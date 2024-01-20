@@ -20,6 +20,7 @@ import Card from "primevue/card";
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "./views/Home.vue";
 import Teams from "./views/Teams.vue";
+import AddTeam from "./views/AddTeam.vue";
 
 const app = createApp(App);
 
@@ -43,6 +44,7 @@ app.component("Card", Card);
 const routes = [
   { path: "/", component: Home },
   { path: "/teams", component: Teams },
+  { path: "/addteam", component: AddTeam },
 ];
 
 const router = createRouter({
@@ -54,8 +56,8 @@ app.use(router);
 
 // Initialize Firebase
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
-import { firebaseConfig } from "./firebaseConfig.js";
+import { getFirestore } from "firebase/firestore/lite";
+import { firebaseConfig } from "./database/firebaseConfig.js";
 export const firebase = initializeApp(firebaseConfig);
 export const db = getFirestore(firebase);
 

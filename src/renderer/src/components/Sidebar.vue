@@ -15,7 +15,11 @@
         <div v-for="item in items" class="menu">
           <h3 class="menu-item">{{ item.label }}</h3>
           <div v-for="subitem in item.items" class="link">
-            <router-link v-slot="{ navigate }" :to="subitem.route">
+            <router-link
+              v-slot="{ navigate }"
+              :to="subitem.route"
+              class="router-link"
+            >
               <a :href="subitem.route" @click="navigate">
                 <span :class="subitem.icon" />
                 <span class="ml">{{ subitem.label }}</span>
@@ -81,6 +85,7 @@ const items = ref([
 .link {
   margin-top: 0px;
   height: 40px;
+  width: 100%;
   border-radius: var(--border-radius);
   display: flex;
   justify-content: start;
@@ -91,6 +96,10 @@ const items = ref([
 .link:hover {
   background-color: var(--primary-200);
   color: var(--highlight-text-color);
+}
+
+.router-link {
+  width: 100;
 }
 
 a:link {
