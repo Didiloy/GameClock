@@ -18,41 +18,48 @@
         </div>
       </template>
     </Card>
-    <p class="error" v-if="error">
-      {{ errorText }}
-    </p>
-    <p class="success" v-if="succeded">C'est tout bon !</p>
+    <Toast />
   </div>
 </template>
 <script setup>
 import { ref } from "vue";
 import { addTeam } from "../database/database";
+import { useToast } from "primevue/usetoast";
+
+const toast = useToast();
 const name = ref("");
-const error = ref(false);
-const errorText = ref("");
 const loading = ref(false);
 const icon = ref("pi pi-plus");
-const succeded = ref(false);
 async function onAddTeam() {
-  error.value = false;
   if (name.value == "") {
-    error.value = true;
-    errorText.value = "Vous ne pouvez pas ajouter une équipe sans nom.";
+    toast.add({
+      severity: "error",
+      summary: "",
+      detail: "Vous ne pouvez pas ajouter une équipe sans nom.",
+      life: 3000,
+    });
     return;
   }
   loading.value = true;
   let success = await addTeam(name.value);
   if (success) {
-    error.value = false;
-    errorText.value = "";
     name.value = "";
     icon.value = "pi pi-check";
-    succeded.value = true;
+    toast.add({
+      severity: "success",
+      summary: "",
+      detail: "C'est tout bon !",
+      life: 3000,
+    });
   } else {
-    error.value = true;
-    errorText.value =
-      "Une erreur est survenue lors de l'ajout de l'équipe. Une équipe de ce nom existe peut être déjà";
     name.value = "";
+    toast.add({
+      severity: "error",
+      summary: "",
+      detail:
+        "Une erreur est survenue lors de l'ajout de l'équipe. Une équipe de ce nom existe peut être déjà",
+      life: 3000,
+    });
   }
   loading.value = false;
 }
