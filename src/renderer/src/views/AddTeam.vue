@@ -96,14 +96,6 @@ async function onAddTeam() {
   margin-top: 50px;
 }
 
-.error {
-  color: red;
-}
-
-.success {
-  color: green;
-}
-
 .title {
   margin-right: 10px;
 }

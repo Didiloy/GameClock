@@ -1,10 +1,12 @@
 <template>
   <div class="container">
-    <h2>Home</h2>
+    <Image :src="logo" width="250" class="header" />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import logo from "../assets/images/icons.png";
+</script>
 <style scoped>
 .container {
   display: flex;
