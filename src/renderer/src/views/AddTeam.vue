@@ -10,7 +10,7 @@
           </div>
           <Button
             label="Ajouter"
-            icon="pi pi-plus"
+            :icon="icon"
             class="btn-add"
             @click="onAddTeam"
             :loading="loading"
@@ -21,6 +21,7 @@
     <p class="error" v-if="error">
       {{ errorText }}
     </p>
+    <p class="success" v-if="succeded">C'est tout bon !</p>
   </div>
 </template>
 <script setup>
@@ -30,6 +31,8 @@ const name = ref("");
 const error = ref(false);
 const errorText = ref("");
 const loading = ref(false);
+const icon = ref("pi pi-plus");
+const succeded = ref(false);
 async function onAddTeam() {
   error.value = false;
   if (name.value == "") {
@@ -43,6 +46,8 @@ async function onAddTeam() {
     error.value = false;
     errorText.value = "";
     name.value = "";
+    icon.value = "pi pi-check";
+    succeded.value = true;
   } else {
     error.value = true;
     errorText.value =
@@ -86,6 +91,10 @@ async function onAddTeam() {
 
 .error {
   color: red;
+}
+
+.success {
+  color: green;
 }
 
 .title {
