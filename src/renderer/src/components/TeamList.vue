@@ -1,33 +1,29 @@
 <template>
-  <Card class="card">
-    <template #content>
-      <DataView :value="teamItem">
-        <template #list="slotProps">
-          <div
-            v-for="(item, index) in slotProps.items"
-            :key="index"
-            :class="getClassNameFromIndex(index)"
-            @click="navigateToTeam(item.name)"
-          >
-            <div class="team-name">
-              <h3>{{ item.name }}</h3>
-            </div>
-            <div class="team-playtime">
-              <h4>{{ convertMinuteToHoursMinute(item.playtime) }}</h4>
-            </div>
-            <div class="icon-action">
-              <i class="pi pi-arrow-right"></i>
-            </div>
-          </div>
-        </template>
-      </DataView>
+  <DataView :value="teamItem" class="dataview">
+    <template #list="slotProps">
+      <div
+        v-for="(item, index) in slotProps.items"
+        :key="index"
+        :class="getClassNameFromIndex(index)"
+        @click="navigateToTeam(item.name)"
+      >
+        <div class="team-name">
+          <h3>{{ item.name }}</h3>
+        </div>
+        <div class="team-playtime">
+          <h4>{{ convertMinuteToHoursMinute(item.playtime) }}</h4>
+        </div>
+        <div class="icon-action">
+          <i class="pi pi-arrow-right"></i>
+        </div>
+      </div>
     </template>
-  </Card>
+  </DataView>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { getTeams, getSessions, addTeam } from "../database/database";
+import { getTeams, getSessions } from "../database/database";
 import { getDoc } from "firebase/firestore";
 
 onMounted(() => {
@@ -85,11 +81,14 @@ function getClassNameFromIndex(index) {
 }
 
 function navigateToTeam(teamName) {
-  addTeam("sebastein");
   router.push("/team/" + teamName);
 }
 </script>
 <style scoped>
+.dataview {
+  margin-top: 70px;
+}
+
 .team-item {
   width: 750px;
   display: flex;

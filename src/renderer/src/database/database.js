@@ -18,6 +18,7 @@ export async function addTeam(name) {
   });
 }
 
+//Sessions
 export const getSessions = async () => {
   const sessionsList = [];
   const sessionsSnapshot = await getDocs(collection(db, "sessions"));
