@@ -1,16 +1,20 @@
-import { db } from "../main.js";
-import { getDocs, collection, doc } from "firebase/firestore/lite";
+import db from "./firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
 
-export const getTeams = async () => {
-  const t = collection(db, "teams");
-  const teamSnapshot = await getDocs(t);
-  const teamsList = teamSnapshot.docs.map((doc) => doc.data());
+export async function getTeams() {
+  const teamsList = [];
+  const teamsSnapshot = await getDocs(collection(db, "teams"));
+  teamsSnapshot.forEach((doc) => {
+    teamsList.push(doc.data());
+  });
   return teamsList;
-};
+}
 
 export const getSessions = async () => {
-  const s = collection(db, "sessions");
-  const sessionsSnapshot = await getDocs(s);
-  const sessionsList = sessionsSnapshot.docs.map((doc) => doc.data());
+  const sessionsList = [];
+  const sessionsSnapshot = await getDocs(collection(db, "sessions"));
+  sessionsSnapshot.forEach((doc) => {
+    sessionsList.push(doc.data());
+  });
   return sessionsList;
 };

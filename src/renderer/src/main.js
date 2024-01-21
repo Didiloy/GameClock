@@ -54,11 +54,4 @@ const router = createRouter({
 
 app.use(router);
 
-// Initialize Firebase
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore/lite";
-import { firebaseConfig } from "./database/firebaseConfig.js";
-export const firebase = initializeApp(firebaseConfig);
-export const db = getFirestore(firebase);
-
 app.mount("#app");
