@@ -11,7 +11,9 @@
               class="mb10"
             ></InputText>
             <div class="input-duration">
-              <label for="duration" class=""> Durée de la session </label>
+              <label for="duration" class="">
+                Durée de la session en minutes</label
+              >
               <InputNumber
                 id="duration"
                 v-model="duration"
@@ -32,7 +34,7 @@
               label="Ajouter"
               :icon="icon"
               class="btn-add"
-              @click=""
+              @click="addNewSession"
               :loading="loading"
             ></Button>
           </div>
@@ -40,10 +42,14 @@
       </template>
     </Card>
   </div>
+  <Toast />
 </template>
 <script setup>
 import { ref } from "vue";
+import { addSession } from "../database/database";
+import { useToast } from "primevue/usetoast";
 
+const toast = useToast();
 const props = defineProps(["teamName"]);
 const loading = ref(false);
 const icon = ref("pi pi-plus");
@@ -54,6 +60,36 @@ const options_cool = ref([
   { name: "C'était cool", value: true },
   { name: "C'était pas cool", value: false },
 ]);
+
+async function addNewSession() {
+  loading.value = true;
+  const success = await addSession(
+    props.teamName,
+    game.value,
+    duration.value,
+    was_cool.value
+  );
+  loading.value = false;
+  if (success) {
+    icon.value = "pi pi-check";
+    toast.add({
+      severity: "success",
+      summary: "",
+      detail: "C'est tout bon !",
+      life: 3000,
+    });
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "",
+      detail: "Une erreur est survenue lors de l'ajout de la session de jeu.",
+      life: 3000,
+    });
+  }
+  game.value = "";
+  duration.value = 0;
+  was_cool.value = true;
+}
 </script>
 <style scoped>
 .component-container {

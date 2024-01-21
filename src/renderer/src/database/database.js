@@ -1,5 +1,5 @@
 import db from "./firebaseConfig";
-import { collection, getDocs, setDoc, doc } from "firebase/firestore";
+import { collection, getDocs, setDoc, doc, getDoc } from "firebase/firestore";
 
 //Teams
 export async function getTeams() {
@@ -36,3 +36,48 @@ export const getSessions = async () => {
   });
   return sessionsList;
 };
+
+export async function addSession(teamName, gameName, duration, was_cool) {
+  try {
+    let gameAlreadyExists = false;
+    let teamId;
+    let gamePath = "";
+    const gamesSnapshot = await getDocs(collection(db, "games"));
+    for (let s of gamesSnapshot.docs) {
+      if (s.data().name == gameName) {
+        gameAlreadyExists = true;
+        gamePath = s.id;
+      }
+    }
+
+    const teamsSnapshot = await getDocs(collection(db, "teams"));
+    for (let doc of teamsSnapshot.docs) {
+      if (doc.data().name == teamName) {
+        teamId = doc.id;
+      }
+    }
+    if (!gameAlreadyExists) {
+      const gamesRef = collection(db, "games");
+      await setDoc(doc(gamesRef), {
+        name: gameName,
+      });
+      const gamesSnapshot = await getDocs(collection(db, "games"));
+      for (let s of gamesSnapshot.docs) {
+        if (s.data().name == gameName) {
+          gamePath = s.id;
+        }
+      }
+    }
+    const sessionRef = collection(db, "sessions");
+    await setDoc(doc(sessionRef), {
+      duration: duration,
+      was_cool: was_cool,
+      date: new Date(),
+      game: doc(collection(db, "games"), gamePath),
+      team: doc(collection(db, "teams"), teamId),
+    });
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
