@@ -14,18 +14,19 @@
       <div>
         <div v-for="item in items" class="menu">
           <h3 class="menu-item">{{ item.label }}</h3>
-          <div v-for="subitem in item.items" class="link">
-            <router-link
-              v-slot="{ navigate }"
-              :to="subitem.route"
-              class="router-link"
-            >
+          <router-link
+            v-for="subitem in item.items"
+            v-slot="{ navigate }"
+            :to="subitem.route"
+            class="router-link link"
+          >
+            <div>
               <a :href="subitem.route" @click="navigate">
                 <span :class="subitem.icon" />
                 <span class="ml">{{ subitem.label }}</span>
               </a>
-            </router-link>
-          </div>
+            </div>
+          </router-link>
         </div>
       </div>
     </Sidebar>
