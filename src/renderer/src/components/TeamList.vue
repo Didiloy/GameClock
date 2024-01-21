@@ -1,32 +1,40 @@
 <template>
-  <Card>
+  <Card class="card">
     <template #content>
-      <DataTable :value="teamItem" stripedRows tableStyle="min-width: 50rem">
-        <Column field="name" header="Nom"></Column>
-        <Column header="Temps de jeu">
-          <template #body="slotProps">
-            <span>{{
-              convertMinuteToHoursMinute(slotProps.data.playtime)
-            }}</span>
-          </template>
-        </Column>
-        <Column header="">
-          <template #body>
-            <Button label="Voir les stats"></Button>
-          </template>
-        </Column>
-      </DataTable>
+      <DataView :value="teamItem">
+        <template #list="slotProps">
+          <div
+            v-for="(item, index) in slotProps.items"
+            :key="index"
+            :class="getClassNameFromIndex(index)"
+            @click="navigateToTeam(item.name)"
+          >
+            <div class="team-name">
+              <h3>{{ item.name }}</h3>
+            </div>
+            <div class="team-playtime">
+              <h4>{{ convertMinuteToHoursMinute(item.playtime) }}</h4>
+            </div>
+            <div class="icon-action">
+              <i class="pi pi-arrow-right"></i>
+            </div>
+          </div>
+        </template>
+      </DataView>
     </template>
   </Card>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { getTeams, getSessions } from "../database/database";
+import { useRouter } from "vue-router";
+import { getTeams, getSessions, addTeam } from "../database/database";
 import { getDoc } from "firebase/firestore";
 
 onMounted(() => {
   init();
 });
+
+const router = useRouter();
 
 const teams = ref([]);
 const sessions = ref([]);
@@ -65,4 +73,65 @@ async function calculateTeamPlayTime(teamName) {
 function convertMinuteToHoursMinute(minute) {
   return (minute - (minute % 60)) / 60 + "h" + (minute % 60) + "min";
 }
+
+function getClassNameFromIndex(index) {
+  if (index == 0) {
+    return "team-item rounded-top";
+  } else if (index == teamItem.value.length - 1) {
+    return "team-item rounded-bottom";
+  } else {
+    return "team-item team-item-odd";
+  }
+}
+
+function navigateToTeam(teamName) {
+  addTeam("sebastein");
+  router.push("/team/" + teamName);
+}
 </script>
+<style scoped>
+.team-item {
+  width: 750px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary-100);
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.team-item:hover {
+  background-color: var(--primary-300);
+  cursor: pointer;
+}
+
+.rounded-top {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.rounded-bottom {
+  /* round only the bottom */
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.team-name {
+  width: 200px;
+  height: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.icon-action {
+  width: 50px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card {
+  padding: 0px;
+}
+</style>

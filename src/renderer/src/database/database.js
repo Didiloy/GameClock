@@ -1,6 +1,7 @@
 import db from "./firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, setDoc, doc } from "firebase/firestore";
 
+//Teams
 export async function getTeams() {
   const teamsList = [];
   const teamsSnapshot = await getDocs(collection(db, "teams"));
@@ -8,6 +9,13 @@ export async function getTeams() {
     teamsList.push(doc.data());
   });
   return teamsList;
+}
+
+export async function addTeam(name) {
+  const teamsRef = collection(db, "teams");
+  await setDoc(doc(teamsRef), {
+    name: name,
+  });
 }
 
 export const getSessions = async () => {

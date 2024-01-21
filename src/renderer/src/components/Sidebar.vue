@@ -5,10 +5,10 @@
       style="width: 200px"
       :showCloseIcon="false"
       :modal="false"
+      class="main-background"
     >
       <template #header>
-        <Image :src="logo" width="50" />
-        <h3>GameClock</h3>
+        <Image :src="logo" width="150" class="header" />
       </template>
       <Divider />
       <div>
@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import logo from "../assets/images/logo.jpeg";
+import logo from "../assets/images/icons.png";
 import { ref } from "vue";
 
 const items = ref([
@@ -77,6 +77,9 @@ const items = ref([
 </script>
 
 <style scoped>
+.header {
+  margin-top: 5px;
+}
 .menu {
   width: 100%;
   border: none;
@@ -95,7 +98,7 @@ const items = ref([
 }
 
 .link:hover {
-  background-color: var(--primary-200);
+  background-color: var(--primary-300);
   color: var(--highlight-text-color);
 }
 

@@ -13,6 +13,7 @@ import Sidebar from "primevue/sidebar";
 import Divider from "primevue/divider";
 import Image from "primevue/image";
 import DataTable from "primevue/datatable";
+import DataView from "primevue/dataview";
 import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup"; // optional
 import Row from "primevue/row";
@@ -22,6 +23,7 @@ import Home from "./views/Home.vue";
 import Teams from "./views/Teams.vue";
 import AddTeam from "./views/AddTeam.vue";
 import GeneralStats from "./views/GeneralStats.vue";
+import Team from "./views/Team.vue";
 
 const app = createApp(App);
 
@@ -36,6 +38,7 @@ app.component("Sidebar", Sidebar);
 app.component("Divider", Divider);
 app.component("Image", Image);
 app.component("DataTable", DataTable);
+app.component("DataView", DataView);
 app.component("Column", Column);
 app.component("ColumnGroup", ColumnGroup);
 app.component("Row", Row);
@@ -45,6 +48,7 @@ app.component("Card", Card);
 const routes = [
   { path: "/", component: Home },
   { path: "/teams", component: Teams },
+  { path: "/team/:name", component: Team },
   { path: "/addteam", component: AddTeam },
   { path: "/stats", component: GeneralStats },
 ];

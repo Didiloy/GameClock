@@ -3,7 +3,7 @@ import Sidebar from "./components/Sidebar.vue";
 </script>
 
 <template>
-  <div class="container">
+  <div class="container main-background">
     <div class="sidebar">
       <Sidebar></Sidebar>
     </div>
@@ -13,9 +13,13 @@ import Sidebar from "./components/Sidebar.vue";
   </div>
 </template>
 
-<style scoped>
+<style>
 .container {
   display: flex;
+}
+
+.main-background {
+  background-color: var(--primary-50);
 }
 
 .content {
