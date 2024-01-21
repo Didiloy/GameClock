@@ -8,15 +8,49 @@
             <h4 class="title">Nom de l'équipe:</h4>
             <InputText type="text" v-model="name" />
           </div>
-          <Button label="Ajouter" icon="pi pi-plus" class="btn-add"></Button>
+          <Button
+            label="Ajouter"
+            icon="pi pi-plus"
+            class="btn-add"
+            @click="onAddTeam"
+            :loading="loading"
+          ></Button>
         </div>
       </template>
     </Card>
+    <p class="error" v-if="error">
+      {{ errorText }}
+    </p>
   </div>
 </template>
 <script setup>
 import { ref } from "vue";
+import { addTeam } from "../database/database";
 const name = ref("");
+const error = ref(false);
+const errorText = ref("");
+const loading = ref(false);
+async function onAddTeam() {
+  error.value = false;
+  if (name.value == "") {
+    error.value = true;
+    errorText.value = "Vous ne pouvez pas ajouter une équipe sans nom.";
+    return;
+  }
+  loading.value = true;
+  let success = await addTeam(name.value);
+  if (success) {
+    error.value = false;
+    errorText.value = "";
+    name.value = "";
+  } else {
+    error.value = true;
+    errorText.value =
+      "Une erreur est survenue lors de l'ajout de l'équipe. Une équipe de ce nom existe peut être déjà";
+    name.value = "";
+  }
+  loading.value = false;
+}
 </script>
 <style scoped>
 .container {
@@ -48,6 +82,10 @@ const name = ref("");
 
 .btn-add {
   margin-top: 50px;
+}
+
+.error {
+  color: red;
 }
 
 .title {

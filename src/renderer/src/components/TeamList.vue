@@ -59,6 +59,7 @@ async function calculateTeamPlayTime(teamName) {
   let playtime = 0;
   for (const s of sessions.value) {
     let teamDetails = (await getDoc(s.team)).data();
+    if (teamDetails == undefined) continue;
     if (teamDetails.name == teamName) {
       playtime += s.duration;
     }

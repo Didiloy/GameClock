@@ -12,10 +12,19 @@ export async function getTeams() {
 }
 
 export async function addTeam(name) {
+  let alreadyExists = false;
   const teamsRef = collection(db, "teams");
+  const teamsSnapshot = await getDocs(teamsRef);
+  teamsSnapshot.forEach((doc) => {
+    if (doc.data().name == name) {
+      alreadyExists = true;
+    }
+  });
+  if (alreadyExists) return false;
   await setDoc(doc(teamsRef), {
     name: name,
   });
+  return true;
 }
 
 //Sessions
