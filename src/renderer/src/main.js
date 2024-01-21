@@ -5,6 +5,7 @@ import "primevue/resources/themes/lara-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import InputText from "primevue/inputtext";
+import InputNumber from "primevue/inputnumber";
 import Button from "primevue/button";
 import Toast from "primevue/toast";
 import ToastService from "primevue/toastservice";
@@ -18,6 +19,7 @@ import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup"; // optional
 import Row from "primevue/row";
 import Card from "primevue/card";
+import SelectButton from "primevue/selectbutton";
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "./views/Home.vue";
 import Teams from "./views/Teams.vue";
@@ -30,6 +32,8 @@ const app = createApp(App);
 //PrimeVue
 app.use(PrimeVue);
 app.component("InputText", InputText);
+app.component("InputNumber", InputNumber);
+app.component("SelectButton", SelectButton);
 app.component("Button", Button);
 app.component("Toast", Toast);
 app.use(ToastService);

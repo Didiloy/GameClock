@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Image :src="logo" width="250" class="header" />
-    <PlayTimeHome></PlayTimeHome>
+    <PlayTimeHome class="play-time"></PlayTimeHome>
   </div>
 </template>
 
@@ -16,5 +16,9 @@ import PlayTimeHome from "../components/PlayTimeHome.vue";
   align-items: center;
   justify-content: space-between;
   height: 100%;
+}
+
+.play-time {
+  margin-top: 50px;
 }
 </style>

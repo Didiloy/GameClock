@@ -99,10 +99,9 @@ function convertMinuteToHoursMinute(minute) {
   return (minute - (minute % 60)) / 60 + "h" + (minute % 60) + "min";
 }
 </script>
-<style>
+<style scoped>
 .card {
   background-color: var(--primary-100);
   width: 70vw;
-  margin-top: 70px;
 }
 </style>
