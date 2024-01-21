@@ -21,6 +21,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "./views/Home.vue";
 import Teams from "./views/Teams.vue";
 import AddTeam from "./views/AddTeam.vue";
+import GeneralStats from "./views/GeneralStats.vue";
 
 const app = createApp(App);
 
@@ -45,6 +46,7 @@ const routes = [
   { path: "/", component: Home },
   { path: "/teams", component: Teams },
   { path: "/addteam", component: AddTeam },
+  { path: "/stats", component: GeneralStats },
 ];
 
 const router = createRouter({
