@@ -81,3 +81,13 @@ export async function addSession(teamName, gameName, duration, was_cool) {
     return false;
   }
 }
+
+//Games
+export async function getGames() {
+  const gamesList = [];
+  const gamesSnapshot = await getDocs(collection(db, "games"));
+  gamesSnapshot.forEach((doc) => {
+    gamesList.push(doc.data());
+  });
+  return gamesList;
+}

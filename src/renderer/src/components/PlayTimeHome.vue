@@ -96,7 +96,11 @@ function calculatePercentage(playtime) {
 }
 
 function convertMinuteToHoursMinute(minute) {
-  return (minute - (minute % 60)) / 60 + "h" + (minute % 60) + "min";
+  return (
+    (minute - (minute % 60)) / 60 +
+    "h" +
+    (minute % 60 == 0 ? "" : (minute % 60) + "min")
+  );
 }
 </script>
 <style scoped>

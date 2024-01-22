@@ -19,6 +19,8 @@ import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup"; // optional
 import Row from "primevue/row";
 import Card from "primevue/card";
+import Accordion from "primevue/accordion";
+import AccordionTab from "primevue/accordiontab";
 import SelectButton from "primevue/selectbutton";
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "./views/Home.vue";
@@ -47,6 +49,8 @@ app.component("Column", Column);
 app.component("ColumnGroup", ColumnGroup);
 app.component("Row", Row);
 app.component("Card", Card);
+app.component("Accordion", Accordion);
+app.component("AccordionTab", AccordionTab);
 
 //Router
 const routes = [

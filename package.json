@@ -22,6 +22,7 @@
     "firebase": "^10.7.2",
     "primeicons": "^6.0.1",
     "primevue": "^3.46.0",
+    "steamgriddb": "^2.1.1",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
