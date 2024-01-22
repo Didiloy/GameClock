@@ -1,5 +1,6 @@
 import db from "./firebaseConfig";
 import { collection, getDocs, setDoc, doc, getDoc } from "firebase/firestore";
+import { getGameId, getGameLogo, getGameHeroe } from "../api/steamgriddb";
 
 //Teams
 export async function getTeams() {
@@ -61,6 +62,7 @@ export async function addSession(teamName, gameName, duration, was_cool) {
       await setDoc(doc(gamesRef), {
         name: gameName,
       });
+      await addImagesToGame(gameName);
       const gamesSnapshot = await getDocs(collection(db, "games"));
       for (let s of gamesSnapshot.docs) {
         if (s.data().name == gameName) {
@@ -90,4 +92,31 @@ export async function getGames() {
     gamesList.push(doc.data());
   });
   return gamesList;
+}
+
+export async function addImagesToGame(gameName) {
+  //get the game in database
+  let gameId = "";
+  let game;
+  const gamesSnapshot = await getDocs(collection(db, "games"));
+  for (let s of gamesSnapshot.docs) {
+    if (s.data().name == gameName) {
+      gameId = s.id;
+      game = s.data();
+    }
+  }
+
+  //get the logo from steamgriddb
+  const gameid = await getGameId(gameName);
+  const gameLogo = await getGameLogo(gameid);
+  const gameHeroe = await getGameHeroe(gameid);
+
+  console.log("logo", gameLogo);
+  console.log("heroe", gameHeroe);
+  // Add the logo in database
+  await setDoc(doc(db, "games", gameId), {
+    name: game.name,
+    logo: gameLogo,
+    heroe: gameHeroe,
+  });
 }

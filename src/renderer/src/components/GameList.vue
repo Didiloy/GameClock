@@ -1,6 +1,15 @@
 <template>
   <DataTable :value="all_games" stripedRows tableStyle="min-width: 50rem">
-    <Column field="name" header="Nom du jeu"></Column>
+    <Column field="name" header="Nom du jeu">
+      <template #body="slotProps">
+        <img
+          v-if="slotProps.data.logo"
+          :src="slotProps.data.logo"
+          style="width: 70px; height: auto; border-radius: 5px"
+        />
+        {{ slotProps.data.name }}
+      </template>
+    </Column>
     <Column field="playtime" header="Temps de jeu">
       <template #body="slotProps">
         {{ convertMinuteToHoursMinute(slotProps.data.playtime) }}</template
@@ -15,8 +24,9 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { getGames, getSessions } from "../database/database";
+import { getGames, getSessions, addImagesToGame } from "../database/database";
 import { getDoc } from "firebase/firestore";
+import { getGameId, getGameGrid, getGameLogo } from "../api/steamgriddb";
 
 onMounted(() => {
   init();
@@ -39,11 +49,16 @@ async function init() {
   ];
   for (const v of games.value) {
     let playtime = await calculateGamePlayTime(v.name);
-    all_games_playtime.push({ name: v.name, playtime: playtime });
+    all_games_playtime.push({
+      name: v.name,
+      playtime: playtime,
+      logo: v.logo,
+    });
   }
   all_games.value = all_games_playtime.sort((a, b) => {
     return b.playtime - a.playtime;
   });
+  console.log(all_games.value);
 }
 
 async function calculateGamePlayTime(game) {
@@ -60,6 +75,17 @@ async function calculateGamePlayTime(game) {
 
 async function updateGames() {
   let t = await getGames();
+  for (let game of t) {
+    if (
+      game.logo == undefined ||
+      game.logo == "" ||
+      game.heroe == undefined ||
+      game.heroe == ""
+    ) {
+      await addImagesToGame(game.name);
+      t = await getGames();
+    }
+  }
   games.value = t;
 }
 
