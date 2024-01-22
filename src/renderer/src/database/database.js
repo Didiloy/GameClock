@@ -111,8 +111,6 @@ export async function addImagesToGame(gameName) {
   const gameLogo = await getGameLogo(gameid);
   const gameHeroe = await getGameHeroe(gameid);
 
-  console.log("logo", gameLogo);
-  console.log("heroe", gameHeroe);
   // Add the logo in database
   await setDoc(doc(db, "games", gameId), {
     name: game.name,
