@@ -65,7 +65,7 @@ const loading = ref(false);
 const icon = ref("pi pi-plus");
 const game = ref("");
 const duration = ref(0);
-const was_cool = ref(true);
+const was_cool = ref({});
 const options_cool = ref([
   { name: "C'était cool", value: true },
   { name: "C'était pas cool", value: false },
@@ -92,7 +92,7 @@ async function addNewSession() {
     props.teamName,
     game.value,
     duration.value,
-    was_cool.value
+    was_cool.value.value
   );
   loading.value = false;
   if (success) {
