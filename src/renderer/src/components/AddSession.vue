@@ -5,11 +5,13 @@
       <template #content>
         <div class="content-container">
           <div class="left">
-            <InputText
+            <AutoComplete
               v-model="game"
               placeholder="Nom du jeu"
+              :suggestions="items"
+              @complete="autocomplete"
               class="mb10"
-            ></InputText>
+            ></AutoComplete>
             <div class="input-duration">
               <label for="duration" class="">
                 Durée de la session en minutes</label
@@ -45,12 +47,14 @@
   <Toast />
 </template>
 <script setup>
-import { ref } from "vue";
-import { addSession } from "../database/database";
+import { ref, onMounted } from "vue";
+import { addSession, getGames } from "../database/database";
 import { useToast } from "primevue/usetoast";
 
 const toast = useToast();
 const props = defineProps(["teamName"]);
+const all_games = ref([]);
+const items = ref([]);
 const loading = ref(false);
 const icon = ref("pi pi-plus");
 const game = ref("");
@@ -60,6 +64,28 @@ const options_cool = ref([
   { name: "C'était cool", value: true },
   { name: "C'était pas cool", value: false },
 ]);
+
+onMounted(() => {
+  init();
+});
+
+async function init() {
+  await updateGames();
+}
+
+async function updateGames() {
+  let t = await getGames();
+  all_games.value = t;
+}
+
+const autocomplete = (event) => {
+  let tmpArray = all_games.value.filter((item) => {
+    return item.name.toLowerCase().includes(event.query.toLowerCase());
+  });
+  items.value = tmpArray.map((item) => {
+    return item.name;
+  });
+};
 
 async function addNewSession() {
   loading.value = true;
