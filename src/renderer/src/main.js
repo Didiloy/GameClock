@@ -29,6 +29,7 @@ import Teams from "./views/Teams.vue";
 import AddTeam from "./views/AddTeam.vue";
 import GeneralStats from "./views/GeneralStats.vue";
 import Team from "./views/Team.vue";
+import { createPinia } from "pinia";
 
 const app = createApp(App);
 
@@ -70,4 +71,7 @@ const router = createRouter({
 
 app.use(router);
 
+//Pinia
+const pinia = createPinia();
+app.use(pinia);
 app.mount("#app");

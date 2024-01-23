@@ -1,5 +1,22 @@
 <script setup>
 import Sidebar from "./components/Sidebar.vue";
+import { getGames, getSessions, getTeams } from "./database/database.js";
+import { onMounted } from "vue";
+import { useStore } from "./store/store.js";
+import { storeToRefs } from "pinia";
+
+onMounted(() => {
+  init();
+});
+
+const store = useStore();
+const { sessions, games, teams } = storeToRefs(store);
+
+async function init() {
+  games.value = await getGames();
+  sessions.value = await getSessions();
+  teams.value = await getTeams();
+}
 </script>
 
 <template>

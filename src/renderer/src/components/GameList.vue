@@ -24,22 +24,20 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { getGames, getSessions, addImagesToGame } from "../database/database";
 import { getDoc } from "firebase/firestore";
-import { getGameId, getGameGrid, getGameLogo } from "../api/steamgriddb";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
 
 onMounted(() => {
   init();
 });
 
 const all_games = ref([]);
-const games = ref([]);
+const store = useStore();
+const { sessions, games } = storeToRefs(store);
 const total_time = ref(0);
-const sessions = ref([]);
 
 async function init() {
-  await updateGames();
-  await updateSession();
   total_time.value = calculateTotalTime();
   let all_games_playtime = [
     {
@@ -58,7 +56,6 @@ async function init() {
   all_games.value = all_games_playtime.sort((a, b) => {
     return b.playtime - a.playtime;
   });
-  console.log(all_games.value);
 }
 
 async function calculateGamePlayTime(game) {
@@ -71,27 +68,6 @@ async function calculateGamePlayTime(game) {
     }
   }
   return playtime;
-}
-
-async function updateGames() {
-  let t = await getGames();
-  for (let game of t) {
-    if (
-      game.logo == undefined ||
-      game.logo == "" ||
-      game.heroe == undefined ||
-      game.heroe == ""
-    ) {
-      await addImagesToGame(game.name);
-      t = await getGames();
-    }
-  }
-  games.value = t;
-}
-
-async function updateSession() {
-  let s = await getSessions();
-  sessions.value = s;
 }
 
 function calculateTotalTime() {

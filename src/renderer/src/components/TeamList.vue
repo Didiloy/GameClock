@@ -23,8 +23,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { getTeams, getSessions } from "../database/database";
 import { getDoc } from "firebase/firestore";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
 
 onMounted(() => {
   init();
@@ -32,23 +33,11 @@ onMounted(() => {
 
 const router = useRouter();
 
-const teams = ref([]);
-const sessions = ref([]);
+const store = useStore();
+const { teams, sessions } = storeToRefs(store);
 const teamItem = ref([]);
 
-async function updateTeams() {
-  let t = await getTeams();
-  teams.value = t;
-}
-
-async function updateSession() {
-  let s = await getSessions();
-  sessions.value = s;
-}
-
 const init = async () => {
-  await updateTeams();
-  await updateSession();
   teams.value.forEach(async (v) => {
     let playtime = await calculateTeamPlayTime(v.name);
     teamItem.value.push({ name: v.name, playtime: playtime });

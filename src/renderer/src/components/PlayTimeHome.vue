@@ -28,21 +28,26 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { getTeams, getSessions } from "../database/database";
 import { getDoc } from "firebase/firestore";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
 
 onMounted(() => {
   init();
+  // console.log(sessions);
+  // console.log(teams);
+  // setTimeout(() => {
+  //   console.log(sessions);
+  //   console.log(teams);
+  // }, 1000);
 });
 
-const teams = ref([]);
-const sessions = ref([]);
+const store = useStore();
+const { sessions, teams } = storeToRefs(store);
 const total_time = ref(0);
 const teams_playtime = ref([]);
 
 async function init() {
-  await updateTeams();
-  await updateSession();
   total_time.value = calculateTotalTime();
   let all_teams_playtime = [
     {
@@ -71,16 +76,6 @@ async function calculateTeamPlayTime(teamName) {
     }
   }
   return playtime;
-}
-
-async function updateTeams() {
-  let t = await getTeams();
-  teams.value = t;
-}
-
-async function updateSession() {
-  let s = await getSessions();
-  sessions.value = s;
 }
 
 function calculateTotalTime() {

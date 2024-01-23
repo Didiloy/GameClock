@@ -48,12 +48,18 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { addSession, getGames } from "../database/database";
 import { useToast } from "primevue/usetoast";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
+import { addSession } from "../database/database";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
+const store = useStore();
+const { games } = storeToRefs(store);
 const toast = useToast();
 const props = defineProps(["teamName"]);
-const all_games = ref([]);
+const all_games = ref(games);
 const items = ref([]);
 const loading = ref(false);
 const icon = ref("pi pi-plus");
@@ -69,14 +75,7 @@ onMounted(() => {
   init();
 });
 
-async function init() {
-  await updateGames();
-}
-
-async function updateGames() {
-  let t = await getGames();
-  all_games.value = t;
-}
+async function init() {}
 
 const autocomplete = (event) => {
   let tmpArray = all_games.value.filter((item) => {
@@ -104,6 +103,7 @@ async function addNewSession() {
       detail: "C'est tout bon !",
       life: 3000,
     });
+    router.go();
   } else {
     toast.add({
       severity: "error",
