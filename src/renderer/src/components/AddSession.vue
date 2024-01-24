@@ -52,9 +52,7 @@ import { useToast } from "primevue/usetoast";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { addSession } from "../database/database";
-import { useRouter } from "vue-router";
 
-const router = useRouter();
 const store = useStore();
 const { games } = storeToRefs(store);
 const toast = useToast();
@@ -103,7 +101,8 @@ async function addNewSession() {
       detail: "C'est tout bon !",
       life: 3000,
     });
-    router.go();
+    await store.reloadStore();
+    console.log("store reloaded");
   } else {
     toast.add({
       severity: "error",

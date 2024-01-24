@@ -25,7 +25,9 @@
 import { ref } from "vue";
 import { addTeam } from "../database/database";
 import { useToast } from "primevue/usetoast";
+import { useStore } from "../store/store";
 
+const store = useStore();
 const toast = useToast();
 const name = ref("");
 const loading = ref(false);
@@ -51,6 +53,7 @@ async function onAddTeam() {
       detail: "C'est tout bon !",
       life: 3000,
     });
+    await store.reloadStore();
   } else {
     name.value = "";
     toast.add({
