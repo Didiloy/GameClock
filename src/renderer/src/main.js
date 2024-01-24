@@ -23,7 +23,7 @@ import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 import SelectButton from "primevue/selectbutton";
 import AutoComplete from "primevue/autocomplete";
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "./views/Home.vue";
 import Teams from "./views/Teams.vue";
 import AddTeam from "./views/AddTeam.vue";
@@ -65,7 +65,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes: routes,
 });
 

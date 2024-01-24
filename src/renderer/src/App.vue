@@ -2,7 +2,6 @@
 import Sidebar from "./components/Sidebar.vue";
 import { onMounted } from "vue";
 import { useStore } from "./store/store.js";
-import { storeToRefs } from "pinia";
 
 onMounted(() => {
   init();
@@ -21,7 +20,7 @@ async function init() {
       <Sidebar></Sidebar>
     </div>
     <div class="content">
-      <RouterView />
+      <router-view />
     </div>
   </div>
 </template>
