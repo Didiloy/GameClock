@@ -25,12 +25,12 @@ async function init() {
   </div>
 </template>
 
-<style>
+<style scoped>
 .container {
   display: flex;
 }
 
-.main-background {
+:global(.main-background) {
   background-color: var(--primary-50);
 }
 

@@ -1,5 +1,13 @@
 import db from "./firebaseConfig";
-import { collection, getDocs, setDoc, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  setDoc,
+  doc,
+  getDoc,
+  query,
+  where,
+} from "firebase/firestore";
 import { getGameId, getGameLogo, getGameHeroe } from "../api/steamgriddb";
 
 //Teams
@@ -117,4 +125,34 @@ export async function addImagesToGame(gameName) {
     logo: gameLogo,
     heroe: gameHeroe,
   });
+}
+
+export async function getFirstGamesByPlaytime(numberOfGames) {
+  let games_to_return = [];
+  const gamesSnapshot = await getDocs(collection(db, "games"));
+  for (let g of gamesSnapshot.docs) {
+    let p = await getGameTotalPlaytime(g.ref);
+    games_to_return.push({
+      name: g.data().name,
+      playtime: p,
+      heroe: g.data().heroe,
+      joyRate: 0,
+      icon: g.data().logo,
+    });
+  }
+  return games_to_return
+    .sort((a, b) => {
+      return b.playtime - a.playtime;
+    })
+    .slice(0, numberOfGames);
+}
+
+async function getGameTotalPlaytime(gameRef) {
+  let acc = 0;
+  const q = query(collection(db, "sessions"), where("game", "==", gameRef));
+  const sessions_on_game = await getDocs(q);
+  for (const session of sessions_on_game.docs) {
+    acc += session.data().duration;
+  }
+  return acc;
 }
