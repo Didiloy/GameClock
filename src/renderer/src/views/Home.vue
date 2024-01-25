@@ -16,7 +16,11 @@
             ? games_for_little_card[i - 1].playtime
             : ''
         "
-        :joyRate="0"
+        :joyRate="
+          games_for_little_card[i - 1]
+            ? games_for_little_card[i - 1].joyRate
+            : ''
+        "
         :heroe="
           games_for_little_card[i - 1] ? games_for_little_card[i - 1].heroe : ''
         "

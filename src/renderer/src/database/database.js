@@ -132,11 +132,12 @@ export async function getFirstGamesByPlaytime(numberOfGames) {
   const gamesSnapshot = await getDocs(collection(db, "games"));
   for (let g of gamesSnapshot.docs) {
     let p = await getGameTotalPlaytime(g.ref);
+    let j = await getGameJoyRate(g.ref);
     games_to_return.push({
       name: g.data().name,
       playtime: p,
       heroe: g.data().heroe,
-      joyRate: 0,
+      joyRate: j,
       icon: g.data().logo,
     });
   }
@@ -155,4 +156,19 @@ async function getGameTotalPlaytime(gameRef) {
     acc += session.data().duration;
   }
   return acc;
+}
+
+async function getGameJoyRate(gameRef) {
+  let was_cool = 0;
+  let cpt = 0;
+  const q = query(collection(db, "sessions"), where("game", "==", gameRef));
+  const sessions_on_game = await getDocs(q);
+  for (const session of sessions_on_game.docs) {
+    cpt++;
+    if (session.data().was_cool) was_cool++;
+  }
+  let percentage;
+  if (was_cool == 0) percentage = 0;
+  else percentage = (was_cool / cpt) * 100;
+  return percentage;
 }
