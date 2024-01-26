@@ -7,6 +7,8 @@ import {
   getDoc,
   query,
   where,
+  sum,
+  getAggregateFromServer,
 } from "firebase/firestore";
 import { getGameId, getGameLogo, getGameHeroe } from "../api/steamgriddb";
 
@@ -34,6 +36,33 @@ export async function addTeam(name) {
     name: name,
   });
   return true;
+}
+
+export async function getFirstTeamsByPlaytime(numberTeams) {
+  let teams_to_return = [];
+  const teamsSnapshot = await getDocs(collection(db, "teams"));
+  for (let g of teamsSnapshot.docs) {
+    let p = await getTeamTotalPlaytime(g.ref);
+    teams_to_return.push({
+      name: g.data().name,
+      playtime: p,
+    });
+  }
+  return teams_to_return
+    .sort((a, b) => {
+      return b.playtime - a.playtime;
+    })
+    .slice(0, numberTeams);
+}
+
+async function getTeamTotalPlaytime(teamRef) {
+  let acc = 0;
+  const q = query(collection(db, "sessions"), where("team", "==", teamRef));
+  const sessions_on_team = await getDocs(q);
+  for (const session of sessions_on_team.docs) {
+    acc += session.data().duration;
+  }
+  return acc;
 }
 
 //Sessions
@@ -171,4 +200,13 @@ async function getGameJoyRate(gameRef) {
   if (was_cool == 0) percentage = 0;
   else percentage = (was_cool / cpt) * 100;
   return percentage;
+}
+
+//Playtime
+export async function getTotalPlaytime() {
+  const coll = collection(db, "sessions");
+  const snapshot = await getAggregateFromServer(coll, {
+    total_playtime: sum("duration"),
+  });
+  return snapshot.data().total_playtime;
 }

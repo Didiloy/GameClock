@@ -23,6 +23,7 @@ import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 import SelectButton from "primevue/selectbutton";
 import AutoComplete from "primevue/autocomplete";
+import Chart from "primevue/chart";
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "./views/Home.vue";
 import Teams from "./views/Teams.vue";
@@ -54,6 +55,7 @@ app.component("Card", Card);
 app.component("Accordion", Accordion);
 app.component("AccordionTab", AccordionTab);
 app.component("AutoComplete", AutoComplete);
+app.component("Chart", Chart);
 
 //Router
 const routes = [
