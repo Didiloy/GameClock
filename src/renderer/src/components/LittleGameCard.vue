@@ -18,6 +18,7 @@
 import { ref, computed } from "vue";
 
 const props = defineProps(["gameName", "playtime", "joyRate", "heroe", "icon"]);
+const card_size = ref("450px");
 const joyrate_bad = computed(() => {
   return 100 - props.joyRate + "%";
 });
@@ -31,7 +32,10 @@ const heroe_url = computed(() => {
 
 function convertMinuteToHoursMinute(minute) {
   return (
-    (minute - (minute % 60)) / 60 + "H" + (minute % 60 == 0 ? "" : minute % 60)
+    (minute - (minute % 60)) / 60 +
+    " H " +
+    (minute % 60 == 0 ? "" : minute % 60) +
+    " M "
   );
 }
 </script>
@@ -39,7 +43,7 @@ function convertMinuteToHoursMinute(minute) {
 .container-card {
   display: grid;
   grid-template-columns: auto !important;
-  width: 450px;
+  width: v-bind(card_size);
   height: 95px !important;
   border-radius: 10px;
   background-image: v-bind(heroe_url);
@@ -54,7 +58,7 @@ function convertMinuteToHoursMinute(minute) {
   flex-direction: column !important;
   justify-content: start !important;
   align-items: center !important;
-  width: 450px;
+  width: v-bind(card_size);
   height: 95px !important;
   border-radius: 10px;
 }
@@ -64,7 +68,7 @@ function convertMinuteToHoursMinute(minute) {
   flex-direction: row !important;
   justify-content: space-between !important;
   align-items: center !important;
-  width: 450px;
+  width: v-bind(card_size);
   height: 85px !important;
   border-radius: 10px;
 }
@@ -105,6 +109,7 @@ function convertMinuteToHoursMinute(minute) {
 .playtime {
   color: var(--surface-0);
   margin-left: 30px !important;
-  font-size: 50px;
+  font-size: 42px;
+  opacity: 0.8;
 }
 </style>
