@@ -3,7 +3,17 @@
     <Card class="card">
       <template #title> Classement des équipes par temps de jeu </template>
       <template #content>
-        <Chart type="bar" :data="chartData" :options="chartOptions" />
+        <Chart
+          type="bar"
+          :data="chartData"
+          :options="chartOptions"
+          :pt="{
+            canvas: {
+              class: 'p-chart',
+              style: 'height: 280px;',
+            },
+          }"
+        />
       </template>
     </Card>
   </div>
@@ -118,5 +128,9 @@ const setChartOptions = () => {
   background-color: var(--primary-100);
   width: 100%;
   height: 100%;
+}
+
+.p-chart {
+  max-height: 100%;
 }
 </style>
