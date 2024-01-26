@@ -30,8 +30,8 @@ dmg:
 linux:
   target:
     - AppImage
-    - snap
-    - deb
+    # - snap
+    # - deb
   maintainer: com.github.Didiloy
   category: Utility
 appImage:

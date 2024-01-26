@@ -45,8 +45,6 @@
 import logo from "../assets/images/icons.png";
 import PlayTimeHome from "../components/PlayTimeHome.vue";
 import LittleGameCard from "../components/LittleGameCard.vue";
-import { useStore } from "../store/store";
-import { storeToRefs } from "pinia";
 import { ref, onMounted } from "vue";
 import { getFirstGamesByPlaytime } from "../database/database.js";
 
@@ -54,8 +52,6 @@ onMounted(() => {
   init();
 });
 
-const store = useStore();
-const { games } = storeToRefs(store);
 const games_for_little_card = ref([]);
 const number_of_little_card = ref(3);
 

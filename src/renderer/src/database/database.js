@@ -40,8 +40,10 @@ export async function addTeam(name) {
 
 export async function getFirstTeamsByPlaytime(numberTeams) {
   let teams_to_return = [];
+  let cpt = 0;
   const teamsSnapshot = await getDocs(collection(db, "teams"));
   for (let g of teamsSnapshot.docs) {
+    cpt++;
     let p = await getTeamTotalPlaytime(g.ref);
     teams_to_return.push({
       name: g.data().name,
@@ -52,7 +54,7 @@ export async function getFirstTeamsByPlaytime(numberTeams) {
     .sort((a, b) => {
       return b.playtime - a.playtime;
     })
-    .slice(0, numberTeams);
+    .slice(0, numberTeams == 0 ? cpt : numberTeams);
 }
 
 async function getTeamTotalPlaytime(teamRef) {

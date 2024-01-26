@@ -8,6 +8,8 @@ export const useStore = defineStore("store", () => {
   const games = ref([]);
   const sessions = ref([]);
 
+  reloadStore();
+
   async function reloadStore() {
     teams.value = await getTeams();
     games.value = await getGames();

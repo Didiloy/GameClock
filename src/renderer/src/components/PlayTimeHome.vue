@@ -36,11 +36,12 @@ const teams_playtime = computed(() => {
   return arr;
 });
 
-const chartData = ref();
+const chartData = ref({});
 const chartOptions = ref();
 
 async function init() {
-  teams_from_db.value = await getFirstTeamsByPlaytime(teams.value.length);
+  let a = await getFirstTeamsByPlaytime(teams.value.length);
+  teams_from_db.value = a;
   total_time.value = await getTotalPlaytime();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();

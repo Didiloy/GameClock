@@ -1,17 +1,5 @@
 <script setup>
 import Sidebar from "./components/Sidebar.vue";
-import { onMounted } from "vue";
-import { useStore } from "./store/store.js";
-
-onMounted(() => {
-  init();
-});
-
-const store = useStore();
-
-async function init() {
-  await store.reloadStore();
-}
 </script>
 
 <template>
