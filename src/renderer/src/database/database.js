@@ -160,8 +160,10 @@ export async function addImagesToGame(gameName) {
 
 export async function getFirstGamesByPlaytime(numberOfGames) {
   let games_to_return = [];
+  let cpt = 0;
   const gamesSnapshot = await getDocs(collection(db, "games"));
   for (let g of gamesSnapshot.docs) {
+    cpt++;
     let p = await getGameTotalPlaytime(g.ref);
     let j = await getGameJoyRate(g.ref);
     games_to_return.push({
@@ -176,7 +178,7 @@ export async function getFirstGamesByPlaytime(numberOfGames) {
     .sort((a, b) => {
       return b.playtime - a.playtime;
     })
-    .slice(0, numberOfGames);
+    .slice(0, numberOfGames == 0 ? cpt : numberOfGames);
 }
 
 async function getGameTotalPlaytime(gameRef) {

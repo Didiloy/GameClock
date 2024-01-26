@@ -40,8 +40,7 @@ const chartData = ref({});
 const chartOptions = ref();
 
 async function init() {
-  let a = await getFirstTeamsByPlaytime(teams.value.length);
-  teams_from_db.value = a;
+  teams_from_db.value = await getFirstTeamsByPlaytime(teams.value.length);
   total_time.value = await getTotalPlaytime();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
@@ -117,6 +116,7 @@ const setChartOptions = () => {
 <style scoped>
 .card {
   background-color: var(--primary-100);
-  width: 70vw;
+  width: 100%;
+  height: 100%;
 }
 </style>
