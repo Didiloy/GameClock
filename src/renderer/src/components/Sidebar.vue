@@ -73,6 +73,16 @@ const items = ref([
       },
     ],
   },
+  {
+    label: "Paramètres",
+    items: [
+      {
+        label: "Jeux",
+        icon: "pi pi-play",
+        route: "/settings/games",
+      },
+    ],
+  },
 ]);
 </script>
 

@@ -30,6 +30,7 @@ import Teams from "./views/Teams.vue";
 import AddTeam from "./views/AddTeam.vue";
 import GeneralStats from "./views/GeneralStats.vue";
 import Team from "./views/Team.vue";
+import GamesSettings from "./views/GamesSettings.vue";
 import { createPinia } from "pinia";
 
 const app = createApp(App);
@@ -64,6 +65,7 @@ const routes = [
   { path: "/team/:name", component: Team },
   { path: "/addteam", component: AddTeam },
   { path: "/stats", component: GeneralStats },
+  { path: "/settings/games", component: GamesSettings },
 ];
 
 const router = createRouter({

@@ -133,6 +133,21 @@ export async function getGames() {
   return gamesList;
 }
 
+export async function modifyGame(name, logo, heroe) {
+  try {
+    const q = query(collection(db, "games"), where("name", "==", name));
+    const gameDocument = (await getDocs(q)).docs[0];
+    await setDoc(doc(db, "games", gameDocument.id), {
+      name: name,
+      logo: logo,
+      heroe: heroe,
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 export async function addImagesToGame(gameName) {
   //get the game in database
   let gameId = "";
