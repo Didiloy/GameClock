@@ -1,11 +1,12 @@
 <template>
   <div class="sgs-container">
     <Card class="card">
+      <template #title
+        ><span class="sgs-title">{{ props.name }}</span></template
+      >
       <template #content>
         <div class="sgs-container">
           <div class="sgs-left">
-            <label for="name">Nom du jeu</label>
-            <InputText id="name" type="text" v-model="name" />
             <label for="logo">Logo du jeu</label>
             <InputText id="logo" type="text" v-model="logo" />
             <label for="heroe">Image du jeu</label>
@@ -104,6 +105,12 @@ async function useModifyGame() {
   align-items: center;
   width: 50%;
   height: 100%;
+}
+
+.sgs-title {
+  color: var(--surface-0);
+  text-shadow: 2px 0 0 #000;
+  font-size: 30px;
 }
 
 label {
