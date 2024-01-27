@@ -2,10 +2,10 @@
   <Card
     class="card"
     :pt="{
-      body: { style: 'height:100%; ' },
+      content: { style: 'height:100%; ' },
     }"
   >
-    <template #title> Classement des jeux en pourcentage </template>
+    <template #subtitle> Classement des jeux en pourcentage </template>
     <template #content>
       <div class="center-pie">
         <Chart
@@ -16,7 +16,7 @@
           :pt="{
             canvas: {
               class: 'p-chart',
-              style: 'height: 280px;',
+              style: 'height: auto; margin-top:10px;',
             },
           }"
         />
@@ -115,17 +115,17 @@ const setChartOptions = () => {
 <style scoped>
 .card {
   background-color: var(--primary-100);
+  width: 100%;
+  height: 100%;
 }
 
 .p-chart {
-  max-height: 100%;
+  height: 100%;
 }
 
 .center-pie {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 100%;
 }
 </style>

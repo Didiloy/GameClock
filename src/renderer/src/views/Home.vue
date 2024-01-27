@@ -1,41 +1,36 @@
 <template>
-  <div class="container">
+  <div class="h-container">
     <Image :src="logo" width="250" class="header" />
-    <div class="graphs">
-      <PlayTimeHome class="play-time"></PlayTimeHome>
-      <GameTimeHome class="play-time"></GameTimeHome>
+    <div class="h-dash">
+      <DashboardView class="dashboard" teamName=""></DashboardView>
     </div>
   </div>
 </template>
 
 <script setup>
 import logo from "../assets/images/icons.png";
-import PlayTimeHome from "../components/PlayTimeHome.vue";
-import GameTimeHome from "../components/GameTimeHome.vue";
-import { ref, onMounted } from "vue";
-
-onMounted(() => {});
+import DashboardView from "../components/DashboardView.vue";
 </script>
 <style scoped>
-.container {
+.h-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.h-dash {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   height: 100%;
-}
-
-.graphs {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   width: 100%;
-  height: 400px;
 }
 
-.play-time {
-  margin-top: 50px;
-  width: 49%;
-  height: 100%;
+.dashboard {
+  width: 100%;
 }
 </style>

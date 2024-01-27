@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Card class="card">
-      <template #title> Classement des équipes par temps de jeu </template>
+      <template #subtitle> Classement des équipes par temps de jeu </template>
       <template #content>
         <Chart
           type="bar"
@@ -10,7 +10,7 @@
           :pt="{
             canvas: {
               class: 'p-chart',
-              style: 'height: 280px;',
+              style: 'height: 100%;',
             },
           }"
         />
