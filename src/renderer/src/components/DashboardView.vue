@@ -2,7 +2,7 @@
   <div class="dv-dashboard">
     <div class="dv-left">
       <PlayTimeHome class="dv-bar-chart"></PlayTimeHome>
-      <PlayTimeHome class="dv-bar-chart-2"></PlayTimeHome>
+      <BarChartAllGames class="dv-radar-chart"></BarChartAllGames>
     </div>
     <div class="dv-right">
       <GameTimeHome class="dv-pie-chart"></GameTimeHome>
@@ -29,6 +29,7 @@
 import PlayTimeHome from "../components/PlayTimeHome.vue";
 import GameTimeHome from "../components/GameTimeHome.vue";
 import LittleCard from "./LittleCard.vue";
+import BarChartAllGames from "../components/BarChartAllGames.vue";
 const props = defineProps(["teamName"]);
 
 import { useStore } from "../store/store";
@@ -119,7 +120,7 @@ function calculateFunPercentage() {
   max-height: 300px;
 }
 
-.dv-bar-chart-2 {
+.dv-radar-chart {
   width: 100%;
   margin-top: 5px;
   max-height: 300px;

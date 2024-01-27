@@ -10,7 +10,7 @@
           :pt="{
             canvas: {
               class: 'p-chart',
-              style: 'height: 100%;',
+              style: 'height: 100%; width: auto;',
             },
           }"
         />
@@ -33,7 +33,6 @@ onMounted(() => {
 
 const store = useStore();
 const { teams } = storeToRefs(store);
-const total_time = ref(0);
 const teams_from_db = ref([]);
 const teams_name = computed(() => {
   let arr = [];
@@ -51,21 +50,8 @@ const chartOptions = ref();
 
 async function init() {
   teams_from_db.value = await getFirstTeamsByPlaytime(teams.value.length);
-  total_time.value = await getTotalPlaytime();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
-}
-
-function calculatePercentage(playtime) {
-  return ((playtime / total_time.value) * 100).toFixed(2);
-}
-
-function convertMinuteToHoursMinute(minute) {
-  return (
-    (minute - (minute % 60)) / 60 +
-    "h" +
-    (minute % 60 == 0 ? "" : (minute % 60) + "min")
-  );
 }
 
 const setChartData = () => {

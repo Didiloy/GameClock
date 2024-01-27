@@ -206,6 +206,41 @@ async function getGameTotalPlaytime(gameRef) {
   return acc;
 }
 
+export async function getGameSessionsNumber(gameName) {
+  const q_game = query(collection(db, "games"), where("name", "==", gameName));
+  const gameRef = (await getDocs(q_game)).docs[0].ref;
+  const q_sessions = query(
+    collection(db, "sessions"),
+    where("game", "==", gameRef)
+  );
+  const sessions_on_game = await getDocs(q_sessions);
+  let acc = sessions_on_game.docs.length;
+  return acc;
+}
+
+export async function getGameAvgDuration(gameName) {
+  const q_game = query(collection(db, "games"), where("name", "==", gameName));
+  const gameRef = (await getDocs(q_game)).docs[0].ref;
+  const q_sessions = query(
+    collection(db, "sessions"),
+    where("game", "==", gameRef)
+  );
+  const sessions_on_game = await getDocs(q_sessions);
+  let sessions_duration = [];
+  for (const session of sessions_on_game.docs) {
+    sessions_duration.push(session.data().duration);
+  }
+  const average = (array) =>
+    array.length == 0 ? 0 : array.reduce((a, b) => a + b) / array.length;
+  return average(sessions_duration).toFixed(2);
+}
+
+export async function getGameCoolPercentage(gameName) {
+  const q_game = query(collection(db, "games"), where("name", "==", gameName));
+  const gameRef = (await getDocs(q_game)).docs[0].ref;
+  return await getGameJoyRate(gameRef);
+}
+
 async function getGameJoyRate(gameRef) {
   let was_cool = 0;
   let cpt = 0;
