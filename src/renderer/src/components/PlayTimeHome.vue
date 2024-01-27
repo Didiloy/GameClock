@@ -69,6 +69,7 @@ function convertMinuteToHoursMinute(minute) {
 }
 
 const setChartData = () => {
+  const documentStyle = getComputedStyle(document.body);
   return {
     labels: teams_name.value,
     datasets: [
@@ -76,8 +77,17 @@ const setChartData = () => {
         label: "Temps de jeu en minute",
         data: teams_playtime.value,
         backgroundColor: [
-          "rgba(252, 140, 173, 0.4)",
-          "rgba(46, 169, 223, 0.4)",
+          documentStyle.getPropertyValue("--indigo-500"),
+          documentStyle.getPropertyValue("--cyan-500"),
+          documentStyle.getPropertyValue("--pink-500"),
+          documentStyle.getPropertyValue("--teal-500"),
+          documentStyle.getPropertyValue("--blue-500"),
+          documentStyle.getPropertyValue("--bluegray-500"),
+          documentStyle.getPropertyValue("--yellow-500"),
+          documentStyle.getPropertyValue("--green-500"),
+          documentStyle.getPropertyValue("--red-500"),
+          documentStyle.getPropertyValue("--orange-500"),
+          documentStyle.getPropertyValue("--purple-500"),
         ],
         borderWidth: 1,
       },
