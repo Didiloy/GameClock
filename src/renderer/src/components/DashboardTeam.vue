@@ -29,6 +29,22 @@
         class="dv-pie-chart"
         :teamName="props.teamName"
       ></GameTimeHome>
+      <Card class="dt-card">
+        <template #subtitle> Top 3 des jeux les plus joués </template>
+        <template #content>
+          <div class="dt-little-game-card">
+            <LittleGameCard
+              v-for="i in 3"
+              :key="i"
+              :gameName="top_games[i - 1] ? top_games[i - 1].name : ''"
+              :playtime="top_games[i - 1] ? top_games[i - 1].playtime : ''"
+              :joyRate="top_games[i - 1] ? top_games[i - 1].joyRate : ''"
+              :heroe="top_games[i - 1] ? top_games[i - 1].heroe : ''"
+              :icon="top_games[i - 1] ? top_games[i - 1].icon : ''"
+            ></LittleGameCard>
+          </div>
+        </template>
+      </Card>
     </div>
   </div>
 </template>
@@ -36,11 +52,13 @@
 import PlayTimeHome from "../components/PlayTimeHome.vue";
 import GameTimeHome from "../components/GameTimeHome.vue";
 import LittleCard from "./LittleCard.vue";
+import LittleGameCard from "./LittleGameCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
 import {
   getSumSessionsDuration,
   getNumberOfGamePlayed,
   calculateTeamRankingByDuration,
+  getFirstGamesByPlaytime,
 } from "../database/database";
 const props = defineProps(["teamName"]);
 
@@ -59,12 +77,15 @@ watch(sessions, () => {
   init();
 });
 
+const top_games = ref([]);
+
 async function init() {
   total_time.value = calculateTotalTime();
   team_time.value = await calculateTeamTime(props.teamName);
   number_of_games.value = await getNumberOfGames(props.teamName);
   ranking.value = await calculateRanking(props.teamName);
-  fun_percentage.value = calculateFunPercentage();
+  //   fun_percentage.value = calculateFunPercentage();
+  top_games.value = await getFirstGamesByPlaytime(3, props.teamName);
 }
 
 const total_time = ref(0);
@@ -170,6 +191,20 @@ function calculateFunPercentage() {
   align-items: center;
   width: 100%;
   height: 100%;
+}
+
+.dt-card {
+  margin-top: 5px;
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-100);
+}
+
+.dt-little-game-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .mr-5 {

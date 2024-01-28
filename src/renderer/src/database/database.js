@@ -204,7 +204,7 @@ export async function getFirstGamesByPlaytime(numberOfGames, teamName) {
     for (let g of gamesSnapshot.docs) {
       cpt++;
       let p = await getTeamGameTotalPlaytime(g.ref, teamRef);
-      let j = await getGameJoyRate(g.ref);
+      let j = await getGameJoyRate(g.ref, teamRef);
       games_to_return.push({
         name: g.data().name,
         playtime: p,
@@ -322,10 +322,19 @@ export async function getGameCoolPercentage(gameName) {
   return await getGameJoyRate(gameRef);
 }
 
-async function getGameJoyRate(gameRef) {
+async function getGameJoyRate(gameRef, teamRef) {
   let was_cool = 0;
   let cpt = 0;
-  const q = query(collection(db, "sessions"), where("game", "==", gameRef));
+  let q;
+  if (teamRef == "" || teamRef == undefined) {
+    q = query(collection(db, "sessions"), where("game", "==", gameRef));
+  } else {
+    q = query(
+      collection(db, "sessions"),
+      where("game", "==", gameRef),
+      where("team", "==", teamRef)
+    );
+  }
   const sessions_on_game = await getDocs(q);
   for (const session of sessions_on_game.docs) {
     cpt++;
