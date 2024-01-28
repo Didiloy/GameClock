@@ -1,16 +1,15 @@
 <template>
-  <div class="dv-dashboard">
+  <div class="dt-dashboard">
     <div class="dv-left">
-      <PlayTimeHome class="dv-bar-chart"></PlayTimeHome>
-      <BarChartAllGames class="dv-radar-chart"></BarChartAllGames>
-    </div>
-    <div class="dv-right">
-      <GameTimeHome class="dv-pie-chart"></GameTimeHome>
       <div class="littles-card">
         <LittleCard
           class="mr-5"
-          :name="total_time_hours"
-          value="passées à jouer"
+          :name="team_time_hours"
+          :value="
+            'passées à jouer. Soit ' +
+            percentage_total_time +
+            'du temps total de jeu'
+          "
         ></LittleCard>
         <LittleCard
           class="mr-5"
@@ -18,10 +17,18 @@
           value="jeux joués"
         ></LittleCard>
         <LittleCard
-          :name="fun_percentage_computed"
-          value="de plaisir a jouer"
+          :name="ranking_computed"
+          value="position de l'équipe dans le classement par temps de jeu"
         ></LittleCard>
       </div>
+      <PlayTimeHome class="dv-bar-chart"></PlayTimeHome>
+      <BarChartAllGames class="dv-radar-chart"></BarChartAllGames>
+    </div>
+    <div class="dv-right">
+      <GameTimeHome
+        class="dv-pie-chart"
+        :teamName="props.teamName"
+      ></GameTimeHome>
     </div>
   </div>
 </template>
@@ -30,12 +37,17 @@ import PlayTimeHome from "../components/PlayTimeHome.vue";
 import GameTimeHome from "../components/GameTimeHome.vue";
 import LittleCard from "./LittleCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
+import {
+  getSumSessionsDuration,
+  getNumberOfGamePlayed,
+  calculateTeamRankingByDuration,
+} from "../database/database";
 const props = defineProps(["teamName"]);
 
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 const store = useStore();
-const { sessions, games } = storeToRefs(store);
+const { sessions, games, teams } = storeToRefs(store);
 
 import { computed, ref, onMounted, watch } from "vue";
 
@@ -49,13 +61,19 @@ watch(sessions, () => {
 
 async function init() {
   total_time.value = calculateTotalTime();
-  number_of_games.value = getNumberOfGames();
+  team_time.value = await calculateTeamTime(props.teamName);
+  number_of_games.value = await getNumberOfGames(props.teamName);
+  ranking.value = await calculateRanking(props.teamName);
   fun_percentage.value = calculateFunPercentage();
 }
 
 const total_time = ref(0);
-const total_time_hours = computed(() => {
-  return convertMinuteToHoursMinute(total_time.value);
+const team_time = ref(0);
+const team_time_hours = computed(() => {
+  return convertMinuteToHoursMinute(team_time.value);
+});
+const percentage_total_time = computed(() => {
+  return ((team_time.value / total_time.value) * 100).toFixed(2) + "%";
 });
 
 function convertMinuteToHoursMinute(minute) {
@@ -71,9 +89,22 @@ function calculateTotalTime() {
   return cpt;
 }
 
+async function calculateTeamTime(name) {
+  return await getSumSessionsDuration(name);
+}
+
 const number_of_games = ref(0);
-function getNumberOfGames() {
-  return games.value.length;
+async function getNumberOfGames(teamName) {
+  return await getNumberOfGamePlayed(teamName);
+}
+
+const ranking = ref(0);
+const ranking_computed = computed(() => {
+  return "#" + ranking.value;
+});
+
+async function calculateRanking(teamName) {
+  return await calculateTeamRankingByDuration(teamName);
 }
 
 const fun_percentage = ref(0);
@@ -89,7 +120,7 @@ function calculateFunPercentage() {
 }
 </script>
 <style scoped>
-.dv-dashboard {
+.dt-dashboard {
   display: flex;
   flex-direction: row;
   justify-content: start;
@@ -118,6 +149,7 @@ function calculateFunPercentage() {
 .dv-bar-chart {
   width: 100%;
   max-height: 300px;
+  margin-top: 5px;
 }
 
 .dv-radar-chart {
@@ -134,11 +166,10 @@ function calculateFunPercentage() {
 .littles-card {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 100%;
-  margin-top: 5px;
 }
 
 .mr-5 {

@@ -25,10 +25,11 @@
   </Card>
 </template>
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { getFirstGamesByPlaytime } from "../database/database.js";
+const props = defineProps(["teamName"]);
 
 onMounted(() => {
   init();
@@ -36,6 +37,10 @@ onMounted(() => {
 
 const store = useStore();
 const { games } = storeToRefs(store);
+watch(games, () => {
+  init();
+});
+
 const games_from_db = ref([]);
 const games_name = computed(() => {
   let arr = [];
@@ -52,7 +57,10 @@ const chartData = ref({});
 const chartOptions = ref();
 
 async function init() {
-  games_from_db.value = await getFirstGamesByPlaytime(games.value.length);
+  games_from_db.value = await getFirstGamesByPlaytime(
+    games.value.length,
+    props.teamName
+  );
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
 }

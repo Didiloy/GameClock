@@ -2,14 +2,14 @@
   <div class="h-container">
     <Image :src="logo" width="250" class="header" />
     <div class="h-dash">
-      <DashboardView class="dashboard" teamName=""></DashboardView>
+      <Dashboard class="dashboard" teamName=""></Dashboard>
     </div>
   </div>
 </template>
 
 <script setup>
 import logo from "../assets/images/icons.png";
-import DashboardView from "../components/DashboardView.vue";
+import Dashboard from "../components/Dashboard.vue";
 </script>
 <style scoped>
 .h-container {

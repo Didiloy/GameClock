@@ -26,6 +26,7 @@ import { useRouter } from "vue-router";
 import { getDoc } from "firebase/firestore";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
+import { getSumSessionsDuration } from "../database/database";
 
 onMounted(() => {
   init();
@@ -39,22 +40,10 @@ const teamItem = ref([]);
 
 const init = async () => {
   teams.value.forEach(async (v) => {
-    let playtime = await calculateTeamPlayTime(v.name);
+    let playtime = await getSumSessionsDuration(v.name);
     teamItem.value.push({ name: v.name, playtime: playtime });
   });
 };
-
-async function calculateTeamPlayTime(teamName) {
-  let playtime = 0;
-  for (const s of sessions.value) {
-    let teamDetails = (await getDoc(s.team)).data();
-    if (teamDetails == undefined) continue;
-    if (teamDetails.name == teamName) {
-      playtime += s.duration;
-    }
-  }
-  return playtime;
-}
 
 function convertMinuteToHoursMinute(minute) {
   return (minute - (minute % 60)) / 60 + "h" + (minute % 60) + "min";

@@ -22,10 +22,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import {
-  getFirstTeamsByPlaytime,
-  getTotalPlaytime,
-} from "../database/database.js";
+import { getFirstTeamsByPlaytime } from "../database/database.js";
 
 onMounted(() => {
   init();

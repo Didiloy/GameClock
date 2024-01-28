@@ -17,6 +17,7 @@ import Sidebar from "./components/Sidebar.vue";
 .app-container {
   display: flex;
   height: 100%;
+  width: 100%;
 }
 
 :global(.main-background) {
@@ -25,8 +26,9 @@ import Sidebar from "./components/Sidebar.vue";
 
 .content {
   margin-left: 200px;
-  padding: 2px;
+  padding: 5px;
   height: 100%;
+  width: 100%;
   flex: 1; /* Takes remaining width */
 }
 </style>

@@ -9,6 +9,7 @@ import {
   where,
   sum,
   getAggregateFromServer,
+  and,
 } from "firebase/firestore";
 import { getGameId, getGameLogo, getGameHeroe } from "../api/steamgriddb";
 
@@ -123,6 +124,21 @@ export async function addSession(teamName, gameName, duration, was_cool) {
   }
 }
 
+export async function getSumSessionsDuration(teamName) {
+  const q_team = query(collection(db, "teams"), where("name", "==", teamName));
+  const teamRef = (await getDocs(q_team)).docs[0].ref;
+  const q_sessions = query(
+    collection(db, "sessions"),
+    where("team", "==", teamRef)
+  );
+  const sessions_on_team = await getDocs(q_sessions);
+  let total_duration = 0;
+  for (let s in sessions_on_team.docs) {
+    total_duration += sessions_on_team.docs[s].data().duration;
+  }
+  return total_duration;
+}
+
 //Games
 export async function getGames() {
   const gamesList = [];
@@ -173,7 +189,53 @@ export async function addImagesToGame(gameName) {
   });
 }
 
-export async function getFirstGamesByPlaytime(numberOfGames) {
+export async function getFirstGamesByPlaytime(numberOfGames, teamName) {
+  if (teamName == "" || teamName == undefined) {
+    return await getFirstGamesByPlaytimeWithoutTeam(numberOfGames);
+  } else {
+    const q_team = query(
+      collection(db, "teams"),
+      where("name", "==", teamName)
+    );
+    const teamRef = (await getDocs(q_team)).docs[0].ref;
+    let games_to_return = [];
+    let cpt = 0;
+    const gamesSnapshot = await getDocs(collection(db, "games"));
+    for (let g of gamesSnapshot.docs) {
+      cpt++;
+      let p = await getTeamGameTotalPlaytime(g.ref, teamRef);
+      let j = await getGameJoyRate(g.ref);
+      games_to_return.push({
+        name: g.data().name,
+        playtime: p,
+        heroe: g.data().heroe,
+        joyRate: j,
+        icon: g.data().logo,
+      });
+    }
+    return games_to_return
+      .sort((a, b) => {
+        return b.playtime - a.playtime;
+      })
+      .slice(0, numberOfGames == 0 ? cpt : numberOfGames);
+  }
+}
+
+async function getTeamGameTotalPlaytime(gameRef, teamRef) {
+  let acc = 0;
+  const q = query(
+    collection(db, "sessions"),
+    where("game", "==", gameRef),
+    where("team", "==", teamRef)
+  );
+  const sessions_on_game = await getDocs(q);
+  for (const session of sessions_on_game.docs) {
+    acc += session.data().duration;
+  }
+  return acc;
+}
+
+export async function getFirstGamesByPlaytimeWithoutTeam(numberOfGames) {
   let games_to_return = [];
   let cpt = 0;
   const gamesSnapshot = await getDocs(collection(db, "games"));
@@ -204,6 +266,25 @@ async function getGameTotalPlaytime(gameRef) {
     acc += session.data().duration;
   }
   return acc;
+}
+
+export async function getNumberOfGamePlayed(teamName) {
+  const q_team = query(collection(db, "teams"), where("name", "==", teamName));
+  const teamRef = (await getDocs(q_team)).docs[0].ref;
+  const q_sessions = query(
+    collection(db, "sessions"),
+    where("team", "==", teamRef)
+  );
+  const sessions_on_team = await getDocs(q_sessions);
+  let numberOfGames = 0;
+  let played_game = [];
+  for (let s in sessions_on_team.docs) {
+    if (!played_game.includes(sessions_on_team.docs[s].data().game.id)) {
+      numberOfGames++;
+      played_game.push(sessions_on_team.docs[s].data().game.id);
+    }
+  }
+  return numberOfGames;
 }
 
 export async function getGameSessionsNumber(gameName) {
@@ -263,4 +344,27 @@ export async function getTotalPlaytime() {
     total_playtime: sum("duration"),
   });
   return snapshot.data().total_playtime;
+}
+
+export async function calculateTeamRankingByDuration(teamName) {
+  let teamsList = [];
+  const teamsSnapshot = await getDocs(collection(db, "teams"));
+  teamsSnapshot.forEach((doc) => {
+    teamsList.push(doc);
+  });
+  let team_name_session_number = [];
+  for (let team of teamsList) {
+    let team_name = team.data().name;
+    let team_playtime = await getSumSessionsDuration(team_name);
+    team_name_session_number.push({
+      team_name: team_name,
+      team_playtime: team_playtime,
+    });
+  }
+  team_name_session_number.sort((a, b) => {
+    return b.team_playtime - a.team_playtime;
+  });
+  let index =
+    team_name_session_number.findIndex((e) => e.team_name == teamName) + 1; //La première position est 1 et non 0
+  return index;
 }

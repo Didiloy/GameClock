@@ -118,7 +118,7 @@ async function addNewSession() {
 </script>
 <style scoped>
 .component-container {
-  width: 70vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -133,7 +133,7 @@ async function addNewSession() {
 }
 .card {
   background-color: var(--primary-100);
-  width: 70vw;
+  width: 100%;
 }
 
 .content-container {
