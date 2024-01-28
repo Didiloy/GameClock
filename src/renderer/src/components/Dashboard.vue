@@ -99,7 +99,7 @@ function calculateFunPercentage() {
 }
 
 .dv-left {
-  width: 66%;
+  width: 60%;
   margin-right: 5px;
   display: flex;
   flex-direction: column;
@@ -108,7 +108,7 @@ function calculateFunPercentage() {
 }
 
 .dv-right {
-  width: 33%;
+  width: 48%;
   display: flex;
   flex-direction: column;
   justify-content: center;
