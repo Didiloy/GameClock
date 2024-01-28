@@ -27,7 +27,7 @@ import {
   getGameAvgDuration,
   getGameCoolPercentage,
 } from "../database/database.js";
-
+const props = defineProps(["teamName"]);
 onMounted(() => {
   init();
 });
@@ -44,7 +44,7 @@ const sessions_number = ref([]);
 const getSessionNumber = async () => {
   let res = [];
   for (let g of games.value) {
-    res.push(await getGameSessionsNumber(g.name));
+    res.push(await getGameSessionsNumber(g.name, props.teamName));
   }
   return res;
 };
@@ -53,7 +53,7 @@ const avg_duration = ref([]);
 const getAverageDuration = async () => {
   let res = [];
   for (let g of games.value) {
-    res.push(await getGameAvgDuration(g.name));
+    res.push(await getGameAvgDuration(g.name, props.teamName));
   }
   return res;
 };
@@ -62,7 +62,7 @@ const cool_percentage = ref([]);
 const getCoolPercentage = async () => {
   let res = [];
   for (let g of games.value) {
-    res.push(await getGameCoolPercentage(g.name));
+    res.push(await getGameCoolPercentage(g.name, props.teamName));
   }
   return res;
 };
@@ -78,6 +78,14 @@ async function init() {
   sessions_number.value = await getSessionNumber();
   avg_duration.value = await getAverageDuration();
   cool_percentage.value = await getCoolPercentage();
+  for (let i = games_names.value.length; i >= 0; i--) {
+    if (sessions_number.value[i] == 0) {
+      games_names.value.splice(i, 1);
+      sessions_number.value.splice(i, 1);
+      avg_duration.value.splice(i, 1);
+      cool_percentage.value.splice(i, 1);
+    }
+  }
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
 }

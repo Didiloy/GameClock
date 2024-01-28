@@ -22,7 +22,10 @@
         ></LittleCard>
       </div>
       <PlayTimeHome class="dv-bar-chart"></PlayTimeHome>
-      <BarChartAllGames class="dv-radar-chart"></BarChartAllGames>
+      <BarChartAllGames
+        class="dv-radar-chart"
+        :teamName="props.teamName"
+      ></BarChartAllGames>
     </div>
     <div class="dv-right">
       <GameTimeHome
@@ -84,7 +87,6 @@ async function init() {
   team_time.value = await calculateTeamTime(props.teamName);
   number_of_games.value = await getNumberOfGames(props.teamName);
   ranking.value = await calculateRanking(props.teamName);
-  //   fun_percentage.value = calculateFunPercentage();
   top_games.value = await getFirstGamesByPlaytime(3, props.teamName);
 }
 
@@ -128,17 +130,20 @@ async function calculateRanking(teamName) {
   return await calculateTeamRankingByDuration(teamName);
 }
 
-const fun_percentage = ref(0);
-const fun_percentage_computed = computed(() => {
-  return fun_percentage.value.toFixed(2) + "%";
-});
-function calculateFunPercentage() {
-  let cpt = 0;
-  sessions.value.forEach((element) => {
-    if (element.was_cool) cpt++;
-  });
-  return (cpt / sessions.value.length) * 100;
-}
+const monthNames = [
+  "Jan",
+  "Fev",
+  "Mar",
+  "Avr",
+  "Mai",
+  "Juin",
+  "Jui",
+  "Aou",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 </script>
 <style scoped>
 .dt-dashboard {
