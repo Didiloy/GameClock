@@ -34,7 +34,11 @@ function convertMinuteToHoursMinute(minute) {
   return (
     (minute - (minute % 60)) / 60 +
     " H " +
-    (minute % 60 == 0 ? "" : minute % 60) +
+    (minute % 60 == 0
+      ? ""
+      : minute % 60 < 10
+        ? "0" + (minute % 60)
+        : minute % 60) +
     " M "
   );
 }
