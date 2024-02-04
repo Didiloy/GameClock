@@ -21,7 +21,10 @@
           value="position de l'équipe dans le classement par temps de jeu"
         ></LittleCard>
       </div>
-      <PlayTimeHome class="dv-bar-chart"></PlayTimeHome>
+      <LineChartGameByMonth
+        class="dv-bar-chart"
+        :teamName="props.teamName"
+      ></LineChartGameByMonth>
       <BarChartAllGames
         class="dv-radar-chart"
         :teamName="props.teamName"
@@ -52,7 +55,7 @@
   </div>
 </template>
 <script setup>
-import PlayTimeHome from "../components/PlayTimeHome.vue";
+import LineChartGameByMonth from "./LineChartGameByMonth.vue";
 import GameTimeHome from "../components/GameTimeHome.vue";
 import LittleCard from "./LittleCard.vue";
 import LittleGameCard from "./LittleGameCard.vue";

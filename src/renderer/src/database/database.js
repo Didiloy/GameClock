@@ -18,7 +18,8 @@ export async function getTeams() {
   const teamsList = [];
   const teamsSnapshot = await getDocs(collection(db, "teams"));
   teamsSnapshot.forEach((doc) => {
-    teamsList.push(doc.data());
+    let doc_id = doc.id;
+    teamsList.push({ ...doc.data(), id: doc_id });
   });
   return teamsList;
 }
@@ -73,7 +74,8 @@ export const getSessions = async () => {
   const sessionsList = [];
   const sessionsSnapshot = await getDocs(collection(db, "sessions"));
   sessionsSnapshot.forEach((doc) => {
-    sessionsList.push(doc.data());
+    let doc_id = doc.id;
+    sessionsList.push({ ...doc.data(), id: doc_id });
   });
   return sessionsList;
 };
@@ -186,7 +188,8 @@ export async function getGames() {
   const gamesList = [];
   const gamesSnapshot = await getDocs(collection(db, "games"));
   gamesSnapshot.forEach((doc) => {
-    gamesList.push(doc.data());
+    let doc_id = doc.id;
+    gamesList.push({ ...doc.data(), id: doc_id });
   });
   return gamesList;
 }
