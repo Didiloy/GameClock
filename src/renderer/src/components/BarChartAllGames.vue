@@ -22,18 +22,13 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import {
-  getGameSessionsNumber,
-  getGameAvgDuration,
-  getGameCoolPercentage,
-} from "../database/database.js";
 const props = defineProps(["teamName"]);
 onMounted(() => {
   init();
 });
 
 const store = useStore();
-const { games } = storeToRefs(store);
+const { games, sessions, teams } = storeToRefs(store);
 
 const games_names = computed(() => {
   let res = [];
@@ -44,16 +39,56 @@ const sessions_number = ref([]);
 const getSessionNumber = async () => {
   let res = [];
   for (let g of games.value) {
-    res.push(await getGameSessionsNumber(g.name, props.teamName));
+    let acc = 0;
+    if (props.teamName) {
+      for (let s of sessions.value) {
+        if (s.game.id == g.id && s.team.id == id_of_team.value) {
+          acc += 1;
+        }
+      }
+    } else {
+      for (let s of sessions.value) {
+        if (s.game.id == g.id) {
+          acc += 1;
+        }
+      }
+    }
+    res.push(acc);
   }
   return res;
 };
+
+const id_of_team = ref("");
+function setIdOfTeam() {
+  for (let t of teams.value) {
+    if (t.name == props.teamName) {
+      id_of_team.value = t.id;
+    }
+  }
+}
 
 const avg_duration = ref([]);
 const getAverageDuration = async () => {
   let res = [];
   for (let g of games.value) {
-    res.push(await getGameAvgDuration(g.name, props.teamName));
+    let acc = 0;
+    let ss_num = 0;
+    if (props.teamName) {
+      for (let s of sessions.value) {
+        if (s.game.id == g.id && s.team.id == id_of_team.value) {
+          acc += s.duration;
+          ss_num++;
+        }
+      }
+    } else {
+      for (let s of sessions.value) {
+        if (s.game.id == g.id) {
+          acc += s.duration;
+          ss_num++;
+        }
+      }
+    }
+    res.push(acc / ss_num);
   }
   return res;
 };
@@ -62,7 +97,24 @@ const cool_percentage = ref([]);
 const getCoolPercentage = async () => {
   let res = [];
   for (let g of games.value) {
-    res.push(await getGameCoolPercentage(g.name, props.teamName));
+    let acc = 0;
+    let ss_num = 0;
+    if (props.teamName) {
+      for (let s of sessions.value) {
+        if (s.game.id == g.id && s.team.id == id_of_team.value) {
+          acc += s.was_cool ? 1 : 0;
+          ss_num++;
+        }
+      }
+    } else {
+      for (let s of sessions.value) {
+        if (s.game.id == g.id) {
+          acc += s.was_cool ? 1 : 0;
+          ss_num++;
+        }
+      }
+    }
+    res.push((acc / ss_num) * 100);
   }
   return res;
 };
@@ -75,6 +127,7 @@ const chartData = ref({});
 const chartOptions = ref();
 
 async function init() {
+  setIdOfTeam();
   sessions_number.value = await getSessionNumber();
   avg_duration.value = await getAverageDuration();
   cool_percentage.value = await getCoolPercentage();

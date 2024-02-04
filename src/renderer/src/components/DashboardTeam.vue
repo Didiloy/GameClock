@@ -22,11 +22,11 @@
         ></LittleCard>
       </div>
       <LineChartGameByMonth
-        class="dv-bar-chart"
+        class="dv-chart"
         :teamName="props.teamName"
       ></LineChartGameByMonth>
       <BarChartAllGames
-        class="dv-radar-chart"
+        class="dv-chart"
         :teamName="props.teamName"
       ></BarChartAllGames>
     </div>
@@ -175,16 +175,10 @@ const monthNames = [
   align-items: center;
 }
 
-.dv-bar-chart {
+.dv-chart {
   width: 100%;
   max-height: 300px;
   margin-top: 5px;
-}
-
-.dv-radar-chart {
-  width: 100%;
-  margin-top: 5px;
-  max-height: 300px;
 }
 
 .dv-pie-chart {
