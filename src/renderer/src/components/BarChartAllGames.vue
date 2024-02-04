@@ -118,7 +118,7 @@ const setChartData = () => {
         backgroundColor: documentStyle.getPropertyValue("--pink-500"),
       },
       {
-        label: "Plaisir a jouer en(%)",
+        label: "Plaisir à jouer en(%)",
         borderColor: documentStyle.getPropertyValue("--orange-400"),
         pointBackgroundColor: documentStyle.getPropertyValue("--orange-400"),
         pointBorderColor: documentStyle.getPropertyValue("--orange-400"),

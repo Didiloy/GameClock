@@ -19,7 +19,7 @@
         ></LittleCard>
         <LittleCard
           :name="fun_percentage_computed"
-          value="de plaisir a jouer"
+          value="de plaisir à jouer"
         ></LittleCard>
       </div>
     </div>
