@@ -1,4 +1,4 @@
-# gameclock
+# GameClock
 
 An Electron application with Vue and Firebase.
 Track your Game time with your friends !

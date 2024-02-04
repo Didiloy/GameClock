@@ -8,6 +8,10 @@
         @click="navigateToTeam(item.name)"
       >
         <div class="team-name">
+          <img
+            :src="item.logo"
+            style="max-width: 60px; max-height: 60px; margin-right: 10px"
+          />
           <h3>{{ item.name }}</h3>
         </div>
         <div class="team-playtime">
@@ -23,10 +27,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { getDoc } from "firebase/firestore";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import { getSumSessionsDuration } from "../database/database";
+import { getSumSessionsDurationAndMostPlayedLogo } from "../database/database";
 
 onMounted(() => {
   init();
@@ -40,8 +43,12 @@ const teamItem = ref([]);
 
 const init = async () => {
   teams.value.forEach(async (v) => {
-    let playtime = await getSumSessionsDuration(v.name);
-    teamItem.value.push({ name: v.name, playtime: playtime });
+    let playtime = await getSumSessionsDurationAndMostPlayedLogo(v.name);
+    teamItem.value.push({
+      name: v.name,
+      playtime: playtime.duration,
+      logo: playtime.logo,
+    });
   });
 };
 
@@ -70,6 +77,7 @@ function navigateToTeam(teamName) {
 
 .team-item {
   width: 750px;
+  height: 75px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -95,7 +103,7 @@ function navigateToTeam(teamName) {
 }
 
 .team-name {
-  width: 200px;
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: start;
