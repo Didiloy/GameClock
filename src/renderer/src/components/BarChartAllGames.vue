@@ -10,7 +10,7 @@
           :pt="{
             canvas: {
               class: 'p-chart',
-              style: 'height: 100%;',
+              style: 'height: 100%; width: auto',
             },
           }"
         />
@@ -19,24 +19,30 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, reactive, onMounted, computed, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 const props = defineProps(["teamName"]);
+const store = useStore();
+const { games, sessions, teams } = storeToRefs(store);
 onMounted(() => {
   init();
 });
 
-const store = useStore();
-const { games, sessions, teams } = storeToRefs(store);
-
-const games_names = computed(() => {
-  let res = [];
-  games.value.map((g) => res.push(g.name));
-  return res;
+watch([games, sessions, teams], () => {
+  init();
 });
+
+const games_names = ref([]);
+const getGamesNames = () => {
+  let res = [];
+  games.value.map((g) =>
+    res.push(g.name.length > 10 ? g.name.slice(0, 10) + "..." : g.name)
+  );
+  return res;
+};
 const sessions_number = ref([]);
-const getSessionNumber = async () => {
+const getSessionNumber = () => {
   let res = [];
   for (let g of games.value) {
     let acc = 0;
@@ -68,7 +74,7 @@ function setIdOfTeam() {
 }
 
 const avg_duration = ref([]);
-const getAverageDuration = async () => {
+const getAverageDuration = () => {
   let res = [];
   for (let g of games.value) {
     let acc = 0;
@@ -94,7 +100,7 @@ const getAverageDuration = async () => {
 };
 
 const cool_percentage = ref([]);
-const getCoolPercentage = async () => {
+const getCoolPercentage = () => {
   let res = [];
   for (let g of games.value) {
     let acc = 0;
@@ -119,18 +125,15 @@ const getCoolPercentage = async () => {
   return res;
 };
 
-watch(games, () => {
-  init();
-});
-
 const chartData = ref({});
 const chartOptions = ref();
 
-async function init() {
+function init() {
   setIdOfTeam();
-  sessions_number.value = await getSessionNumber();
-  avg_duration.value = await getAverageDuration();
-  cool_percentage.value = await getCoolPercentage();
+  games_names.value = getGamesNames();
+  sessions_number.value = getSessionNumber();
+  avg_duration.value = getAverageDuration();
+  cool_percentage.value = getCoolPercentage();
   for (let i = games_names.value.length; i >= 0; i--) {
     if (sessions_number.value[i] == 0) {
       games_names.value.splice(i, 1);
