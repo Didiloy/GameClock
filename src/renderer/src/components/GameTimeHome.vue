@@ -77,6 +77,7 @@ function setGamesNameAndPlaytime() {
     }
   }
   temp_games.sort((a, b) => b.playtime - a.playtime);
+  temp_games = temp_games.filter((g) => g.playtime > 0);
   games_name.value = temp_games.map((g) => g.name);
   games_playtime.value = temp_games.map((g) => g.playtime);
 }
