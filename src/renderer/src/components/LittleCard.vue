@@ -29,6 +29,7 @@ const props = defineProps(["name", "value", "iconName"]);
   flex-direction: row;
   justify-content: start;
   align-items: center;
+  color: var(--primary-color);
 }
 
 .lc-title {

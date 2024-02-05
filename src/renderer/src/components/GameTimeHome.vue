@@ -28,39 +28,65 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import { getFirstGamesByPlaytime } from "../database/database.js";
 const props = defineProps(["teamName"]);
+const store = useStore();
+const { games, sessions, teams } = storeToRefs(store);
 
 onMounted(() => {
   init();
 });
 
-const store = useStore();
-const { games } = storeToRefs(store);
-watch(games, () => {
+watch([games, sessions, teams], () => {
   init();
 });
 
-const games_from_db = ref([]);
-const games_name = computed(() => {
-  let arr = [];
-  games_from_db.value.map((game) => arr.push(game.name));
-  return arr;
-});
-const games_playtime = computed(() => {
-  let arr = [];
-  games_from_db.value.map((game) => arr.push(game.playtime));
-  return arr;
-});
+const id_of_team = ref("");
+function setIdOfTeam() {
+  for (let t of teams.value) {
+    if (t.name == props.teamName) {
+      id_of_team.value = t.id;
+    }
+  }
+}
+
+const games_name = ref([]);
+
+const games_playtime = ref([]);
+
+function setGamesNameAndPlaytime() {
+  let temp_games = [];
+  if (id_of_team.value) {
+    for (let g of games.value) {
+      let acc = 0;
+      for (let s of sessions.value) {
+        if (s.team.id == id_of_team.value && s.game.id == g.id) {
+          acc += s.duration;
+        }
+      }
+      temp_games.push({ name: g.name, playtime: acc });
+    }
+  } else {
+    for (let g of games.value) {
+      let acc = 0;
+      for (let s of sessions.value) {
+        if (s.game.id == g.id) {
+          acc += s.duration;
+        }
+      }
+      temp_games.push({ name: g.name, playtime: acc });
+    }
+  }
+  temp_games.sort((a, b) => b.playtime - a.playtime);
+  games_name.value = temp_games.map((g) => g.name);
+  games_playtime.value = temp_games.map((g) => g.playtime);
+}
 
 const chartData = ref({});
 const chartOptions = ref();
 
 async function init() {
-  games_from_db.value = await getFirstGamesByPlaytime(
-    games.value.length,
-    props.teamName
-  );
+  setIdOfTeam();
+  setGamesNameAndPlaytime();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
 }
