@@ -9,15 +9,18 @@
       <div class="littles-card">
         <LittleCard
           class="mr-5"
+          iconName="pi pi-hourglass"
           :name="total_time_hours"
           value="passées à jouer"
         ></LittleCard>
         <LittleCard
           class="mr-5"
+          iconName="pi pi-sort-amount-up"
           :name="number_of_games"
           value="jeux joués"
         ></LittleCard>
         <LittleCard
+          iconName="pi pi-heart-fill"
           :name="fun_percentage_computed"
           value="de plaisir à jouer"
         ></LittleCard>

@@ -4,6 +4,7 @@
       <div class="littles-card">
         <LittleCard
           class="mr-5"
+          iconName="pi pi-hourglass"
           :name="team_time_hours"
           :value="
             'passées à jouer. Soit ' +
@@ -13,10 +14,12 @@
         ></LittleCard>
         <LittleCard
           class="mr-5"
+          iconName="pi pi-sort-amount-up"
           :name="number_of_games"
           value="jeux joués"
         ></LittleCard>
         <LittleCard
+          iconName="pi pi-hashtag"
           :name="ranking_computed"
           value="position de l'équipe dans le classement par temps de jeu"
         ></LittleCard>
@@ -126,7 +129,7 @@ async function getNumberOfGames(teamName) {
 
 const ranking = ref(0);
 const ranking_computed = computed(() => {
-  return "#" + ranking.value;
+  return ranking.value;
 });
 
 async function calculateRanking(teamName) {
