@@ -90,7 +90,7 @@ const top_games = ref([]);
 
 async function init() {
   total_time.value = calculateTotalTime();
-  team_time.value = await calculateTeamTime(props.teamName);
+  team_time.value = calculateTeamTime(props.teamName);
   number_of_games.value = await getNumberOfGames(props.teamName);
   ranking.value = await calculateRanking(props.teamName);
   top_games.value = await getFirstGamesByPlaytime(3, props.teamName);
@@ -118,8 +118,21 @@ function calculateTotalTime() {
   return cpt;
 }
 
-async function calculateTeamTime(name) {
-  return await getSumSessionsDuration(name);
+function calculateTeamTime(name) {
+  let id_of_team = "";
+  for (let t of teams.value) {
+    if (t.name == name) {
+      id_of_team = t.id;
+    }
+  }
+  if (id_of_team == "") return 0;
+  let cpt = 0;
+  sessions.value.forEach((element) => {
+    if (element.team.id == id_of_team) {
+      cpt += element.duration;
+    }
+  });
+  return cpt;
 }
 
 const number_of_games = ref(0);
