@@ -62,7 +62,7 @@ const items = ref([]);
 const loading = ref(false);
 const icon = ref("pi pi-plus");
 const game = ref("");
-const duration = ref(0);
+const duration = ref();
 const was_cool = ref({});
 const options_cool = ref([
   { name: "C'était cool", value: true },
