@@ -105,6 +105,19 @@ watch(sessions, () => {
   init();
 });
 
+function convertMinuteToHoursMinute(minute) {
+  return (
+    ((minute - (minute % 60)) / 60 > 0
+      ? (minute - (minute % 60)) / 60 + "h"
+      : "") +
+    (minute % 60 == 0
+      ? ""
+      : minute % 60 >= 10
+        ? (minute % 60) + "min"
+        : "0" + (minute % 60) + "min")
+  );
+}
+
 const setChartData = () => {
   const documentStyle = getComputedStyle(document.documentElement);
 
@@ -153,6 +166,15 @@ const setChartOptions = () => {
     maintainAspectRatio: false,
     aspectRatio: 0.6,
     plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            return convertMinuteToHoursMinute(
+              game_duration_by_month.value[context.dataIndex]
+            );
+          },
+        },
+      },
       legend: {
         labels: {
           color: textColor,
