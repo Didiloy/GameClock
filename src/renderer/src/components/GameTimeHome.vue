@@ -25,7 +25,7 @@
   </Card>
 </template>
 <script setup>
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, watch, reactive } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 const props = defineProps(["teamName"]);
@@ -53,14 +53,18 @@ const games_name = ref([]);
 
 const games_playtime = ref([]);
 
+const games_percentage = ref([]);
+
 function setGamesNameAndPlaytime() {
   let temp_games = [];
+  let total_playtime = 0;
   if (id_of_team.value) {
     for (let g of games.value) {
       let acc = 0;
       for (let s of sessions.value) {
         if (s.team.id == id_of_team.value && s.game.id == g.id) {
           acc += s.duration;
+          total_playtime += s.duration;
         }
       }
       temp_games.push({ name: g.name, playtime: acc });
@@ -71,6 +75,7 @@ function setGamesNameAndPlaytime() {
       for (let s of sessions.value) {
         if (s.game.id == g.id) {
           acc += s.duration;
+          total_playtime += s.duration;
         }
       }
       temp_games.push({ name: g.name, playtime: acc });
@@ -79,6 +84,9 @@ function setGamesNameAndPlaytime() {
   temp_games.sort((a, b) => b.playtime - a.playtime);
   temp_games = temp_games.filter((g) => g.playtime > 0);
   games_name.value = temp_games.map((g) => g.name);
+  games_percentage.value = temp_games.map((g) =>
+    ((g.playtime / total_playtime) * 100).toFixed(0)
+  );
   games_playtime.value = temp_games.map((g) => g.playtime);
 }
 
@@ -90,6 +98,18 @@ async function init() {
   setGamesNameAndPlaytime();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
+}
+
+function convertMinuteToHoursMinute(minute) {
+  return (
+    (minute - (minute % 60)) / 60 +
+    "h" +
+    (minute % 60 == 0
+      ? ""
+      : minute % 60 > 10
+        ? minute % 60
+        : "0" + (minute % 60))
+  );
 }
 
 const setChartData = () => {
@@ -137,6 +157,20 @@ const setChartOptions = () => {
 
   return {
     plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            return (
+              convertMinuteToHoursMinute(
+                games_playtime.value[context.dataIndex]
+              ) +
+              " -> " +
+              games_percentage.value[context.dataIndex] +
+              "%"
+            );
+          },
+        },
+      },
       legend: {
         labels: {
           usePointStyle: true,
