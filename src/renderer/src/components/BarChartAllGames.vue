@@ -107,7 +107,7 @@ const getCoolPercentage = () => {
     let ss_num = 0;
     if (props.teamName) {
       for (let s of sessions.value) {
-        if (s.game.id == g.id && s.team.id == id_of_team.value) {
+        if (s.game.id === g.id && s.team.id === id_of_team.value) {
           acc += s.was_cool ? 1 : 0;
           ss_num++;
         }

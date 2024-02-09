@@ -65,8 +65,9 @@ const game = ref("");
 const duration = ref();
 const was_cool = ref({});
 const options_cool = ref([
-  { name: "C'était cool", value: true },
-  { name: "C'était pas cool", value: false },
+  { name: "Bien", value: true },
+  {name: "Neutre", value: undefined },
+  { name: "Nul", value: false },
 ]);
 
 onMounted(() => {
@@ -113,7 +114,6 @@ async function addNewSession() {
   }
   game.value = "";
   duration.value = 0;
-  was_cool.value = true;
 }
 </script>
 <style scoped>

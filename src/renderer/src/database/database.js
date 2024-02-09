@@ -113,13 +113,23 @@ export async function addSession(teamName, gameName, duration, was_cool) {
       }
     }
     const sessionRef = collection(db, "sessions");
-    await setDoc(doc(sessionRef), {
-      duration: duration,
-      was_cool: was_cool,
-      date: new Date(),
-      game: doc(collection(db, "games"), gamePath),
-      team: doc(collection(db, "teams"), teamId),
-    });
+    //if the session was neutral we don't add was cool
+    if(was_cool){
+      await setDoc(doc(sessionRef), {
+        duration: duration,
+        was_cool: was_cool,
+        date: new Date(),
+        game: doc(collection(db, "games"), gamePath),
+        team: doc(collection(db, "teams"), teamId),
+      });
+    }else {
+      await setDoc(doc(sessionRef), {
+           duration: duration,
+           date: new Date(),
+           game: doc(collection(db, "games"), gamePath),
+           team: doc(collection(db, "teams"), teamId),
+      });
+    }
     return true;
   } catch (err) {
     return false;
