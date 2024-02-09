@@ -1,6 +1,6 @@
 <template>
   <div class="h-container">
-    <Image :src="logo" width="250" class="header" />
+    <Image :src="logo" class="header" width="250"/>
     <div class="h-dash">
       <Dashboard class="dashboard" teamName=""></Dashboard>
     </div>

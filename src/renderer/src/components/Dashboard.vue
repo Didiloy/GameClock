@@ -8,21 +8,21 @@
       <GameTimeHome class="dv-pie-chart"></GameTimeHome>
       <div class="littles-card">
         <LittleCard
-          class="mr-5"
-          iconName="pi pi-hourglass"
-          :name="total_time_hours"
-          value="passées à jouer"
+            class="mr-5"
+            iconName="pi pi-hourglass"
+            :name="total_time_hours"
+            value="passées à jouer"
         ></LittleCard>
         <LittleCard
-          class="mr-5"
-          iconName="pi pi-sort-amount-up"
-          :name="number_of_games"
-          value="jeux joués"
+            class="mr-5"
+            iconName="pi pi-sort-amount-up"
+            :name="number_of_games"
+            value="jeux joués"
         ></LittleCard>
         <LittleCard
-          iconName="pi pi-heart-fill"
-          :name="fun_percentage_computed"
-          value="de plaisir à jouer"
+            iconName="pi pi-heart-fill"
+            :name="fun_percentage_computed"
+            :value="percentage_card_computed"
         ></LittleCard>
       </div>
     </div>
@@ -33,14 +33,14 @@ import PlayTimeHome from "../components/PlayTimeHome.vue";
 import GameTimeHome from "../components/GameTimeHome.vue";
 import LittleCard from "./LittleCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
+import {useStore} from "../store/store";
+import {storeToRefs} from "pinia";
+import {computed, onMounted, ref, watch} from "vue";
+
 const props = defineProps(["teamName"]);
 
-import { useStore } from "../store/store";
-import { storeToRefs } from "pinia";
 const store = useStore();
-const { sessions, games } = storeToRefs(store);
-
-import { computed, ref, onMounted, watch } from "vue";
+const {sessions, games} = storeToRefs(store);
 
 onMounted(() => {
   init();
@@ -63,9 +63,10 @@ const total_time_hours = computed(() => {
 
 function convertMinuteToHoursMinute(minute) {
   return (
-    (minute - (minute % 60)) / 60 + "h" + (minute % 60 == 0 ? "" : minute % 60)
+      (minute - (minute % 60)) / 60 + "h" + (minute % 60 == 0 ? "" : minute % 60)
   );
 }
+
 function calculateTotalTime() {
   let cpt = 0;
   sessions.value.forEach((element) => {
@@ -75,6 +76,7 @@ function calculateTotalTime() {
 }
 
 const number_of_games = ref(0);
+
 function getNumberOfGames() {
   return games.value.length;
 }
@@ -83,12 +85,24 @@ const fun_percentage = ref(0);
 const fun_percentage_computed = computed(() => {
   return fun_percentage.value.toFixed(2) + "%";
 });
+const neutral_percentage = ref(0);
+const not_fun_percentage = ref(0);
+const percentage_card_computed = computed(() => {
+  return `<b>de plaisir à jouer.</b><br>Neutre: ${neutral_percentage.value}% <br>Nul: ${not_fun_percentage.value}%`;
+});
+
 function calculateFunPercentage() {
-  let cpt = 0;
+  let cpt_fun = 0;
+  let cpt_neutral = 0;
+  let cpt_not_fun = 0;
   sessions.value.forEach((element) => {
-    if (element.was_cool) cpt++;
+    if (element.was_cool == undefined) cpt_neutral++;
+    else if (element.was_cool) cpt_fun++;
+    else cpt_not_fun++;
   });
-  return (cpt / sessions.value.length) * 100;
+  neutral_percentage.value = ((cpt_neutral / sessions.value.length) * 100).toFixed(0);
+  not_fun_percentage.value = ((cpt_not_fun / sessions.value.length) * 100).toFixed(0);
+  return (cpt_fun / sessions.value.length) * 100;
 }
 </script>
 <style scoped>

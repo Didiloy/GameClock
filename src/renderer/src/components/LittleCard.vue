@@ -9,7 +9,8 @@
       </div>
     </template>
     <template #content>
-      {{ props.value }}
+      <div v-html="props.value">
+      </div>
     </template>
   </Card>
 </template>
