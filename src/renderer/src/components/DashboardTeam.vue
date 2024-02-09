@@ -1,59 +1,64 @@
 <template>
-  <div class="dt-dashboard">
-    <div class="dv-left">
-      <div class="littles-card">
-        <LittleCard
-          class="mr-5"
-          iconName="pi pi-hourglass"
-          :name="team_time_hours"
-          :value="
-            'passées à jouer. Soit ' +
-            percentage_total_time +
-            'du temps total de jeu'
-          "
-        ></LittleCard>
-        <LittleCard
-          class="mr-5"
-          iconName="pi pi-sort-amount-up"
-          :name="number_of_games"
-          value="jeux joués"
-        ></LittleCard>
-        <LittleCard
-          iconName="pi pi-hashtag"
-          :name="ranking_computed"
-          value="position de l'équipe dans le classement par temps de jeu"
-        ></LittleCard>
+  <div class="dt-container">
+    <div class="dt-dashboard">
+      <div class="dv-left">
+        <div class="littles-card">
+          <LittleCard
+            class="mr-5"
+            iconName="pi pi-hourglass"
+            :name="team_time_hours"
+            :value="
+              'passées à jouer. Soit ' +
+              percentage_total_time +
+              'du temps total de jeu'
+            "
+          ></LittleCard>
+          <LittleCard
+            class="mr-5"
+            iconName="pi pi-sort-amount-up"
+            :name="number_of_games"
+            value="jeux joués"
+          ></LittleCard>
+          <LittleCard
+            iconName="pi pi-hashtag"
+            :name="ranking_computed"
+            value="position de l'équipe dans le classement par temps de jeu"
+          ></LittleCard>
+        </div>
+        <LineChartGameByMonth
+          class="dv-chart"
+          :teamName="props.teamName"
+        ></LineChartGameByMonth>
+        <BarChartAllGames
+          class="dv-chart"
+          :teamName="props.teamName"
+        ></BarChartAllGames>
       </div>
-      <LineChartGameByMonth
-        class="dv-chart"
-        :teamName="props.teamName"
-      ></LineChartGameByMonth>
-      <BarChartAllGames
-        class="dv-chart"
-        :teamName="props.teamName"
-      ></BarChartAllGames>
+      <div class="dv-right">
+        <GameTimeHome
+          class="dv-pie-chart"
+          :teamName="props.teamName"
+        ></GameTimeHome>
+        <Card class="dt-card">
+          <template #subtitle> Top 3 des jeux les plus joués </template>
+          <template #content>
+            <div class="dt-little-game-card">
+              <LittleGameCard
+                v-for="i in 3"
+                :key="i"
+                :gameName="top_games[i - 1] ? top_games[i - 1].name : ''"
+                :playtime="top_games[i - 1] ? top_games[i - 1].playtime : ''"
+                :joyRate="top_games[i - 1] ? top_games[i - 1].joyRate : ''"
+                :heroe="top_games[i - 1] ? top_games[i - 1].heroe : ''"
+                :icon="top_games[i - 1] ? top_games[i - 1].icon : ''"
+              ></LittleGameCard>
+            </div>
+          </template>
+        </Card>
+      </div>
     </div>
-    <div class="dv-right">
-      <GameTimeHome
-        class="dv-pie-chart"
-        :teamName="props.teamName"
-      ></GameTimeHome>
-      <Card class="dt-card">
-        <template #subtitle> Top 3 des jeux les plus joués </template>
-        <template #content>
-          <div class="dt-little-game-card">
-            <LittleGameCard
-              v-for="i in 3"
-              :key="i"
-              :gameName="top_games[i - 1] ? top_games[i - 1].name : ''"
-              :playtime="top_games[i - 1] ? top_games[i - 1].playtime : ''"
-              :joyRate="top_games[i - 1] ? top_games[i - 1].joyRate : ''"
-              :heroe="top_games[i - 1] ? top_games[i - 1].heroe : ''"
-              :icon="top_games[i - 1] ? top_games[i - 1].icon : ''"
-            ></LittleGameCard>
-          </div>
-        </template>
-      </Card>
+    <div class="dt-session-history">
+      <SessionsHistory :teamName="props.teamName" />
     </div>
   </div>
 </template>
@@ -63,6 +68,7 @@ import GameTimeHome from "../components/GameTimeHome.vue";
 import LittleCard from "./LittleCard.vue";
 import LittleGameCard from "./LittleGameCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
+import SessionsHistory from "./SessionsHistory.vue";
 import {
   getSumSessionsDuration,
   getNumberOfGamePlayed,
