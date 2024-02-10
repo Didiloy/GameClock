@@ -46,7 +46,7 @@
   </Card>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import {ref, onMounted, watch} from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 const props = defineProps(["teamName"]);
@@ -56,6 +56,10 @@ const { games, sessions, teams } = storeToRefs(store);
 const sessions_values = ref([]);
 const id_of_team = ref("");
 onMounted(() => {
+  init();
+});
+
+watch([sessions], () => {
   init();
 });
 
