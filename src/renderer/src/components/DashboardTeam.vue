@@ -4,61 +4,46 @@
       <div class="dv-left">
         <div class="littles-card">
           <LittleCard
-            class="mr-5"
-            iconName="pi pi-hourglass"
-            :name="team_time_hours"
-            :value="
+              class="mr-5"
+              iconName="pi pi-hourglass"
+              :name="team_time_hours"
+              :value="
               'passées à jouer. Soit ' +
               percentage_total_time +
               'du temps total de jeu'
             "
           ></LittleCard>
           <LittleCard
-            class="mr-5"
-            iconName="pi pi-sort-amount-up"
-            :name="number_of_games"
-            value="jeux joués"
+              class="mr-5"
+              iconName="pi pi-sort-amount-up"
+              :name="number_of_games"
+              value="jeux joués"
           ></LittleCard>
           <LittleCard
-            iconName="pi pi-hashtag"
-            :name="ranking_computed"
-            value="position de l'équipe dans le classement par temps de jeu"
+              iconName="pi pi-hashtag"
+              :name="ranking_computed"
+              value="position de l'équipe dans le classement par temps de jeu"
           ></LittleCard>
         </div>
         <LineChartGameByMonth
-          class="dv-chart"
-          :teamName="props.teamName"
+            class="dv-chart"
+            :teamName="props.teamName"
         ></LineChartGameByMonth>
         <BarChartAllGames
-          class="dv-chart"
-          :teamName="props.teamName"
+            class="dv-chart"
+            :teamName="props.teamName"
         ></BarChartAllGames>
       </div>
       <div class="dv-right">
         <GameTimeHome
-          class="dv-pie-chart"
-          :teamName="props.teamName"
+            class="dv-pie-chart"
+            :teamName="props.teamName"
         ></GameTimeHome>
-        <Card class="dt-card">
-          <template #subtitle> Top 3 des jeux les plus joués </template>
-          <template #content>
-            <div class="dt-little-game-card">
-              <LittleGameCard
-                v-for="i in 3"
-                :key="i"
-                :gameName="top_games[i - 1] ? top_games[i - 1].name : ''"
-                :playtime="top_games[i - 1] ? top_games[i - 1].playtime : ''"
-                :joyRate="top_games[i - 1] ? top_games[i - 1].joyRate : ''"
-                :heroe="top_games[i - 1] ? top_games[i - 1].heroe : ''"
-                :icon="top_games[i - 1] ? top_games[i - 1].icon : ''"
-              ></LittleGameCard>
-            </div>
-          </template>
-        </Card>
+        <TopGamesLittleGameCard :teamName="props.teamName"></TopGamesLittleGameCard>
       </div>
     </div>
     <div class="dt-session-history">
-      <SessionsHistory :teamName="props.teamName" />
+      <SessionsHistory :teamName="props.teamName"/>
     </div>
   </div>
 </template>
@@ -66,23 +51,18 @@
 import LineChartGameByMonth from "./LineChartGameByMonth.vue";
 import GameTimeHome from "../components/GameTimeHome.vue";
 import LittleCard from "./LittleCard.vue";
-import LittleGameCard from "./LittleGameCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
 import SessionsHistory from "./SessionsHistory.vue";
-import {
-  getSumSessionsDuration,
-  getNumberOfGamePlayed,
-  calculateTeamRankingByDuration,
-  getFirstGamesByPlaytime,
-} from "../database/database";
+import TopGamesLittleGameCard from "./TopGamesLittleGameCard.vue";
+import {calculateTeamRankingByDuration, getFirstGamesByPlaytime, getNumberOfGamePlayed,} from "../database/database";
+import {useStore} from "../store/store";
+import {storeToRefs} from "pinia";
+import {computed, onMounted, ref, watch} from "vue";
+
 const props = defineProps(["teamName"]);
 
-import { useStore } from "../store/store";
-import { storeToRefs } from "pinia";
 const store = useStore();
-const { sessions, games, teams } = storeToRefs(store);
-
-import { computed, ref, onMounted, watch } from "vue";
+const {sessions, games, teams} = storeToRefs(store);
 
 onMounted(() => {
   init();
@@ -92,14 +72,12 @@ watch(sessions, () => {
   init();
 });
 
-const top_games = ref([]);
 
 async function init() {
   total_time.value = calculateTotalTime();
   team_time.value = calculateTeamTime(props.teamName);
   number_of_games.value = await getNumberOfGames(props.teamName);
   ranking.value = await calculateRanking(props.teamName);
-  top_games.value = await getFirstGamesByPlaytime(3, props.teamName);
 }
 
 const total_time = ref(0);
@@ -113,14 +91,14 @@ const percentage_total_time = computed(() => {
 
 function convertMinuteToHoursMinute(minute) {
   return (
-    ((minute - (minute % 60)) / 60 > 0
-      ? (minute - (minute % 60)) / 60 + "h"
-      : "") +
-    (minute % 60 == 0
-      ? ""
-      : minute % 60 >= 10
-        ? minute % 60
-        : "0" + (minute % 60))
+      ((minute - (minute % 60)) / 60 > 0
+          ? (minute - (minute % 60)) / 60 + "h"
+          : "") +
+      (minute % 60 == 0
+          ? ""
+          : minute % 60 >= 10
+              ? minute % 60
+              : "0" + (minute % 60))
   );
 }
 
@@ -135,7 +113,7 @@ function calculateTotalTime() {
 function calculateTeamTime(name) {
   let id_of_team = "";
   for (let t of teams.value) {
-    if (t.name == name) {
+    if (t.name === name) {
       id_of_team = t.id;
     }
   }
@@ -150,6 +128,7 @@ function calculateTeamTime(name) {
 }
 
 const number_of_games = ref(0);
+
 async function getNumberOfGames(teamName) {
   return await getNumberOfGamePlayed(teamName);
 }
@@ -230,13 +209,6 @@ const monthNames = [
   width: 100%;
   height: 100%;
   background-color: var(--primary-100);
-}
-
-.dt-little-game-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 .mr-5 {

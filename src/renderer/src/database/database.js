@@ -346,7 +346,7 @@ async function getGameJoyRate(gameRef, teamRef) {
   let was_cool = 0;
   let cpt = 0;
   let q;
-  if (teamRef == "" || teamRef == undefined) {
+  if (teamRef === "" || teamRef === undefined) {
     q = query(collection(db, "sessions"), where("game", "==", gameRef));
   } else {
     q = query(

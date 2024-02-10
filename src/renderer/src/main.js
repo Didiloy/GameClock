@@ -16,6 +16,8 @@ import Image from "primevue/image";
 import DataTable from "primevue/datatable";
 import DataView from "primevue/dataview";
 import Column from "primevue/column";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
 import ColumnGroup from "primevue/columngroup"; // optional
 import Row from "primevue/row";
 import Card from "primevue/card";
@@ -57,6 +59,8 @@ app.component("Accordion", Accordion);
 app.component("AccordionTab", AccordionTab);
 app.component("AutoComplete", AutoComplete);
 app.component("Chart", Chart);
+app.component("TabView", TabView);
+app.component("TabPanel", TabPanel);
 
 //Router
 const routes = [

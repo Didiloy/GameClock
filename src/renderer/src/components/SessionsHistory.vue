@@ -67,7 +67,7 @@ function init() {
   }
 
   for (let s of sessions.value) {
-    if (s.team.id == id_of_team.value) {
+    if (s.team.id === id_of_team.value) {
       let [game_name, logo] = getGameNameAndLogoById(s.game.id);
       sessions_values.value.push({
         name: game_name,
