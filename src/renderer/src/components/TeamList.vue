@@ -25,20 +25,25 @@
   </DataView>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import {ref, onMounted, watch} from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { getSumSessionsDurationAndMostPlayedLogo } from "../database/database";
+const router = useRouter();
+
+const store = useStore();
+const { teams, sessions } = storeToRefs(store);
 
 onMounted(() => {
   init();
 });
 
-const router = useRouter();
+watch(sessions, () => {
+  init();
+});
 
-const store = useStore();
-const { teams, sessions } = storeToRefs(store);
+
 const teamItem = ref([]);
 
 const init = async () => {
