@@ -26,7 +26,7 @@ export async function getGameGrid(id) {
 }
 
 export async function getGameLogo(id) {
-  const url = BASE_URL + "/logos/game/" + id;
+  const url = BASE_URL + "/icons/game/" + id;
   const data = await fetch(url, { headers: header }).then((res) => res.json());
   return data.data[0].url;
 }

@@ -168,16 +168,16 @@ const monthNames = [
 }
 
 .dv-left {
-  width: 60%;
+  width: 50%;
   margin-right: 5px;
   display: flex;
   flex-direction: column;
   justify-content: start;
-  align-items: center;
+  align-items: start;
 }
 
 .dv-right {
-  width: 48%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -186,7 +186,8 @@ const monthNames = [
 
 .dv-chart {
   width: 100%;
-  max-height: 300px;
+  height: auto;
+  //max-height: 300px;
   margin-top: 5px;
 }
 
@@ -201,7 +202,7 @@ const monthNames = [
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
 .dt-card {
