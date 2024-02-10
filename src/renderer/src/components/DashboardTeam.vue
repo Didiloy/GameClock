@@ -25,6 +25,22 @@
               value="position de l'équipe dans le classement par temps de jeu"
           ></LittleCard>
         </div>
+        <div class="littles-card mt-5">
+          <LittleCard
+              class="mr-5"
+              iconName="pi pi-book"
+              :name="number_of_books"
+              :value="
+              'C\'est le nombre de <b>livres</b> d\'environ 400 pages que l\'on peut lire pendant ce temps'
+            "
+          ></LittleCard>
+          <LittleCard
+              iconName="pi pi-youtube"
+              :name="number_of_movies"
+              :value="'C\'est le nombre de <b>films</b> que l\'on peut regarder pendant ce temps'"
+          ></LittleCard>
+
+        </div>
         <LineChartGameByMonth
             class="dv-chart"
             :teamName="props.teamName"
@@ -54,7 +70,7 @@ import LittleCard from "./LittleCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import TopGamesLittleGameCard from "./TopGamesLittleGameCard.vue";
-import {calculateTeamRankingByDuration, getFirstGamesByPlaytime, getNumberOfGamePlayed,} from "../database/database";
+import {calculateTeamRankingByDuration, getNumberOfGamePlayed,} from "../database/database";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref, watch} from "vue";
@@ -87,6 +103,16 @@ const team_time_hours = computed(() => {
 });
 const percentage_total_time = computed(() => {
   return ((team_time.value / total_time.value) * 100).toFixed(2) + "%";
+});
+
+const average_book_reading_time = ref(178);
+const number_of_books = computed(() => {
+  return (team_time.value / average_book_reading_time.value).toFixed(0);
+});
+
+const average_movie_time = ref(110);
+const number_of_movies = computed(() => {
+  return (team_time.value / average_movie_time.value).toFixed(0);
 });
 
 function convertMinuteToHoursMinute(minute) {
@@ -214,5 +240,9 @@ const monthNames = [
 
 .mr-5 {
   margin-right: 5px;
+}
+
+.mt-5 {
+  margin-top: 5px;
 }
 </style>

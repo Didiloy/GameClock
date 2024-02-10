@@ -22,7 +22,7 @@ const props = defineProps(["name", "value", "iconName"]);
   width: 100%;
   height: 100%;
   max-height: 200px;
-  max-width: 200px;
+  //max-width: 200px;
   background-color: var(--primary-100);
 }
 .lc-center {
