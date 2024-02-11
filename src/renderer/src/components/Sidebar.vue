@@ -29,6 +29,10 @@
           </router-link>
         </div>
       </div>
+      <div class="div-reload-button">
+        <Divider />
+        <Button class="reload-button" label="Recharger les données" @click="onReload" :icon="icon" :loading="loading"></Button>
+      </div>
     </Sidebar>
   </div>
 </template>
@@ -36,6 +40,11 @@
 <script setup>
 import logo from "../assets/images/icons.png";
 import { ref } from "vue";
+import {useStore} from "../store/store.js";
+import {addTeam} from "../database/database";
+
+const loading = ref(false);
+const icon = ref("pi pi-replay");
 
 const items = ref([
   {
@@ -84,12 +93,41 @@ const items = ref([
     ],
   },
 ]);
+
+async function onReload(){
+  loading.value = true;
+  await useStore().reloadStore();
+  loading.value = false;
+}
 </script>
 
 <style scoped>
 .header {
   margin-top: 5px;
 }
+
+.div-reload-button{
+  position: absolute;
+  bottom: 10px;
+  left: 0px;
+  border: none;
+  margin-left: 0px;
+  margin-top: 0px;
+  height: auto;
+  width: 100%;
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.reload-button{
+  width: 90%;
+}
+
 .menu {
   width: 100%;
   border: none;
@@ -113,7 +151,7 @@ const items = ref([
 }
 
 .router-link {
-  width: 100;
+  width: 100%;
 }
 
 a:link {
