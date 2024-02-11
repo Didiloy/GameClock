@@ -117,7 +117,8 @@ const setChartData = () => {
   const documentStyle = getComputedStyle(document.body);
 
   return {
-    labels: games_name.value,
+    labels: games_name.value.map((g) => ""),
+    // labels: games_name.value,
     datasets: [
       {
         data: games_playtime.value,
@@ -160,6 +161,9 @@ const setChartOptions = () => {
     plugins: {
       tooltip: {
         callbacks: {
+          beforeLabel: function (context) {
+            return games_name.value[context.dataIndex];
+          },
           label: function (context) {
             return (
               convertMinuteToHoursMinute(

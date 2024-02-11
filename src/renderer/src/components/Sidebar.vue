@@ -63,16 +63,16 @@ const items = ref([
       },
     ],
   },
-  {
-    label: "Général",
-    items: [
-      {
-        label: "Statistiques",
-        icon: "pi pi-chart-line",
-        route: "/stats",
-      },
-    ],
-  },
+  // {
+  //   label: "Général",
+  //   items: [
+  //     {
+  //       label: "Statistiques",
+  //       icon: "pi pi-chart-line",
+  //       route: "/stats",
+  //     },
+  //   ],
+  // },
   {
     label: "Paramètres",
     items: [
