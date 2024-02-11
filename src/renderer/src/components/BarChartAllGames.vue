@@ -19,7 +19,7 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, onMounted, computed, watch } from "vue";
+import { ref,  onMounted,  watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 const props = defineProps(["teamName"]);
@@ -99,32 +99,6 @@ const getAverageDuration = () => {
   return res;
 };
 
-const cool_percentage = ref([]);
-const getCoolPercentage = () => {
-  let res = [];
-  for (let g of games.value) {
-    let acc = 0;
-    let ss_num = 0;
-    if (props.teamName) {
-      for (let s of sessions.value) {
-        if (s.game.id === g.id && s.team.id === id_of_team.value) {
-          acc += s.was_cool ? 1 : 0;
-          ss_num++;
-        }
-      }
-    } else {
-      for (let s of sessions.value) {
-        if (s.game.id == g.id) {
-          acc += s.was_cool ? 1 : 0;
-          ss_num++;
-        }
-      }
-    }
-    res.push((acc / ss_num) * 100);
-  }
-  return res;
-};
-
 const chartData = ref({});
 const chartOptions = ref();
 
@@ -133,13 +107,11 @@ function init() {
   games_names.value = getGamesNames();
   sessions_number.value = getSessionNumber();
   avg_duration.value = getAverageDuration();
-  cool_percentage.value = getCoolPercentage();
   for (let i = games_names.value.length; i >= 0; i--) {
-    if (sessions_number.value[i] == 0) {
+    if (sessions_number.value[i] === 0) {
       games_names.value.splice(i, 1);
       sessions_number.value.splice(i, 1);
       avg_duration.value.splice(i, 1);
-      cool_percentage.value.splice(i, 1);
     }
   }
   chartOptions.value = setChartOptions();
@@ -172,16 +144,6 @@ const setChartData = () => {
         pointHoverBorderColor: documentStyle.getPropertyValue("--pink-400"),
         data: avg_duration.value,
         backgroundColor: documentStyle.getPropertyValue("--pink-500"),
-      },
-      {
-        label: "Plaisir à jouer en(%)",
-        borderColor: documentStyle.getPropertyValue("--orange-400"),
-        pointBackgroundColor: documentStyle.getPropertyValue("--orange-400"),
-        pointBorderColor: documentStyle.getPropertyValue("--orange-400"),
-        pointHoverBackgroundColor: textColor,
-        pointHoverBorderColor: documentStyle.getPropertyValue("--orange-400"),
-        data: cool_percentage.value,
-        backgroundColor: documentStyle.getPropertyValue("--orange-500"),
       },
     ],
   };

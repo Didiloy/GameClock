@@ -3,6 +3,8 @@
     <div class="dv-left">
       <PlayTimeHome class="dv-bar-chart"></PlayTimeHome>
       <BarChartAllGames class="dv-radar-chart"></BarChartAllGames>
+      <GamesFunPercentage
+          class="dv-radar-chart"></GamesFunPercentage>
     </div>
     <div class="dv-right">
       <GameTimeHome class="dv-pie-chart"></GameTimeHome>
@@ -36,6 +38,7 @@ import BarChartAllGames from "../components/BarChartAllGames.vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref, watch} from "vue";
+import GamesFunPercentage from "./GamesFunPercentage.vue";
 
 const props = defineProps(["teamName"]);
 

@@ -49,6 +49,9 @@
             class="dv-chart"
             :teamName="props.teamName"
         ></BarChartAllGames>
+        <GamesFunPercentage
+            class="dv-chart"
+            :teamName="props.teamName"></GamesFunPercentage>
       </div>
       <div class="dv-right">
         <GameTimeHome
@@ -70,6 +73,7 @@ import LittleCard from "./LittleCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import TopGamesLittleGameCard from "./TopGamesLittleGameCard.vue";
+import GamesFunPercentage from "./GamesFunPercentage.vue";
 import {calculateTeamRankingByDuration, getNumberOfGamePlayed,} from "../database/database";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
