@@ -7,25 +7,39 @@
           class="dv-radar-chart"></GamesFunPercentage>
     </div>
     <div class="dv-right">
-      <GameTimeHome class="dv-pie-chart"></GameTimeHome>
-      <div class="littles-card">
-        <LittleCard
-            class="mr-5"
-            iconName="pi pi-hourglass"
-            :name="total_time_hours"
-            value="passées à jouer"
-        ></LittleCard>
-        <LittleCard
-            class="mr-5"
-            iconName="pi pi-sort-amount-up"
-            :name="number_of_games"
-            value="jeux joués"
-        ></LittleCard>
-        <LittleCard
-            iconName="pi pi-heart-fill"
-            :name="fun_percentage_computed"
-            :value="percentage_card_computed"
-        ></LittleCard>
+      <div class="dv-right-row">
+        <GameTimeHome class="dv-pie-chart"></GameTimeHome>
+      </div>
+      <div class="dv-right-row mt-5">
+        <LittleCard class="mt-5 mr-5"
+                    iconName="pi pi-hourglass"
+                    :name="team_with_greatest_session_average_playtime"
+                    :value="'Fait les plus grosses sessions de jeu (' + convertMinuteToHoursMinute(team_with_greatest_session_average_playtime_value) + ' en moyenne)'"></LittleCard>
+        <LittleCard class="mt-5"
+                    iconName="pi pi-hourglass"
+                    :name="team_with_most_sessions"
+                    :value="'A le plus de sessions avec ' + team_with_most_sessions_value + ' sessions'"></LittleCard>
+      </div>
+      <div class="dv-right-row">
+        <div class="littles-card">
+          <LittleCard
+              class="mr-5"
+              iconName="pi pi-hourglass"
+              :name="total_time_hours"
+              value="passées à jouer"
+          ></LittleCard>
+          <LittleCard
+              class="mr-5"
+              iconName="pi pi-sort-amount-up"
+              :name="number_of_games"
+              value="jeux joués"
+          ></LittleCard>
+          <LittleCard
+              iconName="pi pi-heart-fill"
+              :name="fun_percentage_computed"
+              :value="percentage_card_computed"
+          ></LittleCard>
+        </div>
       </div>
     </div>
   </div>
@@ -43,7 +57,7 @@ import GamesFunPercentage from "./GamesFunPercentage.vue";
 const props = defineProps(["teamName"]);
 
 const store = useStore();
-const {sessions, games} = storeToRefs(store);
+const {sessions, games, teams} = storeToRefs(store);
 
 onMounted(() => {
   init();
@@ -57,6 +71,40 @@ async function init() {
   total_time.value = calculateTotalTime();
   number_of_games.value = getNumberOfGames();
   fun_percentage.value = calculateFunPercentage();
+  getTeamWithGreatestSessionAveragePlaytime();
+}
+
+const team_with_greatest_session_average_playtime = ref("");
+const team_with_greatest_session_average_playtime_value = ref(0);
+const team_with_most_sessions = ref("");
+const team_with_most_sessions_value = ref(0);
+function getTeamWithGreatestSessionAveragePlaytime() {
+  let teams_tmp = [];
+  let teams_playtime_on_average = [];
+  let teams_sessions = [];
+  for (let t of teams.value) {
+    teams_tmp.push(t.name);
+    let cpt = 0;
+    let nb = 0;
+    sessions.value.forEach((element) => {
+      if (element.team.id === t.id) {
+        cpt += element.duration;
+        nb++;
+      }
+    });
+    teams_playtime_on_average.push(cpt / nb);
+    teams_sessions.push(nb);
+  }
+  for (let i = 0; i < teams_playtime_on_average.length; i++) {
+    if (teams_playtime_on_average[i] > team_with_greatest_session_average_playtime_value.value) {
+      team_with_greatest_session_average_playtime_value.value = teams_playtime_on_average[i];
+      team_with_greatest_session_average_playtime.value = teams_tmp[i];
+    }
+    if(teams_sessions[i] > team_with_most_sessions_value.value) {
+      team_with_most_sessions_value.value = teams_sessions[i];
+      team_with_most_sessions.value = teams_tmp[i];
+    }
+  }
 }
 
 const total_time = ref(0);
@@ -129,8 +177,15 @@ function calculateFunPercentage() {
 
 .dv-right {
   width: 48%;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto auto;
+}
+
+.dv-right-row {
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 }
@@ -163,5 +218,9 @@ function calculateFunPercentage() {
 
 .mr-5 {
   margin-right: 5px;
+}
+
+.mt-5 {
+  margin-top: 5px;
 }
 </style>
