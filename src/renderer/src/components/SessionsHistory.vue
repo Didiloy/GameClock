@@ -64,12 +64,14 @@ watch([sessions], () => {
 });
 
 function init() {
+   id_of_team.value = "";
   for (let t of teams.value) {
     if (t.name == props.teamName) {
       id_of_team.value = t.id;
     }
   }
 
+   sessions_values.value = [];
   for (let s of sessions.value) {
     if (s.team.id === id_of_team.value) {
       let [game_name, logo] = getGameNameAndLogoById(s.game.id);

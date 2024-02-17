@@ -41,6 +41,7 @@ function setSessionsOfTheTeam() {
 
 const id_of_team = ref("");
 function setIdOfTeam() {
+   id_of_team.value = "";
   for (let t of teams.value) {
     if (t.name == props.teamName) {
       id_of_team.value = t.id;
@@ -50,6 +51,7 @@ function setIdOfTeam() {
 
 const game_duration_by_month = ref([]);
 function setGameDuration() {
+   game_duration_by_month.value = [];
   for (let s of sessions_of_the_team.value) {
     let date = new Date(s.date.seconds * 1000);
     let month = date.getMonth();
@@ -63,6 +65,7 @@ function setGameDuration() {
 
 const joyrate_by_month = ref([]);
 function setJoyrate() {
+   joyrate_by_month.value = [];
   let joyrate_number = [];
   for (let s of sessions_of_the_team.value) {
     let date = new Date(s.date.seconds * 1000);
