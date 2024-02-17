@@ -12,11 +12,11 @@
       </div>
       <div class="dv-right-row mt-5">
         <LittleCard class="mt-5 mr-5"
-                    iconName="pi pi-hourglass"
+                    iconName="pi pi-users"
                     :name="team_with_greatest_session_average_playtime"
                     :value="'Fait les plus grosses sessions de jeu (' + convertMinuteToHoursMinute(team_with_greatest_session_average_playtime_value) + ' en moyenne)'"></LittleCard>
         <LittleCard class="mt-5"
-                    iconName="pi pi-hourglass"
+                    iconName="pi pi-user"
                     :name="team_with_most_sessions"
                     :value="'A le plus de sessions avec ' + team_with_most_sessions_value + ' sessions'"></LittleCard>
       </div>

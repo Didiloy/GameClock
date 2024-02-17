@@ -37,7 +37,7 @@ const games_names = ref([]);
 const getGamesNames = () => {
   let res = [];
   games.value.map((g) =>
-    res.push(g.name.length > 10 ? g.name.slice(0, 10) + "..." : g.name)
+    res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name)
   );
   return res;
 };
@@ -161,6 +161,13 @@ const setChartOptions = () => {
       legend: {
         labels: {
           color: textColor,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          beforeLabel: function (context) {
+            return (games.value[context.dataIndex].name);
+          },
         },
       },
     },
