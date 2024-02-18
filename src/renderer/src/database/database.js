@@ -136,25 +136,6 @@ export async function addSession(teamName, gameName, duration, was_cool) {
   }
 }
 
-export async function getSumSessionsDurationAndMostPlayedLogo(teamName) {
-  const q_team = query(collection(db, "teams"), where("name", "==", teamName));
-  const teamRef = (await getDocs(q_team)).docs[0].ref;
-  const q_sessions = query(
-    collection(db, "sessions"),
-    where("team", "==", teamRef)
-  );
-  const sessions_on_team = await getDocs(q_sessions);
-  let total_duration = 0;
-  let logo = await getMostPlayedLogo(sessions_on_team);
-  for (let s in sessions_on_team.docs) {
-    total_duration += sessions_on_team.docs[s].data().duration;
-  }
-  return {
-    logo: logo,
-    duration: total_duration,
-  };
-}
-
 export async function getSumSessionsDuration(teamName) {
   const q_team = query(collection(db, "teams"), where("name", "==", teamName));
   const teamRef = (await getDocs(q_team)).docs[0].ref;
@@ -168,29 +149,6 @@ export async function getSumSessionsDuration(teamName) {
     total_duration += sessions_on_team.docs[s].data().duration;
   }
   return total_duration;
-}
-
-async function getMostPlayedLogo(sessions) {
-  let games = [];
-  for (let s in sessions.docs) {
-    if (games.some((g) => g.id == sessions.docs[s].data().game.id)) {
-      for (let g in games) {
-        if (games[g].id == sessions.docs[s].data().game.id) {
-          games[g].duration += sessions.docs[s].data().duration;
-        }
-      }
-    } else {
-      let tmpobj = {
-        id: sessions.docs[s].data().game.id,
-        duration: sessions.docs[s].data().duration,
-      };
-      games.push(tmpobj);
-    }
-  }
-  games.sort((a, b) => b.duration - a.duration);
-  const docRef = doc(db, "games", games[0].id);
-  const docSnap = await getDoc(docRef);
-  return docSnap.data().logo;
 }
 
 //Games

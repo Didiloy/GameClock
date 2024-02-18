@@ -29,11 +29,10 @@ import {ref, onMounted, watch} from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import { getSumSessionsDurationAndMostPlayedLogo } from "../database/database";
 const router = useRouter();
 
 const store = useStore();
-const { teams, sessions } = storeToRefs(store);
+const { teams, sessions, games } = storeToRefs(store);
 
 onMounted(() => {
   init();
@@ -45,20 +44,60 @@ watch(sessions, () => {
 
 
 const teamItem = ref([]);
+function setTeamItem(){
+  teamItem.value = [];
+  for(let t of teams.value){
+    teamItem.value.push({
+      name: t.name,
+      playtime: getPlaytime(t.id),
+      logo: getMostPlayedLogo(t.id),
+    });
+  }
+}
+
+function getMostPlayedLogo(teamId){
+    let temp_games = [];
+    let total_playtime = 0;
+      for (let g of games.value) {
+        let acc = 0;
+        for (let s of sessions.value) {
+          if (s.team.id === teamId && s.game.id === g.id) {
+            acc += s.duration;
+            total_playtime += s.duration;
+          }
+        }
+        temp_games.push({ name: g.name, playtime: acc, logo: g.logo});
+      }
+    temp_games.sort((a, b) => b.playtime - a.playtime);
+    temp_games = temp_games.filter((g) => g.playtime > 0);
+    return temp_games[0].logo;
+}
+
+function getPlaytime(teamId){
+  let playtime = 0;
+  for(let s of sessions.value){
+    if(s.team.id === teamId){
+      playtime += s.duration;
+    }
+  }
+  return playtime;
+}
 
 const init = async () => {
-  teams.value.forEach(async (v) => {
-    let playtime = await getSumSessionsDurationAndMostPlayedLogo(v.name);
-    teamItem.value.push({
-      name: v.name,
-      playtime: playtime.duration,
-      logo: playtime.logo,
-    });
-  });
+  setTeamItem();
 };
 
 function convertMinuteToHoursMinute(minute) {
-  return (minute - (minute % 60)) / 60 + "h" + (minute % 60) + "min";
+  return (
+      ((minute - (minute % 60)) / 60 > 0
+          ? (minute - (minute % 60)) / 60 + "h"
+          : "") +
+      (minute % 60 === 0
+          ? ""
+          : minute % 60 >= 10
+              ? (minute % 60) + "min"
+              : "0" + (minute % 60) + "min")
+  );
 }
 
 function getClassNameFromIndex(index) {
