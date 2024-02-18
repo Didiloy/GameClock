@@ -25,7 +25,9 @@ import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 import SelectButton from "primevue/selectbutton";
 import AutoComplete from "primevue/autocomplete";
+import ProgressBar from 'primevue/progressbar';
 import Chart from "primevue/chart";
+import ProgressSpinner from 'primevue/progressspinner';
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "./views/Home.vue";
 import Teams from "./views/Teams.vue";
@@ -60,6 +62,9 @@ app.component("AutoComplete", AutoComplete);
 app.component("Chart", Chart);
 app.component("TabView", TabView);
 app.component("TabPanel", TabPanel);
+app.component("ProgressBar", ProgressBar);
+app.component("ProgressSpinner", ProgressSpinner);
+
 
 //Router
 const routes = [

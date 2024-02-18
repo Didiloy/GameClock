@@ -153,7 +153,7 @@ export async function getSumSessionsDuration(teamName) {
 
 //Games
 export async function getGames() {
-  const gamesList = [];
+  let gamesList = [];
   const gamesSnapshot = await getDocs(collection(db, "games"));
   gamesSnapshot.forEach((doc) => {
     let doc_id = doc.id;

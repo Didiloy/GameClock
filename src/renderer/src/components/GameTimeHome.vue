@@ -43,7 +43,7 @@ watch([games, sessions, teams], () => {
 const id_of_team = ref("");
 function setIdOfTeam() {
   for (let t of teams.value) {
-    if (t.name == props.teamName) {
+    if (t.name === props.teamName) {
       id_of_team.value = t.id;
     }
   }
@@ -62,7 +62,7 @@ function setGamesNameAndPlaytime() {
     for (let g of games.value) {
       let acc = 0;
       for (let s of sessions.value) {
-        if (s.team.id == id_of_team.value && s.game.id == g.id) {
+        if (s.team.id === id_of_team.value && s.game.id === g.id) {
           acc += s.duration;
           total_playtime += s.duration;
         }
@@ -73,7 +73,7 @@ function setGamesNameAndPlaytime() {
     for (let g of games.value) {
       let acc = 0;
       for (let s of sessions.value) {
-        if (s.game.id == g.id) {
+        if (s.game.id === g.id) {
           acc += s.duration;
           total_playtime += s.duration;
         }
@@ -105,7 +105,7 @@ function convertMinuteToHoursMinute(minute) {
     ((minute - (minute % 60)) / 60 > 0
       ? (minute - (minute % 60)) / 60 + "h"
       : "") +
-    (minute % 60 == 0
+    (minute % 60 === 0
       ? ""
       : minute % 60 >= 10
         ? (minute % 60) + "min"
