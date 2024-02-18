@@ -14,8 +14,13 @@ import DashboardTeam from "../components/DashboardTeam.vue";
 .t-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   height: 100%;
+}
+
+h2 {
+  color: #5a5d9d;
+  font-size: 2rem;
 }
 </style>

@@ -102,16 +102,19 @@ const getAverageDuration = () => {
 const chartData = ref({});
 const chartOptions = ref();
 
+const games_copy = ref([]);
 function init() {
   setIdOfTeam();
   games_names.value = getGamesNames();
   sessions_number.value = getSessionNumber();
   avg_duration.value = getAverageDuration();
+  games_copy.value = games.value;
   for (let i = games_names.value.length; i >= 0; i--) {
     if (sessions_number.value[i] === 0) {
       games_names.value.splice(i, 1);
       sessions_number.value.splice(i, 1);
       avg_duration.value.splice(i, 1);
+      games_copy.value.splice(i, 1);
     }
   }
   chartOptions.value = setChartOptions();
@@ -166,7 +169,7 @@ const setChartOptions = () => {
       tooltip: {
         callbacks: {
           beforeLabel: function (context) {
-            return (games.value[context.dataIndex].name);
+            return (games_copy.value[context.dataIndex].name);
           },
         },
       },

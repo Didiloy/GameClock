@@ -70,7 +70,7 @@ function getMostPlayedLogo(teamId){
       }
     temp_games.sort((a, b) => b.playtime - a.playtime);
     temp_games = temp_games.filter((g) => g.playtime > 0);
-    return temp_games[0].logo;
+    return temp_games[0]?.logo ? temp_games[0].logo : '';
 }
 
 function getPlaytime(teamId){
