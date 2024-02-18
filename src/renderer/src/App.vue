@@ -14,7 +14,7 @@ const { sessions, games, teams } = storeToRefs(store);
     <div v-if="sessions.length === 0 || games.length === 0 || teams.length === 0"  class="content">
       <div class="a-loading">
         <h2>Chargement des données</h2>
-      <ProgressSpinner />
+        <ProgressSpinner />
       </div>
     </div>
     <div v-else class="content">

@@ -108,7 +108,7 @@ function init() {
   games_names.value = getGamesNames();
   sessions_number.value = getSessionNumber();
   avg_duration.value = getAverageDuration();
-  games_copy.value = games.value;
+  games_copy.value = games.value.slice();
   for (let i = games_names.value.length; i >= 0; i--) {
     if (sessions_number.value[i] === 0) {
       games_names.value.splice(i, 1);
