@@ -208,7 +208,10 @@ const setChartOptions = () => {
             content: { style: 'height:100%; ' }
         }"
     >
-      <template #subtitle> Taux de fun par jeux</template>
+      <template #subtitle>
+        <span class="gfp-font">
+          Taux de fun par jeux
+        </span></template>
       <template #content>
         <Chart
             type="bar"
@@ -234,5 +237,16 @@ const setChartOptions = () => {
   width: 100%;
   height: 100%;
   border-radius: 30px;
+}
+
+@font-face {
+  font-family: sephir;
+  src: url('../assets/fonts/sephir/sephir.otf');
+}
+
+.gfp-font {
+  font-family: sephir, serif;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 </style>

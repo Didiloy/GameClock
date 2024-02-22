@@ -6,7 +6,11 @@
             root: { style: 'box-shadow: 0px 0px 0px 0px;' },
             content: { style: 'height:100%; width: auto;' }
         }">
-      <template #subtitle> Informations des jeux</template>
+      <template #subtitle>
+        <span class="bcag-font">
+          Informations des jeux
+        </span>
+      </template>
       <template #content>
         <Chart
             type="bar"
@@ -197,5 +201,16 @@ const setChartOptions = () => {
   width: 100%;
   height: 100%;
   border-radius: 30px;
+}
+
+@font-face {
+  font-family: sephir;
+  src: url('../assets/fonts/sephir/sephir.otf');
+}
+
+.bcag-font {
+  font-family: sephir, serif;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 </style>

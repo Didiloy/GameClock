@@ -106,7 +106,7 @@ const total_time_hours = computed(() => {
 
 function convertMinuteToHoursMinute(minute) {
   return (
-      (minute - (minute % 60)) / 60 + "h" + (minute % 60 == 0 ? "" : minute % 60)
+      (minute - (minute % 60)) / 60 + "h" + (minute % 60 === 0 ? "" : minute % 60)
   );
 }
 
@@ -131,7 +131,7 @@ const fun_percentage_computed = computed(() => {
 const neutral_percentage = ref(0);
 const not_fun_percentage = ref(0);
 const percentage_card_computed = computed(() => {
-  return `<b>de plaisir à jouer.</b><br>Neutre: ${neutral_percentage.value}% <br>Nul: ${not_fun_percentage.value}%`;
+  return `<b>de plaisir à jouer.</b><br><b>Neutre:</b> ${neutral_percentage.value}% <br><b>Nul</b>: ${not_fun_percentage.value}%`;
 });
 
 function calculateFunPercentage() {
@@ -139,7 +139,7 @@ function calculateFunPercentage() {
   let cpt_neutral = 0;
   let cpt_not_fun = 0;
   sessions.value.forEach((element) => {
-    if (element.was_cool == undefined) cpt_neutral++;
+    if (element.was_cool === undefined) cpt_neutral++;
     else if (element.was_cool) cpt_fun++;
     else cpt_not_fun++;
   });

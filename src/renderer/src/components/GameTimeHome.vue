@@ -1,20 +1,23 @@
 <template>
   <Card
-    class="card"
-    :pt="{
+      class="card"
+      :pt="{
     root: { style: 'box-shadow: 0px 0px 0px 0px;' },
       content: { style: 'height:100%; ' }
     }"
   >
-    <template #subtitle> Classement des jeux en pourcentage </template>
+    <template #subtitle> <span class="gth-font">
+      Classement des jeux en pourcentage
+    </span>
+    </template>
     <template #content>
       <div class="center-pie">
         <Chart
-          type="pie"
-          :data="chartData"
-          :options="chartOptions"
-          class="pie"
-          :pt="{
+            type="pie"
+            :data="chartData"
+            :options="chartOptions"
+            class="pie"
+            :pt="{
             canvas: {
               class: 'p-chart',
               style: 'height: auto; margin-top:10px;',
@@ -26,12 +29,13 @@
   </Card>
 </template>
 <script setup>
-import { ref, onMounted, watch, reactive } from "vue";
-import { useStore } from "../store/store";
-import { storeToRefs } from "pinia";
+import {onMounted, ref, watch} from "vue";
+import {useStore} from "../store/store";
+import {storeToRefs} from "pinia";
+
 const props = defineProps(["teamName"]);
 const store = useStore();
-const { games, sessions, teams } = storeToRefs(store);
+const {games, sessions, teams} = storeToRefs(store);
 
 onMounted(() => {
   init();
@@ -42,6 +46,7 @@ watch([games, sessions, teams], () => {
 });
 
 const id_of_team = ref("");
+
 function setIdOfTeam() {
   for (let t of teams.value) {
     if (t.name === props.teamName) {
@@ -68,7 +73,7 @@ function setGamesNameAndPlaytime() {
           total_playtime += s.duration;
         }
       }
-      temp_games.push({ name: g.name, playtime: acc });
+      temp_games.push({name: g.name, playtime: acc});
     }
   } else {
     for (let g of games.value) {
@@ -79,14 +84,14 @@ function setGamesNameAndPlaytime() {
           total_playtime += s.duration;
         }
       }
-      temp_games.push({ name: g.name, playtime: acc });
+      temp_games.push({name: g.name, playtime: acc});
     }
   }
   temp_games.sort((a, b) => b.playtime - a.playtime);
   temp_games = temp_games.filter((g) => g.playtime > 0);
   games_name.value = temp_games.map((g) => g.name);
   games_percentage.value = temp_games.map((g) =>
-    ((g.playtime / total_playtime) * 100).toFixed(0)
+      ((g.playtime / total_playtime) * 100).toFixed(0)
   );
   games_playtime.value = temp_games.map((g) => g.playtime);
 }
@@ -103,14 +108,14 @@ async function init() {
 
 function convertMinuteToHoursMinute(minute) {
   return (
-    ((minute - (minute % 60)) / 60 > 0
-      ? (minute - (minute % 60)) / 60 + "h"
-      : "") +
-    (minute % 60 === 0
-      ? ""
-      : minute % 60 >= 10
-        ? (minute % 60) + "min"
-        : "0" + (minute % 60) + "min")
+      ((minute - (minute % 60)) / 60 > 0
+          ? (minute - (minute % 60)) / 60 + "h"
+          : "") +
+      (minute % 60 === 0
+          ? ""
+          : minute % 60 >= 10
+              ? (minute % 60) + "min"
+              : "0" + (minute % 60) + "min")
   );
 }
 
@@ -167,12 +172,12 @@ const setChartOptions = () => {
           },
           label: function (context) {
             return (
-              convertMinuteToHoursMinute(
-                games_playtime.value[context.dataIndex]
-              ) +
-              " -> " +
-              games_percentage.value[context.dataIndex] +
-              "%"
+                convertMinuteToHoursMinute(
+                    games_playtime.value[context.dataIndex]
+                ) +
+                " -> " +
+                games_percentage.value[context.dataIndex] +
+                "%"
             );
           },
         },
@@ -193,6 +198,17 @@ const setChartOptions = () => {
   width: 100%;
   height: 100%;
   border-radius: 30px;
+}
+
+@font-face {
+  font-family: sephir;
+  src: url('../assets/fonts/sephir/sephir.otf');
+}
+
+.gth-font {
+  font-family: sephir, serif;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .p-chart {

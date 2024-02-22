@@ -6,7 +6,10 @@
             content: { style: 'height:100%; ' }
         }"
     >
-      <template #subtitle> Classement des équipes par temps de jeu </template>
+      <template #subtitle>
+        <span class="pth-font">
+        Classement des équipes par temps de jeu
+        </span></template>
       <template #content>
         <Chart
           type="bar"
@@ -14,7 +17,7 @@
           :options="chartOptions"
           :pt="{
             canvas: {
-              style: 'height: 100%; max-height:250px;  width: auto;',
+              style: 'height: 100%; max-height:240px;  width: auto;',
             },
           }"
         />
@@ -35,22 +38,34 @@ onMounted(() => {
 const store = useStore();
 const { teams } = storeToRefs(store);
 const teams_from_db = ref([]);
-const teams_name = computed(() => {
+const teams_name = ref([]);
+function getTeamsName(){
   let arr = [];
   teams_from_db.value.map((team) => arr.push(team.name));
   return arr;
-});
+}
 const teams_playtime = computed(() => {
   let arr = [];
   teams_from_db.value.map((team) => arr.push(team.playtime));
   return arr;
 });
 
+const teams_name_spliced = ref([]);
+const getTeamNamesSpliced = () => {
+  let res = [];
+  teams_name.value.map((g) =>
+      res.push(g.length > 10 ? g.slice(0, 6) + "..." : g)
+  );
+  return res;
+};
+
 const chartData = ref({});
 const chartOptions = ref();
 
 async function init() {
   teams_from_db.value = await getFirstTeamsByPlaytime(teams.value.length);
+  teams_name.value = getTeamsName();
+  teams_name_spliced.value = getTeamNamesSpliced();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
 }
@@ -58,7 +73,7 @@ async function init() {
 const setChartData = () => {
   const documentStyle = getComputedStyle(document.body);
   return {
-    labels: teams_name.value,
+    labels: teams_name_spliced.value,
     datasets: [
       {
         label: "Temps de jeu en minute",
@@ -92,6 +107,13 @@ const setChartOptions = () => {
 
   return {
     plugins: {
+      tooltip: {
+        callbacks: {
+          beforeLabel: function (context) {
+            return (teams_name.value[context.dataIndex]);
+          },
+        },
+      },
       legend: {
         labels: {
           color: textColor,
@@ -126,5 +148,16 @@ const setChartOptions = () => {
   width: 100%;
   height: 100%;
   border-radius: 30px;
+}
+
+@font-face {
+  font-family: sephir;
+  src: url('../assets/fonts/sephir/sephir.otf');
+}
+
+.pth-font {
+  font-family: sephir, serif;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 </style>
