@@ -1,16 +1,20 @@
 <template>
   <div class="container">
-    <Card class="card">
-      <template #subtitle> Informations des jeux </template>
+    <Card
+        class="card"
+        :pt="{
+            root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+            content: { style: 'height:100%; width: auto;' }
+        }">
+      <template #subtitle> Informations des jeux</template>
       <template #content>
         <Chart
-          type="bar"
-          :data="chartData"
-          :options="chartOptions"
-          :pt="{
+            type="bar"
+            :data="chartData"
+            :options="chartOptions"
+            :pt="{
             canvas: {
-              class: 'p-chart',
-              style: 'height: 100%; width: auto',
+              style: 'height: 100%; max-height: 350px; width: auto',
             },
           }"
         />
@@ -19,12 +23,13 @@
   </div>
 </template>
 <script setup>
-import { ref,  onMounted,  watch } from "vue";
-import { useStore } from "../store/store";
-import { storeToRefs } from "pinia";
+import {onMounted, ref, watch} from "vue";
+import {useStore} from "../store/store";
+import {storeToRefs} from "pinia";
+
 const props = defineProps(["teamName"]);
 const store = useStore();
-const { games, sessions, teams } = storeToRefs(store);
+const {games, sessions, teams} = storeToRefs(store);
 onMounted(() => {
   init();
 });
@@ -37,7 +42,7 @@ const games_names = ref([]);
 const getGamesNames = () => {
   let res = [];
   games.value.map((g) =>
-    res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name)
+      res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name)
   );
   return res;
 };
@@ -65,6 +70,7 @@ const getSessionNumber = () => {
 };
 
 const id_of_team = ref("");
+
 function setIdOfTeam() {
   for (let t of teams.value) {
     if (t.name == props.teamName) {
@@ -103,6 +109,7 @@ const chartData = ref({});
 const chartOptions = ref();
 
 const games_copy = ref([]);
+
 function init() {
   setIdOfTeam();
   games_names.value = getGamesNames();
@@ -156,7 +163,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary"
+      "--text-color-secondary"
   );
 
   return {
@@ -189,9 +196,6 @@ const setChartOptions = () => {
   background-color: var(--primary-100);
   width: 100%;
   height: 100%;
-}
-
-.p-chart {
-  max-height: 100%;
+  border-radius: 30px;
 }
 </style>

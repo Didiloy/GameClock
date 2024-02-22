@@ -2,7 +2,8 @@
   <Card
     class="card"
     :pt="{
-      content: { style: 'height:100%; ' },
+    root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+      content: { style: 'height:100%; ' }
     }"
   >
     <template #subtitle> Classement des jeux en pourcentage </template>
@@ -191,6 +192,7 @@ const setChartOptions = () => {
   background-color: var(--primary-100);
   width: 100%;
   height: 100%;
+  border-radius: 30px;
 }
 
 .p-chart {

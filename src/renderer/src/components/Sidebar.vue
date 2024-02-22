@@ -2,7 +2,7 @@
   <div>
     <Sidebar
       :visible="true"
-      style="width: 200px"
+      style="width: 185px"
       :showCloseIcon="false"
       :modal="false"
       class="main-background"

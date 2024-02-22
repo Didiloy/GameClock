@@ -1,57 +1,48 @@
 <template>
   <div class="dv-dashboard">
-    <div class="dv-left">
-      <PlayTimeHome class="dv-bar-chart"></PlayTimeHome>
-      <BarChartAllGames class="dv-radar-chart"></BarChartAllGames>
-      <GamesFunPercentage
-          class="dv-radar-chart"></GamesFunPercentage>
-    </div>
-    <div class="dv-right">
-      <div class="dv-right-row">
-        <GameTimeHome class="dv-pie-chart"></GameTimeHome>
-      </div>
-      <div class="dv-right-row mt-5">
-        <LittleCard class="mt-5 mr-5"
-                    iconName="pi pi-users"
-                    :name="team_with_greatest_session_average_playtime"
-                    :value="'Fait les plus grosses sessions de jeu (' + convertMinuteToHoursMinute(team_with_greatest_session_average_playtime_value) + ' en moyenne)'"></LittleCard>
-        <LittleCard class="mt-5"
-                    iconName="pi pi-user"
-                    :name="team_with_most_sessions"
-                    :value="'A le plus de sessions avec ' + team_with_most_sessions_value + ' sessions'"></LittleCard>
-      </div>
-      <div class="dv-right-row">
-        <div class="littles-card">
-          <LittleCard
-              class="mr-5"
-              iconName="pi pi-hourglass"
-              :name="total_time_hours"
-              value="passées à jouer"
-          ></LittleCard>
-          <LittleCard
-              class="mr-5"
-              iconName="pi pi-sort-amount-up"
-              :name="number_of_games"
-              value="jeux joués"
-          ></LittleCard>
-          <LittleCard
-              iconName="pi pi-heart-fill"
-              :name="fun_percentage_computed"
-              :value="percentage_card_computed"
-          ></LittleCard>
-        </div>
-      </div>
-    </div>
+    <LittleCard class="dv-lc-sessions"
+                iconName="pi pi-users"
+                :name="team_with_greatest_session_average_playtime"
+                :value="'Fait les plus grosses sessions de jeu (' + convertMinuteToHoursMinute(team_with_greatest_session_average_playtime_value) + ' en moyenne)'"></LittleCard>
+    <LittleCard
+        class="dv-lc-time-played"
+        iconName="pi pi-hourglass"
+        :name="total_time_hours"
+        value="passées à jouer"
+    ></LittleCard>
+    <LittleCard
+        class="dv-lc-game-number"
+        iconName="pi pi-sort-amount-up"
+        :name="number_of_games"
+        value="jeux joués"
+    ></LittleCard>
+    <LittleCard class="dv-lc-most-session"
+                iconName="pi pi-user"
+                :name="team_with_most_sessions"
+                :value="'A le plus de sessions avec ' + team_with_most_sessions_value + ' sessions'"></LittleCard>
+    <GameTimeHome class="dv-pie-chart"></GameTimeHome>
+    <BarChartAllGames class="dv-bar-all-game"></BarChartAllGames>
+    <LittleCard
+        class="dv-lc-percentage"
+        iconName="pi pi-heart-fill"
+        :name="fun_percentage_computed"
+        :value="percentage_card_computed"
+    ></LittleCard>
+    <PlayTimeHome class="dv-play-time-home"></PlayTimeHome>
+    <GamesFunPercentage
+        class="dv-fun-percentage"></GamesFunPercentage>
+
+
   </div>
 </template>
 <script setup>
-import PlayTimeHome from "../components/PlayTimeHome.vue";
-import GameTimeHome from "../components/GameTimeHome.vue";
 import LittleCard from "./LittleCard.vue";
-import BarChartAllGames from "../components/BarChartAllGames.vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref, watch} from "vue";
+import GameTimeHome from "./GameTimeHome.vue";
+import BarChartAllGames from "./BarChartAllGames.vue";
+import PlayTimeHome from "./PlayTimeHome.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
 
 const props = defineProps(["teamName"]);
@@ -78,6 +69,7 @@ const team_with_greatest_session_average_playtime = ref("");
 const team_with_greatest_session_average_playtime_value = ref(0);
 const team_with_most_sessions = ref("");
 const team_with_most_sessions_value = ref(0);
+
 function getTeamWithGreatestSessionAveragePlaytime() {
   let teams_tmp = [];
   let teams_playtime_on_average = [];
@@ -100,7 +92,7 @@ function getTeamWithGreatestSessionAveragePlaytime() {
       team_with_greatest_session_average_playtime_value.value = teams_playtime_on_average[i];
       team_with_greatest_session_average_playtime.value = teams_tmp[i];
     }
-    if(teams_sessions[i] > team_with_most_sessions_value.value) {
+    if (teams_sessions[i] > team_with_most_sessions_value.value) {
       team_with_most_sessions_value.value = teams_sessions[i];
       team_with_most_sessions.value = teams_tmp[i];
     }
@@ -155,72 +147,109 @@ function calculateFunPercentage() {
   not_fun_percentage.value = ((cpt_not_fun / sessions.value.length) * 100).toFixed(0);
   return (cpt_fun / sessions.value.length) * 100;
 }
+
 </script>
 <style scoped>
 .dv-dashboard {
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
+  display: grid;
+  column-gap: 10px;
+  row-gap: 10px;
   width: 100%;
   height: 100%;
-  margin-top: 20px;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: 100px;
+  margin-top: 15px;
+  padding: 15px;
 }
 
-.dv-left {
-  width: 60%;
-  margin-right: 5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-}
-
-.dv-right {
-  width: 48%;
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto auto auto;
-}
-
-.dv-right-row {
+.dv-lc-sessions {
+  display: inline-grid;
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
+  grid-column-start: 1;
+  grid-column-end: 5;
+  grid-row-start: 1;
+  grid-row-end: 3;
 }
 
-.dv-bar-chart {
+.dv-lc-time-played {
+  display: inline-grid;
   width: 100%;
-  max-height: 300px;
+  height: 100%;
+  grid-column-start: 5;
+  grid-column-end: 7;
+  grid-row-start: 1;
+  grid-row-end: 3;
 }
 
-.dv-radar-chart {
+.dv-lc-game-number {
+  display: inline-grid;
   width: 100%;
-  margin-top: 5px;
-  max-height: 300px;
+  height: 100%;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 3;
+  grid-row-end: 5;
 }
+
+.dv-lc-most-session {
+  display: inline-grid;
+  width: 100%;
+  height: 100%;
+  grid-column-start: 3;
+  grid-column-end: 7;
+  grid-row-start: 3;
+  grid-row-end: 5;
+}
+
+.dv-lc-percentage {
+  display: inline-grid;
+  width: 100%;
+  height: 100%;
+  grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row-start: 5;
+  grid-row-end: 9;
+}
+
 
 .dv-pie-chart {
   width: 100%;
   height: 100%;
+  grid-column-start: 7;
+  grid-column-end: 13;
+  grid-row-start: 1;
+  grid-row-end: 5;
 }
 
-.littles-card {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
+ .dv-bar-all-game {
+   width: 100%;
+   height: 100%;
+   grid-column-start: 4;
+   grid-column-end: 13;
+   grid-row-start: 5;
+   grid-row-end: 9;
+ }
+
+
+
+.dv-play-time-home {
   width: 100%;
   height: 100%;
-  margin-top: 5px;
+  grid-column-start: 1;
+  grid-column-end: 7;
+  grid-row-start: 9;
+  grid-row-end: 12;
 }
 
-.mr-5 {
-  margin-right: 5px;
+.dv-fun-percentage{
+  width: 100%;
+  height: 100%;
+  grid-column-start: 7;
+  grid-column-end: 13;
+  grid-row-start: 9;
+  grid-row-end: 12;
 }
 
-.mt-5 {
-  margin-top: 5px;
-}
+
 </style>

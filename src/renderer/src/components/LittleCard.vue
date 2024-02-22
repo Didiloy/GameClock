@@ -1,5 +1,5 @@
 <template>
-  <Card class="lc-container">
+  <Card class="lc-container" :pt="{ root: { style: 'box-shadow: 0px 0px 0px 0px;' } }">
     <template #title>
       <div class="lc-center">
         <b><i :class="props.iconName"></i></b>
@@ -21,9 +21,8 @@ const props = defineProps(["name", "value", "iconName"]);
 .lc-container {
   width: 100%;
   height: 100%;
-  max-height: 200px;
-  //max-width: 200px;
   background-color: var(--primary-100);
+  border-radius: 30px;
 }
 .lc-center {
   display: flex;

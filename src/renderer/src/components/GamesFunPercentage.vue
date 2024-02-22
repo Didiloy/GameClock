@@ -1,19 +1,21 @@
 <script setup>
-import { ref,  onMounted,  watch } from "vue";
-import { useStore } from "../store/store";
-import { storeToRefs } from "pinia";
+import {onMounted, ref, watch} from "vue";
+import {useStore} from "../store/store";
+import {storeToRefs} from "pinia";
+
 const props = defineProps(["teamName"]);
 const store = useStore();
-const { games, sessions, teams } = storeToRefs(store);
+const {games, sessions, teams} = storeToRefs(store);
 onMounted(() => {
   init();
 });
 
-watch(sessions,() => {
+watch(sessions, () => {
   init();
 });
 
 const id_of_team = ref("");
+
 function setIdOfTeam() {
   for (let t of teams.value) {
     if (t.name === props.teamName) {
@@ -26,7 +28,7 @@ const games_names = ref([]);
 const getGamesNames = () => {
   let res = [];
   games.value.map((g) =>
-      res.push(g.name.length > 10 ? g.name.slice(0, 10) + "..." : g.name)
+      res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name)
   );
   return res;
 };
@@ -34,48 +36,50 @@ const getGamesNames = () => {
 const fun_percentage = ref([]);
 const neutral_percentage = ref([]);
 const bad_percentage = ref([]);
-function setPercentages(){
-  for(let g of games.value){
+
+function setPercentages() {
+  for (let g of games.value) {
     let fun = 0;
     let neutral = 0;
     let bad = 0;
     let cpt = 0;
-    for(let s of sessions.value){
-      if(id_of_team.value === ""){
-        if(s.game.id === g.id){
+    for (let s of sessions.value) {
+      if (id_of_team.value === "") {
+        if (s.game.id === g.id) {
           cpt++;
-          if(s.was_cool){
+          if (s.was_cool) {
             fun++;
-          }else if(s.was_cool === undefined){
+          } else if (s.was_cool === undefined) {
             neutral++;
-          }else{
+          } else {
             bad++;
           }
         }
-      }else {
-        if(s.game.id === g.id && s.team.id === id_of_team.value){
+      } else {
+        if (s.game.id === g.id && s.team.id === id_of_team.value) {
           cpt++;
-          if(s.was_cool){
+          if (s.was_cool) {
             fun++;
-          }else if(s.was_cool === undefined){
+          } else if (s.was_cool === undefined) {
             neutral++;
-          }else{
+          } else {
             bad++;
           }
         }
       }
     }
-    fun_percentage.value.push(((fun/cpt)*100).toFixed(2));
-    neutral_percentage.value.push(((neutral/cpt)*100).toFixed(2));
-    bad_percentage.value.push(((bad/cpt)*100).toFixed(2));
+    fun_percentage.value.push(((fun / cpt) * 100).toFixed(2));
+    neutral_percentage.value.push(((neutral / cpt) * 100).toFixed(2));
+    bad_percentage.value.push(((bad / cpt) * 100).toFixed(2));
   }
 }
 
-function init(){
+function init() {
   fun_percentage.value = [];
   neutral_percentage.value = [];
   bad_percentage.value = [];
   setIdOfTeam();
+  games_copy.value = games.value.slice();
   games_names.value = getGamesNames();
   setPercentages();
   for (let i = games_names.value.length; i >= 0; i--) {
@@ -90,6 +94,7 @@ function init(){
   chartData.value = setChartData();
 }
 
+const games_copy = ref([]);
 
 const chartData = ref({});
 const chartOptions = ref();
@@ -149,6 +154,9 @@ const setChartOptions = () => {
     plugins: {
       tooltip: {
         callbacks: {
+          beforeLabel: function (context) {
+            return (games_copy.value[context.dataIndex].name);
+          },
           label: function (context) {
             return (
                 context.dataset.data[context.dataIndex] +
@@ -193,17 +201,25 @@ const setChartOptions = () => {
 
 <template>
   <div class="container">
-    <Card class="card">
-      <template #subtitle> Taux de fun par jeux </template>
+    <Card class="card"
+          :pt="{
+            root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+            body: { style: 'height:100%; ' },
+            content: { style: 'height:100%; ' }
+        }"
+    >
+      <template #subtitle> Taux de fun par jeux</template>
       <template #content>
         <Chart
             type="bar"
             :data="chartData"
             :options="chartOptions"
             :pt="{
+              root: {
+               style: 'height: 100%; max-height:250px; width: auto;',
+            },
             canvas: {
-              class: 'p-chart',
-              style: 'height: 100%; width: auto',
+               style: 'height: 100%; max-height:250px; width: auto;',
             },
           }"
         />
@@ -217,9 +233,6 @@ const setChartOptions = () => {
   background-color: var(--primary-100);
   width: 100%;
   height: 100%;
-}
-
-.p-chart {
-  max-height: 100%;
+  border-radius: 30px;
 }
 </style>

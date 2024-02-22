@@ -1,6 +1,11 @@
 <template>
   <div class="container">
-    <Card class="card">
+    <Card class="card"
+          :pt="{
+            root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+            content: { style: 'height:100%; ' }
+        }"
+    >
       <template #subtitle> Classement des équipes par temps de jeu </template>
       <template #content>
         <Chart
@@ -9,8 +14,7 @@
           :options="chartOptions"
           :pt="{
             canvas: {
-              class: 'p-chart',
-              style: 'height: 100%; width: auto;',
+              style: 'height: 100%; max-height:250px;  width: auto;',
             },
           }"
         />
@@ -121,9 +125,6 @@ const setChartOptions = () => {
   background-color: var(--primary-100);
   width: 100%;
   height: 100%;
-}
-
-.p-chart {
-  max-height: 100%;
+  border-radius: 30px;
 }
 </style>

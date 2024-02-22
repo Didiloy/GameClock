@@ -15,17 +15,14 @@ import Dashboard from "../components/Dashboard.vue";
 .h-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
   height: 100%;
   width: 100%;
 }
 
 .h-dash {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  flex: 1;
   height: 100%;
   width: 100%;
 }

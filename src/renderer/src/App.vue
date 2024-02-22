@@ -25,7 +25,8 @@ const { sessions, games, teams } = storeToRefs(store);
 
 <style scoped>
 .app-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 185px auto;
   height: 100%;
   width: 100%;
 }
@@ -48,10 +49,8 @@ h2 {
 }
 
 .content {
-  margin-left: 200px;
   padding: 5px;
   height: 100%;
   width: 100%;
-  flex: 1; /* Takes remaining width */
 }
 </style>
