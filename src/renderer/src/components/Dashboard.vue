@@ -2,35 +2,45 @@
   <div class="dv-dashboard">
     <LittleCard class="dv-lc-sessions"
                 iconName="pi pi-users"
+                backgroundColor="#f9e09f"
+                titleColor="#241a00"
                 :name="team_with_greatest_session_average_playtime"
                 :value="'Fait les plus grosses sessions de jeu (' + convertMinuteToHoursMinute(team_with_greatest_session_average_playtime_value) + ' en moyenne)'"></LittleCard>
     <LittleCard
         class="dv-lc-time-played"
         iconName="pi pi-hourglass"
+        backgroundColor="#d4e7dc"
+        titleColor="#0f1f18"
         :name="total_time_hours"
         value="passées à jouer"
     ></LittleCard>
     <LittleCard
         class="dv-lc-game-number"
         iconName="pi pi-sort-amount-up"
+        backgroundColor="#c5eae7"
+        titleColor="#00201f"
         :name="number_of_games"
         value="jeux joués"
     ></LittleCard>
     <LittleCard class="dv-lc-most-session"
                 iconName="pi pi-user"
+                backgroundColor="#ffdbcb"
+                titleColor="#341100"
                 :name="team_with_most_sessions"
                 :value="'A le plus de sessions avec ' + team_with_most_sessions_value + ' sessions'"></LittleCard>
-    <GameTimeHome class="dv-pie-chart"></GameTimeHome>
-    <BarChartAllGames class="dv-bar-all-game"></BarChartAllGames>
+    <GameTimeHome class="dv-pie-chart" backgroundColor="#e8defa" titleColor="#1e182c"></GameTimeHome>
+    <BarChartAllGames class="dv-bar-all-game" backgroundColor="#dae1ff" titleColor="#001849"></BarChartAllGames>
     <LittleCard
         class="dv-lc-percentage"
         iconName="pi pi-heart-fill"
+        backgroundColor="#f7d8fe"
+        titleColor="#27142f"
         :name="fun_percentage_computed"
         :value="percentage_card_computed"
     ></LittleCard>
-    <PlayTimeHome class="dv-play-time-home"></PlayTimeHome>
+    <PlayTimeHome class="dv-play-time-home" backgroundColor="#c1f18f" titleColor="#0e2000"></PlayTimeHome>
     <GamesFunPercentage
-        class="dv-fun-percentage"></GamesFunPercentage>
+        class="dv-fun-percentage" backgroundColor="#ffdbd0" titleColor="#390b00"></GamesFunPercentage>
 
 
   </div>
@@ -131,7 +141,9 @@ const fun_percentage_computed = computed(() => {
 const neutral_percentage = ref(0);
 const not_fun_percentage = ref(0);
 const percentage_card_computed = computed(() => {
-  return `<b>de plaisir à jouer.</b><br><b>Neutre:</b> ${neutral_percentage.value}% <br><b>Nul</b>: ${not_fun_percentage.value}%`;
+  return `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <b>de plaisir à jouer !</b><br><h2>Neutre:</h2> ${neutral_percentage.value}% <br><h2>Nul:</h2> ${not_fun_percentage.value}%
+          </div>`;
 });
 
 function calculateFunPercentage() {

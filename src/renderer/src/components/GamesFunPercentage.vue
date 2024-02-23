@@ -3,7 +3,8 @@ import {onMounted, ref, watch} from "vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 
-const props = defineProps(["teamName"]);
+const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
+const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 const store = useStore();
 const {games, sessions, teams} = storeToRefs(store);
 onMounted(() => {
@@ -88,6 +89,7 @@ function init() {
       neutral_percentage.value.splice(i, 1);
       bad_percentage.value.splice(i, 1);
       games_names.value.splice(i, 1);
+      games_copy.value.splice(i, 1);
     }
   }
   chartOptions.value = setChartOptions();
@@ -233,7 +235,7 @@ const setChartOptions = () => {
 
 <style scoped>
 .card {
-  background-color: var(--primary-100);
+  background-color: v-bind('backgroundColor');
   width: 100%;
   height: 100%;
   border-radius: 30px;
@@ -248,5 +250,6 @@ const setChartOptions = () => {
   font-family: sephir, serif;
   font-size: 1.5rem;
   font-weight: bold;
+  color: v-bind('props.titleColor');
 }
 </style>

@@ -35,6 +35,9 @@ onMounted(() => {
   init();
 });
 
+const props = defineProps(["backgroundColor", "titleColor"]);
+const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
+
 const store = useStore();
 const { teams } = storeToRefs(store);
 const teams_from_db = ref([]);
@@ -144,7 +147,7 @@ const setChartOptions = () => {
 </script>
 <style scoped>
 .card {
-  background-color: var(--primary-100);
+  background-color: v-bind('backgroundColor');
   width: 100%;
   height: 100%;
   border-radius: 30px;
@@ -159,5 +162,6 @@ const setChartOptions = () => {
   font-family: sephir, serif;
   font-size: 1.5rem;
   font-weight: bold;
+  color: v-bind('titleColor');
 }
 </style>

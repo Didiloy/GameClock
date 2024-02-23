@@ -15,7 +15,8 @@
   </Card>
 </template>
 <script setup>
-const props = defineProps(["name", "value", "iconName"]);
+const props = defineProps(["name", "value", "iconName", "backgroundColor", "titleColor"]);
+const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 </script>
 <style scoped>
 @font-face {
@@ -31,7 +32,7 @@ const props = defineProps(["name", "value", "iconName"]);
 .lc-container {
   width: 100%;
   height: 100%;
-  background-color: var(--primary-100);
+  background-color: v-bind('backgroundColor');
   border-radius: 30px;
 }
 .lc-center {
@@ -39,7 +40,7 @@ const props = defineProps(["name", "value", "iconName"]);
   flex-direction: row;
   justify-content: start;
   align-items: center;
-  color: var(--primary-color);
+  color: v-bind('props.titleColor');
 }
 
 .lc-content {
@@ -47,6 +48,11 @@ const props = defineProps(["name", "value", "iconName"]);
   font-size: 1.5rem;
 }
 
+:deep(h2) {
+  color: v-bind('props.titleColor');
+  font-family: dishcek,serif;
+  font-size: 1.8rem;
+}
 .lc-title {
   flex: 1;
   display: flex;

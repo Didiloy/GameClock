@@ -7,7 +7,10 @@
     }"
   >
     <template #subtitle> <span class="gth-font">
-      Classement des jeux en pourcentage
+      <span class="gth-subtitle">
+        Classement des jeux en pourcentage
+      </span>
+
     </span>
     </template>
     <template #content>
@@ -33,7 +36,7 @@ import {onMounted, ref, watch} from "vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 
-const props = defineProps(["teamName"]);
+const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
 const store = useStore();
 const {games, sessions, teams} = storeToRefs(store);
 
@@ -45,6 +48,7 @@ watch([games, sessions, teams], () => {
   init();
 });
 
+const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 const id_of_team = ref("");
 
 function setIdOfTeam() {
@@ -194,7 +198,7 @@ const setChartOptions = () => {
 </script>
 <style scoped>
 .card {
-  background-color: var(--primary-100);
+  background-color: v-bind('backgroundColor');
   width: 100%;
   height: 100%;
   border-radius: 30px;
@@ -209,6 +213,10 @@ const setChartOptions = () => {
   font-family: sephir, serif;
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+.gth-subtitle {
+  color: v-bind('props.titleColor');
 }
 
 .p-chart {
