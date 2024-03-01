@@ -28,6 +28,7 @@ import AutoComplete from "primevue/autocomplete";
 import ProgressBar from 'primevue/progressbar';
 import Chart from "primevue/chart";
 import Dialog from 'primevue/dialog';
+import ToggleButton from 'primevue/togglebutton';
 import ProgressSpinner from 'primevue/progressspinner';
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "./views/Home.vue";
@@ -66,6 +67,7 @@ app.component("TabPanel", TabPanel);
 app.component("ProgressBar", ProgressBar);
 app.component("ProgressSpinner", ProgressSpinner);
 app.component("Dialog", Dialog);
+app.component("ToggleButton", ToggleButton);
 
 //Router
 const routes = [

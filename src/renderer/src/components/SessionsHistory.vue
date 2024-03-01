@@ -106,7 +106,7 @@ function convertMinuteToHoursMinute(minute) {
     ((minute - (minute % 60)) / 60 > 0
       ? (minute - (minute % 60)) / 60 + "h"
       : "") +
-    (minute % 60 == 0
+    (minute % 60 === 0
       ? ""
       : minute % 60 >= 10
         ? (minute % 60) + "min"
