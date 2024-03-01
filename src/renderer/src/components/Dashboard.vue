@@ -107,6 +107,7 @@ function getTeamWithGreatestSessionAveragePlaytime() {
       team_with_most_sessions.value = teams_tmp[i];
     }
   }
+  team_with_greatest_session_average_playtime_value.value = Math.round(team_with_greatest_session_average_playtime_value.value);
 }
 
 const total_time = ref(0);

@@ -2,7 +2,7 @@
   <Card class="lc-container" :pt="{ root: { style: 'box-shadow: 0px 0px 0px 0px;' } }">
     <template #title>
       <div class="lc-center">
-        <b><i :class="props.iconName"></i></b>
+        <b><i :class="props.iconName + ' icon'"></i></b>
         <div class="lc-title">
           {{ props.name }}
         </div>
@@ -27,6 +27,11 @@ const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--p
 @font-face {
   font-family: peachcake;
   src: url('../assets/fonts/peach_cake/peachcake.otf');
+}
+
+.icon{
+  font-size: 1.8rem;
+
 }
 
 .lc-container {
