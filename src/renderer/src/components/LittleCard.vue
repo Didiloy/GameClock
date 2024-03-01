@@ -39,6 +39,7 @@ const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--p
   height: 100%;
   background-color: v-bind('backgroundColor');
   border-radius: 30px;
+  overflow: hidden;
 }
 .lc-center {
   display: flex;

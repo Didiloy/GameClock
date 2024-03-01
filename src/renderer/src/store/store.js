@@ -11,6 +11,9 @@ export const useStore = defineStore("store",  () => {
   reloadStore();
 
   async function reloadStore() {
+    teams.value = [];
+    games.value = [];
+    sessions.value = [];
     teams.value = await getTeams();
     games.value = await getGames();
     sessions.value = await getSessions();
