@@ -1,18 +1,23 @@
 <template>
   <div class="container">
-    <Card class="card">
-      <template #subtitle> Temps de jeu et de bonheur par mois</template>
+    <Card class="card"
+          :pt="{
+            root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+            body: { style: 'height:100%; width: auto;' },
+            content: { style: 'height:100%; width: auto;' }
+        }">
+      <template #subtitle> <span class="lcgm-font">Temps de jeu et de bonheur par mois </span></template>
       <template #content>
         <Chart
           type="line"
           :data="chartData"
           :options="chartOptions"
           :pt="{
-            canvas: {
-              class: 'p-chart',
-              style: 'height: 100%;',
-            },
-          }"
+            root: { style: 'height: 100%; width: auto' },
+              canvas: {
+                style: 'height: 100%; width: auto',
+              },
+            }"
         />
       </template>
     </Card>
@@ -22,13 +27,15 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-const props = defineProps(["teamName"]);
+const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
 onMounted(() => {
   init();
 });
 
 const store = useStore();
 const { sessions, teams } = storeToRefs(store);
+
+const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 
 const sessions_of_the_team = ref([]);
 function setSessionsOfTheTeam() {
@@ -207,12 +214,22 @@ const setChartOptions = () => {
 </script>
 <style scoped>
 .card {
-  background-color: var(--primary-100);
+  background-color: v-bind('backgroundColor');
   width: 100%;
   height: 100%;
+  border-radius: 30px;
 }
 
-.p-chart {
-  max-height: 100%;
+@font-face {
+  font-family: sephir;
+  src: url('../assets/fonts/sephir/sephir.otf');
 }
+
+.lcgm-font {
+  font-family: sephir, serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: v-bind('props.titleColor');
+}
+
 </style>

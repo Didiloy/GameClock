@@ -48,7 +48,7 @@ function convertMinuteToHoursMinute(minute) {
   display: grid;
   grid-template-columns: auto !important;
   width: v-bind(card_size);
-  height: 95px !important;
+  height: 85px !important;
   border-radius: 10px;
   background-image: v-bind(heroe_url);
   background-size: cover;
@@ -63,7 +63,7 @@ function convertMinuteToHoursMinute(minute) {
   justify-content: start !important;
   align-items: center !important;
   width: v-bind(card_size);
-  height: 95px !important;
+  height: 85px !important;
   border-radius: 10px;
 }
 
@@ -73,14 +73,14 @@ function convertMinuteToHoursMinute(minute) {
   justify-content: space-between !important;
   align-items: center !important;
   width: v-bind(card_size);
-  height: 85px !important;
+  height: 75px !important;
   border-radius: 10px;
 }
 .img {
   border-radius: 10px;
   margin-right: 20px !important;
-  max-width: 80px;
-  max-height: 80px;
+  max-width: 60px;
+  max-height: 60px;
   width: auto;
   height: auto;
 }

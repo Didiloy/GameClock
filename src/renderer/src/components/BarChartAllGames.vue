@@ -17,10 +17,10 @@
             :data="chartData"
             :options="chartOptions"
             :pt="{
-            canvas: {
-              style: 'height: 100%; max-height: 350px; width: auto',
-            },
-          }"
+              canvas: {
+                style: 'height: 100%; max-height: 350px; width: auto',
+              },
+            }"
         />
       </template>
     </Card>

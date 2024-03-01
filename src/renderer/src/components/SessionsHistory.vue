@@ -1,6 +1,11 @@
 <template>
-  <Card class="sh-container">
-    <template #subtitle> Historique des sessions </template>
+  <Card class="sh-container"
+        :pt="{
+            root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+            body: { style: 'height:100%; ' },
+            content: { style: 'height:100%; ' }
+        }">
+    <template #subtitle> <span class="sh-font">Historique des sessions</span> </template>
     <template #content>
       <Accordion class="">
         <AccordionTab header="Sessions">
@@ -49,7 +54,8 @@
 import {ref, onMounted, watch} from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-const props = defineProps(["teamName"]);
+const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
+const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 const store = useStore();
 const { games, sessions, teams } = storeToRefs(store);
 
@@ -110,10 +116,10 @@ function convertMinuteToHoursMinute(minute) {
 </script>
 <style scoped>
 .sh-container {
+  background-color: v-bind('backgroundColor');
   width: 100%;
   height: 100%;
-  margin-top: 5px;
-  background-color: var(--primary-100);
+  border-radius: 30px;
 }
 .sh-name {
   display: flex;
@@ -124,5 +130,17 @@ function convertMinuteToHoursMinute(minute) {
 
 .sh-name > span {
   margin-left: 5px;
+}
+
+@font-face {
+  font-family: sephir;
+  src: url('../assets/fonts/sephir/sephir.otf');
+}
+
+.sh-font {
+  font-family: sephir, serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: v-bind('props.titleColor');
 }
 </style>
