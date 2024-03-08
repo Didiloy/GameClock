@@ -10,23 +10,30 @@
       <span class="gth-subtitle">
         Classement des jeux en pourcentage
       </span>
-
     </span>
     </template>
     <template #content>
-      <div class="center-pie">
-        <Chart
-            type="pie"
-            :data="chartData"
-            :options="chartOptions"
-            class="pie"
-            :pt="{
+      <Checkbox v-model="showLabel" inputId="show_label" :binary="true" @click="onShowLabelClick"
+                style="height: 20px;"/>
+      <label for="show_label" class="ml-2" style="font-size: 10pt;"> Montrer les noms </label>
+      <div class="chart-wrapper">
+        <div class="center-pie">
+          <Chart
+              type="pie"
+              ref="chart"
+              :data="chartData"
+              :options="chartOptions"
+              :plugins="[htmlLegendPlugin]"
+              class="pie"
+              :pt="{
             canvas: {
               class: 'p-chart',
-              style: 'height: auto; margin-top:10px;',
+              style: 'height: auto; width: 100%',
             },
           }"
-        />
+          />
+        </div>
+        <div class="legend-container" id="legend-container"></div>
       </div>
     </template>
   </Card>
@@ -48,7 +55,23 @@ watch([games, sessions, teams], () => {
   init();
 });
 
+const chart = ref({});
+
+const showLabel = ref(false);
+
+function onShowLabelClick() {
+  showLabel.value = !showLabel.value;
+  if (showLabel.value) {
+    chart.value.data.labels = games_name.value;
+    chart.value.options.plugins.legend.display = false;
+  } else {
+    chart.value.data.labels = games_name.value.map((g) => "");
+    chart.value.options.plugins.legend.display = false;
+  }
+}
+
 const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
+
 const id_of_team = ref("");
 
 function setIdOfTeam() {
@@ -186,7 +209,12 @@ const setChartOptions = () => {
           },
         },
       },
+      htmlLegend: {
+        containerID: "legend-container",
+      },
       legend: {
+        display: false,
+        position: "right",
         labels: {
           usePointStyle: true,
           color: textColor,
@@ -194,6 +222,87 @@ const setChartOptions = () => {
       },
     },
   };
+};
+
+const getOrCreateLegendList = (chart, id) => {
+  const legendContainer = document.getElementById(id);
+  let listContainer = legendContainer.querySelector('ul');
+
+  if (!listContainer) {
+    listContainer = document.createElement('ul');
+    listContainer.style.display = 'flex';
+    listContainer.style.flexDirection = 'column';
+    listContainer.style.overflowY = 'scroll';
+    listContainer.style.maxHeight = '300px';
+    listContainer.style.margin = 0;
+    listContainer.style.padding = 0;
+
+    legendContainer.appendChild(listContainer);
+  }
+
+  return listContainer;
+};
+
+const htmlLegendPlugin = {
+  id: 'htmlLegend',
+  afterUpdate(chart, args, options) {
+    const ul = getOrCreateLegendList(chart, options.containerID);
+
+    // Remove old legend items
+    while (ul.firstChild) {
+      ul.firstChild.remove();
+    }
+
+    // Reuse the built-in legendItems generator
+    const items = chart.options.plugins.legend.labels.generateLabels(chart);
+
+    items.forEach(item => {
+      const li = document.createElement('li');
+      li.style.alignItems = 'center';
+      li.style.cursor = 'pointer';
+      li.style.display = 'flex';
+      li.style.flexDirection = 'row';
+      li.style.marginLeft = '0px';
+      li.style.marginTop = '5px';
+
+      li.onclick = () => {
+        const {type} = chart.config;
+        if (type === 'pie' || type === 'doughnut') {
+          // Pie and doughnut charts only have a single dataset and visibility is per item
+          chart.toggleDataVisibility(item.index);
+        } else {
+          chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
+        }
+        chart.update();
+      };
+
+      // Color box
+      const boxSpan = document.createElement('span');
+      boxSpan.style.background = item.fillStyle;
+      boxSpan.style.borderColor = item.strokeStyle;
+      boxSpan.style.borderWidth = item.lineWidth + 'px';
+      boxSpan.style.borderRadius = '10px';
+      boxSpan.style.display = 'inline-block';
+      boxSpan.style.flexShrink = 0;
+      boxSpan.style.height = '20px';
+      boxSpan.style.marginRight = '10px';
+      boxSpan.style.width = '20px';
+
+      // Text
+      const textContainer = document.createElement('p');
+      textContainer.style.color = item.fontColor;
+      textContainer.style.margin = 0;
+      textContainer.style.padding = 0;
+      textContainer.style.textDecoration = item.hidden ? 'line-through' : '';
+
+      const text = document.createTextNode(item.text);
+      textContainer.appendChild(text);
+
+      li.appendChild(boxSpan);
+      li.appendChild(textContainer);
+      ul.appendChild(li);
+    });
+  }
 };
 </script>
 <style scoped>
@@ -223,8 +332,20 @@ const setChartOptions = () => {
   height: 100%;
 }
 
-.center-pie {
+.legend-container {
+}
+
+.chart-wrapper {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.center-pie {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }

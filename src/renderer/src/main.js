@@ -26,10 +26,12 @@ import AccordionTab from "primevue/accordiontab";
 import SelectButton from "primevue/selectbutton";
 import AutoComplete from "primevue/autocomplete";
 import ProgressBar from 'primevue/progressbar';
+import Checkbox from 'primevue/checkbox';
 import Chart from "primevue/chart";
 import Dialog from 'primevue/dialog';
 import ToggleButton from 'primevue/togglebutton';
 import ProgressSpinner from 'primevue/progressspinner';
+import OverlayPanel from 'primevue/overlaypanel';
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "./views/Home.vue";
 import Teams from "./views/Teams.vue";
@@ -68,6 +70,8 @@ app.component("ProgressBar", ProgressBar);
 app.component("ProgressSpinner", ProgressSpinner);
 app.component("Dialog", Dialog);
 app.component("ToggleButton", ToggleButton);
+app.component("Checkbox", Checkbox);
+app.component("OverlayPanel", OverlayPanel);
 
 //Router
 const routes = [
