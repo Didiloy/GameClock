@@ -1,6 +1,6 @@
 <template>
   <div class="sgs-container">
-    <Card class="card">
+    <Card class="card" :pt="{ root: { style: 'box-shadow: 0px 0px 0px 0px;' } }">
       <template #title
         ><span class="sgs-title">{{ props.name }}</span></template
       >
@@ -78,6 +78,7 @@ async function useModifyGame() {
   background-size: cover;
   background-repeat: no-repeat;
   width: 100%;
+  border-radius: 30px;
 }
 
 .sgs-container {

@@ -63,10 +63,8 @@ function onShowLabelClick() {
   showLabel.value = !showLabel.value;
   if (showLabel.value) {
     chart.value.data.labels = games_name.value;
-    chart.value.options.plugins.legend.display = false;
   } else {
     chart.value.data.labels = games_name.value.map((g) => "");
-    chart.value.options.plugins.legend.display = false;
   }
 }
 
@@ -214,7 +212,6 @@ const setChartOptions = () => {
       },
       legend: {
         display: false,
-        position: "right",
         labels: {
           usePointStyle: true,
           color: textColor,
@@ -234,8 +231,8 @@ const getOrCreateLegendList = (chart, id) => {
     listContainer.style.flexDirection = 'column';
     listContainer.style.overflowY = 'scroll';
     listContainer.style.maxHeight = '300px';
-    listContainer.style.margin = 0;
-    listContainer.style.padding = 0;
+    listContainer.style.margin = "0";
+    listContainer.style.padding = "0";
 
     legendContainer.appendChild(listContainer);
   }
