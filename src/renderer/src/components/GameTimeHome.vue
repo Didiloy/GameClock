@@ -42,6 +42,7 @@
 import {onMounted, ref, watch} from "vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
+import {convertMinuteToHoursMinute} from "../common/main";
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
 const store = useStore();
@@ -129,19 +130,6 @@ async function init() {
   setGamesNameAndPlaytime();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
-}
-
-function convertMinuteToHoursMinute(minute) {
-  return (
-      ((minute - (minute % 60)) / 60 > 0
-          ? (minute - (minute % 60)) / 60 + "h"
-          : "") +
-      (minute % 60 === 0
-          ? ""
-          : minute % 60 >= 10
-              ? (minute % 60) + "min"
-              : "0" + (minute % 60) + "min")
-  );
 }
 
 const setChartData = () => {

@@ -29,6 +29,7 @@ import {onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
+import {convertMinuteToHoursMinute} from "../common/main";
 
 const router = useRouter();
 
@@ -88,19 +89,6 @@ function getPlaytime(teamId) {
 const init = async () => {
   setTeamItem();
 };
-
-function convertMinuteToHoursMinute(minute) {
-  return (
-      ((minute - (minute % 60)) / 60 > 0
-          ? (minute - (minute % 60)) / 60 + "h "
-          : "") +
-      (minute % 60 === 0
-          ? ""
-          : minute % 60 >= 10
-              ? (minute % 60) + "m"
-              : "0" + (minute % 60) + "m")
-  );
-}
 
 function getClassNameFromIndex(index) {
   if (index === 0) {

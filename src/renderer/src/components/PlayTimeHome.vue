@@ -30,6 +30,7 @@ import { ref, onMounted, computed } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { getFirstTeamsByPlaytime } from "../database/database.js";
+import {convertMinuteToHoursMinute} from "../common/main";
 
 onMounted(() => {
   init();
@@ -79,7 +80,7 @@ const setChartData = () => {
     labels: teams_name_spliced.value,
     datasets: [
       {
-        label: "Temps de jeu en minute",
+        label: "Temps de jeu",
         data: teams_playtime.value,
         backgroundColor: [
           documentStyle.getPropertyValue("--indigo-500"),
@@ -114,6 +115,13 @@ const setChartOptions = () => {
         callbacks: {
           beforeLabel: function (context) {
             return (teams_name.value[context.dataIndex]);
+          },
+          label: function (context) {
+            return ( "temps de jeu: " +
+                convertMinuteToHoursMinute(
+                    teams_playtime.value[context.dataIndex]
+                )
+            );
           },
         },
       },
