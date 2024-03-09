@@ -16,12 +16,20 @@
           ></AutoComplete>
           <div class="as-duration-input">
             <InputNumber
-                class="input-field"
+                v-if="!is_chrono_running"
+                class="input-field input-number"
                 v-model="duration"
                 placeholder="Durée en minute"
             ></InputNumber>
+            <span v-else class="chrono-time">
+              {{convertSecondsToMinutesSeconds(duration_seconds) }}
+            </span>
             <div>
-              <Button icon="pi pi-clock" :label="duration_seconds > 0 ? convertSecondsToMinutesSeconds(duration_seconds) : ''" @click="startStopWatch"/>
+              <Button icon="pi pi-clock"
+                      :label="is_chrono_running > 0 ? 'Stop' : ''" @click="startStopWatch"
+                      :style="'background-color:' + getChronoButtonColor() +';'"
+                      class="as-chrono-button"
+              />
             </div>
           </div>
         </div>
@@ -96,10 +104,18 @@ watch(toggle_nul, () => {
   }
 });
 
+const timestamp_start_chrono = ref(0);
+
 const duration_seconds = ref(0);
 const is_chrono_running = ref(false);
 function startStopWatch() {
-  is_chrono_running.value = !is_chrono_running.value;
+  if(!is_chrono_running.value){
+    timestamp_start_chrono.value =  Date.now();
+    duration.value = 0;
+    is_chrono_running.value = !is_chrono_running.value;
+  }else {
+    is_chrono_running.value = !is_chrono_running.value;
+  }
 }
 
 watch(duration_seconds, () => {
@@ -112,7 +128,7 @@ onMounted(() => {
 
 setInterval(() => {
   if(is_chrono_running.value){
-    duration_seconds.value++;
+    duration_seconds.value =  (Date.now() - timestamp_start_chrono.value) / 1000;
   }
 }, 1000);
 
@@ -127,7 +143,7 @@ const autocomplete = (event) => {
 
 function convertSecondsToMinutesSeconds(seconds) {
   let minutes = Math.floor(seconds / 60);
-  let remainingSeconds = seconds % 60;
+  let remainingSeconds = (seconds % 60).toFixed(0);
 
   let result = "";
 
@@ -176,6 +192,10 @@ async function addNewSession() {
   game.value = "";
   duration.value = 0;
 }
+
+function getChronoButtonColor(){
+  return is_chrono_running.value ? 'var(--red-400)' : 'var(--primary-400)';
+}
 </script>
 <style scoped>
 .card {
@@ -204,13 +224,17 @@ async function addNewSession() {
 .as-duration-input {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: end;
   align-items: center;
   width: 100%;
 }
 
 .input-field {
   width: 200px;
+}
+
+.input-number{
+  margin-right: 108px;
 }
 
 .as-fun-selector {
@@ -220,6 +244,16 @@ async function addNewSession() {
   align-items: center;
   margin-top: 10px;
   width: 100%;
+}
+
+.as-chrono-button{
+  flex: 1;
+}
+
+.chrono-time {
+  margin-right: 100px;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .mb10 {
