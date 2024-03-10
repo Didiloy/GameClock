@@ -11,7 +11,7 @@
         Classement des équipes par temps de jeu
         </span></template>
       <template #subtitle>
-        <Chip label="Clic sur une équipe pour voir le détail" icon="pi pi-info-circle"
+        <Chip label="Clique sur une équipe pour voir le détail" icon="pi pi-info-circle"
               style="background-color: var(--primary-100);"/>
       </template>
       <template #content>
