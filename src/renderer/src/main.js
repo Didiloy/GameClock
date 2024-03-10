@@ -25,6 +25,7 @@ import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 import SelectButton from "primevue/selectbutton";
 import AutoComplete from "primevue/autocomplete";
+import Chip from "primevue/chip";
 import ProgressBar from 'primevue/progressbar';
 import Checkbox from 'primevue/checkbox';
 import Chart from "primevue/chart";
@@ -72,6 +73,7 @@ app.component("Dialog", Dialog);
 app.component("ToggleButton", ToggleButton);
 app.component("Checkbox", Checkbox);
 app.component("OverlayPanel", OverlayPanel);
+app.component("Chip", Chip);
 
 //Router
 const routes = [

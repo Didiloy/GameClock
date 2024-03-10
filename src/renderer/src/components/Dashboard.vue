@@ -252,7 +252,7 @@ function calculateFunPercentage() {
   grid-column-start: 1;
   grid-column-end: 7;
   grid-row-start: 9;
-  grid-row-end: 12;
+  grid-row-end: 13;
 }
 
 .dv-fun-percentage{
@@ -261,7 +261,7 @@ function calculateFunPercentage() {
   grid-column-start: 7;
   grid-column-end: 13;
   grid-row-start: 9;
-  grid-row-end: 12;
+  grid-row-end: 13;
 }
 
 

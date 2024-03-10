@@ -6,18 +6,22 @@
             content: { style: 'height:100%; ' }
         }"
     >
-      <template #subtitle>
+      <template #title>
         <span class="pth-font">
         Classement des équipes par temps de jeu
         </span></template>
+      <template #subtitle>
+        <Chip label="Clic sur une équipe pour voir le détail" icon="pi pi-info-circle"
+              style="background-color: var(--primary-100);"/>
+      </template>
       <template #content>
         <Chart
-          type="bar"
-          :data="chartData"
-          :options="chartOptions"
-          :pt="{
+            type="bar"
+            :data="chartData"
+            :options="chartOptions"
+            :pt="{
             canvas: {
-              style: 'height: 100%; max-height:240px;  width: auto;',
+              style: 'height: 100%; max-height:300px;  width: auto;',
             },
           }"
         />
@@ -26,11 +30,14 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, computed } from "vue";
-import { useStore } from "../store/store";
-import { storeToRefs } from "pinia";
-import { getFirstTeamsByPlaytime } from "../database/database.js";
+import {computed, onMounted, ref} from "vue";
+import {useStore} from "../store/store";
+import {storeToRefs} from "pinia";
+import {getFirstTeamsByPlaytime} from "../database/database.js";
 import {convertMinuteToHoursMinute} from "../common/main";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 onMounted(() => {
   init();
@@ -40,14 +47,16 @@ const props = defineProps(["backgroundColor", "titleColor"]);
 const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 
 const store = useStore();
-const { teams } = storeToRefs(store);
+const {teams} = storeToRefs(store);
 const teams_from_db = ref([]);
 const teams_name = ref([]);
-function getTeamsName(){
+
+function getTeamsName() {
   let arr = [];
   teams_from_db.value.map((team) => arr.push(team.name));
   return arr;
 }
+
 const teams_playtime = computed(() => {
   let arr = [];
   teams_from_db.value.map((team) => arr.push(team.playtime));
@@ -105,11 +114,15 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary"
+      "--text-color-secondary"
   );
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
   return {
+    onClick: (e) => {
+      const team_position = Math.abs(e.chart.scales.x.getValueForPixel(e.x));
+      router.push("/team/" + teams_name.value[team_position]);
+    },
     plugins: {
       tooltip: {
         callbacks: {
@@ -117,7 +130,7 @@ const setChartOptions = () => {
             return (teams_name.value[context.dataIndex]);
           },
           label: function (context) {
-            return ( "temps de jeu: " +
+            return ("temps de jeu: " +
                 convertMinuteToHoursMinute(
                     teams_playtime.value[context.dataIndex]
                 )

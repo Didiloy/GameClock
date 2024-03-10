@@ -221,10 +221,10 @@ const setChartOptions = () => {
             :options="chartOptions"
             :pt="{
               root: {
-               style: 'height: 100%; max-height:250px; width: auto;',
+               style: 'height: 100%; max-height:300px; width: auto;',
             },
             canvas: {
-               style: 'height: 100%; max-height:250px; width: auto;',
+               style: 'height: 100%; max-height:300px; width: auto;',
             },
           }"
         />
