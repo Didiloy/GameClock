@@ -1,12 +1,13 @@
 <template>
   <div class="t-container">
     <div class="t-top-row">
-      <Button label="Nouvelle session" icon="pi pi-plus" @click="add_session_dialog_visible = !add_session_dialog_visible"></Button>
+      <Button label="Nouvelle session" icon="pi pi-plus" @click="toggleAddSession"></Button>
       <div class="t-title">
         <h2 class="team-name">{{ $route.params.name }}</h2>
       </div>
     </div>
-    <Dialog v-model:visible="add_session_dialog_visible" modal dismissableMask header="Ajouter une session" :style="{ width: '600px' }">
+    <Dialog v-model:visible="add_session_dialog_visible" modal dismissableMask header="Ajouter une session"
+            :style="{ width: '600px' }">
       <AddSession :teamName="$route.params.name"></AddSession>
     </Dialog>
     <DashboardTeam :teamName="$route.params.name"></DashboardTeam>
@@ -16,8 +17,27 @@
 <script setup>
 import AddSession from "../components/AddSession.vue";
 import DashboardTeam from "../components/DashboardTeam.vue";
-import {ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
+
 const add_session_dialog_visible = ref(false);
+
+function toggleAddSession() {
+  add_session_dialog_visible.value = !add_session_dialog_visible.value;
+}
+
+function keyEventAddSession(e) {
+  if (e.key === 'n' || e.key === 'N') {
+    if(!add_session_dialog_visible.value)
+      toggleAddSession()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keyup', keyEventAddSession)
+});
+onUnmounted(() => {
+  document.removeEventListener('keyup', keyEventAddSession);
+});
 </script>
 <style scoped>
 .t-container {
@@ -49,9 +69,9 @@ const add_session_dialog_visible = ref(false);
   src: url('../assets/fonts/dishcek/Dishcek.otf');
 }
 
-.team-name{
+.team-name {
   color: #5a5d9d;
-  font-family: dishcek,serif;
+  font-family: dishcek, serif;
   font-size: 2.5rem;
   display: inline;
   margin: 0;
