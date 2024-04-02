@@ -1,9 +1,9 @@
 {
-  "name": "gameclock",
+  "name": "GameClock",
   "version": "1.0.0",
-  "description": "An Electron application with Vue",
+  "description": "Track you play time with your  friends",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "github.com/Didiloy",
   "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",
@@ -17,22 +17,22 @@
     "build:linux": "npm run build && electron-builder --linux --config"
   },
   "dependencies": {
-    "@electron-toolkit/preload": "^3.0.0",
-    "@electron-toolkit/utils": "^3.0.0",
-    "chart.js": "^4.4.1",
-    "firebase": "^10.7.2",
-    "pinia": "^2.1.7",
-    "primeicons": "^6.0.1",
-    "primevue": "^3.46.0",
-    "steamgriddb": "^2.1.1",
-    "vue-router": "^4.2.5"
+    "@electron-toolkit/preload": "latest",
+    "@electron-toolkit/utils": "latest",
+    "chart.js": "latest",
+    "firebase": "latest",
+    "pinia": "latest",
+    "primeicons": "latest",
+    "primevue": "latest",
+    "steamgriddb": "latest",
+    "vue-router": "latest"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.1",
     "@rushstack/eslint-patch": "^1.6.1",
     "@vitejs/plugin-vue": "^5.0.2",
     "@vue/eslint-config-prettier": "^9.0.0",
-    "electron": "^28.1.1",
+    "electron": "^29.1.6",
     "electron-builder": "^24.9.1",
     "electron-vite": "^2.0.0",
     "eslint": "^8.56.0",
