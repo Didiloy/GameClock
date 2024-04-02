@@ -56,6 +56,7 @@ function setTeamItem() {
       logo: getMostPlayedLogo(t.id),
     });
   }
+  teamItem.value.sort((a, b) => b.playtime - a.playtime);
 }
 
 function getMostPlayedLogo(teamId) {
