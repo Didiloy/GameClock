@@ -4,12 +4,8 @@ import {
   getDocs,
   setDoc,
   doc,
-  getDoc,
   query,
   where,
-  sum,
-  getAggregateFromServer,
-  and,
 } from "firebase/firestore";
 import { getGameId, getGameLogo, getGameHeroe } from "../api/steamgriddb";
 
@@ -202,85 +198,6 @@ export async function addImagesToGame(gameName) {
   });
 }
 
-export async function getFirstGamesByPlaytime(numberOfGames, teamName) {
-  if (teamName == "" || teamName == undefined) {
-    return await getFirstGamesByPlaytimeWithoutTeam(numberOfGames);
-  } else {
-    const q_team = query(
-      collection(db, "teams"),
-      where("name", "==", teamName)
-    );
-    const teamRef = (await getDocs(q_team)).docs[0].ref;
-    let games_to_return = [];
-    let cpt = 0;
-    const gamesSnapshot = await getDocs(collection(db, "games"));
-    for (let g of gamesSnapshot.docs) {
-      cpt++;
-      let p = await getTeamGameTotalPlaytime(g.ref, teamRef);
-      let j = await getGameJoyRate(g.ref, teamRef);
-      games_to_return.push({
-        name: g.data().name,
-        playtime: p,
-        heroe: g.data().heroe,
-        joyRate: j,
-        icon: g.data().logo,
-      });
-    }
-    return games_to_return
-      .sort((a, b) => {
-        return b.playtime - a.playtime;
-      })
-      .slice(0, numberOfGames == 0 ? cpt : numberOfGames);
-  }
-}
-
-async function getTeamGameTotalPlaytime(gameRef, teamRef) {
-  let acc = 0;
-  const q = query(
-    collection(db, "sessions"),
-    where("game", "==", gameRef),
-    where("team", "==", teamRef)
-  );
-  const sessions_on_game = await getDocs(q);
-  for (const session of sessions_on_game.docs) {
-    acc += session.data().duration;
-  }
-  return acc;
-}
-
-export async function getFirstGamesByPlaytimeWithoutTeam(numberOfGames) {
-  let games_to_return = [];
-  let cpt = 0;
-  const gamesSnapshot = await getDocs(collection(db, "games"));
-  for (let g of gamesSnapshot.docs) {
-    cpt++;
-    let p = await getGameTotalPlaytime(g.ref);
-    let j = await getGameJoyRate(g.ref);
-    games_to_return.push({
-      name: g.data().name,
-      playtime: p,
-      heroe: g.data().heroe,
-      joyRate: j,
-      icon: g.data().logo,
-    });
-  }
-  return games_to_return
-    .sort((a, b) => {
-      return b.playtime - a.playtime;
-    })
-    .slice(0, numberOfGames == 0 ? cpt : numberOfGames);
-}
-
-async function getGameTotalPlaytime(gameRef) {
-  let acc = 0;
-  const q = query(collection(db, "sessions"), where("game", "==", gameRef));
-  const sessions_on_game = await getDocs(q);
-  for (const session of sessions_on_game.docs) {
-    acc += session.data().duration;
-  }
-  return acc;
-}
-
 export async function getNumberOfGamePlayed(teamName) {
   const q_team = query(collection(db, "teams"), where("name", "==", teamName));
   const teamRef = (await getDocs(q_team)).docs[0].ref;
@@ -300,39 +217,7 @@ export async function getNumberOfGamePlayed(teamName) {
   return numberOfGames;
 }
 
-async function getGameJoyRate(gameRef, teamRef) {
-  let was_cool = 0;
-  let cpt = 0;
-  let q;
-  if (teamRef === "" || teamRef === undefined) {
-    q = query(collection(db, "sessions"), where("game", "==", gameRef));
-  } else {
-    q = query(
-      collection(db, "sessions"),
-      where("game", "==", gameRef),
-      where("team", "==", teamRef)
-    );
-  }
-  const sessions_on_game = await getDocs(q);
-  for (const session of sessions_on_game.docs) {
-    cpt++;
-    if (session.data().was_cool) was_cool++;
-  }
-  let percentage;
-  if (was_cool == 0) percentage = 0;
-  else percentage = (was_cool / cpt) * 100;
-  return percentage;
-}
-
 //Playtime
-export async function getTotalPlaytime() {
-  const coll = collection(db, "sessions");
-  const snapshot = await getAggregateFromServer(coll, {
-    total_playtime: sum("duration"),
-  });
-  return snapshot.data().total_playtime;
-}
-
 export async function calculateTeamRankingByDuration(teamName) {
   let teamsList = [];
   const teamsSnapshot = await getDocs(collection(db, "teams"));
