@@ -28,6 +28,7 @@ import AutoComplete from "primevue/autocomplete";
 import Chip from "primevue/chip";
 import ProgressBar from 'primevue/progressbar';
 import Checkbox from 'primevue/checkbox';
+import Dropdown from 'primevue/dropdown';
 import Chart from "primevue/chart";
 import Dialog from 'primevue/dialog';
 import ToggleButton from 'primevue/togglebutton';
@@ -40,6 +41,7 @@ import AddTeam from "./views/AddTeam.vue";
 import Team from "./views/Team.vue";
 import GamesSettings from "./views/GamesSettings.vue";
 import { createPinia } from "pinia";
+import Settings from "./views/Settings.vue";
 
 const app = createApp(App);
 
@@ -74,6 +76,7 @@ app.component("ToggleButton", ToggleButton);
 app.component("Checkbox", Checkbox);
 app.component("OverlayPanel", OverlayPanel);
 app.component("Chip", Chip);
+app.component("Dropdown", Dropdown);
 
 //Router
 const routes = [
@@ -82,6 +85,7 @@ const routes = [
   { path: "/team/:name", component: Team },
   { path: "/addteam", component: AddTeam },
   { path: "/settings/games", component: GamesSettings },
+  { path: "/settings/general", component: Settings },
 ];
 
 const router = createRouter({

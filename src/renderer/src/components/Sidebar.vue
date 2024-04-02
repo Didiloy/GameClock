@@ -90,6 +90,11 @@ const items = ref([
         icon: "pi pi-play",
         route: "/settings/games",
       },
+      {
+        label: "Général",
+        icon: "pi pi-cog",
+        route: "/settings/general",
+      }
     ],
   },
 ]);
