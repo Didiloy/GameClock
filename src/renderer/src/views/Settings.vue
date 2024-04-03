@@ -1,11 +1,14 @@
 <script setup>
 import TeamsPreferences from "../components/preferences/TeamsPreferences.vue";
+import AddSessionPreferences from "../components/preferences/AddSessionPreferences.vue";
 </script>
 
 <template>
   <div class="container">
     <h2 class="s-title">Paramètres</h2>
     <TeamsPreferences/>
+    <Divider/>
+    <AddSessionPreferences/>
     <Divider/>
   </div>
 </template>

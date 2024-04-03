@@ -106,7 +106,7 @@ function getPlaytime(teamId) {
   return playtime;
 }
 
-const init = async () => {
+const init = () => {
   setTeamItem();
   sortTeams();
 };

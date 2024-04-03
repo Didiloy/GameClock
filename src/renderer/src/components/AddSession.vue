@@ -63,7 +63,7 @@ import {addSession} from "../database/database";
 const store = useStore();
 const {games} = storeToRefs(store);
 const toast = useToast();
-const props = defineProps(["teamName"]);
+const props = defineProps(["teamName", "gameName"]);
 const all_games = ref(games);
 const items = ref([]);
 const loading = ref(false);
@@ -123,7 +123,9 @@ watch(duration_seconds, () => {
 });
 
 onMounted(() => {
-
+  if(props.gameName){
+    game.value = props.gameName;
+  }
 });
 
 setInterval(() => {

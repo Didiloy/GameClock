@@ -8,7 +8,7 @@
     </div>
     <Dialog v-model:visible="add_session_dialog_visible" modal dismissableMask header="Ajouter une session"
             :style="{ width: '600px' }">
-      <AddSession :teamName="$route.params.name"></AddSession>
+      <AddSession :teamName="$route.params.name" :gameName="add_session_game_name"></AddSession>
     </Dialog>
     <DashboardTeam :teamName="$route.params.name"></DashboardTeam>
   </div>
@@ -18,7 +18,9 @@
 import AddSession from "../components/AddSession.vue";
 import DashboardTeam from "../components/DashboardTeam.vue";
 import {onMounted, onUnmounted, ref} from "vue";
+import { getPreferences} from "../preferences/preferences";
 
+const add_session_game_name = ref("");
 const add_session_dialog_visible = ref(false);
 
 function toggleAddSession() {
@@ -26,9 +28,23 @@ function toggleAddSession() {
 }
 
 function keyEventAddSession(e) {
-  if (e.key === 'n' || e.key === 'N') {
-    if(!add_session_dialog_visible.value)
+  if (e.key === getPreferences("add_session_key_shortcut").toLowerCase() || e.key === getPreferences("add_session_key_shortcut").toUpperCase()) {
+    if(!add_session_dialog_visible.value){
+      add_session_game_name.value = ""
       toggleAddSession()
+    }
+  }
+  if (e.key === getPreferences("add_session_with_name_key_shortcut_1").toLowerCase() || e.key === getPreferences("add_session_with_name_key_shortcut_1").toUpperCase()) {
+    if(!add_session_dialog_visible.value){
+      add_session_game_name.value = getPreferences("add_session_with_name_game_name_1")
+      toggleAddSession()
+    }
+  }
+  if (e.key === getPreferences("add_session_with_name_key_shortcut_2").toLowerCase() || e.key === getPreferences("add_session_with_name_key_shortcut_2").toUpperCase()) {
+    if(!add_session_dialog_visible.value){
+      add_session_game_name.value = getPreferences("add_session_with_name_game_name_2")
+      toggleAddSession()
+    }
   }
 }
 
