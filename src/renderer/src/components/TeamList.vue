@@ -51,14 +51,17 @@ const teamItem = ref([]);
 function setTeamItem() {
   teamItem.value = [];
   for (let t of teams.value) {
+    let {game_name, logo} = getMostPlayedGameNameAndLogo(t.id);
     teamItem.value.push({
       name: t.name,
       playtime: getPlaytime(t.id),
-      logo: getMostPlayedLogo(t.id),
-      game_name: getMostPlayedGameName(t.id)
+      logo: logo,
+      game_name: game_name
     });
   }
+}
 
+function sortTeams(){
   switch(getPreferences("sort_order_team_list")) {
     case "playtime":
       teamItem.value.sort((a, b) => b.playtime - a.playtime);
@@ -72,7 +75,7 @@ function setTeamItem() {
   }
 }
 
-function getMostPlayedGameName(teamId) {
+function getMostPlayedGameNameAndLogo(teamId) {
   let temp_games = [];
   let total_playtime = 0;
   for (let g of games.value) {
@@ -87,25 +90,10 @@ function getMostPlayedGameName(teamId) {
   }
   temp_games.sort((a, b) => b.playtime - a.playtime);
   temp_games = temp_games.filter((g) => g.playtime > 0);
-  return temp_games[0]?.name ? temp_games[0].name : '';
-}
-
-function getMostPlayedLogo(teamId) {
-  let temp_games = [];
-  let total_playtime = 0;
-  for (let g of games.value) {
-    let acc = 0;
-    for (let s of sessions.value) {
-      if (s.team.id === teamId && s.game.id === g.id) {
-        acc += s.duration;
-        total_playtime += s.duration;
-      }
-    }
-    temp_games.push({name: g.name, playtime: acc, logo: g.logo});
+  return {
+    game_name: temp_games[0]?.name ? temp_games[0].name : '',
+    logo: temp_games[0]?.logo ? temp_games[0].logo : ''
   }
-  temp_games.sort((a, b) => b.playtime - a.playtime);
-  temp_games = temp_games.filter((g) => g.playtime > 0);
-  return temp_games[0]?.logo ? temp_games[0].logo : '';
 }
 
 function getPlaytime(teamId) {
@@ -120,6 +108,7 @@ function getPlaytime(teamId) {
 
 const init = async () => {
   setTeamItem();
+  sortTeams();
 };
 
 function getClassNameFromIndex(index) {
