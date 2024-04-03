@@ -42,7 +42,8 @@
 import {onMounted, ref, watch} from "vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
-import {convertMinuteToHoursMinute} from "../common/main";
+import {convertMinuteToHoursMinute, generateRandomColor} from "../common/main";
+import {getPreferences} from "../preferences/preferences";
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
 const store = useStore();
@@ -58,10 +59,14 @@ watch([games, sessions, teams], () => {
 
 const chart = ref({});
 
-const showLabel = ref(false);
+const showLabel = ref(getPreferences("pie_chart_labels_shown"));
 
 function onShowLabelClick() {
   showLabel.value = !showLabel.value;
+  setLabels();
+}
+
+function setLabels() {
   if (showLabel.value) {
     chart.value.data.labels = games_name.value;
   } else {
@@ -122,12 +127,41 @@ function setGamesNameAndPlaytime() {
   games_playtime.value = temp_games.map((g) => g.playtime);
 }
 
+const colors_of_pie_parts = ref([]);
+function setColorsOfPieParts() {
+  colors_of_pie_parts.value = [];
+  if (!getPreferences("pie_chart_use_custom_colors")) {
+    const documentStyle = getComputedStyle(document.body);
+    const colors = [
+      documentStyle.getPropertyValue("--blue-500"),
+      documentStyle.getPropertyValue("--yellow-500"),
+      documentStyle.getPropertyValue("--green-500"),
+      documentStyle.getPropertyValue("--red-500"),
+      documentStyle.getPropertyValue("--orange-500"),
+      documentStyle.getPropertyValue("--purple-500"),
+      documentStyle.getPropertyValue("--pink-500"),
+      documentStyle.getPropertyValue("--teal-500"),
+      documentStyle.getPropertyValue("--cyan-500"),
+      documentStyle.getPropertyValue("--indigo-500"),
+      documentStyle.getPropertyValue("--bluegray-500"),
+    ];
+    for(let i = 0; i < colors.length; i++) {
+      colors_of_pie_parts.value.push(colors[i]);
+    }
+  }else {
+    for(let i = 0; i < games_name.value.length; i++) {
+      colors_of_pie_parts.value.push(generateRandomColor());
+    }
+  }
+}
+
 const chartData = ref({});
 const chartOptions = ref();
 
-async function init() {
+function init() {
   setIdOfTeam();
   setGamesNameAndPlaytime();
+  setColorsOfPieParts();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
 }
@@ -136,37 +170,12 @@ const setChartData = () => {
   const documentStyle = getComputedStyle(document.body);
 
   return {
-    labels: games_name.value.map((g) => ""),
-    // labels: games_name.value,
+    labels: showLabel.value ? games_name.value : games_name.value.map((g) => ""),
     datasets: [
       {
         data: games_playtime.value,
-        backgroundColor: [
-          documentStyle.getPropertyValue("--blue-500"),
-          documentStyle.getPropertyValue("--yellow-500"),
-          documentStyle.getPropertyValue("--green-500"),
-          documentStyle.getPropertyValue("--red-500"),
-          documentStyle.getPropertyValue("--orange-500"),
-          documentStyle.getPropertyValue("--purple-500"),
-          documentStyle.getPropertyValue("--pink-500"),
-          documentStyle.getPropertyValue("--teal-500"),
-          documentStyle.getPropertyValue("--cyan-500"),
-          documentStyle.getPropertyValue("--indigo-500"),
-          documentStyle.getPropertyValue("--bluegray-500"),
-        ],
-        hoverBackgroundColor: [
-          documentStyle.getPropertyValue("--blue-400"),
-          documentStyle.getPropertyValue("--yellow-400"),
-          documentStyle.getPropertyValue("--green-400"),
-          documentStyle.getPropertyValue("--red-400"),
-          documentStyle.getPropertyValue("--orange-400"),
-          documentStyle.getPropertyValue("--purple-400"),
-          documentStyle.getPropertyValue("--pink-400"),
-          documentStyle.getPropertyValue("--teal-400"),
-          documentStyle.getPropertyValue("--cyan-400"),
-          documentStyle.getPropertyValue("--indigo-400"),
-          documentStyle.getPropertyValue("--bluegray-400"),
-        ],
+        backgroundColor: colors_of_pie_parts.value,
+        hoverBackgroundColor: colors_of_pie_parts.value,
       },
     ],
   };
@@ -232,6 +241,7 @@ const htmlLegendPlugin = {
   id: 'htmlLegend',
   afterUpdate(chart, args, options) {
     const ul = getOrCreateLegendList(chart, options.containerID);
+    ul.style.maxWidth = "200px";
 
     // Remove old legend items
     while (ul.firstChild) {

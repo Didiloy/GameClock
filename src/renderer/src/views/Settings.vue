@@ -1,6 +1,7 @@
 <script setup>
 import TeamsPreferences from "../components/preferences/TeamsPreferences.vue";
 import AddSessionPreferences from "../components/preferences/AddSessionPreferences.vue";
+import PieChartPreferences from "../components/preferences/PieChartPreferences.vue";
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import AddSessionPreferences from "../components/preferences/AddSessionPreferenc
     <Divider/>
     <AddSessionPreferences/>
     <Divider/>
+    <PieChartPreferences/>
   </div>
 </template>
 
@@ -21,7 +23,7 @@ import AddSessionPreferences from "../components/preferences/AddSessionPreferenc
   align-items: center;
   justify-content: start;
   height: 100%;
-  width: 100%;
+  width: 95%;
   margin-bottom: 20px;
 }
 

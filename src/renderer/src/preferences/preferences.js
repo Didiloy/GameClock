@@ -1,5 +1,5 @@
 const defaults = {
-    "pie_chart_labels_shown": true,
+    "pie_chart_labels_shown": false,
     "pie_chart_use_custom_colors": false,
     "add_session_key_shortcut": "n",
     "add_session_with_name_key_shortcut_1": "b",

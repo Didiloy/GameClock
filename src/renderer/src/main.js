@@ -31,6 +31,7 @@ import Checkbox from 'primevue/checkbox';
 import Dropdown from 'primevue/dropdown';
 import Chart from "primevue/chart";
 import Dialog from 'primevue/dialog';
+import InputSwitch from 'primevue/inputswitch';
 import ToggleButton from 'primevue/togglebutton';
 import ProgressSpinner from 'primevue/progressspinner';
 import OverlayPanel from 'primevue/overlaypanel';
@@ -77,6 +78,7 @@ app.component("Checkbox", Checkbox);
 app.component("OverlayPanel", OverlayPanel);
 app.component("Chip", Chip);
 app.component("Dropdown", Dropdown);
+app.component("InputSwitch", InputSwitch);
 
 //Router
 const routes = [

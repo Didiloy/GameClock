@@ -1,37 +1,40 @@
 <template>
   <div>
     <Sidebar
-      :visible="true"
-      style="width: 185px"
-      :showCloseIcon="false"
-      :modal="false"
-      class="main-background"
+        :visible="true"
+        style="width: 185px"
+        :showCloseIcon="false"
+        :modal="false"
+        class="main-background"
     >
       <template #header>
-        <Image :src="logo" width="150" class="header" />
+        <Image :src="logo" width="150" class="header"/>
       </template>
-      <Divider />
-      <div>
-        <div v-for="item in items" class="menu">
-          <h3 class="menu-item">{{ item.label }}</h3>
-          <router-link
-            v-for="subitem in item.items"
-            v-slot="{ navigate }"
-            :to="subitem.route"
-            class="router-link link"
-          >
-            <div>
-              <a :href="subitem.route" @click="navigate">
-                <span :class="subitem.icon" />
-                <span class="ml">{{ subitem.label }}</span>
-              </a>
-            </div>
-          </router-link>
+      <Divider/>
+      <div class="s-content">
+        <div style="width: 100%;">
+          <div v-for="item in items" class="menu">
+            <h3 class="menu-item">{{ item.label }}</h3>
+            <router-link
+                v-for="subitem in item.items"
+                v-slot="{ navigate }"
+                :to="subitem.route"
+                class="router-link link"
+            >
+              <div>
+                <a :href="subitem.route" @click="navigate">
+                  <span :class="subitem.icon"/>
+                  <span class="ml">{{ subitem.label }}</span>
+                </a>
+              </div>
+            </router-link>
+          </div>
         </div>
-      </div>
-      <div class="div-reload-button">
-        <Divider />
-        <Button class="reload-button" label="Recharger les données" @click="onReload" :icon="icon" :loading="loading"></Button>
+        <div class="div-reload-button">
+          <Divider/>
+          <Button class="reload-button" label="Recharger les données" @click="onReload" :icon="icon"
+                  :loading="loading"></Button>
+        </div>
       </div>
     </Sidebar>
   </div>
@@ -39,9 +42,8 @@
 
 <script setup>
 import logo from "../assets/images/icons.png";
-import { ref } from "vue";
+import {ref} from "vue";
 import {useStore} from "../store/store.js";
-import {addTeam} from "../database/database";
 
 const loading = ref(false);
 const icon = ref("pi pi-replay");
@@ -99,7 +101,7 @@ const items = ref([
   },
 ]);
 
-async function onReload(){
+async function onReload() {
   loading.value = true;
   await useStore().reloadStore();
   loading.value = false;
@@ -111,13 +113,15 @@ async function onReload(){
   margin-top: 5px;
 }
 
-.div-reload-button{
-  position: absolute;
-  bottom: 10px;
-  left: 0px;
-  border: none;
-  margin-left: 0px;
-  margin-top: 0px;
+.s-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: start;
+  height: 90%;
+}
+
+.div-reload-button {
   height: auto;
   width: 100%;
   border-radius: var(--border-radius);
@@ -125,12 +129,10 @@ async function onReload(){
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-left: 10px;
-  padding-right: 10px;
 }
 
-.reload-button{
-  width: 90%;
+.reload-button {
+  width: 100%;
 }
 
 .menu {
