@@ -6,6 +6,7 @@ const defaults = {
     "add_session_with_name_game_name_1": "",
     "add_session_with_name_key_shortcut_2": "v",
     "add_session_with_name_game_name_2": "",
+    "reload_data_after_adding_session": true,
     "sort_order_team_list": "playtime",
 };
 

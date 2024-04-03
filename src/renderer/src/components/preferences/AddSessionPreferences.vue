@@ -66,6 +66,11 @@ const update_shortcut_with_name_2 = (update_value) => {
   if (!validateShortCut(update_value)) return;
   setPreferences("add_session_with_name_key_shortcut_2", update_value);
 };
+
+const reload_data = ref(getPreferences("reload_data_after_adding_session"));
+watch(reload_data, () => {
+  setPreferences("reload_data_after_adding_session", reload_data.value);
+});
 </script>
 
 <template>
@@ -98,6 +103,11 @@ const update_shortcut_with_name_2 = (update_value) => {
                    style="width: 50px" maxlength="1"
         />
       </div>
+    </div>
+
+    <div class="tp-item">
+      <b class="text-color">Recharger les données après l'ajout d'une session:</b>
+      <InputSwitch v-model="reload_data"/>
     </div>
     <Toast/>
   </div>

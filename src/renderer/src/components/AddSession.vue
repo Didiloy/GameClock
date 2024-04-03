@@ -22,7 +22,7 @@
                 placeholder="Durée en minute"
             ></InputNumber>
             <span v-else class="chrono-time">
-              {{convertSecondsToMinutesSeconds(duration_seconds) }}
+              {{ convertSecondsToMinutesSeconds(duration_seconds) }}
             </span>
             <div>
               <Button icon="pi pi-clock"
@@ -59,6 +59,7 @@ import {useToast} from "primevue/usetoast";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {addSession} from "../database/database";
+import {getPreferences} from "../preferences/preferences";
 
 const store = useStore();
 const {games} = storeToRefs(store);
@@ -108,12 +109,13 @@ const timestamp_start_chrono = ref(0);
 
 const duration_seconds = ref(0);
 const is_chrono_running = ref(false);
+
 function startStopWatch() {
-  if(!is_chrono_running.value){
-    timestamp_start_chrono.value =  Date.now();
+  if (!is_chrono_running.value) {
+    timestamp_start_chrono.value = Date.now();
     duration.value = 0;
     is_chrono_running.value = !is_chrono_running.value;
-  }else {
+  } else {
     is_chrono_running.value = !is_chrono_running.value;
   }
 }
@@ -123,14 +125,14 @@ watch(duration_seconds, () => {
 });
 
 onMounted(() => {
-  if(props.gameName){
+  if (props.gameName) {
     game.value = props.gameName;
   }
 });
 
 setInterval(() => {
-  if(is_chrono_running.value){
-    duration_seconds.value =  (Date.now() - timestamp_start_chrono.value) / 1000;
+  if (is_chrono_running.value) {
+    duration_seconds.value = (Date.now() - timestamp_start_chrono.value) / 1000;
   }
 }, 1000);
 
@@ -180,9 +182,11 @@ async function addNewSession() {
       detail: "C'est tout bon !",
       life: 3000,
     });
-    setTimeout(async () => {
-      await store.reloadStore();
-    }, 3000);
+    if (getPreferences("reload_data_after_adding_session")) {
+      setTimeout(async () => {
+        await store.reloadStore();
+      }, 3000);
+    }
   } else {
     toast.add({
       severity: "error",
@@ -195,7 +199,7 @@ async function addNewSession() {
   duration.value = 0;
 }
 
-function getChronoButtonColor(){
+function getChronoButtonColor() {
   return is_chrono_running.value ? 'var(--red-400)' : 'var(--primary-400)';
 }
 </script>
@@ -235,7 +239,7 @@ function getChronoButtonColor(){
   width: 200px;
 }
 
-.input-number{
+.input-number {
   margin-right: 108px;
 }
 
@@ -248,7 +252,7 @@ function getChronoButtonColor(){
   width: 100%;
 }
 
-.as-chrono-button{
+.as-chrono-button {
   flex: 1;
 }
 
