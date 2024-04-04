@@ -19,7 +19,9 @@ import AddSession from "../components/AddSession.vue";
 import DashboardTeam from "../components/DashboardTeam.vue";
 import {onMounted, onUnmounted, ref} from "vue";
 import { getPreferences} from "../preferences/preferences";
+import {useRoute} from "vue-router";
 
+const game_if_we_come_from_home = useRoute().params.game;
 const add_session_game_name = ref("");
 const add_session_dialog_visible = ref(false);
 
@@ -50,6 +52,10 @@ function keyEventAddSession(e) {
 
 onMounted(() => {
   document.addEventListener('keyup', keyEventAddSession)
+  if(game_if_we_come_from_home){
+    add_session_game_name.value = game_if_we_come_from_home
+    toggleAddSession()
+  }
 });
 onUnmounted(() => {
   document.removeEventListener('keyup', keyEventAddSession);

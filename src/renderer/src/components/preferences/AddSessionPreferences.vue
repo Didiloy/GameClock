@@ -6,7 +6,7 @@ import {useStore} from "../../store/store";
 import {storeToRefs} from "pinia";
 
 const store = useStore();
-const {games} = storeToRefs(store);
+const {games, teams} = storeToRefs(store);
 const toast = useToast();
 
 const shortcut_add_session = ref(getPreferences("add_session_key_shortcut"));
@@ -42,9 +42,12 @@ function isValidChar(character) {
 }
 
 const game_list = ref([]);
+const teams_list = ref([]);
 onMounted(() => {
   game_list.value = games.value.map(g => g.name);
   game_list.value.unshift("");
+  teams_list.value = teams.value.map(t => t.name);
+  teams_list.value.unshift("");
 });
 
 const first_game = ref(getPreferences("add_session_with_name_game_name_1"));
@@ -71,11 +74,28 @@ const reload_data = ref(getPreferences("reload_data_after_adding_session"));
 watch(reload_data, () => {
   setPreferences("reload_data_after_adding_session", reload_data.value);
 });
+
+const shortcut_add_session_from_homepage_key_shortcut = ref(getPreferences("add_session_from_homepage_key_shortcut"));
+const update_shortcut_add_session_from_homepage = (update_value) => {
+  if (!validateShortCut(update_value)) return;
+  setPreferences("add_session_from_homepage_key_shortcut", update_value);
+};
+
+const add_session_from_homepage_game_name = ref(getPreferences("add_session_from_homepage_game_name"));
+watch(add_session_from_homepage_game_name, () => {
+  setPreferences("add_session_from_homepage_game_name", add_session_from_homepage_game_name.value);
+});
+
+const add_session_from_homepage_team_name = ref(getPreferences("add_session_from_homepage_team_name"));
+watch(add_session_from_homepage_team_name, () => {
+  setPreferences("add_session_from_homepage_team_name", add_session_from_homepage_team_name.value);
+});
 </script>
 
 <template>
   <div class="tp-container">
     <h2 class="tp-title">Ajouter une session</h2>
+    <h4 class="tp-title">Sur la page d'équipe</h4>
     <div class="tp-item">
       <b class="text-color">Raccourci clavier pour ajouter une session sans nom de jeu:</b>
       <InputText type="text" :modelValue="shortcut_add_session" @update:modelValue="update_shortcut_without_name"
@@ -108,6 +128,18 @@ watch(reload_data, () => {
     <div class="tp-item">
       <b class="text-color">Recharger les données après l'ajout d'une session:</b>
       <InputSwitch v-model="reload_data"/>
+    </div>
+    <h4 class="tp-title">Sur la page d'accueil</h4>
+    <div class="tp-item">
+      <b class="text-color">Raccourci clavier pour ajouter une session dans une équipe:</b>
+      <div class="tp-item-right-container">
+        <Dropdown v-model="add_session_from_homepage_team_name" :options="teams_list" style="width: 150px; margin-right: 10px"/>
+        <Dropdown v-model="add_session_from_homepage_game_name" :options="game_list" style="width: 200px; margin-right: 10px"/>
+        <InputText type="text" :modelValue="shortcut_add_session_from_homepage_key_shortcut"
+                   @update:modelValue="update_shortcut_add_session_from_homepage"
+                   style="width: 50px" maxlength="1"
+        />
+      </div>
     </div>
     <Toast/>
   </div>
