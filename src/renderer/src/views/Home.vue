@@ -18,7 +18,8 @@ const router = useRouter();
 
 function keyEventAddSession(e) {
   if (e.key === getPreferences("add_session_from_homepage_key_shortcut").toLowerCase() || e.key === getPreferences("add_session_from_homepage_key_shortcut").toUpperCase()) {
-    router.push("/team/" + getPreferences("add_session_from_homepage_team_name") + "/" + getPreferences("add_session_from_homepage_game_name"));
+    if (getPreferences("add_session_from_homepage_team_name") !== "")
+      router.push("/team/" + getPreferences("add_session_from_homepage_team_name") + "/" + getPreferences("add_session_from_homepage_game_name"));
   }
 }
 
