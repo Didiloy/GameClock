@@ -179,9 +179,9 @@ const setChartOptions = () => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            return convertMinuteToHoursMinute(
+            return "" + convertMinuteToHoursMinute(
               game_duration_by_month.value[context.dataIndex]
-            );
+            ) + " - " + joyrate_by_month.value[context.dataIndex].toFixed(2) + "%";
           },
         },
       },
