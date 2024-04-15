@@ -35,6 +35,14 @@
                 }}</template
               >
             </Column>
+            <Column field="joyrate" header="Bonheur">
+              <template #body="slotProps">
+                {{
+                  slotProps.data.joyrate == null ? "Neutre" :
+                  slotProps.data.joyrate === true ? "Bien" : "Nul"
+                }}</template
+              >
+            </Column>
             <Column field="date" header="Date">
               <template #body="slotProps">
                 {{
@@ -54,10 +62,13 @@
 import {ref, onMounted, watch} from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
+import {convertMinuteToHoursMinute} from "../common/main";
+
 const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
 const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 const store = useStore();
 const { games, sessions, teams } = storeToRefs(store);
+
 
 const sessions_values = ref([]);
 const id_of_team = ref("");
@@ -72,7 +83,7 @@ watch([sessions], () => {
 function init() {
    id_of_team.value = "";
   for (let t of teams.value) {
-    if (t.name == props.teamName) {
+    if (t.name === props.teamName) {
       id_of_team.value = t.id;
     }
   }
@@ -86,6 +97,7 @@ function init() {
         playtime: s.duration,
         date: s.date,
         logo: logo,
+        joyrate: s.was_cool
       });
     }
   }
@@ -96,22 +108,9 @@ function init() {
 
 function getGameNameAndLogoById(id) {
   for (let g of games.value) {
-    if (id == g.id) return [g.name, g.logo];
+    if (id === g.id) return [g.name, g.logo];
   }
   return ["[Jeu supprimé ou introuvable]", ""];
-}
-
-function convertMinuteToHoursMinute(minute) {
-  return (
-    ((minute - (minute % 60)) / 60 > 0
-      ? (minute - (minute % 60)) / 60 + "h"
-      : "") +
-    (minute % 60 === 0
-      ? ""
-      : minute % 60 >= 10
-        ? (minute % 60) + "min"
-        : "0" + (minute % 60) + "min")
-  );
 }
 </script>
 <style scoped>

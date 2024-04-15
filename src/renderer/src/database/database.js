@@ -83,7 +83,7 @@ export async function addSession(teamName, gameName, duration, was_cool) {
     let gamePath = "";
     const gamesSnapshot = await getDocs(collection(db, "games"));
     for (let s of gamesSnapshot.docs) {
-      if (s.data().name == gameName) {
+      if (s.data().name === gameName) {
         gameAlreadyExists = true;
         gamePath = s.id;
       }
@@ -91,7 +91,7 @@ export async function addSession(teamName, gameName, duration, was_cool) {
 
     const teamsSnapshot = await getDocs(collection(db, "teams"));
     for (let doc of teamsSnapshot.docs) {
-      if (doc.data().name == teamName) {
+      if (doc.data().name === teamName) {
         teamId = doc.id;
       }
     }
@@ -103,14 +103,14 @@ export async function addSession(teamName, gameName, duration, was_cool) {
       await addImagesToGame(gameName);
       const gamesSnapshot = await getDocs(collection(db, "games"));
       for (let s of gamesSnapshot.docs) {
-        if (s.data().name == gameName) {
+        if (s.data().name === gameName) {
           gamePath = s.id;
         }
       }
     }
     const sessionRef = collection(db, "sessions");
     //if the session was neutral we don't add was cool
-    if(was_cool){
+    if(was_cool !== undefined){
       await setDoc(doc(sessionRef), {
         duration: duration,
         was_cool: was_cool,
