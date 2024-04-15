@@ -1,25 +1,25 @@
 <template>
   <div class="gs-container">
-      <h2 class="gs-title">Modifiez vos jeux</h2>
+    <h2 class="gs-title">Modifiez vos jeux</h2>
+    <i>{{games.length}} jeux</i>
     <div class="gs-games">
       <SingleGameSetting
-        class="gs-m"
-        v-for="g in games.sort((a, b) => a.name.localeCompare(b.name))"
-        :name="g.name"
-        :heroe="g.heroe"
-        :logo="g.logo"
+          class="gs-m"
+          v-for="g in games.sort((a, b) => a.name.localeCompare(b.name))"
+          :name="g.name"
+          :heroe="g.heroe"
+          :logo="g.logo"
       />
     </div>
   </div>
 </template>
 <script setup>
 import SingleGameSetting from "../components/SingleGameSetting.vue";
-import { ref } from "vue";
-import { useStore } from "../store/store";
-import { storeToRefs } from "pinia";
+import {useStore} from "../store/store";
+import {storeToRefs} from "pinia";
 
 const store = useStore();
-const { games } = storeToRefs(store);
+const {games} = storeToRefs(store);
 </script>
 <style scoped>
 .gs-container {
@@ -36,9 +36,9 @@ const { games } = storeToRefs(store);
   src: url('../assets/fonts/dishcek/Dishcek.otf');
 }
 
-.gs-title{
+.gs-title {
   color: #5a5d9d;
-  font-family: dishcek,serif;
+  font-family: dishcek, serif;
   font-size: 2.5rem;
   display: inline;
   margin: 0;
