@@ -30,6 +30,7 @@
 import {onMounted, ref, watch} from "vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
+import {convertMinuteToHoursMinute} from "../common/main";
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
 const store = useStore();
@@ -184,6 +185,11 @@ const setChartOptions = () => {
           beforeLabel: function (context) {
             return (games_copy.value[context.dataIndex].name);
           },
+          label: function(tooltipItem){
+            if(tooltipItem.datasetIndex === 1){
+              return "Temps moyen d'une session: " + convertMinuteToHoursMinute(avg_duration.value[tooltipItem.dataIndex]);
+            }
+          }
         },
       },
     },
