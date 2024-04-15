@@ -22,7 +22,7 @@
                 placeholder="Durée en minute"
             ></InputNumber>
             <span v-else class="chrono-time">
-              {{ convertSecondsToMinutesSeconds(duration_seconds) }}
+              {{ convertSecondsToHourMinutesSeconds(duration_seconds) }}
             </span>
             <div>
               <Button icon="pi pi-clock"
@@ -145,15 +145,18 @@ const autocomplete = (event) => {
   });
 };
 
-function convertSecondsToMinutesSeconds(seconds) {
+function convertSecondsToHourMinutesSeconds(seconds) {
   let minutes = Math.floor(seconds / 60);
   let remainingSeconds = (seconds % 60).toFixed(0);
 
   let result = "";
 
-  if (minutes > 0) {
-    result += minutes + "m";
+  if (minutes > 60) {
+    result += Math.floor(minutes / 60) + "h ";
+    minutes = minutes % 60;
   }
+
+  result += minutes + "m";
 
   if (remainingSeconds > 0) {
     if (result !== "") {
