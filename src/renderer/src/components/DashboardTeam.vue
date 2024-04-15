@@ -88,7 +88,6 @@ import LittleCard from "./LittleCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
 import TopGamesLittleGameCard from "./TopGamesLittleGameCard.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
-import { getNumberOfGamePlayed,} from "../database/database";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref, watch} from "vue";
@@ -99,37 +98,41 @@ const props = defineProps(["teamName"]);
 
 const store = useStore();
 const {sessions, games, teams} = storeToRefs(store);
+const id_of_team = ref("");
 
 onMounted(() => {
   init();
 });
 
-watch(sessions, () => {
+watch([sessions, id_of_team], () => {
   init();
 });
 
-
-async function init() {
+function init() {
+  id_of_team.value = getIdOfTeam();
   total_time.value = calculateTotalTime();
-  team_time.value = calculateTeamTime(props.teamName);
+  team_time.value = calculateTeamTime();
   sessions_number.value = getNumberOfSessions();
   ranking.value = calculateRanking(props.teamName);
-  number_of_games.value = await getNumberOfGames(props.teamName);
+  number_of_games.value = getNumberOfGames();
 }
 
 const sessions_number = ref(0);
 
-function getNumberOfSessions() {
-  let id_of_team = "";
+
+function getIdOfTeam(){
   for (let t of teams.value) {
     if (t.name === props.teamName) {
-      id_of_team = t.id;
+      return t.id;
     }
   }
-  if (id_of_team === "") return 0;
+  return "";
+}
+function getNumberOfSessions() {
+  if (id_of_team.value === "") return 0;
   let cpt = 0;
   sessions.value.forEach((element) => {
-    if (element.team.id === id_of_team) {
+    if (element.team.id === id_of_team.value) {
       cpt++;
     }
   });
@@ -163,17 +166,11 @@ function calculateTotalTime() {
   return cpt;
 }
 
-function calculateTeamTime(name) {
-  let id_of_team = "";
-  for (let t of teams.value) {
-    if (t.name === name) {
-      id_of_team = t.id;
-    }
-  }
-  if (id_of_team === "") return 0;
+function calculateTeamTime() {
+  if (id_of_team.value === "") return 0;
   let cpt = 0;
   sessions.value.forEach((element) => {
-    if (element.team.id === id_of_team) {
+    if (element.team.id === id_of_team.value) {
       cpt += element.duration;
     }
   });
@@ -182,8 +179,19 @@ function calculateTeamTime(name) {
 
 const number_of_games = ref(0);
 
-async function getNumberOfGames(teamName) {
-  return await getNumberOfGamePlayed(teamName);
+function getNumberOfGames() {
+  if (id_of_team.value === "") return 0;
+  let cpt = 0;
+  let played_games = [];
+  sessions.value.forEach((element) => {
+    if (element.team.id === id_of_team.value) {
+      if (!played_games.includes(element.game.id)) {
+        played_games.push(element.game.id);
+        cpt++;
+      }
+    }
+  });
+  return cpt;
 }
 
 const ranking = ref(0);

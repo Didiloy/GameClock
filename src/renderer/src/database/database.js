@@ -197,22 +197,3 @@ export async function addImagesToGame(gameName) {
     heroe: gameHeroe,
   });
 }
-
-export async function getNumberOfGamePlayed(teamName) {
-  const q_team = query(collection(db, "teams"), where("name", "==", teamName));
-  const teamRef = (await getDocs(q_team)).docs[0].ref;
-  const q_sessions = query(
-    collection(db, "sessions"),
-    where("team", "==", teamRef)
-  );
-  const sessions_on_team = await getDocs(q_sessions);
-  let numberOfGames = 0;
-  let played_game = [];
-  for (let s in sessions_on_team.docs) {
-    if (!played_game.includes(sessions_on_team.docs[s].data().game.id)) {
-      numberOfGames++;
-      played_game.push(sessions_on_team.docs[s].data().game.id);
-    }
-  }
-  return numberOfGames;
-}
