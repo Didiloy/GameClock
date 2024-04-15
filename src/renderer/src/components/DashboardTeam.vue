@@ -88,11 +88,12 @@ import LittleCard from "./LittleCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
 import TopGamesLittleGameCard from "./TopGamesLittleGameCard.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
-import {calculateTeamRankingByDuration, getNumberOfGamePlayed,} from "../database/database";
+import { getNumberOfGamePlayed,} from "../database/database";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref, watch} from "vue";
 import SessionsHistory from "./SessionsHistory.vue";
+import {convertMinuteToHoursMinute} from "../common/main";
 
 const props = defineProps(["teamName"]);
 
@@ -112,8 +113,8 @@ async function init() {
   total_time.value = calculateTotalTime();
   team_time.value = calculateTeamTime(props.teamName);
   sessions_number.value = getNumberOfSessions();
+  ranking.value = calculateRanking(props.teamName);
   number_of_games.value = await getNumberOfGames(props.teamName);
-  ranking.value = await calculateRanking(props.teamName);
 }
 
 const sessions_number = ref(0);
@@ -154,19 +155,6 @@ const number_of_movies = computed(() => {
   return (team_time.value / average_movie_time.value).toFixed(0);
 });
 
-function convertMinuteToHoursMinute(minute) {
-  return (
-      ((minute - (minute % 60)) / 60 > 0
-          ? (minute - (minute % 60)) / 60 + "h"
-          : "") +
-      (minute % 60 === 0
-          ? ""
-          : minute % 60 >= 10
-              ? minute % 60
-              : "0" + (minute % 60))
-  );
-}
-
 function calculateTotalTime() {
   let cpt = 0;
   sessions.value.forEach((element) => {
@@ -203,8 +191,31 @@ const ranking_computed = computed(() => {
   return ranking.value;
 });
 
-async function calculateRanking(teamName) {
-  return await calculateTeamRankingByDuration(teamName);
+function calculateRanking(teamName) {
+  //calculate the playtime of all teams
+  let playtime = [];
+  for (let t of teams.value) {
+    let cpt = 0;
+    sessions.value.forEach((element) => {
+      if (element.team.id === t.id) {
+        cpt += element.duration;
+      }
+    });
+    playtime.push({team: t.name, time: cpt});
+  }
+
+  playtime.sort((a, b) => {
+    return b.time - a.time;
+  });
+
+  let cpt = 1;
+  for (let p of playtime) {
+    if (p.team === teamName) {
+      return cpt;
+    }
+    cpt++;
+  }
+  return cpt;
 }
 
 const monthNames = [

@@ -216,27 +216,3 @@ export async function getNumberOfGamePlayed(teamName) {
   }
   return numberOfGames;
 }
-
-//Playtime
-export async function calculateTeamRankingByDuration(teamName) {
-  let teamsList = [];
-  const teamsSnapshot = await getDocs(collection(db, "teams"));
-  teamsSnapshot.forEach((doc) => {
-    teamsList.push(doc);
-  });
-  let team_name_session_number = [];
-  for (let team of teamsList) {
-    let team_name = team.data().name;
-    let team_playtime = await getSumSessionsDuration(team_name);
-    team_name_session_number.push({
-      team_name: team_name,
-      team_playtime: team_playtime,
-    });
-  }
-  team_name_session_number.sort((a, b) => {
-    return b.team_playtime - a.team_playtime;
-  });
-  let index =
-    team_name_session_number.findIndex((e) => e.team_name == teamName) + 1; //La première position est 1 et non 0
-  return index;
-}
