@@ -2,21 +2,32 @@
   <div class="sgs-container">
     <Card class="card" :pt="{ root: { style: 'box-shadow: 0px 0px 0px 0px;' },
      body: {style: 'height: 100%;'},
-     content: {style: 'height: 100%;'}}">
+     content: {style: 'height: 100%; padding:0;'}}">
       <template #title
       ><span class="sgs-title">{{ props.name }}</span></template
       >
       <template #content>
         <div class="sessions-info">
-          <p class="individual-info"><span class="individual-info-lg">{{ total_sessions }} </span> sessions</p>
-          <p class="individual-info">Session la plus longue : <span
-              class="individual-info-lg">{{ convertMinuteToHoursMinute(longuest_session) }}</span></p>
-          <p class="individual-info">Session la plus courte : <span
-              class="individual-info-lg">{{ convertMinuteToHoursMinute(smallest_session) }} </span></p>
-          <p class="individual-info">Durée moyenne des sessions : <span
-              class="individual-info-lg">{{ convertMinuteToHoursMinute(average_session) }}</span></p>
-          <p class="individual-info">Équipe qui joue le plus : <span
-              class="individual-info-lg">{{ team_who_play_the_most }}</span></p>
+          <div class="individual-info sgs-session-number">
+            <p class="individual-info-lg">{{ total_sessions }}</p>
+            <p>sessions</p>
+          </div>
+          <div class="individual-info sgs-longest-session">
+            <p class="individual-info-lg">{{ convertMinuteToHoursMinute(longuest_session) }}</p>
+            <p>Session la plus longue</p>
+          </div>
+          <div class="individual-info sgs-smallest-session">
+            <p class="individual-info-lg">{{ convertMinuteToHoursMinute(smallest_session) }}</p>
+            <p>Session la plus courte</p>
+          </div>
+          <div class="individual-info sgs-average-session">
+            <p class="individual-info-lg">{{ convertMinuteToHoursMinute(average_session) }}</p>
+            <p>Durée moyenne des sessions</p>
+          </div>
+          <div class="individual-info sgs-team">
+            <p class="individual-info-lg">{{ team_who_play_the_most }}</p>
+            <p>Équipe qui joue le plus</p>
+          </div>
         </div>
         <div class="sgs-content">
           <div class="sgs-left">
@@ -24,15 +35,15 @@
             <InputText id="logo" type="text" v-model="logo" style="width:400px;"/>
             <label for="heroe">Image du jeu</label>
             <InputText id="heroe" type="text" v-model="heroe" style="width:400px;"/>
-            <Button
-                label="Modifier"
-                :icon="icon"
-                class="btn-add"
-                @click="useModifyGame"
-                :loading="loading"
-                style="margin-top: 10px;"
-            ></Button>
           </div>
+          <Button
+              label="Modifier"
+              :icon="icon"
+              class="btn-add"
+              @click="useModifyGame"
+              :loading="loading"
+              style="margin-top: 10px;"
+          ></Button>
         </div>
       </template>
     </Card>
@@ -147,7 +158,7 @@ async function useModifyGame() {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  height: 500px;
+  height: 100%;
   width: 100%;
   border-radius: 30px;
 }
@@ -156,46 +167,90 @@ async function useModifyGame() {
   width: 100%;
   height: 100%;
   border-radius: 30px;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.sessions-info {
+  display: grid;
+  column-gap: 5px;
+  row-gap: 5px;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: 100px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.sgs-session-number {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+.sgs-longest-session {
+  grid-column-start: 3;
+  grid-column-end: 5;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+.sgs-smallest-session {
+  grid-column-start: 5;
+  grid-column-end: 7;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+.sgs-average-session {
+  grid-column-start: 1;
+  grid-column-end: 5;
+  grid-row-start: 2;
+  grid-row-end: 2;
+}
+
+.sgs-team {
+  grid-column-start: 5;
+  grid-column-end: 7;
+  grid-row-start: 2;
+  grid-row-end: 2;
+}
+
+.individual-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  //border: 1px solid white;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  font-size: large;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: var(--surface-0);
+}
+
+.individual-info > p {
+  margin: 0;
+}
+
+.individual-info-lg {
+  font-size: x-large;
+  color: var(--surface-0);
+  font-weight: bold;
 }
 
 .sgs-content {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
-.sgs-text-color {
-  color: var(--surface-0);
-}
-
-.sessions-info {
-  color: var(--surface-0);
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: start;
-  align-items: center;
-}
-
-.individual-info {
-  display: inline;
-  background-color: var(--primary-200);
+  align-items: end;
+  width: 90%;
+  margin: 10px auto 0;
   padding: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
-  color: var(--text-color);
-  font-size: large;
-  margin-right: 20px;
-}
-
-.individual-info-lg {
-  font-size: x-large;
-  color: var(--text-color);
-  font-weight: bold;
 }
 
 .sgs-left {
