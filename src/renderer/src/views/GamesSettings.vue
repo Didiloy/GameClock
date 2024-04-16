@@ -51,7 +51,6 @@ const {games} = storeToRefs(store);
   justify-content: start;
   align-items: center;
   width: 80%;
-  height: 70%;
   margin-bottom: 50px;
 }
 
