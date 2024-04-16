@@ -54,6 +54,14 @@
           titleColor="#241a00"
           :value="text_movies"
       ></LittleCard>
+      <LittleCard
+          class="dt-lc-joy-all-game"
+          iconName="pi pi-thumbs-up"
+          :name="total_fun_percentage + '%'"
+          backgroundColor="#90a1b9"
+          titleColor="#303a48"
+          value="Plaisir ressenti tous jeux confondus"
+      ></LittleCard>
       <LineChartGameByMonth
           class="dt-line-chart"
           :teamName="props.teamName"
@@ -78,7 +86,7 @@
       ></LittleCard>
 
     </div>
-      <SessionsHistory :teamName="props.teamName"/>
+    <SessionsHistory :teamName="props.teamName"/>
   </div>
 </template>
 <script setup>
@@ -100,6 +108,7 @@ const store = useStore();
 const {sessions, games, teams} = storeToRefs(store);
 const id_of_team = ref("");
 
+
 onMounted(() => {
   init();
 });
@@ -115,12 +124,13 @@ function init() {
   sessions_number.value = getNumberOfSessions();
   ranking.value = calculateRanking(props.teamName);
   number_of_games.value = getNumberOfGames();
+  total_fun_percentage.value = getTotalFunPercentage();
 }
 
 const sessions_number = ref(0);
 
 
-function getIdOfTeam(){
+function getIdOfTeam() {
   for (let t of teams.value) {
     if (t.name === props.teamName) {
       return t.id;
@@ -128,6 +138,7 @@ function getIdOfTeam(){
   }
   return "";
 }
+
 function getNumberOfSessions() {
   if (id_of_team.value === "") return 0;
   let cpt = 0;
@@ -224,6 +235,15 @@ function calculateRanking(teamName) {
     cpt++;
   }
   return cpt;
+}
+
+const total_fun_percentage = ref(0);
+
+function getTotalFunPercentage() {
+  let tmp = sessions.value.filter(s => s.team.id === id_of_team.value);
+  let cpt = 0;
+  tmp.map(s => cpt += s.was_cool ? 1 : 0);
+  return (cpt / tmp.length * 100).toFixed(0);
 }
 
 const monthNames = [
@@ -334,6 +354,16 @@ const text_movies = `<div style="display: flex; flex-direction: column; justify-
   grid-column-start: 1;
   grid-column-end: 4;
   grid-row-start: 11;
+  grid-row-end: 14;
+}
+
+.dt-lc-joy-all-game {
+  display: inline-grid;
+  width: 100%;
+  height: 100%;
+  grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row-start: 14;
   grid-row-end: 16;
 }
 
