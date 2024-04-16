@@ -1,11 +1,14 @@
 <template>
   <div class="gs-container">
     <h2 class="gs-title">Modifiez vos jeux</h2>
-    <i>{{games.length}} jeux</i>
+    <div>
+      <InputText type="text" v-model="value" placeholder="Chercher un jeu..." style="height: 30px;"/>
+    </div>
+    <i>{{games_values.length}} jeux</i>
     <div class="gs-games">
       <SingleGameSetting
           class="gs-m"
-          v-for="g in games.sort((a, b) => a.name.localeCompare(b.name))"
+          v-for="g in games_values.sort((a, b) => a.name.localeCompare(b.name))"
           :name="g.name"
           :heroe="g.heroe"
           :logo="g.logo"
@@ -17,9 +20,21 @@
 import SingleGameSetting from "../components/SingleGameSetting.vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
+import {onMounted, ref, watch} from "vue";
 
 const store = useStore();
 const {games} = storeToRefs(store);
+const games_values = ref([]);
+const value = ref("");
+
+onMounted(() => {
+  games_values.value = games.value;
+});
+
+watch(value, () => {
+  games_values.value = games.value.filter((g) => g.name.toLowerCase().includes(value.value.toLowerCase()));
+});
+
 </script>
 <style scoped>
 .gs-container {
