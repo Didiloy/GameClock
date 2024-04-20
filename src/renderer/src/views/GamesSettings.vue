@@ -8,7 +8,7 @@
     <div class="gs-games">
       <SingleGameSetting
           class="gs-m"
-          v-for="g in games_values.sort((a, b) => a.name.localeCompare(b.name))"
+          v-for="g in games_values"
           :name="g.name"
           :heroe="g.heroe"
           :logo="g.logo"
@@ -28,11 +28,12 @@ const games_values = ref([]);
 const value = ref("");
 
 onMounted(() => {
-  games_values.value = games.value;
+  games_values.value = games.value.toSorted((a, b) => a.name.localeCompare(b.name));
 });
 
 watch(value, () => {
   games_values.value = games.value.filter((g) => g.name.toLowerCase().includes(value.value.toLowerCase()));
+  games_values.value = games_values.value.sort((a, b) => a.name.localeCompare(b.name));
 });
 
 </script>

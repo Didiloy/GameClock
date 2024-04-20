@@ -51,7 +51,7 @@
   </div>
 </template>
 <script setup>
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, onUnmounted, onUpdated, watch} from "vue";
 import {modifyGame} from "../database/database";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
@@ -59,7 +59,9 @@ import {useToast} from "primevue/usetoast";
 import {convertMinuteToHoursMinute} from "../common/main";
 
 const props = defineProps(["name", "logo", "heroe"]);
-const name = ref(props.name);
+const name = computed(() => {
+  return props.name;
+});
 const logo = ref(props.logo);
 const heroe = ref(props.heroe);
 const heroe_url = computed(() => {
@@ -127,6 +129,16 @@ onMounted(() => {
   average_session.value = getAverageSession();
   team_who_play_the_most.value = getTeamWhoPlayTheMost();
 });
+
+watch(name, () => {
+  game_id.value = getGameId();
+  total_sessions.value = getTotalSessions();
+  longuest_session.value = getLonguestSession();
+  smallest_session.value = getSmallestSession();
+  average_session.value = getAverageSession();
+  team_who_play_the_most.value = getTeamWhoPlayTheMost();
+});
+
 
 async function useModifyGame() {
   loading.value = true;
