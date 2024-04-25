@@ -3,7 +3,7 @@ import {onMounted, ref, watch} from "vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 
-const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
+const props = defineProps(["teamName", "backgroundColor", "titleColor", "sessions"]);
 const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 const store = useStore();
 const {games, sessions, teams} = storeToRefs(store);
@@ -12,6 +12,10 @@ onMounted(() => {
 });
 
 watch(sessions, () => {
+  init();
+});
+
+watch(() => props.sessions, () => {
   init();
 });
 
@@ -44,7 +48,7 @@ function setPercentages() {
     let neutral = 0;
     let bad = 0;
     let cpt = 0;
-    for (let s of sessions.value) {
+    for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
       if (id_of_team.value === "") {
         if (s.game.id === g.id) {
           cpt++;

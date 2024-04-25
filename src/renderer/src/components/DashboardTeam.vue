@@ -25,15 +25,19 @@
       <GameTimeHome
           class="dt-pie-chart"
           :teamName="props.teamName"
+          :sessions="props.sessions"
           backgroundColor="#f9e09f"
           titleColor="#241a00"
       ></GameTimeHome>
       <GamesFunPercentage
           class="dt-fun-percentage"
-          :teamName="props.teamName"></GamesFunPercentage>
+          :teamName="props.teamName"
+          :sessions="props.sessions"
+      ></GamesFunPercentage>
       <BarChartAllGames
           class="dt-bar-chart"
           :teamName="props.teamName"
+          :sessions="props.sessions"
           backgroundColor="#ffdbcb"
           titleColor="#341100"
       ></BarChartAllGames>
@@ -102,7 +106,7 @@ import {computed, onMounted, ref, watch} from "vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import {convertMinuteToHoursMinute} from "../common/main";
 
-const props = defineProps(["teamName"]);
+const props = defineProps(["teamName", "sessions"]);
 
 const store = useStore();
 const {sessions, games, teams} = storeToRefs(store);
@@ -114,6 +118,10 @@ onMounted(() => {
 });
 
 watch([sessions, id_of_team], () => {
+  init();
+});
+
+watch(() => props.sessions, () => {
   init();
 });
 
@@ -131,22 +139,25 @@ const sessions_number = ref(0);
 
 
 function getIdOfTeam() {
-  for (let t of teams.value) {
-    if (t.name === props.teamName) {
-      return t.id;
-    }
-  }
-  return "";
+  return teams.value.filter((t) => t.name === props.teamName)[0].id;
 }
 
 function getNumberOfSessions() {
   if (id_of_team.value === "") return 0;
   let cpt = 0;
-  sessions.value.forEach((element) => {
-    if (element.team.id === id_of_team.value) {
-      cpt++;
-    }
-  });
+  if(props.sessions === undefined) {
+    sessions.value.forEach((element) => {
+      if (element.team.id === id_of_team.value) {
+        cpt++;
+      }
+    });
+  }else {
+    props.sessions.forEach((element) => {
+      if (element.team.id === id_of_team.value) {
+        cpt++;
+      }
+    });
+  }
   return cpt;
 }
 
@@ -180,11 +191,19 @@ function calculateTotalTime() {
 function calculateTeamTime() {
   if (id_of_team.value === "") return 0;
   let cpt = 0;
-  sessions.value.forEach((element) => {
-    if (element.team.id === id_of_team.value) {
-      cpt += element.duration;
-    }
-  });
+  if (props.sessions === undefined) {
+    sessions.value.forEach((element) => {
+      if (element.team.id === id_of_team.value) {
+        cpt += element.duration;
+      }
+    });
+  } else {
+    props.sessions.forEach((element) => {
+      if (element.team.id === id_of_team.value) {
+        cpt += element.duration;
+      }
+    });
+  }
   return cpt;
 }
 
@@ -194,14 +213,32 @@ function getNumberOfGames() {
   if (id_of_team.value === "") return 0;
   let cpt = 0;
   let played_games = [];
-  sessions.value.forEach((element) => {
-    if (element.team.id === id_of_team.value) {
-      if (!played_games.includes(element.game.id)) {
-        played_games.push(element.game.id);
-        cpt++;
+  if(props.sessions === undefined) {
+    sessions.value.forEach((element) => {
+      if (element.team.id === id_of_team.value) {
+        if (!played_games.includes(element.game.id)) {
+          played_games.push(element.game.id);
+          cpt++;
+        }
       }
+    });
+  }else {
+    props.sessions.forEach((element) => {
+      if (element.team.id === id_of_team.value) {
+        if (!played_games.includes(element.game.id)) {
+          played_games.push(element.game.id);
+          cpt++;
+        }
+      }
+    });
+  }
+  //for deleted games the game is not in the games list even if we have the id
+  //so we need to check if the game is in the games list
+  for(let g of played_games){
+    if(games.value.filter(game => game.id === g).length === 0){
+      cpt--;
     }
-  });
+  }
   return cpt;
 }
 
@@ -240,26 +277,16 @@ function calculateRanking(teamName) {
 const total_fun_percentage = ref(0);
 
 function getTotalFunPercentage() {
-  let tmp = sessions.value.filter(s => s.team.id === id_of_team.value);
+  let tmp;
+  if(props.sessions === undefined) {
+    tmp = sessions.value.filter(s => s.team.id === id_of_team.value);
+  }else {
+    tmp = props.sessions.filter(s => s.team.id === id_of_team.value);
+  }
   let cpt = 0;
   tmp.map(s => cpt += s.was_cool ? 1 : 0);
   return (cpt / tmp.length * 100).toFixed(0);
 }
-
-const monthNames = [
-  "Jan",
-  "Fev",
-  "Mar",
-  "Avr",
-  "Mai",
-  "Juin",
-  "Jui",
-  "Aou",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
 
 const text_book = `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <span>C'est le nombre de <b>livres</b> d'environ 400 pages que vous auriez pu lire pendant ce temps.</span>

@@ -32,7 +32,7 @@ import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {convertMinuteToHoursMinute} from "../common/main";
 
-const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
+const props = defineProps(["teamName", "backgroundColor", "titleColor", "sessions"]);
 const store = useStore();
 const {games, sessions, teams} = storeToRefs(store);
 onMounted(() => {
@@ -40,6 +40,10 @@ onMounted(() => {
 });
 
 watch([games, sessions, teams], () => {
+  init();
+});
+
+watch(() => props.sessions, () => {
   init();
 });
 
@@ -59,14 +63,14 @@ const getSessionNumber = () => {
   for (let g of games.value) {
     let acc = 0;
     if (props.teamName) {
-      for (let s of sessions.value) {
-        if (s.game.id == g.id && s.team.id == id_of_team.value) {
+      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
+        if (s.game.id === g.id && s.team.id === id_of_team.value) {
           acc += 1;
         }
       }
     } else {
-      for (let s of sessions.value) {
-        if (s.game.id == g.id) {
+      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
+        if (s.game.id === g.id) {
           acc += 1;
         }
       }
@@ -93,15 +97,15 @@ const getAverageDuration = () => {
     let acc = 0;
     let ss_num = 0;
     if (props.teamName) {
-      for (let s of sessions.value) {
-        if (s.game.id == g.id && s.team.id == id_of_team.value) {
+      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
+        if (s.game.id === g.id && s.team.id === id_of_team.value) {
           acc += s.duration;
           ss_num++;
         }
       }
     } else {
-      for (let s of sessions.value) {
-        if (s.game.id == g.id) {
+      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
+        if (s.game.id === g.id) {
           acc += s.duration;
           ss_num++;
         }

@@ -5,12 +5,14 @@
       <div class="t-title">
         <h2 class="team-name">{{ $route.params.name }}</h2>
       </div>
+      <Dropdown v-model="selected_month" :options="labels_dropdown" optionLabel="label"  />
+
     </div>
     <Dialog v-model:visible="add_session_dialog_visible" modal dismissableMask header="Ajouter une session"
             :style="{ width: '600px' }">
       <AddSession :teamName="$route.params.name" :gameName="add_session_game_name"></AddSession>
     </Dialog>
-    <DashboardTeam :teamName="$route.params.name"></DashboardTeam>
+    <DashboardTeam :teamName="$route.params.name" :sessions="selected_month.game_sessions"></DashboardTeam>
   </div>
 </template>
 
@@ -20,10 +22,88 @@ import DashboardTeam from "../components/DashboardTeam.vue";
 import {onMounted, onUnmounted, ref} from "vue";
 import { getPreferences} from "../preferences/preferences";
 import {useRoute} from "vue-router";
+import {useStore} from "../store/store";
+import {storeToRefs} from "pinia";
+
+const store = useStore();
+const {sessions, games, teams} = storeToRefs(store);
 
 const game_if_we_come_from_home = useRoute().params.game;
 const add_session_game_name = ref("");
 const add_session_dialog_visible = ref(false);
+
+
+const id_of_team = ref("");
+function getIdOfTeam(){
+  return teams.value.filter(t => t.name === useRoute().params.name)[0].id;
+}
+
+const sessions_of_team = ref([]);
+function getSessionsOfTeam(){
+  return sessions.value.filter(s => s.team.id === id_of_team.value);
+}
+
+const month_year = ref([]);
+function createMonthYearArray(){
+  let tmp_games = sessions_of_team.value.sort((a, b) => {
+    return b.date.seconds - a.date.seconds;
+  });
+  let games_by_year_months = [];
+  for (let g of tmp_games) {
+    if (games_by_year_months.length === 0) {
+      games_by_year_months.push({
+        year: g.date.toDate().getFullYear(),
+        months: [{month: g.date.toDate().getMonth(), games: [g]}]
+      });
+    } else {
+      let year_exist = false;
+      for (let y of games_by_year_months) {
+        if (y.year === g.date.toDate().getFullYear()) {
+          year_exist = true;
+          let month_exist = false;
+          for (let m of y.months) {
+            if (m.month === g.date.toDate().getMonth()) {
+              month_exist = true;
+              m.games.push(g);
+            }
+          }
+          if (!month_exist) {
+            y.months.push({month: g.date.toDate().getMonth(), games: [g]});
+          }
+        }
+      }
+      if (!year_exist) {
+        games_by_year_months.push({
+          year: g.date.toDate().getFullYear(),
+          months: [{month: g.date.toDate().getMonth(), games: [g]}]
+        });
+      }
+    }
+  }
+  return games_by_year_months.sort((a, b) => {
+    return a.year - b.year;
+  });
+}
+
+const labels_dropdown = ref([]);
+function setLabelsDropdown(){
+  labels_dropdown.value.push({
+    label: "Toutes périodes",
+    game_sessions: sessions_of_team.value
+  });
+  for(let year of month_year.value){
+    for(let month of year.months){
+      labels_dropdown.value.push({
+        label: months[month.month] + " " + year.year,
+        game_sessions: month.games
+      });
+    }
+  }
+}
+
+const selected_month = ref({});
+
+const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 
 function toggleAddSession() {
   add_session_dialog_visible.value = !add_session_dialog_visible.value;
@@ -51,6 +131,12 @@ function keyEventAddSession(e) {
 }
 
 onMounted(() => {
+  id_of_team.value = getIdOfTeam();
+  sessions_of_team.value = getSessionsOfTeam();
+  month_year.value = createMonthYearArray();
+  setLabelsDropdown();
+  selected_month.value = labels_dropdown.value[0];
+
   document.addEventListener('keyup', keyEventAddSession)
   if(game_if_we_come_from_home){
     add_session_game_name.value = game_if_we_come_from_home

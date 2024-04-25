@@ -45,7 +45,7 @@ import {storeToRefs} from "pinia";
 import {convertMinuteToHoursMinute, generateRandomColor} from "../common/main";
 import {getPreferences} from "../preferences/preferences";
 
-const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
+const props = defineProps(["teamName", "backgroundColor", "titleColor", "sessions"]);
 const store = useStore();
 const {games, sessions, teams} = storeToRefs(store);
 
@@ -54,6 +54,10 @@ onMounted(() => {
 });
 
 watch([games, sessions, teams], () => {
+  init();
+});
+
+watch(() => props.sessions, () => {
   init();
 });
 
@@ -98,7 +102,7 @@ function setGamesNameAndPlaytime() {
   if (id_of_team.value) {
     for (let g of games.value) {
       let acc = 0;
-      for (let s of sessions.value) {
+      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
         if (s.team.id === id_of_team.value && s.game.id === g.id) {
           acc += s.duration;
           total_playtime += s.duration;
@@ -109,7 +113,7 @@ function setGamesNameAndPlaytime() {
   } else {
     for (let g of games.value) {
       let acc = 0;
-      for (let s of sessions.value) {
+      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
         if (s.game.id === g.id) {
           acc += s.duration;
           total_playtime += s.duration;
@@ -128,6 +132,7 @@ function setGamesNameAndPlaytime() {
 }
 
 const colors_of_pie_parts = ref([]);
+
 function setColorsOfPieParts() {
   colors_of_pie_parts.value = [];
   if (!getPreferences("pie_chart_use_custom_colors")) {
@@ -145,11 +150,11 @@ function setColorsOfPieParts() {
       documentStyle.getPropertyValue("--indigo-500"),
       documentStyle.getPropertyValue("--bluegray-500"),
     ];
-    for(let i = 0; i < colors.length; i++) {
+    for (let i = 0; i < colors.length; i++) {
       colors_of_pie_parts.value.push(colors[i]);
     }
-  }else {
-    for(let i = 0; i < games_name.value.length; i++) {
+  } else {
+    for (let i = 0; i < games_name.value.length; i++) {
       colors_of_pie_parts.value.push(generateRandomColor());
     }
   }
