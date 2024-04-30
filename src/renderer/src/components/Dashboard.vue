@@ -1,48 +1,49 @@
 <template>
-  <div class="dv-dashboard">
-    <LittleCard class="dv-lc-sessions"
-                iconName="pi pi-users"
-                backgroundColor="#f9e09f"
-                titleColor="#241a00"
-                :name="team_with_greatest_session_average_playtime"
-                :value="'Fait les plus grosses sessions de jeu (' + convertMinuteToHoursMinute(team_with_greatest_session_average_playtime_value) + ' en moyenne)'"></LittleCard>
-    <LittleCard
-        class="dv-lc-time-played"
-        iconName="pi pi-hourglass"
-        backgroundColor="#d4e7dc"
-        titleColor="#0f1f18"
-        :name="total_time_hours"
-        value="passées à jouer"
-    ></LittleCard>
-    <LittleCard
-        class="dv-lc-game-number"
-        iconName="pi pi-sort-amount-up"
-        backgroundColor="#c5eae7"
-        titleColor="#00201f"
-        :name="number_of_games"
-        value="jeux joués"
-    ></LittleCard>
-    <LittleCard class="dv-lc-most-session"
-                iconName="pi pi-user"
-                backgroundColor="#ffdbcb"
-                titleColor="#341100"
-                :name="team_with_most_sessions"
-                :value="'A le plus de sessions avec ' + team_with_most_sessions_value + ' sessions'"></LittleCard>
-    <GameTimeHome class="dv-pie-chart" backgroundColor="#e8defa" titleColor="#1e182c"></GameTimeHome>
-    <BarChartAllGames class="dv-bar-all-game" backgroundColor="#dae1ff" titleColor="#001849"></BarChartAllGames>
-    <LittleCard
-        class="dv-lc-percentage"
-        iconName="pi pi-heart-fill"
-        backgroundColor="#f7d8fe"
-        titleColor="#27142f"
-        :name="fun_percentage_computed"
-        :value="percentage_card_computed"
-    ></LittleCard>
-    <PlayTimeHome class="dv-play-time-home" backgroundColor="#c1f18f" titleColor="#0e2000"></PlayTimeHome>
-    <GamesFunPercentage
-        class="dv-fun-percentage" backgroundColor="#ffdbd0" titleColor="#390b00"></GamesFunPercentage>
-
-
+  <div class="dv-container">
+    <div class="dv-dashboard">
+      <LittleCard class="dv-lc-sessions"
+                  iconName="pi pi-users"
+                  backgroundColor="#f9e09f"
+                  titleColor="#241a00"
+                  :name="team_with_greatest_session_average_playtime"
+                  :value="'Fait les plus grosses sessions de jeu (' + convertMinuteToHoursMinute(team_with_greatest_session_average_playtime_value) + ' en moyenne)'"></LittleCard>
+      <LittleCard
+          class="dv-lc-time-played"
+          iconName="pi pi-hourglass"
+          backgroundColor="#d4e7dc"
+          titleColor="#0f1f18"
+          :name="total_time_hours"
+          value="passées à jouer"
+      ></LittleCard>
+      <LittleCard
+          class="dv-lc-game-number"
+          iconName="pi pi-sort-amount-up"
+          backgroundColor="#c5eae7"
+          titleColor="#00201f"
+          :name="number_of_games"
+          value="jeux joués"
+      ></LittleCard>
+      <LittleCard class="dv-lc-most-session"
+                  iconName="pi pi-user"
+                  backgroundColor="#ffdbcb"
+                  titleColor="#341100"
+                  :name="team_with_most_sessions"
+                  :value="'A le plus de sessions avec ' + team_with_most_sessions_value + ' sessions'"></LittleCard>
+      <GameTimeHome class="dv-pie-chart" backgroundColor="#e8defa" titleColor="#1e182c"></GameTimeHome>
+      <BarChartAllGames class="dv-bar-all-game" backgroundColor="#dae1ff" titleColor="#001849"></BarChartAllGames>
+      <LittleCard
+          class="dv-lc-percentage"
+          iconName="pi pi-heart-fill"
+          backgroundColor="#f7d8fe"
+          titleColor="#27142f"
+          :name="fun_percentage_computed"
+          :value="percentage_card_computed"
+      ></LittleCard>
+      <PlayTimeHome class="dv-play-time-home" backgroundColor="#c1f18f" titleColor="#0e2000"></PlayTimeHome>
+      <GamesFunPercentage
+          class="dv-fun-percentage" backgroundColor="#ffdbd0" titleColor="#390b00"></GamesFunPercentage>
+    </div>
+    <SessionsHistory :historySize="5" title="5 dernières sessions entrées"/>
   </div>
 </template>
 <script setup>
@@ -54,6 +55,7 @@ import GameTimeHome from "./GameTimeHome.vue";
 import BarChartAllGames from "./BarChartAllGames.vue";
 import PlayTimeHome from "./PlayTimeHome.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
+import SessionsHistory from "./SessionsHistory.vue";
 
 const props = defineProps(["teamName"]);
 
@@ -163,6 +165,15 @@ function calculateFunPercentage() {
 
 </script>
 <style scoped>
+.dv-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 100%;
+  width: 98%;
+}
+
 .dv-dashboard {
   display: grid;
   column-gap: 10px;
@@ -235,15 +246,14 @@ function calculateFunPercentage() {
   grid-row-end: 5;
 }
 
- .dv-bar-all-game {
-   width: 100%;
-   height: 100%;
-   grid-column-start: 4;
-   grid-column-end: 13;
-   grid-row-start: 5;
-   grid-row-end: 9;
- }
-
+.dv-bar-all-game {
+  width: 100%;
+  height: 100%;
+  grid-column-start: 4;
+  grid-column-end: 13;
+  grid-row-start: 5;
+  grid-row-end: 9;
+}
 
 
 .dv-play-time-home {
@@ -255,7 +265,7 @@ function calculateFunPercentage() {
   grid-row-end: 13;
 }
 
-.dv-fun-percentage{
+.dv-fun-percentage {
   width: 100%;
   height: 100%;
   grid-column-start: 7;
