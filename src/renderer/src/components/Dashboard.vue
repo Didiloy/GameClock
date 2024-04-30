@@ -51,7 +51,7 @@ import LittleCard from "./LittleCard.vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref, watch} from "vue";
-import GameTimeHome from "./GameTimeHome.vue";
+import GameTimeHome from "./PieChartGamePercentage.vue";
 import BarChartAllGames from "./BarChartAllGames.vue";
 import PlayTimeHome from "./PlayTimeHome.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";

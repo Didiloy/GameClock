@@ -1,42 +1,42 @@
 <template>
-  <Card
-      class="card"
-      :pt="{
+    <Card
+        class="card"
+        :pt="{
     root: { style: 'box-shadow: 0px 0px 0px 0px;' },
       content: { style: 'height:100%; ' }
     }"
-  >
-    <template #subtitle> <span class="gth-font">
+    >
+      <template #subtitle> <span class="gth-font">
       <span class="gth-subtitle">
         Classement des jeux en pourcentage
       </span>
     </span>
-    </template>
-    <template #content>
-      <Checkbox v-model="showLabel" inputId="show_label" :binary="true" @click="onShowLabelClick"
-                style="height: 20px;"/>
-      <label for="show_label" class="ml-2" style="font-size: 10pt;"> Montrer les noms </label>
-      <div class="chart-wrapper">
-        <div class="center-pie">
-          <Chart
-              type="pie"
-              ref="chart"
-              :data="chartData"
-              :options="chartOptions"
-              :plugins="[htmlLegendPlugin]"
-              class="pie"
-              :pt="{
+      </template>
+      <template #content>
+        <Checkbox v-model="showLabel" inputId="show_label" :binary="true" @click="onShowLabelClick"
+                  style="height: 20px;"/>
+        <label for="show_label" class="ml-2" style="font-size: 10pt;"> Montrer les noms </label>
+        <div class="chart-wrapper">
+          <div class="center-pie">
+            <Chart
+                type="pie"
+                ref="chart"
+                :data="chartData"
+                :options="chartOptions"
+                :plugins="[htmlLegendPlugin]"
+                class="pie"
+                :pt="{
             canvas: {
               class: 'p-chart',
               style: 'height: auto; width: 100%',
             },
           }"
-          />
+            />
+          </div>
+          <div class="legend-container" id="legend-container"></div>
         </div>
-        <div class="legend-container" id="legend-container"></div>
-      </div>
-    </template>
-  </Card>
+      </template>
+    </Card>
 </template>
 <script setup>
 import {onMounted, ref, watch} from "vue";

@@ -7,6 +7,10 @@ const props = defineProps(["teamName", "backgroundColor", "titleColor", "session
 const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 const store = useStore();
 const {games, sessions, teams} = storeToRefs(store);
+
+const fullscreen = ref(false);
+
+
 onMounted(() => {
   init();
 });
@@ -217,6 +221,7 @@ const setChartOptions = () => {
       <template #subtitle>
         <span class="gfp-font">
           Taux de fun par jeux
+          <i class="pi pi-window-maximize" @click="fullscreen = !fullscreen"></i>
         </span></template>
       <template #content>
         <Chart
@@ -234,6 +239,24 @@ const setChartOptions = () => {
         />
       </template>
     </Card>
+    <Dialog v-model:visible="fullscreen" modal dismissableMask header="Taux de fun par jeux"
+            :style="{ width: '90%', height: '90%' }">
+      <div style="height: 80vh; width: 100%;">
+        <Chart
+            type="bar"
+            :data="chartData"
+            :options="chartOptions"
+            :pt="{
+              root: {
+               style: 'height: 100%; width: auto;',
+            },
+            canvas: {
+               style: 'height: 100%; width: auto;',
+            },
+          }"
+        />
+      </div>
+    </Dialog>
   </div>
 </template>
 
@@ -255,5 +278,9 @@ const setChartOptions = () => {
   font-size: 1.5rem;
   font-weight: bold;
   color: v-bind('props.titleColor');
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center
 }
 </style>

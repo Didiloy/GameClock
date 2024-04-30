@@ -9,6 +9,7 @@
       <template #title>
         <span class="pth-font">
         Classement des équipes par temps de jeu
+          <i class="pi pi-window-maximize" @click="fullscreen = !fullscreen"></i>
         </span></template>
       <template #subtitle>
         <Chip label="Clique sur une équipe pour voir le détail" icon="pi pi-info-circle"
@@ -27,6 +28,24 @@
         />
       </template>
     </Card>
+    <Dialog v-model:visible="fullscreen" modal dismissableMask header="Classement des équipes par temps de jeu"
+            :style="{ width: '90%', height: '90%' }">
+      <div style="height: 80vh; width: 100%;">
+        <Chart
+            type="bar"
+            :data="chartData"
+            :options="chartOptions"
+            :pt="{
+            root: {
+               style: 'height: 100%; width: auto;',
+            },
+            canvas: {
+              style: 'height: 100%; width: auto;',
+            },
+          }"
+        />
+      </div>
+    </Dialog>
   </div>
 </template>
 <script setup>
@@ -38,6 +57,8 @@ import {convertMinuteToHoursMinute} from "../common/main";
 import {useRouter} from "vue-router";
 
 const router = useRouter();
+
+const fullscreen = ref(false);
 
 onMounted(() => {
   init();
@@ -184,5 +205,9 @@ const setChartOptions = () => {
   font-size: 1.5rem;
   font-weight: bold;
   color: v-bind('titleColor');
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center
 }
 </style>

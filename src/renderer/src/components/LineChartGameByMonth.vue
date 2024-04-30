@@ -6,7 +6,9 @@
             body: { style: 'height:100%; width: auto;' },
             content: { style: 'height:100%; width: auto;' }
         }">
-      <template #subtitle> <span class="lcgm-font">Temps de jeu et de bonheur par mois </span></template>
+      <template #subtitle> <span class="lcgm-font">Temps de jeu et de bonheur par mois
+      <i class="pi pi-window-maximize" @click="fullscreen = !fullscreen"></i>
+      </span></template>
       <template #content>
         <Chart
           type="line"
@@ -21,6 +23,22 @@
         />
       </template>
     </Card>
+    <Dialog v-model:visible="fullscreen" modal dismissableMask header="Temps de jeu et de bonheur par mois"
+            :style="{ width: '90%', height: '90%' }">
+      <div style="height: 80vh; width: 100%;">
+        <Chart
+            type="line"
+            :data="chartData"
+            :options="chartOptions"
+            :pt="{
+            root: { style: 'height: 100%; width: auto' },
+              canvas: {
+                style: 'height: 100%; width: auto',
+              },
+            }"
+        />
+      </div>
+    </Dialog>
   </div>
 </template>
 <script setup>
@@ -28,6 +46,9 @@ import { ref, computed, watch, onMounted } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
+
+const fullscreen = ref(false);
+
 onMounted(() => {
   init();
 });
@@ -230,6 +251,10 @@ const setChartOptions = () => {
   font-size: 1.5rem;
   font-weight: bold;
   color: v-bind('props.titleColor');
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center
 }
 
 </style>

@@ -9,6 +9,7 @@
       <template #subtitle>
         <span class="bcag-font">
           Informations des jeux
+          <i class="pi pi-window-maximize" @click="fullscreen = !fullscreen"></i>
         </span>
       </template>
       <template #content>
@@ -18,12 +19,28 @@
             :options="chartOptions"
             :pt="{
               canvas: {
-                style: 'height: 100%; max-height: 350px; width: auto',
-              },
+                style: 'height: 100%; max-height: 350px; width: auto'
+              }
             }"
         />
       </template>
     </Card>
+    <Dialog v-model:visible="fullscreen" modal dismissableMask header="Informations des jeux"
+            :style="{ width: '90%', height: '90%' }">
+      <div style="height: 80vh; width: 100%;">
+        <Chart
+            type="bar"
+            :data="chartData"
+            :options="chartOptions"
+            :pt="{
+              root: { style: 'height: 100%; width: 100%' },
+              canvas: {
+                style: 'height: 100%; max-height: 100%',
+              },
+            }"
+        />
+      </div>
+    </Dialog>
   </div>
 </template>
 <script setup>
@@ -35,6 +52,9 @@ import {convertMinuteToHoursMinute} from "../common/main";
 const props = defineProps(["teamName", "backgroundColor", "titleColor", "sessions"]);
 const store = useStore();
 const {games, sessions, teams} = storeToRefs(store);
+
+const fullscreen = ref(false);
+
 onMounted(() => {
   init();
 });
@@ -225,5 +245,9 @@ const setChartOptions = () => {
   font-size: 1.5rem;
   font-weight: bold;
   color: v-bind('props.titleColor');
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center
 }
 </style>

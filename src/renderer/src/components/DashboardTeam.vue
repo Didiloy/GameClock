@@ -95,7 +95,7 @@
 </template>
 <script setup>
 import LineChartGameByMonth from "./LineChartGameByMonth.vue";
-import GameTimeHome from "../components/GameTimeHome.vue";
+import GameTimeHome from "./PieChartGamePercentage.vue";
 import LittleCard from "./LittleCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
 import TopGamesLittleGameCard from "./TopGamesLittleGameCard.vue";
