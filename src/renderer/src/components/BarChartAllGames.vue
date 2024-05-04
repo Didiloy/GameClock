@@ -48,6 +48,7 @@ import {onMounted, ref, watch} from "vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {convertMinuteToHoursMinute} from "../common/main";
+import { getIdOfTeam} from "../database/database";
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor", "sessions"]);
 const store = useStore();
@@ -102,14 +103,6 @@ const getSessionNumber = () => {
 
 const id_of_team = ref("");
 
-function setIdOfTeam() {
-  for (let t of teams.value) {
-    if (t.name == props.teamName) {
-      id_of_team.value = t.id;
-    }
-  }
-}
-
 const avg_duration = ref([]);
 const getAverageDuration = () => {
   let res = [];
@@ -142,7 +135,7 @@ const chartOptions = ref();
 const games_copy = ref([]);
 
 function init() {
-  setIdOfTeam();
+  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
   games_names.value = getGamesNames();
   sessions_number.value = getSessionNumber();
   avg_duration.value = getAverageDuration();

@@ -74,6 +74,7 @@ import {onMounted, ref, watch} from "vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {convertMinuteToHoursMinute} from "../common/main";
+import { getIdOfTeam} from "../database/database";
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor", "historySize", "title"]);
 const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
@@ -93,14 +94,9 @@ watch([sessions], () => {
 
 function init() {
   sessions_values.value = [];
-  id_of_team.value = "";
+  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
 
   if(props.teamName !== undefined) {
-    for (let t of teams.value) {
-      if (t.name === props.teamName) {
-        id_of_team.value = t.id;
-      }
-    }
     for (let s of sessions.value) {
       if (s.team.id === id_of_team.value) {
         let [game_name, logo] = getGameNameAndLogoById(s.game.id);

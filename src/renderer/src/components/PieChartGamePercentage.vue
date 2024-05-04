@@ -44,6 +44,7 @@ import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {convertMinuteToHoursMinute, generateRandomColor} from "../common/main";
 import {getPreferences} from "../preferences/preferences";
+import { getIdOfTeam} from "../database/database";
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor", "sessions"]);
 const store = useStore();
@@ -81,14 +82,6 @@ function setLabels() {
 const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 
 const id_of_team = ref("");
-
-function setIdOfTeam() {
-  for (let t of teams.value) {
-    if (t.name === props.teamName) {
-      id_of_team.value = t.id;
-    }
-  }
-}
 
 const games_name = ref([]);
 
@@ -164,7 +157,7 @@ const chartData = ref({});
 const chartOptions = ref();
 
 function init() {
-  setIdOfTeam();
+  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
   setGamesNameAndPlaytime();
   setColorsOfPieParts();
   chartOptions.value = setChartOptions();

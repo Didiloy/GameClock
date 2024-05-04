@@ -151,7 +151,7 @@ function convertSecondsToHourMinutesSeconds(seconds) {
 
   let result = "";
 
-  if (minutes > 60) {
+  if (minutes >= 60) {
     result += Math.floor(minutes / 60) + "h ";
     minutes = minutes % 60;
   }

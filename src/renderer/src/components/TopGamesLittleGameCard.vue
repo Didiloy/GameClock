@@ -3,6 +3,7 @@ import LittleGameCard from "./LittleGameCard.vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {onMounted, ref, watch} from "vue";
+import { getIdOfTeam} from "../database/database";
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
 
@@ -18,7 +19,7 @@ watch([sessions], () => {
 });
 
 function init() {
-  setIdOfTeam();
+  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
   setSessionsOfTeam();
   let tmp_games = sessions_of_team.value.sort((a, b) => {
     return b.date.seconds - a.date.seconds;
@@ -67,14 +68,6 @@ function init() {
 }
 
 const id_of_team = ref("");
-
-function setIdOfTeam() {
-  for (let t of teams.value) {
-    if (t.name === props.teamName) {
-      id_of_team.value = t.id;
-    }
-  }
-}
 
 const sessions_of_team = ref([]);
 

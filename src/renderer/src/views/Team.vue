@@ -24,6 +24,7 @@ import { getPreferences} from "../preferences/preferences";
 import {useRoute} from "vue-router";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
+import { getIdOfTeam} from "../database/database";
 
 const store = useStore();
 const {sessions, games, teams} = storeToRefs(store);
@@ -34,9 +35,6 @@ const add_session_dialog_visible = ref(false);
 
 
 const id_of_team = ref("");
-function getIdOfTeam(){
-  return teams.value.filter(t => t.name === useRoute().params.name)[0].id;
-}
 
 const sessions_of_team = ref([]);
 function getSessionsOfTeam(){
@@ -130,8 +128,8 @@ function keyEventAddSession(e) {
   }
 }
 
-onMounted(() => {
-  id_of_team.value = getIdOfTeam();
+onMounted( () => {
+  id_of_team.value = getIdOfTeam(useRoute().params.name, teams.value);
   sessions_of_team.value = getSessionsOfTeam();
   month_year.value = createMonthYearArray();
   setLabelsDropdown();
@@ -143,6 +141,7 @@ onMounted(() => {
     toggleAddSession()
   }
 });
+
 onUnmounted(() => {
   document.removeEventListener('keyup', keyEventAddSession);
 });

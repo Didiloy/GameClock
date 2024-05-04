@@ -105,6 +105,7 @@ import {storeToRefs} from "pinia";
 import {computed, onMounted, ref, watch} from "vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import {convertMinuteToHoursMinute} from "../common/main";
+import {getIdOfTeam} from "../database/database";
 
 const props = defineProps(["teamName", "sessions"]);
 
@@ -126,7 +127,7 @@ watch(() => props.sessions, () => {
 });
 
 function init() {
-  id_of_team.value = getIdOfTeam();
+  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
   total_time.value = calculateTotalTime();
   team_time.value = calculateTeamTime();
   sessions_number.value = getNumberOfSessions();
@@ -137,10 +138,6 @@ function init() {
 
 const sessions_number = ref(0);
 
-
-function getIdOfTeam() {
-  return teams.value.filter((t) => t.name === props.teamName)[0].id;
-}
 
 function getNumberOfSessions() {
   if (id_of_team.value === "") return 0;

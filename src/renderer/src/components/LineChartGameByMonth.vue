@@ -45,6 +45,9 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
+import { getIdOfTeam } from "../database/database.js";
+import { convertMinuteToHoursMinute} from "../common/main";
+
 const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
 
 const fullscreen = ref(false);
@@ -61,21 +64,13 @@ const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--p
 const sessions_of_the_team = ref([]);
 function setSessionsOfTheTeam() {
   for (let s of sessions.value) {
-    if (s.team.id == id_of_team.value) {
+    if (s.team.id === id_of_team.value) {
       sessions_of_the_team.value.push(s);
     }
   }
 }
 
 const id_of_team = ref("");
-function setIdOfTeam() {
-   id_of_team.value = "";
-  for (let t of teams.value) {
-    if (t.name == props.teamName) {
-      id_of_team.value = t.id;
-    }
-  }
-}
 
 const game_duration_by_month = ref([]);
 function setGameDuration() {
@@ -120,7 +115,7 @@ const chartData = ref({});
 const chartOptions = ref();
 
 async function init() {
-  setIdOfTeam();
+  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
   setSessionsOfTheTeam();
   setGameDuration();
   setJoyrate();
@@ -135,19 +130,6 @@ watch(teams, () => {
 watch(sessions, () => {
   init();
 });
-
-function convertMinuteToHoursMinute(minute) {
-  return (
-    ((minute - (minute % 60)) / 60 > 0
-      ? (minute - (minute % 60)) / 60 + "h"
-      : "") +
-    (minute % 60 == 0
-      ? ""
-      : minute % 60 >= 10
-        ? (minute % 60) + "min"
-        : "0" + (minute % 60) + "min")
-  );
-}
 
 const setChartData = () => {
   const documentStyle = getComputedStyle(document.documentElement);

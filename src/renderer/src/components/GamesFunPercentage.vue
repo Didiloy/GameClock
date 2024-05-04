@@ -2,6 +2,7 @@
 import {onMounted, ref, watch} from "vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
+import {getIdOfTeam} from "../database/database";
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor", "sessions"]);
 const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
@@ -25,13 +26,6 @@ watch(() => props.sessions, () => {
 
 const id_of_team = ref("");
 
-function setIdOfTeam() {
-  for (let t of teams.value) {
-    if (t.name === props.teamName) {
-      id_of_team.value = t.id;
-    }
-  }
-}
 
 const games_names = ref([]);
 const getGamesNames = () => {
@@ -87,7 +81,7 @@ function init() {
   fun_percentage.value = [];
   neutral_percentage.value = [];
   bad_percentage.value = [];
-  setIdOfTeam();
+  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
   games_copy.value = games.value.slice();
   games_names.value = getGamesNames();
   setPercentages();

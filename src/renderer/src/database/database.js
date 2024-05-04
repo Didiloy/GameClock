@@ -8,6 +8,7 @@ import {
   where,
 } from "firebase/firestore";
 import { getGameId, getGameLogo, getGameHeroe } from "../api/steamgriddb";
+import {useRoute} from "vue-router";
 
 //Teams
 export async function getTeams() {
@@ -63,6 +64,11 @@ async function getTeamTotalPlaytime(teamRef) {
     acc += session.data().duration;
   }
   return acc;
+}
+
+export const getIdOfTeam = (teamName, teams) => {
+  if(teamName === undefined || teams === undefined) return "";
+  return teams.filter(t => t.name === teamName)[0].id !== undefined ? teams.filter(t => t.name === teamName)[0].id : "";
 }
 
 //Sessions
