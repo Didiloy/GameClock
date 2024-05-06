@@ -260,7 +260,7 @@ async function addNewSession() {
   const success = await addSession(
     props.teamName,
     game.value,
-    duration.value,
+    parseInt(duration.value),
     was_cool.value.value,
   );
   loading.value = false;
