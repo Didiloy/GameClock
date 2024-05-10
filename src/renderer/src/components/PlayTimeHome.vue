@@ -52,7 +52,6 @@
 import {computed, onMounted, ref} from "vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
-import {getFirstTeamsByPlaytime} from "../database/database.js";
 import {convertMinuteToHoursMinute} from "../common/main";
 import {useRouter} from "vue-router";
 
@@ -68,7 +67,7 @@ const props = defineProps(["backgroundColor", "titleColor"]);
 const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 
 const store = useStore();
-const {teams} = storeToRefs(store);
+const {teams, sessions} = storeToRefs(store);
 const teams_from_db = ref([]);
 const teams_name = ref([]);
 
@@ -96,8 +95,28 @@ const getTeamNamesSpliced = () => {
 const chartData = ref({});
 const chartOptions = ref();
 
-async function init() {
-  teams_from_db.value = await getFirstTeamsByPlaytime(teams.value.length);
+function getFirstTeamsByPlaytime(length){
+  let teams_to_return = [];
+  for(const team of teams.value){
+    teams_to_return.push({
+      name: team.name,
+      playtime: sessions.value.reduce((acc, s) => {
+        if(s.team.id === team.id){
+          return acc + s.duration;
+        }
+        return acc;
+      }, 0)
+    })
+  }
+  return teams_to_return
+      .sort((a, b) => {
+        return b.playtime - a.playtime;
+      })
+      .slice(0, length !== undefined ? length : -1);
+}
+
+function init() {
+  teams_from_db.value = getFirstTeamsByPlaytime(teams.value.length);
   teams_name.value = getTeamsName();
   teams_name_spliced.value = getTeamNamesSpliced();
   chartOptions.value = setChartOptions();

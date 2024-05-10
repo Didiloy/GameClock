@@ -26,7 +26,7 @@ export async function addTeam(name) {
   const teamsRef = collection(db, "teams");
   const teamsSnapshot = await getDocs(teamsRef);
   teamsSnapshot.forEach((doc) => {
-    if (doc.data().name == name) {
+    if (doc.data().name === name) {
       alreadyExists = true;
     }
   });
@@ -35,35 +35,6 @@ export async function addTeam(name) {
     name: name,
   });
   return true;
-}
-
-export async function getFirstTeamsByPlaytime(numberTeams) {
-  let teams_to_return = [];
-  let cpt = 0;
-  const teamsSnapshot = await getDocs(collection(db, "teams"));
-  for (let g of teamsSnapshot.docs) {
-    cpt++;
-    let p = await getTeamTotalPlaytime(g.ref);
-    teams_to_return.push({
-      name: g.data().name,
-      playtime: p,
-    });
-  }
-  return teams_to_return
-    .sort((a, b) => {
-      return b.playtime - a.playtime;
-    })
-    .slice(0, numberTeams == 0 ? cpt : numberTeams);
-}
-
-async function getTeamTotalPlaytime(teamRef) {
-  let acc = 0;
-  const q = query(collection(db, "sessions"), where("team", "==", teamRef));
-  const sessions_on_team = await getDocs(q);
-  for (const session of sessions_on_team.docs) {
-    acc += session.data().duration;
-  }
-  return acc;
 }
 
 export const getIdOfTeam = (teamName, teams) => {
