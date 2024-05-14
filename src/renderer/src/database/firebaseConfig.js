@@ -1,17 +1,29 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "gameclock-ba16c.firebaseapp.com",
-  databaseURL:
-    "https://gameclock-ba16c-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "gameclock-ba16c",
-  storageBucket: "gameclock-ba16c.appspot.com",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-};
+let firebaseConfig = {};
 
 //Initialize firebase
-const firebaseapp = initializeApp(firebaseConfig);
-export default getFirestore(firebaseapp);
+let firebaseapp;
+export let db;
+
+export function initialiseFirebase(stored_databases, selected_database_index) {
+  firebaseConfig = {
+    apiKey: stored_databases.value[selected_database_index.value].apiKey,
+    authDomain:
+      stored_databases.value[selected_database_index.value].authDomain,
+    databaseURL:
+      stored_databases.value[selected_database_index.value].databaseURL,
+    projectId: stored_databases.value[selected_database_index.value].projectId,
+    storageBucket:
+      stored_databases.value[selected_database_index.value].storageBucket,
+    messagingSenderId:
+      stored_databases.value[selected_database_index.value].messagingSenderId,
+    appId: stored_databases.value[selected_database_index.value].appId,
+  };
+  firebaseapp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseapp);
+}
+
+//  databaseURL:
+//"https://gameclock-ba16c-default-rtdb.europe-west1.firebasedatabase.app",

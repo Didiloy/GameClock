@@ -1,4 +1,4 @@
-import db from "./firebaseConfig";
+import { db } from "./firebaseConfig";
 import {
   collection,
   getDocs,
@@ -8,7 +8,6 @@ import {
   where,
 } from "firebase/firestore";
 import { getGameId, getGameLogo, getGameHeroe } from "../api/steamgriddb";
-import {useRoute} from "vue-router";
 
 //Teams
 export async function getTeams() {
@@ -38,9 +37,11 @@ export async function addTeam(name) {
 }
 
 export const getIdOfTeam = (teamName, teams) => {
-  if(teamName === undefined || teams === undefined) return "";
-  return teams.filter(t => t.name === teamName)[0].id !== undefined ? teams.filter(t => t.name === teamName)[0].id : "";
-}
+  if (teamName === undefined || teams === undefined) return "";
+  return teams.filter((t) => t.name === teamName)[0].id !== undefined
+    ? teams.filter((t) => t.name === teamName)[0].id
+    : "";
+};
 
 //Sessions
 export const getSessions = async () => {
@@ -87,7 +88,7 @@ export async function addSession(teamName, gameName, duration, was_cool) {
     }
     const sessionRef = collection(db, "sessions");
     //if the session was neutral we don't add was cool
-    if(was_cool !== undefined){
+    if (was_cool !== undefined) {
       await setDoc(doc(sessionRef), {
         duration: duration,
         was_cool: was_cool,
@@ -95,33 +96,18 @@ export async function addSession(teamName, gameName, duration, was_cool) {
         game: doc(collection(db, "games"), gamePath),
         team: doc(collection(db, "teams"), teamId),
       });
-    }else {
+    } else {
       await setDoc(doc(sessionRef), {
-           duration: duration,
-           date: new Date(),
-           game: doc(collection(db, "games"), gamePath),
-           team: doc(collection(db, "teams"), teamId),
+        duration: duration,
+        date: new Date(),
+        game: doc(collection(db, "games"), gamePath),
+        team: doc(collection(db, "teams"), teamId),
       });
     }
     return true;
   } catch (err) {
     return false;
   }
-}
-
-export async function getSumSessionsDuration(teamName) {
-  const q_team = query(collection(db, "teams"), where("name", "==", teamName));
-  const teamRef = (await getDocs(q_team)).docs[0].ref;
-  const q_sessions = query(
-    collection(db, "sessions"),
-    where("team", "==", teamRef)
-  );
-  const sessions_on_team = await getDocs(q_sessions);
-  let total_duration = 0;
-  for (let s in sessions_on_team.docs) {
-    total_duration += sessions_on_team.docs[s].data().duration;
-  }
-  return total_duration;
 }
 
 //Games

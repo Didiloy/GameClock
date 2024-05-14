@@ -26,23 +26,25 @@ import AccordionTab from "primevue/accordiontab";
 import SelectButton from "primevue/selectbutton";
 import AutoComplete from "primevue/autocomplete";
 import Chip from "primevue/chip";
-import ProgressBar from 'primevue/progressbar';
-import Checkbox from 'primevue/checkbox';
-import Dropdown from 'primevue/dropdown';
+import ProgressBar from "primevue/progressbar";
+import Checkbox from "primevue/checkbox";
+import Dropdown from "primevue/dropdown";
 import Chart from "primevue/chart";
-import Dialog from 'primevue/dialog';
-import InputSwitch from 'primevue/inputswitch';
-import ToggleButton from 'primevue/togglebutton';
-import ProgressSpinner from 'primevue/progressspinner';
-import OverlayPanel from 'primevue/overlaypanel';
+import Dialog from "primevue/dialog";
+import InputSwitch from "primevue/inputswitch";
+import ToggleButton from "primevue/togglebutton";
+import ProgressSpinner from "primevue/progressspinner";
+import OverlayPanel from "primevue/overlaypanel";
+import Message from "primevue/message";
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "./views/Home.vue";
 import Teams from "./views/Teams.vue";
 import AddTeam from "./views/AddTeam.vue";
 import Team from "./views/Team.vue";
 import GamesSettings from "./views/GamesSettings.vue";
-import { createPinia } from "pinia";
+import { createPinia, storeToRefs } from "pinia";
 import Settings from "./views/Settings.vue";
+import AddDatabaseForFirstTime from "./views/AddDatabaseForFirstTime.vue";
 
 const app = createApp(App);
 
@@ -79,6 +81,7 @@ app.component("OverlayPanel", OverlayPanel);
 app.component("Chip", Chip);
 app.component("Dropdown", Dropdown);
 app.component("InputSwitch", InputSwitch);
+app.component("Message", Message);
 
 //Router
 const routes = [
@@ -89,6 +92,7 @@ const routes = [
   { path: "/addteam", component: AddTeam },
   { path: "/settings/games", component: GamesSettings },
   { path: "/settings/general", component: Settings },
+  { path: "/adddatabase", component: AddDatabaseForFirstTime },
 ];
 
 const router = createRouter({
@@ -101,4 +105,5 @@ app.use(router);
 //Pinia
 const pinia = createPinia();
 app.use(pinia);
+
 app.mount("#app");
