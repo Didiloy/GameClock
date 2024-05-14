@@ -1,26 +1,32 @@
 <template>
-  <Card class="sh-container"
-        :pt="{
-            root: { style: 'box-shadow: 0px 0px 0px 0px;' },
-            body: { style: 'height:100%; ' },
-            content: { style: 'height:100%; ' }
-        }">
-    <template #subtitle><span class="sh-font">{{props.title ? props.title : "Historique des sessions"}}</span></template>
+  <Card
+    class="sh-container"
+    :pt="{
+      root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+      body: { style: 'height:100%; ' },
+      content: { style: 'height:100%; ' },
+    }"
+  >
+    <template #subtitle
+      ><span class="sh-font">{{
+        props.title ? props.title : "Historique des sessions"
+      }}</span></template
+    >
     <template #content>
       <Accordion class="">
         <AccordionTab header="Sessions">
           <DataTable
-              :value="sessions_values"
-              stripedRows
-              tableStyle="min-width: 50rem"
+            :value="sessions_values"
+            stripedRows
+            tableStyle="min-width: 50rem"
           >
             <Column field="name" header="Nom du jeu">
               <template #body="slotProps">
                 <div class="sh-name">
                   <img
-                      v-if="slotProps.data.logo"
-                      :src="slotProps.data.logo"
-                      style="width: 50px; height: auto; border-radius: 5px"
+                    v-if="slotProps.data.logo"
+                    :src="slotProps.data.logo"
+                    style="width: 50px; height: auto; border-radius: 5px"
                   />
                   <span>
                     {{ slotProps.data.name }}
@@ -28,41 +34,49 @@
                 </div>
               </template>
             </Column>
-            <Column v-if="props.teamName === undefined" field="team_name" header="Équipe">
+            <Column
+              v-if="props.teamName === undefined"
+              field="team_name"
+              header="Équipe"
+            >
               <template #body="slotProps">
-                {{
-                  slotProps.data.team_name
-                }}
-              </template
-              >
+                {{ slotProps.data.team_name }}
+              </template>
             </Column>
             <Column field="playtime" header="Durée de la session">
               <template #body="slotProps">
-                {{
-                  convertMinuteToHoursMinute(slotProps.data.playtime)
-                }}
-              </template
-              >
+                {{ convertMinuteToHoursMinute(slotProps.data.playtime) }}
+              </template>
             </Column>
             <Column field="joyrate" header="Bonheur">
               <template #body="slotProps">
-                {{
-                  slotProps.data.joyrate == null ? "Neutre" :
-                      slotProps.data.joyrate === true ? "Bien" : "Nul"
-                }}
-              </template
-              >
+                <Chip
+                  :label="
+                    slotProps.data.joyrate == null
+                      ? 'Neutre'
+                      : slotProps.data.joyrate === true
+                        ? 'Bien'
+                        : 'Nul'
+                  "
+                  :class="
+                    slotProps.data.joyrate == null
+                      ? 'c-neutral'
+                      : slotProps.data.joyrate === true
+                        ? 'c-good'
+                        : 'c-bad'
+                  "
+                />
+              </template>
             </Column>
             <Column field="date" header="Date">
               <template #body="slotProps">
                 {{
                   new Date(
-                      slotProps.data.date.seconds * 1000
+                    slotProps.data.date.seconds * 1000
                   ).toLocaleDateString()
                 }}
               </template>
-            </Column
-            >
+            </Column>
           </DataTable>
         </AccordionTab>
       </Accordion>
@@ -70,17 +84,24 @@
   </Card>
 </template>
 <script setup>
-import {onMounted, ref, watch} from "vue";
-import {useStore} from "../store/store";
-import {storeToRefs} from "pinia";
-import {convertMinuteToHoursMinute} from "../common/main";
-import { getIdOfTeam} from "../database/database";
+import { onMounted, ref, watch } from "vue";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
+import { convertMinuteToHoursMinute } from "../common/main";
+import { getIdOfTeam } from "../database/database";
 
-const props = defineProps(["teamName", "backgroundColor", "titleColor", "historySize", "title"]);
-const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
+const props = defineProps([
+  "teamName",
+  "backgroundColor",
+  "titleColor",
+  "historySize",
+  "title",
+]);
+const backgroundColor = props.backgroundColor
+  ? props.backgroundColor
+  : "var(--primary-100)";
 const store = useStore();
-const {games, sessions, teams} = storeToRefs(store);
-
+const { games, sessions, teams } = storeToRefs(store);
 
 const sessions_values = ref([]);
 const id_of_team = ref("");
@@ -96,7 +117,7 @@ function init() {
   sessions_values.value = [];
   id_of_team.value = getIdOfTeam(props.teamName, teams.value);
 
-  if(props.teamName !== undefined) {
+  if (props.teamName !== undefined) {
     for (let s of sessions.value) {
       if (s.team.id === id_of_team.value) {
         let [game_name, logo] = getGameNameAndLogoById(s.game.id);
@@ -105,15 +126,15 @@ function init() {
           playtime: s.duration,
           date: s.date,
           logo: logo,
-          joyrate: s.was_cool
+          joyrate: s.was_cool,
         });
       }
     }
-  }else {
+  } else {
     for (let s of sessions.value) {
       let [game_name, logo] = getGameNameAndLogoById(s.game.id);
       let team_name;
-      for(let t of teams.value){
+      for (let t of teams.value) {
         if (s.team.id === t.id) {
           team_name = t.name;
         }
@@ -124,7 +145,7 @@ function init() {
         playtime: s.duration,
         date: s.date,
         logo: logo,
-        joyrate: s.was_cool
+        joyrate: s.was_cool,
       });
     }
   }
@@ -144,12 +165,10 @@ function getGameNameAndLogoById(id) {
   }
   return ["[Jeu supprimé ou introuvable]", ""];
 }
-
-
 </script>
 <style scoped>
 .sh-container {
-  background-color: v-bind('backgroundColor');
+  background-color: v-bind("backgroundColor");
   width: 100%;
   height: 100%;
   border-radius: 30px;
@@ -168,13 +187,25 @@ function getGameNameAndLogoById(id) {
 
 @font-face {
   font-family: sephir;
-  src: url('../assets/fonts/sephir/sephir.otf');
+  src: url("../assets/fonts/sephir/sephir.otf");
 }
 
 .sh-font {
   font-family: sephir, serif;
   font-size: 1.5rem;
   font-weight: bold;
-  color: v-bind('props.titleColor');
+  color: v-bind("props.titleColor");
+}
+
+.c-neutral {
+  background-color: var(--primary-100);
+}
+
+.c-good {
+  background-color: var(--green-100);
+}
+
+.c-bad {
+  background-color: var(--red-100);
 }
 </style>
