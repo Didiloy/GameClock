@@ -1,7 +1,14 @@
 <template>
   <div class="container">
     <h2>Ajouter une équipe</h2>
-    <Card class="card">
+    <Card
+      class="card"
+      :pt="{
+        root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+        body: { style: 'height:100%; ' },
+        content: { style: 'height:100%; ' },
+      }"
+    >
       <template #content>
         <div class="card-content">
           <div class="form-content">
@@ -38,6 +45,15 @@ async function onAddTeam() {
       severity: "error",
       summary: "",
       detail: "Vous ne pouvez pas ajouter une équipe sans nom.",
+      life: 3000,
+    });
+    return;
+  }
+  if (name.value.includes("/")) {
+    toast.add({
+      severity: "error",
+      summary: "",
+      detail: "Vous ne pouvez pas créer une équipe dont le nom contient des /.",
       life: 3000,
     });
     return;
@@ -105,12 +121,12 @@ async function onAddTeam() {
 
 @font-face {
   font-family: dishcek;
-  src: url('../assets/fonts/dishcek/Dishcek.otf');
+  src: url("../assets/fonts/dishcek/Dishcek.otf");
 }
 
-h2{
+h2 {
   color: #5a5d9d;
-  font-family: dishcek,serif;
+  font-family: dishcek, serif;
   font-size: 2.5rem;
   display: inline;
   margin: 0;
