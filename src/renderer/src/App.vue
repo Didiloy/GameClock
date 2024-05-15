@@ -2,21 +2,22 @@
 import Sidebar from "./components/Sidebar.vue";
 import { useRouter } from "vue-router";
 import { initialiseFirebase } from "./database/firebaseConfig";
+import { getPreferences } from "./preferences/preferences";
 const router = useRouter();
 const storeDatabases = useStoredDatabases();
-const { stored_databases, loadDatabases, selected_database_index } =
-  storeToRefs(storeDatabases);
-console.log(stored_databases.value);
+const { stored_databases, loadDatabases } = storeToRefs(storeDatabases);
 if (stored_databases.value.length === 0) {
-  console.log("No databases");
   router.push("/adddatabase");
 } else {
-  initialiseFirebase(stored_databases, selected_database_index);
+  initialiseFirebase(
+    stored_databases,
+    getPreferences("selected_database_index")
+  );
 }
 import { useStore, useStoredDatabases } from "./store/store";
 import { storeToRefs } from "pinia";
 const store = useStore();
-const { sessions, games, teams } = storeToRefs(store);
+const { sessions, games, teams, loaded } = storeToRefs(store);
 </script>
 
 <template>
@@ -24,13 +25,7 @@ const { sessions, games, teams } = storeToRefs(store);
     <div class="sidebar">
       <Sidebar></Sidebar>
     </div>
-    <div
-      v-if="
-        (sessions.length === 0 || games.length === 0 || teams.length === 0) &&
-        stored_databases.length > 0
-      "
-      class="content"
-    >
+    <div v-if="!loaded && stored_databases.length > 0" class="content">
       <div class="a-loading">
         <h2>Chargement des données</h2>
         <ProgressSpinner />

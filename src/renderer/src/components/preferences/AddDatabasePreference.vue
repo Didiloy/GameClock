@@ -1,0 +1,150 @@
+<script setup>
+import { onMounted, ref, watch } from "vue";
+import { useStoredDatabases } from "../../store/store";
+import { getPreferences, setPreferences } from "../../preferences/preferences";
+import { storeToRefs } from "pinia";
+
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
+
+import { useRouter } from "vue-router";
+const router = useRouter();
+const store = useStoredDatabases();
+const { stored_databases } = storeToRefs(store);
+
+onMounted(() => {});
+
+function deleteDatabase(name, apiKey, authDomain, index) {
+  store.useDeleteDatabase(name, apiKey, authDomain);
+  store.loadDatabases();
+  console.log(index);
+  setPreferences("selected_database_index", index > 0 ? index - 1 : 0);
+  router.go();
+}
+
+async function shareDatabase(index) {
+  let encoded_string = btoa(JSON.stringify(stored_databases.value[index]));
+  try {
+    await navigator.clipboard.writeText(encoded_string);
+    toast.add({
+      severity: "success",
+      summary: "",
+      detail: "Base de données copiée dans le presse-papiers.",
+      life: 3000,
+    });
+  } catch (err) {
+    toast.add({
+      severity: "error",
+      summary: "",
+      detail:
+        "Impossible de copier dans le presse papier. Copiez le texte suivant: " +
+        encoded_string,
+    });
+  }
+}
+
+function setAsActiveDatabase(index) {
+  setPreferences("selected_database_index", index);
+  router.go();
+}
+
+function goToAddDatabase() {
+  router.push("/adddatabase");
+}
+</script>
+
+<template>
+  <div class="tp-container">
+    <h2 class="tp-title">Bases de données</h2>
+    <b class="text-color">Active:</b>
+    <div class="tp-item">
+      <h2>
+        {{ stored_databases[getPreferences("selected_database_index")].name }}
+      </h2>
+      <div>
+        <!-- <Button
+          icon="pi pi-share-alt"
+          label="Partager"
+          class="p-button-secondary"
+          style="margin-right: 10px"
+          @click="shareDatabase(getPreferences('selected_database_index'))"
+        ></Button> -->
+      </div>
+    </div>
+    <b class="text-color" style="margin-top: 10px"
+      >Toutes les bases de données:</b
+    >
+    <div class="tp-item" v-for="(database, index) in stored_databases">
+      <h2>{{ database.name }}</h2>
+      <div>
+        <Button
+          label="Définir comme active"
+          style="margin-right: 10px"
+          @click="setAsActiveDatabase(index)"
+        ></Button>
+        <Button
+          icon="pi pi-share-alt"
+          label="Partager"
+          class="p-button-secondary"
+          style="margin-right: 10px"
+          @click="shareDatabase(index)"
+        ></Button>
+        <Button
+          icon="pi pi-trash"
+          label="Supprimer"
+          class="p-button-danger"
+          @click="
+            deleteDatabase(
+              database.name,
+              database.apiKey,
+              database.authDomain,
+              index
+            )
+          "
+        ></Button>
+      </div>
+    </div>
+    <div class="tp-item" style="background-color: var(--primary-50)">
+      <div></div>
+      <Button label="Ajouter une base de données" @click="goToAddDatabase" />
+    </div>
+    <Toast />
+  </div>
+</template>
+
+<style scoped>
+.tp-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  width: 100%;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.text-color {
+  color: var(--text-color);
+}
+
+.tp-title {
+  color: var(--primary-500);
+}
+
+.tp-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  background-color: var(--primary-100);
+  border-radius: 10px;
+  padding: 0 10px;
+}
+
+.tp-item-right-container {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+</style>

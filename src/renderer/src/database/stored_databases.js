@@ -23,7 +23,6 @@ export function addDatabase(
   let stored_databases = JSON.parse(
     localStorage.getItem(stored_databases_name)
   );
-  console.log("stored_databases: ", stored_databases);
   if (stored_databases === null) {
     stored_databases = [];
   }
@@ -40,4 +39,27 @@ export function addDatabase(
 
   stored_databases.push(obj);
   localStorage.setItem(stored_databases_name, JSON.stringify(stored_databases));
+}
+
+export function deleteDatabase(name, apiKey, authDomain) {
+  let stored_databases = JSON.parse(
+    localStorage.getItem(stored_databases_name)
+  );
+  if (stored_databases === null) {
+    return;
+  }
+  for (let database of stored_databases) {
+    if (
+      name === database.name &&
+      apiKey === database.apiKey &&
+      authDomain === database.authDomain
+    ) {
+      stored_databases.splice(stored_databases.indexOf(database), 1);
+      localStorage.setItem(
+        stored_databases_name,
+        JSON.stringify(stored_databases)
+      );
+      return;
+    }
+  }
 }

@@ -35,45 +35,54 @@
               <ol>
                 <li>
                   Pour créer votre base de données rendez-vous sur
-                  <a
-                    href="https://console.cloud.google.com/firestore/databases?hl=fr"
-                    >firebase</a
+                  <a href="https://console.firebase.google.com/"
+                    >https://console.firebase.google.com/</a
                   >, authentifier vous avec votre compte Google et créez un
                   projet.
                 </li>
                 <li>
-                  Cliquez sur <b>Créer une base de données</b>, choisissez le
-                  <b>mode natif</b>, cliquez sur continuer puis remplisser avec
-                  les valeurs qui vous conviennent.
+                  Saisissez le nom de votre projet, désactivez ou pas Google
+                  analytics puis cliquez sur <b>créer un projet</b>.
                 </li>
                 <li>
-                  Une fois la base de données créée, il faudra se rendre dans
-                  <b>Règles de sécurité</b> puis cliquer sur
-                  <b>Activer firebase</b>.
+                  Une fois fait, dans le menu de gauche, sélectionnez
+                  <b>Créer</b> et choisissez <b>Realtime Database</b>.
                 </li>
                 <li>
-                  Allez sur votre console Cloud Firestore puis sélectionnez
-                  votre nouveau projet.
+                  Cliquez sur <b>Créer une base de données</b>, sélectionnez
+                  votre emplacement, puis sélectionnez
+                  <b>Commencer en mode verrouillé</b>.
                 </li>
                 <li>
-                  Allez dans l'onglet <b>règles</b> et remplacez le
-                  <b>false</b> par <b>true</b>.
+                  Ensuite, sélectionnez de nouveau <b>Créer</b> dans le menu de
+                  gauche puis cliquez sur <b>Firestore Database</b>.
                 </li>
                 <li>
-                  Allez sur la page du projet que vous avez créé puis cliquez
-                  sur l'icone de paramètres à côté de "vue d'ensemble du projet"
-                  ensuite cliquez sur "parametre du projet".
+                  Cliquez sur <b>Créer une base de données</b>, choisissez un
+                  emplacement <b>Régional</b> de votre choix. Cliquez ensuite
+                  sur <b>démarrer en mode production</b>, puis <b>Créer</b>.
                 </li>
                 <li>
-                  Cliquez sur <b>ajouter une application</b> et copiez les
-                  valeurs demandées plus bas sans les guillemets.
+                  Rendez vous dans l'onglet <b>Règles</b> de votre projet et
+                  changez le mot <b>false</b> par <b>true</b>.
+                </li>
+                <li>
+                  Enfin pour récupérer les informations demandées, cliquez sur
+                  l'engrenage en haut à gauche de votre écran, puis sur
+                  <b>Paramètres du projet</b> et ajoutez une application web
+                  (celle ayant une icône ressemblant à
+                  <i class="pi pi-code"></i>) que vous appelerez comme vous
+                  voudrez. Vous pouvez maintenant récupérer toutes les
+                  informations demandées sur cette page.
                 </li>
               </ol>
             </div>
           </AccordionTab>
         </Accordion>
         <div class="text-input">
-          <label for="database_name">Nom de la base de données:</label>
+          <label for="database_name"
+            >Nom de la base de données à votre guise:</label
+          >
           <InputText
             id="database_name"
             v-model="database_name"
@@ -175,7 +184,21 @@ function importDatabase() {
     });
     return;
   }
-  //TODO
+  let decoded_string = atob(import_string.value);
+  let database = JSON.parse(decoded_string);
+  addDatabase(
+    database.name,
+    database.apiKey,
+    database.authDomain,
+    database.databaseURL,
+    database.projectId,
+    database.storageBucket,
+    database.messagingSenderId,
+    database.appId
+  );
+  router.push({ path: "/" }).then(() => {
+    router.go();
+  });
 }
 
 function addNewDatabase() {
@@ -207,7 +230,7 @@ function addNewDatabase() {
     database_messaging_sender_id.value,
     database_app_id.value
   );
-  router.push("/");
+  router.go("/");
 }
 </script>
 <style scoped>

@@ -2,16 +2,21 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { getTeams, getGames, getSessions } from "../database/database.js";
-import { getStoredDatabases } from "../database/stored_databases.js";
+import {
+  getStoredDatabases,
+  deleteDatabase,
+} from "../database/stored_databases.js";
 
 export const useStore = defineStore("store", () => {
   const teams = ref([]);
   const games = ref([]);
   const sessions = ref([]);
+  const loaded = ref(false);
 
   reloadStore();
 
   async function reloadStore() {
+    loaded.value = false;
     teams.value = [];
     games.value = [];
     sessions.value = [];
@@ -21,14 +26,14 @@ export const useStore = defineStore("store", () => {
     teams.value = await getTeams();
     games.value = await getGames();
     sessions.value = await getSessions();
+    loaded.value = true;
   }
 
-  return { teams, games, sessions, reloadStore };
+  return { teams, games, sessions, reloadStore, loaded };
 });
 
 export const useStoredDatabases = defineStore("storedDatabases", () => {
   const stored_databases = ref([]);
-  const selected_database_index = ref(0);
 
   loadDatabases();
 
@@ -37,5 +42,14 @@ export const useStoredDatabases = defineStore("storedDatabases", () => {
     stored_databases.value = getStoredDatabases();
   }
 
-  return { stored_databases, loadDatabases, selected_database_index };
+  function useDeleteDatabase(name, apiKey, authDomain) {
+    deleteDatabase(name, apiKey, authDomain);
+    loadDatabases();
+  }
+
+  return {
+    stored_databases,
+    loadDatabases,
+    useDeleteDatabase,
+  };
 });

@@ -2,21 +2,23 @@
 import TeamsPreferences from "../components/preferences/TeamsPreferences.vue";
 import AddSessionPreferences from "../components/preferences/AddSessionPreferences.vue";
 import PieChartPreferences from "../components/preferences/PieChartPreferences.vue";
+import AddDatabasePreference from "../components/preferences/AddDatabasePreference.vue";
 </script>
 
 <template>
   <div class="container">
     <h2 class="s-title">Paramètres</h2>
-    <TeamsPreferences/>
-    <Divider/>
-    <AddSessionPreferences/>
-    <Divider/>
-    <PieChartPreferences/>
+    <TeamsPreferences />
+    <Divider />
+    <AddSessionPreferences />
+    <Divider />
+    <PieChartPreferences />
+    <Divider />
+    <AddDatabasePreference />
   </div>
 </template>
 
 <style scoped>
-
 .container {
   display: flex;
   flex-direction: column;
@@ -29,7 +31,7 @@ import PieChartPreferences from "../components/preferences/PieChartPreferences.v
 
 @font-face {
   font-family: dishcek;
-  src: url('../assets/fonts/dishcek/Dishcek.otf');
+  src: url("../assets/fonts/dishcek/Dishcek.otf");
 }
 
 .s-title {
