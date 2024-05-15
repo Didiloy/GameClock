@@ -21,11 +21,11 @@
               ><i class="pi pi-info"></i
             ></span>
             <OverlayPanel ref="op">
-            <span>
-              Vous pouvez entrer une durée en minutes ou utiliser une formule
-              pour additionner plusieurs durées. Par exemple, pour ajouter 10
-              minutes et 20 minutes, entrez "=10+20".
-            </span>
+              <span>
+                Vous pouvez entrer une durée en minutes ou utiliser une formule
+                pour additionner plusieurs durées. Par exemple, pour ajouter 10
+                minutes et 20 minutes, entrez "=10+20".
+              </span>
             </OverlayPanel>
             <InputText
               v-if="!is_chrono_running"
@@ -229,7 +229,9 @@ async function addNewSession() {
   loading.value = true;
 
   if (duration.value[0] === "=") {
+    duration.value = duration.value.replace(/\s+/g, "");
     let operandes = duration.value.slice(1).split("+");
+    return;
     duration.value = 0;
     operandes.forEach((operand) => {
       if (!regex.test(operand)) {
@@ -261,7 +263,7 @@ async function addNewSession() {
     props.teamName,
     game.value,
     parseInt(duration.value),
-    was_cool.value.value,
+    was_cool.value.value
   );
   loading.value = false;
   if (success) {
