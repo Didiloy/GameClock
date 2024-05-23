@@ -6,7 +6,7 @@ import AddDatabasePreference from "../components/preferences/AddDatabasePreferen
 </script>
 
 <template>
-  <div class="container">
+  <div class="s-container">
     <h2 class="s-title">Paramètres</h2>
     <TeamsPreferences />
     <Divider />
@@ -19,14 +19,13 @@ import AddDatabasePreference from "../components/preferences/AddDatabasePreferen
 </template>
 
 <style scoped>
-.container {
+.s-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: start;
-  height: 100%;
   width: 95%;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 @font-face {

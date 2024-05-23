@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell } from "electron";
+import { app, BrowserWindow, shell, ipcMain } from "electron";
 import { join } from "path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
@@ -14,6 +14,7 @@ function createWindow() {
     show: true,
     autoHideMenuBar: true,
     icon: icon,
+    frame: false,
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,
@@ -37,6 +38,18 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
+
+  ipcMain.on("maximize", () => {
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  });
+
+  ipcMain.on("minimize", () => {
+    mainWindow.minimize();
+  });
 
   // Menu.setApplicationMenu(null);
 }
@@ -79,6 +92,10 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+ipcMain.on("close", () => {
+  app.quit();
 });
 
 // In this file you can include the rest of your app"s specific main process
