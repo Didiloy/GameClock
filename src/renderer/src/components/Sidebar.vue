@@ -32,6 +32,7 @@
           :icon="icon"
           :loading="loading"
         ></Button>
+        <span class="sidebar-version">Version {{ app_info.version }}</span>
       </div>
     </div>
   </div>
@@ -41,6 +42,7 @@
 import logo from "../assets/images/icons.png";
 import { ref } from "vue";
 import { useStore } from "../store/store.js";
+import app_info from "../../../../package.json";
 
 const loading = ref(false);
 const icon = ref("pi pi-replay");
@@ -180,5 +182,10 @@ a:active {
 
 .ml {
   margin-left: 10px;
+}
+
+.sidebar-version {
+  margin-top: 5px;
+  font-style: italic;
 }
 </style>

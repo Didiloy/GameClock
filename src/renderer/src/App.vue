@@ -223,7 +223,7 @@ onMounted(() => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding: 10px 10px 3px;
   border-right: 1px solid var(--primary-100);
 }
 
