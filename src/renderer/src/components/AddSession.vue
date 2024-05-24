@@ -28,20 +28,15 @@
               </span>
             </OverlayPanel>
             <InputText
-              v-if="!is_chrono_running"
               class="input-number"
               v-model="duration"
               placeholder="Durée en minute"
             ></InputText>
-            <span v-else class="chrono-time">
-              {{ convertSecondsToHourMinutesSeconds(duration_seconds) }}
-            </span>
             <div>
               <Button
                 icon="pi pi-clock"
-                :label="is_chrono_running > 0 ? 'Stop' : ''"
                 @click="startStopWatch"
-                :style="'background-color:' + getChronoButtonColor() + ';'"
+                style="background-color: var(--primary-400)"
                 class="as-chrono-button"
               />
             </div>
@@ -106,11 +101,13 @@
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import { useToast } from "primevue/usetoast";
-import { useStore } from "../store/store";
+import { useStore, useStoreChrono } from "../store/store";
 import { storeToRefs } from "pinia";
 import { addSession } from "../database/database";
 import { getPreferences } from "../preferences/preferences";
 
+const storeChrono = useStoreChrono();
+const { chrono_value } = storeToRefs(storeChrono);
 const store = useStore();
 const { games } = storeToRefs(store);
 const toast = useToast();
@@ -155,36 +152,15 @@ watch(toggle_nul, () => {
   }
 });
 
-const timestamp_start_chrono = ref(0);
-
-const duration_seconds = ref(0);
-const is_chrono_running = ref(false);
-
 function startStopWatch() {
-  if (!is_chrono_running.value) {
-    timestamp_start_chrono.value = Date.now();
-    duration.value = 0;
-    is_chrono_running.value = !is_chrono_running.value;
-  } else {
-    is_chrono_running.value = !is_chrono_running.value;
-  }
+  duration.value = chrono_value.value;
 }
-
-watch(duration_seconds, () => {
-  duration.value = Math.floor(duration_seconds.value / 60);
-});
 
 onMounted(() => {
   if (props.gameName) {
     game.value = props.gameName;
   }
 });
-
-setInterval(() => {
-  if (is_chrono_running.value) {
-    duration_seconds.value = (Date.now() - timestamp_start_chrono.value) / 1000;
-  }
-}, 1000);
 
 const op = ref();
 const toggleOverlay = () => {
@@ -200,30 +176,7 @@ const autocomplete = (event) => {
   });
 };
 
-function convertSecondsToHourMinutesSeconds(seconds) {
-  let minutes = Math.floor(seconds / 60);
-  let remainingSeconds = (seconds % 60).toFixed(0);
-
-  let result = "";
-
-  if (minutes >= 60) {
-    result += Math.floor(minutes / 60) + "h ";
-    minutes = minutes % 60;
-  }
-
-  result += minutes + "m";
-
-  if (remainingSeconds > 0) {
-    if (result !== "") {
-      result += " ";
-    }
-    result += remainingSeconds + "s";
-  }
-
-  return result;
-}
-
-const regex = new RegExp("^[1-9]\\d*$"); //vérifie si le nombre entré ne commecne pas par un 0
+const regex = new RegExp("^[1-9]\\d*$"); //vérifie si le nombre entré ne commence pas par un 0
 
 async function addNewSession() {
   loading.value = true;
@@ -231,7 +184,6 @@ async function addNewSession() {
   if (duration.value[0] === "=") {
     duration.value = duration.value.replace(/\s+/g, "");
     let operandes = duration.value.slice(1).split("+");
-    return;
     duration.value = 0;
     operandes.forEach((operand) => {
       if (!regex.test(operand)) {
@@ -289,10 +241,6 @@ async function addNewSession() {
   }
   game.value = "";
   duration.value = "";
-}
-
-function getChronoButtonColor() {
-  return is_chrono_running.value ? "var(--red-400)" : "var(--primary-400)";
 }
 </script>
 <style scoped>

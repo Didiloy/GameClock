@@ -7,7 +7,17 @@
           draggable="false"
           style="height: 25px; width: auto"
         />
-        <!-- <span>GameClock</span> -->
+      </div>
+      <div
+        id="chronometer"
+        @click="startStopWatch"
+        :style="'background-color:' + background_color + ';'"
+      >
+        <span v-if="duration_seconds !== 0">
+          {{ convertSecondsToHourMinutesSeconds(duration_seconds) }}
+        </span>
+        <i class="pi pi-stop-circle" v-if="is_chrono_running"></i>
+        <i class="pi pi-clock" v-else></i>
       </div>
       <div id="window-controls">
         <div class="button" id="min-button">
@@ -38,7 +48,10 @@
   </div>
 </template>
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref, watch } from "vue";
+import { useStoreChrono } from "../store/store";
+import { storeToRefs } from "pinia";
+const store = useStoreChrono();
 
 function handleWindowControls() {
   // Make minimise/maximise/close buttons work when they are clicked
@@ -58,6 +71,58 @@ function handleWindowControls() {
 onMounted(() => {
   handleWindowControls();
 });
+
+const timestamp_start_chrono = ref(0);
+const duration = ref(0);
+const duration_seconds = ref(0);
+const is_chrono_running = ref(false);
+const background_color = ref("var(--primary-500)");
+
+setInterval(() => {
+  if (is_chrono_running.value) {
+    duration_seconds.value = (Date.now() - timestamp_start_chrono.value) / 1000;
+  }
+}, 1000);
+
+watch(duration_seconds, () => {
+  duration.value = Math.floor(duration_seconds.value / 60);
+  store.updateChrono(duration.value);
+});
+
+function startStopWatch() {
+  if (!is_chrono_running.value) {
+    timestamp_start_chrono.value = Date.now();
+    duration.value = 0;
+    is_chrono_running.value = !is_chrono_running.value;
+    background_color.value = "var(--red-500)";
+  } else {
+    is_chrono_running.value = !is_chrono_running.value;
+    background_color.value = "var(--primary-500)";
+  }
+}
+
+function convertSecondsToHourMinutesSeconds(seconds) {
+  let minutes = Math.floor(seconds / 60);
+  let remainingSeconds = (seconds % 60).toFixed(0);
+
+  let result = "";
+
+  if (minutes >= 60) {
+    result += Math.floor(minutes / 60) + "h ";
+    minutes = minutes % 60;
+  }
+
+  result += minutes + "m";
+
+  if (remainingSeconds > 0) {
+    if (result !== "") {
+      result += " ";
+    }
+    result += remainingSeconds + "s";
+  }
+
+  return result;
+}
 </script>
 <style scoped>
 #header {
@@ -78,7 +143,7 @@ onMounted(() => {
   height: 100%;
   -webkit-app-region: drag;
   display: grid;
-  grid-template-columns: auto 138px;
+  grid-template-columns: auto 110px 138px;
 }
 
 #window-title {
@@ -96,6 +161,15 @@ onMounted(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 1.5;
+}
+
+#chronometer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  -webkit-app-region: no-drag;
+  border-radius: 10px;
 }
 
 #window-controls {

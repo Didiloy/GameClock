@@ -53,3 +53,16 @@ export const useStoredDatabases = defineStore("storedDatabases", () => {
     useDeleteDatabase,
   };
 });
+
+export const useStoreChrono = defineStore("storeChrono", () => {
+  const chrono_value = ref(0);
+
+  function updateChrono(value) {
+    chrono_value.value = value;
+  }
+
+  return {
+    chrono_value,
+    updateChrono,
+  };
+});
