@@ -51,6 +51,7 @@
 import { onMounted, ref, watch } from "vue";
 import { useStoreChrono } from "../store/store";
 import { storeToRefs } from "pinia";
+const props = defineProps(["toggleChrono"]);
 const store = useStoreChrono();
 
 function handleWindowControls() {
@@ -88,6 +89,13 @@ watch(duration_seconds, () => {
   duration.value = Math.floor(duration_seconds.value / 60);
   store.updateChrono(duration.value);
 });
+
+watch(
+  () => props.toggleChrono,
+  () => {
+    startStopWatch();
+  }
+);
 
 function startStopWatch() {
   if (!is_chrono_running.value) {
@@ -143,7 +151,7 @@ function convertSecondsToHourMinutesSeconds(seconds) {
   height: 100%;
   -webkit-app-region: drag;
   display: grid;
-  grid-template-columns: auto 110px 138px;
+  grid-template-columns: auto 130px 138px;
 }
 
 #window-title {

@@ -99,7 +99,7 @@
   <Toast />
 </template>
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import { useToast } from "primevue/usetoast";
 import { useStore, useStoreChrono } from "../store/store";
 import { storeToRefs } from "pinia";

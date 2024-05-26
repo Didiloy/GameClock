@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar.vue";
 import { useRouter } from "vue-router";
 import { initialiseFirebase } from "./database/firebaseConfig";
 import { getPreferences } from "./preferences/preferences";
+import { onMounted, onUnmounted, ref } from "vue";
 const router = useRouter();
 const storeDatabases = useStoredDatabases();
 const { stored_databases, loadDatabases } = storeToRefs(storeDatabases);
@@ -19,11 +20,33 @@ import { useStore, useStoredDatabases } from "./store/store";
 import { storeToRefs } from "pinia";
 const store = useStore();
 const { loaded } = storeToRefs(store);
+const chrono = ref(false);
+
+function keyEventToggleChrono(e) {
+  if (
+    e.key === getPreferences("toggle_chronometer_key_shortcut").toLowerCase() ||
+    e.key === getPreferences("toggle_chronometer_key_shortcut").toUpperCase()
+  ) {
+    toggleChrono();
+  }
+}
+
+onMounted(() => {
+  document.addEventListener("keyup", keyEventToggleChrono);
+});
+onUnmounted(() => {
+  document.removeEventListener("keyup", keyEventToggleChrono);
+});
+
+function toggleChrono() {
+  chrono.value = !chrono.value;
+  console.log("chrono value:", chrono);
+}
 </script>
 
 <template>
   <div class="container">
-    <TitleBar />
+    <TitleBar :toggleChrono="chrono" />
     <div class="app-container main-background">
       <div class="sidebar">
         <Sidebar></Sidebar>

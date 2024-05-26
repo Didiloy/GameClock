@@ -16,6 +16,8 @@ const defaults = {
   sort_order_team_list: "playtime",
   //database
   selected_database_index: 0,
+  //chronometer
+  toggle_chronometer_key_shortcut: "p",
 };
 
 const preferences_name = "preferences";
