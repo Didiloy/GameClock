@@ -1,12 +1,58 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { getPreferences, setPreferences } from "../../preferences/preferences";
+import { useStore } from "../../store/store";
+import { storeToRefs } from "pinia";
+const store = useStore();
+const { teams } = storeToRefs(store);
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
+
+onMounted(() => {
+  addTeamsToPageList();
+});
+
+function addTeamsToPageList() {
+  for (const t of teams.value) {
+    pages_list.value.push({
+      label: t.name,
+      route: `/team/${t.name}`,
+    });
+  }
+}
 
 const toggle_chronometer_key_shortcut = ref(
   getPreferences("toggle_chronometer_key_shortcut")
 );
+
+const selected_page = ref({
+  label: getPreferences("default_start_page"),
+  route: getPreferences("default_start_page_route"),
+});
+const pages_list = ref([
+  {
+    label: "Accueil",
+    route: "/",
+  },
+  {
+    label: "Liste des équipes",
+    route: "/teams",
+  },
+
+  {
+    label: "Jeux",
+    route: "/settings/games",
+  },
+  {
+    label: "Général",
+    route: "/settings/general",
+  },
+]);
+
+watch(selected_page, () => {
+  setPreferences("default_start_page", selected_page.value.label);
+  setPreferences("default_start_page_route", selected_page.value.route);
+});
 
 const update_shortcut = (update_value) => {
   if (!validateShortCut(update_value)) return;
@@ -55,6 +101,14 @@ function isValidChar(character) {
         maxlength="1"
       />
     </div>
+    <div class="tp-item">
+      <b class="text-color">Page dans laquelle démarrer l'application:</b>
+      <Dropdown
+        v-model="selected_page"
+        :options="pages_list"
+        optionLabel="label"
+      />
+    </div>
   </div>
 </template>
 
@@ -82,5 +136,6 @@ function isValidChar(character) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
 }
 </style>

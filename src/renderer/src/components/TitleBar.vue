@@ -50,7 +50,6 @@
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import { useStoreChrono } from "../store/store";
-import { storeToRefs } from "pinia";
 const props = defineProps(["toggleChrono"]);
 const store = useStoreChrono();
 

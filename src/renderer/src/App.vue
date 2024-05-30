@@ -4,7 +4,7 @@ import Sidebar from "./components/Sidebar.vue";
 import { useRouter } from "vue-router";
 import { initialiseFirebase } from "./database/firebaseConfig";
 import { getPreferences } from "./preferences/preferences";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 const router = useRouter();
 const storeDatabases = useStoredDatabases();
 const { stored_databases, loadDatabases } = storeToRefs(storeDatabases);
@@ -19,7 +19,7 @@ if (stored_databases.value.length === 0) {
 import { useStore, useStoredDatabases } from "./store/store";
 import { storeToRefs } from "pinia";
 const store = useStore();
-const { loaded } = storeToRefs(store);
+const { loaded, teams } = storeToRefs(store);
 const chrono = ref(false);
 
 function keyEventToggleChrono(e) {
@@ -31,6 +31,19 @@ function keyEventToggleChrono(e) {
   }
 }
 
+const prefered_page = ref({
+  label: getPreferences("default_start_page"),
+  route: getPreferences("default_start_page_route"),
+});
+
+watch(teams, () => {
+  if (verifyIfTeamExist()) {
+    router.push(prefered_page.value.route);
+  } else {
+    router.push("/");
+  }
+});
+
 onMounted(() => {
   document.addEventListener("keyup", keyEventToggleChrono);
 });
@@ -38,9 +51,22 @@ onUnmounted(() => {
   document.removeEventListener("keyup", keyEventToggleChrono);
 });
 
+function verifyIfTeamExist() {
+  if (!prefered_page.value.route.includes("/team/")) {
+    return true;
+  }
+  console.log("contains");
+  let exist = false;
+  for (const t of teams.value) {
+    if (t.name === prefered_page.value.label) {
+      exist = true;
+    }
+  }
+  return exist;
+}
+
 function toggleChrono() {
   chrono.value = !chrono.value;
-  console.log("chrono value:", chrono);
 }
 </script>
 

@@ -39,7 +39,6 @@
 </template>
 
 <script setup>
-import logo from "../assets/images/icons.png";
 import { ref } from "vue";
 import { useStore } from "../store/store.js";
 import app_info from "../../../../package.json";

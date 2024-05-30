@@ -18,6 +18,9 @@ const defaults = {
   selected_database_index: 0,
   //chronometer
   toggle_chronometer_key_shortcut: "p",
+  //start page
+  default_start_page: "Accueil",
+  default_start_page_route: "/",
 };
 
 const preferences_name = "preferences";
