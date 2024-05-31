@@ -21,6 +21,7 @@ import { storeToRefs } from "pinia";
 const store = useStore();
 const { loaded, teams } = storeToRefs(store);
 const chrono = ref(false);
+const listener_added = ref(false);
 
 function keyEventToggleChrono(e) {
   if (
@@ -45,17 +46,34 @@ watch(teams, () => {
 });
 
 onMounted(() => {
-  document.addEventListener("keyup", keyEventToggleChrono);
+  addChronoListener();
 });
 onUnmounted(() => {
-  document.removeEventListener("keyup", keyEventToggleChrono);
+  removeChronoListener();
 });
+
+function addChronoListener() {
+  document.addEventListener("keyup", keyEventToggleChrono);
+  listener_added.value = true;
+}
+
+function removeChronoListener() {
+  document.removeEventListener("keyup", keyEventToggleChrono);
+  listener_added.value = false;
+}
+
+function toggleChronoListener() {
+  if (listener_added.value) {
+    removeChronoListener();
+  } else {
+    addChronoListener();
+  }
+}
 
 function verifyIfTeamExist() {
   if (!prefered_page.value.route.includes("/team/")) {
     return true;
   }
-  console.log("contains");
   let exist = false;
   for (const t of teams.value) {
     if (t.name === prefered_page.value.label) {
@@ -66,6 +84,7 @@ function verifyIfTeamExist() {
 }
 
 function toggleChrono() {
+  console.log("toggle chrono");
   chrono.value = !chrono.value;
 }
 </script>
@@ -84,7 +103,7 @@ function toggleChrono() {
         </div>
       </div>
       <div v-else class="content">
-        <router-view />
+        <router-view @toggleChronoListener="toggleChronoListener" />
       </div>
     </div>
   </div>

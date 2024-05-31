@@ -4,12 +4,18 @@ import AddSessionPreferences from "../components/preferences/AddSessionPreferenc
 import PieChartPreferences from "../components/preferences/PieChartPreferences.vue";
 import AddDatabasePreference from "../components/preferences/AddDatabasePreference.vue";
 import GeneralPreference from "../components/preferences/GeneralPreference.vue";
+import { defineEmits } from "vue";
+const emit = defineEmits(["toggleChronoListener"]);
+
+function toggleChronoListener() {
+  emit("toggleChronoListener");
+}
 </script>
 
 <template>
   <div class="s-container">
     <h2 class="s-title">Paramètres</h2>
-    <GeneralPreference />
+    <GeneralPreference @toggleChronoListener="toggleChronoListener" />
     <Divider />
     <TeamsPreferences />
     <Divider />

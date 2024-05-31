@@ -25,6 +25,7 @@
       <AddSession
         :teamName="$route.params.name"
         :gameName="add_session_game_name"
+        @toggleChronoListener="toggleChronoListener"
       ></AddSession>
     </Dialog>
     <DashboardTeam
@@ -37,7 +38,7 @@
 <script setup>
 import AddSession from "../components/AddSession.vue";
 import DashboardTeam from "../components/DashboardTeam.vue";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, defineEmits } from "vue";
 import { getPreferences } from "../preferences/preferences";
 import { useRoute } from "vue-router";
 import { useStore } from "../store/store";
@@ -52,6 +53,8 @@ const add_session_game_name = ref("");
 const add_session_dialog_visible = ref(false);
 
 const id_of_team = ref("");
+
+const emit = defineEmits(["toggleChronoListener"]);
 
 const sessions_of_team = ref([]);
 function getSessionsOfTeam() {
@@ -135,6 +138,10 @@ const months = [
 
 function toggleAddSession() {
   add_session_dialog_visible.value = !add_session_dialog_visible.value;
+}
+
+function toggleChronoListener() {
+  emit("toggleChronoListener");
 }
 
 function keyEventAddSession(e) {

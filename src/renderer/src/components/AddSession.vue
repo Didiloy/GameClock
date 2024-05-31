@@ -99,13 +99,14 @@
   <Toast />
 </template>
 <script setup>
-import { onMounted, onUnmounted, ref, watch } from "vue";
+import { onMounted, onUnmounted, ref, watch, defineEmits } from "vue";
 import { useToast } from "primevue/usetoast";
 import { useStore, useStoreChrono } from "../store/store";
 import { storeToRefs } from "pinia";
 import { addSession } from "../database/database";
 import { getPreferences } from "../preferences/preferences";
 
+const emit = defineEmits(["toggleChronoListener"]);
 const storeChrono = useStoreChrono();
 const { chrono_value } = storeToRefs(storeChrono);
 const store = useStore();
@@ -157,9 +158,14 @@ function startStopWatch() {
 }
 
 onMounted(() => {
+  emit("toggleChronoListener");
   if (props.gameName) {
     game.value = props.gameName;
   }
+});
+
+onUnmounted(() => {
+  emit("toggleChronoListener");
 });
 
 const op = ref();
