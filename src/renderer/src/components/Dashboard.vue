@@ -28,8 +28,8 @@
         iconName="pi pi-sort-amount-up"
         backgroundColor="#c5eae7"
         titleColor="#00201f"
-        :name="number_of_games"
-        value="jeux joués"
+        :name="number_of_games + ' jeux joués'"
+        value=""
       ></LittleCard>
       <LittleCard
         class="dv-lc-most-session"
@@ -233,7 +233,7 @@ function calculateFunPercentage() {
   grid-column-start: 1;
   grid-column-end: 4;
   grid-row-start: 1;
-  grid-row-end: 3;
+  grid-row-end: 4;
 }
 
 .dv-lc-time-played {
@@ -250,9 +250,9 @@ function calculateFunPercentage() {
   display: inline-grid;
   width: 100%;
   height: 100%;
-  grid-column-start: 4;
-  grid-column-end: 7;
-  grid-row-start: 3;
+  grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row-start: 4;
   grid-row-end: 5;
 }
 
@@ -260,8 +260,8 @@ function calculateFunPercentage() {
   display: inline-grid;
   width: 100%;
   height: 100%;
-  grid-column-start: 1;
-  grid-column-end: 4;
+  grid-column-start: 4;
+  grid-column-end: 7;
   grid-row-start: 3;
   grid-row-end: 5;
 }
