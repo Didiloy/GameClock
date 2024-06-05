@@ -40,7 +40,11 @@
               header="Équipe"
             >
               <template #body="slotProps">
-                {{ slotProps.data.team_name }}
+                <RouterLink
+                  :to="'/team/' + slotProps.data.team_name"
+                  style="color: var(--primary-500)"
+                  >{{ slotProps.data.team_name }}</RouterLink
+                >
               </template>
             </Column>
             <Column field="playtime" header="Durée de la session">
