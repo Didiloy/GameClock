@@ -72,7 +72,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onMounted, ref, onUnmounted, onUpdated, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { modifyGame } from "../database/database";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
@@ -184,7 +184,7 @@ async function useModifyGame() {
     toast.add({
       severity: "error",
       summary: "",
-      detail: "Une erreur est survenue lors de l'ajout de la session de jeu.",
+      detail: "Une erreur est survenue lors de la modification du jeu.",
       life: 3000,
     });
   }
