@@ -1,10 +1,15 @@
 <template>
   <div class="sgs-container">
-    <Card class="card" :pt="{ root: { style: 'box-shadow: 0px 0px 0px 0px;' },
-     body: {style: 'height: 100%;'},
-     content: {style: 'height: 100%; padding:0;'}}">
+    <Card
+      class="card"
+      :pt="{
+        root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+        body: { style: 'height: 100%;' },
+        content: { style: 'height: 100%; padding:0;' },
+      }"
+    >
       <template #title
-      ><span class="sgs-title">{{ props.name }}</span></template
+        ><span class="sgs-title">{{ props.name }}</span></template
       >
       <template #content>
         <div class="sessions-info">
@@ -13,15 +18,21 @@
             <p>sessions</p>
           </div>
           <div class="individual-info sgs-longest-session">
-            <p class="individual-info-lg">{{ convertMinuteToHoursMinute(longuest_session) }}</p>
+            <p class="individual-info-lg">
+              {{ convertMinuteToHoursMinute(longuest_session) }}
+            </p>
             <p>Session la plus longue</p>
           </div>
           <div class="individual-info sgs-smallest-session">
-            <p class="individual-info-lg">{{ convertMinuteToHoursMinute(smallest_session) }}</p>
+            <p class="individual-info-lg">
+              {{ convertMinuteToHoursMinute(smallest_session) }}
+            </p>
             <p>Session la plus courte</p>
           </div>
           <div class="individual-info sgs-average-session">
-            <p class="individual-info-lg">{{ convertMinuteToHoursMinute(average_session) }}</p>
+            <p class="individual-info-lg">
+              {{ convertMinuteToHoursMinute(average_session) }}
+            </p>
             <p>Durée moyenne des sessions</p>
           </div>
           <div class="individual-info sgs-team">
@@ -32,31 +43,41 @@
         <div class="sgs-content">
           <div class="sgs-left">
             <label for="logo">Logo du jeu</label>
-            <InputText id="logo" type="text" v-model="logo" style="width:400px;"/>
+            <InputText
+              id="logo"
+              type="text"
+              v-model="logo"
+              style="width: 400px"
+            />
             <label for="heroe">Image du jeu</label>
-            <InputText id="heroe" type="text" v-model="heroe" style="width:400px;"/>
+            <InputText
+              id="heroe"
+              type="text"
+              v-model="heroe"
+              style="width: 400px"
+            />
           </div>
           <Button
-              label="Modifier"
-              :icon="icon"
-              class="btn-add"
-              @click="useModifyGame"
-              :loading="loading"
-              style="margin-top: 10px;"
+            label="Modifier"
+            :icon="icon"
+            class="btn-add"
+            @click="useModifyGame"
+            :loading="loading"
+            style="margin-top: 10px"
           ></Button>
         </div>
       </template>
     </Card>
-    <Toast/>
+    <Toast />
   </div>
 </template>
 <script setup>
-import {computed, onMounted, ref, onUnmounted, onUpdated, watch} from "vue";
-import {modifyGame} from "../database/database";
-import {useStore} from "../store/store";
-import {storeToRefs} from "pinia";
-import {useToast} from "primevue/usetoast";
-import {convertMinuteToHoursMinute} from "../common/main";
+import { computed, onMounted, ref, onUnmounted, onUpdated, watch } from "vue";
+import { modifyGame } from "../database/database";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
+import { useToast } from "primevue/usetoast";
+import { convertMinuteToHoursMinute } from "../common/main";
 
 const props = defineProps(["name", "logo", "heroe"]);
 const name = computed(() => {
@@ -69,7 +90,7 @@ const heroe_url = computed(() => {
 });
 
 const store = useStore();
-const {games, sessions, teams} = storeToRefs(store);
+const { games, sessions, teams } = storeToRefs(store);
 const icon = ref("pi pi-cloud-upload");
 const loading = ref(false);
 const toast = useToast();
@@ -90,34 +111,41 @@ function getTotalSessions() {
 }
 
 function getLonguestSession() {
-  return sessions.value
-      .filter((s) => s.game.id === game_id.value)
-      .reduce((acc, s) => (s.duration > acc ? s.duration : acc), 0);
+  let s = sessions.value.filter((s) => s.game.id === game_id.value);
+  if (s.length === 0) return 0;
+  return s.reduce((acc, s) => (s.duration > acc ? s.duration : acc), 0);
 }
 
 function getSmallestSession() {
-  return sessions.value
-      .filter((s) => s.game.id === game_id.value)
-      .reduce((acc, s) => (s.duration < acc ? s.duration : acc), longuest_session.value);
+  let s = sessions.value.filter((s) => s.game.id === game_id.value);
+  if (s.length === 0) return 0;
+  return s.reduce(
+    (acc, s) => (s.duration < acc ? s.duration : acc),
+    longuest_session.value
+  );
 }
 
 function getAverageSession() {
-  return (sessions.value
-      .filter((s) => s.game.id === game_id.value)
-      .reduce((acc, s) => acc + s.duration, 0) / total_sessions.value).toFixed(0);
+  let s = sessions.value.filter((s) => s.game.id === game_id.value);
+  if (s.length === 0) return 0;
+  return (
+    s.reduce((acc, s) => acc + s.duration, 0) / total_sessions.value
+  ).toFixed(0);
 }
 
 const team_who_play_the_most = ref("");
 
 function getTeamWhoPlayTheMost() {
   const team_id = sessions.value
-      .filter((s) => s.game.id === game_id.value)
-      .map((s) => s.team.id)
-      .reduce((acc, id) => {
-        acc[id] = (acc[id] || 0) + 1;
-        return acc;
-      }, {});
-  const team_id_max = Object.keys(team_id).reduce((a, b) => (team_id[a] > team_id[b] ? a : b));
+    .filter((s) => s.game.id === game_id.value)
+    .map((s) => s.team.id)
+    .reduce((acc, id) => {
+      acc[id] = (acc[id] || 0) + 1;
+      return acc;
+    }, {});
+  const team_id_max = Object.keys(team_id).reduce((a, b) =>
+    team_id[a] > team_id[b] ? a : b
+  );
   return teams.value.find((t) => t.id === team_id_max).name;
 }
 
@@ -138,7 +166,6 @@ watch(name, () => {
   average_session.value = getAverageSession();
   team_who_play_the_most.value = getTeamWhoPlayTheMost();
 });
-
 
 async function useModifyGame() {
   loading.value = true;
@@ -164,7 +191,6 @@ async function useModifyGame() {
 }
 </script>
 <style scoped>
-
 .sgs-container {
   background-image: v-bind(heroe_url);
   background-size: cover;
@@ -233,7 +259,6 @@ async function useModifyGame() {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  //border: 1px solid white;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   font-size: large;
