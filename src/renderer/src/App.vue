@@ -19,7 +19,7 @@ if (stored_databases.value.length === 0) {
 import { useStore, useStoredDatabases } from "./store/store";
 import { storeToRefs } from "pinia";
 const store = useStore();
-const { loaded, teams } = storeToRefs(store);
+const { loaded, teams, first_load } = storeToRefs(store);
 const chrono = ref(false);
 const listener_added = ref(false);
 
@@ -39,7 +39,7 @@ const prefered_page = ref({
 
 watch(teams, () => {
   if (verifyIfTeamExist()) {
-    router.push(prefered_page.value.route);
+    if (first_load.value) router.push(prefered_page.value.route);
   } else {
     router.push("/");
   }

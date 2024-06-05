@@ -12,8 +12,10 @@ export const useStore = defineStore("store", () => {
   const games = ref([]);
   const sessions = ref([]);
   const loaded = ref(false);
+  const first_load = ref(true);
 
   reloadStore();
+  first_load.value = true;
 
   async function reloadStore() {
     loaded.value = false;
@@ -27,9 +29,10 @@ export const useStore = defineStore("store", () => {
     games.value = await getGames();
     sessions.value = await getSessions();
     loaded.value = true;
+    first_load.value = false;
   }
 
-  return { teams, games, sessions, reloadStore, loaded };
+  return { teams, games, sessions, reloadStore, loaded, first_load };
 });
 
 export const useStoredDatabases = defineStore("storedDatabases", () => {
