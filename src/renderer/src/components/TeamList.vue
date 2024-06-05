@@ -2,15 +2,15 @@
   <DataView :value="teamItem" class="dataview">
     <template #list="slotProps">
       <div
-          v-for="(item, index) in slotProps.items"
-          :key="index"
-          :class="getClassNameFromIndex(index)"
-          @click="navigateToTeam(item.name)"
+        v-for="(item, index) in slotProps.items"
+        :key="index"
+        :class="getClassNameFromIndex(index)"
+        @click="navigateToTeam(item.name)"
       >
         <div class="team-name">
           <img
-              :src="item.logo"
-              style="max-width: 60px; max-height: 60px; margin-right: 10px"
+            :src="item.logo"
+            style="max-width: 60px; max-height: 60px; margin-right: 10px"
           />
           <h3>{{ item.name }}</h3>
         </div>
@@ -25,44 +25,81 @@
   </DataView>
 </template>
 <script setup>
-import {onMounted, ref, watch} from "vue";
-import {useRouter} from "vue-router";
-import {useStore} from "../store/store";
-import {storeToRefs} from "pinia";
-import {convertMinuteToHoursMinute} from "../common/main";
-import {getPreferences} from "../preferences/preferences";
+import { onMounted, ref, watch, onUpdated } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
+import { convertMinuteToHoursMinute } from "../common/main";
+import { getPreferences } from "../preferences/preferences";
 
 const router = useRouter();
 
 const store = useStore();
-const {teams, sessions, games} = storeToRefs(store);
+const { teams, sessions, games } = storeToRefs(store);
 
 onMounted(() => {
   init();
 });
 
+onUpdated(() => {});
+
 watch(sessions, () => {
   init();
 });
-
 
 const teamItem = ref([]);
 
 function setTeamItem() {
   teamItem.value = [];
-  for (let t of teams.value) {
-    let {game_name, logo} = getMostPlayedGameNameAndLogo(t.id);
-    teamItem.value.push({
-      name: t.name,
-      playtime: getPlaytime(t.id),
-      logo: logo,
-      game_name: game_name
+
+  // calculate gametime and most played game for each team
+  const teamData = teams.value.reduce((acc, team) => {
+    acc[team.id] = {
+      name: team.name,
+      playtime: 0,
+      gameDurations: {}, // To track duration per game
+      logo: "",
+    };
+    return acc;
+  }, {});
+
+  sessions.value.forEach((session) => {
+    const team = teamData[session.team.id];
+    if (team === undefined) return;
+    team.playtime += session.duration;
+
+    //if the game entry doesn't exist, create it
+    if (!team.gameDurations[session.game.id]) {
+      team.gameDurations[session.game.id] = {
+        duration: 0,
+        logo: getGameById(session.game.id).logo,
+      };
+    }
+
+    team.gameDurations[session.game.id].duration += session.duration;
+  });
+
+  // // Determine the most played game for each team
+  Object.values(teamData).forEach((team) => {
+    let maxDuration = 0;
+
+    Object.keys(team.gameDurations).forEach((gameName) => {
+      const gameData = team.gameDurations[gameName];
+      if (gameData.duration > maxDuration) {
+        maxDuration = gameData.duration;
+        team.logo = gameData.logo;
+      }
     });
-  }
+
+    delete team.gameDurations;
+  });
+
+  const result = Object.values(teamData);
+  teamItem.value = result;
 }
 
-function sortTeams(){
-  switch(getPreferences("sort_order_team_list")) {
+function sortTeams() {
+  switch (getPreferences("sort_order_team_list")) {
     case "playtime":
       teamItem.value.sort((a, b) => b.playtime - a.playtime);
       break;
@@ -75,35 +112,10 @@ function sortTeams(){
   }
 }
 
-function getMostPlayedGameNameAndLogo(teamId) {
-  let temp_games = [];
-  let total_playtime = 0;
-  for (let g of games.value) {
-    let acc = 0;
-    for (let s of sessions.value) {
-      if (s.team.id === teamId && s.game.id === g.id) {
-        acc += s.duration;
-        total_playtime += s.duration;
-      }
-    }
-    temp_games.push({name: g.name, playtime: acc, logo: g.logo});
-  }
-  temp_games.sort((a, b) => b.playtime - a.playtime);
-  temp_games = temp_games.filter((g) => g.playtime > 0);
-  return {
-    game_name: temp_games[0]?.name ? temp_games[0].name : '',
-    logo: temp_games[0]?.logo ? temp_games[0].logo : ''
-  }
-}
-
-function getPlaytime(teamId) {
-  let playtime = 0;
-  for (let s of sessions.value) {
-    if (s.team.id === teamId) {
-      playtime += s.duration;
-    }
-  }
-  return playtime;
+function getGameById(gameId) {
+  let game = games.value.find((g) => g.id === gameId);
+  if (game === undefined) return { name: "", heroe: "", logo: "" };
+  return { name: game.name, heroe: game.heroe, logo: game.logo };
 }
 
 const init = () => {
@@ -165,7 +177,7 @@ function navigateToTeam(teamName) {
 }
 
 h4 {
- width: max-content;
+  width: max-content;
 }
 
 .icon-action {

@@ -38,7 +38,7 @@
 <script setup>
 import AddSession from "../components/AddSession.vue";
 import DashboardTeam from "../components/DashboardTeam.vue";
-import { onMounted, onUnmounted, ref, defineEmits } from "vue";
+import { onMounted, onUnmounted, ref, defineEmits, onUpdated } from "vue";
 import { getPreferences } from "../preferences/preferences";
 import { useRoute } from "vue-router";
 import { useStore } from "../store/store";
