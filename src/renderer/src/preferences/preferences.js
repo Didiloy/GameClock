@@ -21,6 +21,7 @@ const defaults = {
   //start page
   default_start_page: "Accueil",
   default_start_page_route: "/",
+  number_of_last_sessions: 5,
 };
 
 const preferences_name = "preferences";

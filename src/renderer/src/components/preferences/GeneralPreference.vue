@@ -51,6 +51,18 @@ const pages_list = ref([
   },
 ]);
 
+const number_of_last_session_possible = ref(["5", "10", "15"]);
+const selected_number_of_last_sessions = ref(
+  getPreferences("number_of_last_sessions")
+);
+
+watch(selected_number_of_last_sessions, () => {
+  setPreferences(
+    "number_of_last_sessions",
+    selected_number_of_last_sessions.value
+  );
+});
+
 watch(selected_page, () => {
   setPreferences("default_start_page", selected_page.value.label);
   setPreferences("default_start_page_route", selected_page.value.route);
@@ -117,6 +129,15 @@ function isValidChar(character) {
         v-model="selected_page"
         :options="pages_list"
         optionLabel="label"
+      />
+    </div>
+    <div class="tp-item">
+      <b class="text-color"
+        >Nombre de dernières sessions à afficher sur la page d'accueil</b
+      >
+      <Dropdown
+        v-model="selected_number_of_last_sessions"
+        :options="number_of_last_session_possible"
       />
     </div>
   </div>

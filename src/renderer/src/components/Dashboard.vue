@@ -72,7 +72,13 @@
         titleColor="#390b00"
       ></GamesFunPercentage>
     </div>
-    <SessionsHistory :historySize="5" title="5 dernières sessions entrées" />
+    <SessionsHistory
+      :historySize="getPreferences('number_of_last_sessions')"
+      :title="
+        getPreferences('number_of_last_sessions') +
+        ' dernières sessions entrées'
+      "
+    />
   </div>
 </template>
 <script setup>
@@ -85,6 +91,7 @@ import BarChartAllGames from "./BarChartAllGames.vue";
 import PlayTimeHome from "./PlayTimeHome.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
 import SessionsHistory from "./SessionsHistory.vue";
+import { getPreferences } from "../preferences/preferences";
 
 const props = defineProps(["teamName"]);
 
