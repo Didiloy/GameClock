@@ -139,7 +139,6 @@ function navigateToTeam(teamName) {
 </script>
 <style scoped>
 .dataview {
-  margin-top: 20px;
 }
 
 .team-item {
