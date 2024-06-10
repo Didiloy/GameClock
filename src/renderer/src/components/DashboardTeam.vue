@@ -1,96 +1,100 @@
 <template>
-  <div class="dt-container">
-
+  <div v-if="!loaded">
+    <Loading msg="Calcul des statistiques" />
+  </div>
+  <div v-else class="dt-container">
     <div class="dt-dashboard">
       <LittleCard
-          class="dt-lc-total-time"
-          iconName="pi pi-hourglass"
-          backgroundColor="#d4e7dc"
-          titleColor="#0f1f18"
-          :name="team_time_hours"
-          :value="
-              'passées à jouer. Soit <b>' +
-              percentage_total_time +
-              '</b> du temps total de jeu'
-            "
+        class="dt-lc-total-time"
+        iconName="pi pi-hourglass"
+        backgroundColor="#d4e7dc"
+        titleColor="#0f1f18"
+        :name="team_time_hours"
+        :value="
+          'passées à jouer. Soit <b>' +
+          percentage_total_time +
+          '</b> du temps total de jeu'
+        "
       ></LittleCard>
       <LittleCard
-          iconName="pi pi-hashtag"
-          class="dt-lc-position"
-          :name="ranking_computed"
-          backgroundColor="#f7d8fe"
-          titleColor="#27142f"
-          value="position de l'équipe dans le classement par temps de jeu"
+        iconName="pi pi-hashtag"
+        class="dt-lc-position"
+        :name="ranking_computed"
+        backgroundColor="#f7d8fe"
+        titleColor="#27142f"
+        value="position de l'équipe dans le classement par temps de jeu"
       ></LittleCard>
       <GameTimeHome
-          class="dt-pie-chart"
-          :teamName="props.teamName"
-          :sessions="props.sessions"
-          backgroundColor="#f9e09f"
-          titleColor="#241a00"
+        class="dt-pie-chart"
+        :teamName="props.teamName"
+        :sessions="props.sessions"
+        backgroundColor="#f9e09f"
+        titleColor="#241a00"
       ></GameTimeHome>
       <GamesFunPercentage
-          class="dt-fun-percentage"
-          :teamName="props.teamName"
-          :sessions="props.sessions"
+        class="dt-fun-percentage"
+        :teamName="props.teamName"
+        :sessions="props.sessions"
       ></GamesFunPercentage>
       <BarChartAllGames
-          class="dt-bar-chart"
-          :teamName="props.teamName"
-          :sessions="props.sessions"
-          backgroundColor="#ffdbcb"
-          titleColor="#341100"
+        class="dt-bar-chart"
+        :teamName="props.teamName"
+        :sessions="props.sessions"
+        backgroundColor="#ffdbcb"
+        titleColor="#341100"
       ></BarChartAllGames>
       <LittleCard
-          class="dt-lc-book-read"
-          iconName="pi pi-book"
-          backgroundColor="#c5eae7"
-          titleColor="#00201f"
-          :name="number_of_books"
-          :value="text_book"
+        class="dt-lc-book-read"
+        iconName="pi pi-book"
+        backgroundColor="#c5eae7"
+        titleColor="#00201f"
+        :name="number_of_books"
+        :value="text_book"
       ></LittleCard>
-      <TopGamesLittleGameCard :teamName="props.teamName" class="dt-top-card"></TopGamesLittleGameCard>
+      <TopGamesLittleGameCard
+        :teamName="props.teamName"
+        class="dt-top-card"
+      ></TopGamesLittleGameCard>
       <LittleCard
-          class="dt-lc-movies"
-          iconName="pi pi-youtube"
-          :name="number_of_movies"
-          backgroundColor="#f9e09f"
-          titleColor="#241a00"
-          :value="text_movies"
+        class="dt-lc-movies"
+        iconName="pi pi-youtube"
+        :name="number_of_movies"
+        backgroundColor="#f9e09f"
+        titleColor="#241a00"
+        :value="text_movies"
       ></LittleCard>
       <LittleCard
-          class="dt-lc-joy-all-game"
-          iconName="pi pi-thumbs-up"
-          :name="total_fun_percentage + '%'"
-          backgroundColor="#90a1b9"
-          titleColor="#303a48"
-          value="Plaisir ressenti tous jeux confondus"
+        class="dt-lc-joy-all-game"
+        iconName="pi pi-thumbs-up"
+        :name="total_fun_percentage + '%'"
+        backgroundColor="#90a1b9"
+        titleColor="#303a48"
+        value="Plaisir ressenti tous jeux confondus"
       ></LittleCard>
       <LineChartGameByMonth
-          class="dt-line-chart"
-          :teamName="props.teamName"
-          backgroundColor="#e8defa"
-          titleColor="#1e182c"
+        class="dt-line-chart"
+        :teamName="props.teamName"
+        backgroundColor="#e8defa"
+        titleColor="#1e182c"
       ></LineChartGameByMonth>
       <LittleCard
-          class="dt-lc-game-number"
-          iconName="pi pi-sort-amount-up"
-          backgroundColor="#ffdbcb"
-          titleColor="#341100"
-          :name="number_of_games"
-          value="jeux joués"
+        class="dt-lc-game-number"
+        iconName="pi pi-sort-amount-up"
+        backgroundColor="#ffdbcb"
+        titleColor="#341100"
+        :name="number_of_games"
+        value="jeux joués"
       ></LittleCard>
       <LittleCard
-          class="dt-lc-todo"
-          iconName="pi pi-list"
-          :name="sessions_number"
-          backgroundColor="#dae1ff"
-          titleColor="#001849"
-          :value="'sessions de jeu'"
+        class="dt-lc-todo"
+        iconName="pi pi-list"
+        :name="sessions_number"
+        backgroundColor="#dae1ff"
+        titleColor="#001849"
+        :value="'sessions de jeu'"
       ></LittleCard>
-
     </div>
-    <SessionsHistory :teamName="props.teamName"/>
+    <SessionsHistory :teamName="props.teamName" />
   </div>
 </template>
 <script setup>
@@ -100,31 +104,38 @@ import LittleCard from "./LittleCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
 import TopGamesLittleGameCard from "./TopGamesLittleGameCard.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
-import {useStore} from "../store/store";
-import {storeToRefs} from "pinia";
-import {computed, onMounted, ref, watch} from "vue";
+import Loading from "./Loading.vue";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
+import { computed, onMounted, ref, watch } from "vue";
 import SessionsHistory from "./SessionsHistory.vue";
-import {convertMinuteToHoursMinute} from "../common/main";
-import {getIdOfTeam} from "../database/database";
+import { convertMinuteToHoursMinute } from "../common/main";
+import { getIdOfTeam } from "../database/database";
 
 const props = defineProps(["teamName", "sessions"]);
 
 const store = useStore();
-const {sessions, games, teams} = storeToRefs(store);
+const { sessions, games, teams } = storeToRefs(store);
 const id_of_team = ref("");
-
+const loaded = ref(false);
 
 onMounted(() => {
-  init();
+  setTimeout(() => {
+    init();
+    loaded.value = true;
+  }, 500);
 });
 
 watch([sessions, id_of_team], () => {
   init();
 });
 
-watch(() => props.sessions, () => {
-  init();
-});
+watch(
+  () => props.sessions,
+  () => {
+    init();
+  }
+);
 
 function init() {
   id_of_team.value = getIdOfTeam(props.teamName, teams.value);
@@ -138,17 +149,16 @@ function init() {
 
 const sessions_number = ref(0);
 
-
 function getNumberOfSessions() {
   if (id_of_team.value === "") return 0;
   let cpt = 0;
-  if(props.sessions === undefined) {
+  if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
       if (element.team.id === id_of_team.value) {
         cpt++;
       }
     });
-  }else {
+  } else {
     props.sessions.forEach((element) => {
       if (element.team.id === id_of_team.value) {
         cpt++;
@@ -210,7 +220,7 @@ function getNumberOfGames() {
   if (id_of_team.value === "") return 0;
   let cpt = 0;
   let played_games = [];
-  if(props.sessions === undefined) {
+  if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
       if (element.team.id === id_of_team.value) {
         if (!played_games.includes(element.game.id)) {
@@ -219,7 +229,7 @@ function getNumberOfGames() {
         }
       }
     });
-  }else {
+  } else {
     props.sessions.forEach((element) => {
       if (element.team.id === id_of_team.value) {
         if (!played_games.includes(element.game.id)) {
@@ -231,8 +241,8 @@ function getNumberOfGames() {
   }
   //for deleted games the game is not in the games list even if we have the id
   //so we need to check if the game is in the games list
-  for(let g of played_games){
-    if(games.value.filter(game => game.id === g).length === 0){
+  for (let g of played_games) {
+    if (games.value.filter((game) => game.id === g).length === 0) {
       cpt--;
     }
   }
@@ -254,7 +264,7 @@ function calculateRanking(teamName) {
         cpt += element.duration;
       }
     });
-    playtime.push({team: t.name, time: cpt});
+    playtime.push({ team: t.name, time: cpt });
   }
 
   playtime.sort((a, b) => {
@@ -275,14 +285,14 @@ const total_fun_percentage = ref(0);
 
 function getTotalFunPercentage() {
   let tmp;
-  if(props.sessions === undefined) {
-    tmp = sessions.value.filter(s => s.team.id === id_of_team.value);
-  }else {
-    tmp = props.sessions.filter(s => s.team.id === id_of_team.value);
+  if (props.sessions === undefined) {
+    tmp = sessions.value.filter((s) => s.team.id === id_of_team.value);
+  } else {
+    tmp = props.sessions.filter((s) => s.team.id === id_of_team.value);
   }
   let cpt = 0;
-  tmp.map(s => cpt += s.was_cool ? 1 : 0);
-  return (cpt / tmp.length * 100).toFixed(0);
+  tmp.map((s) => (cpt += s.was_cool ? 1 : 0));
+  return ((cpt / tmp.length) * 100).toFixed(0);
 }
 
 const text_book = `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">

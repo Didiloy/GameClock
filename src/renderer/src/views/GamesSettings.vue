@@ -19,7 +19,10 @@
       />
     </div>
     <i>{{ games_values.length }} jeux</i>
-    <div class="gs-games">
+    <div v-if="!loaded">
+      <Loading msg="Calcul des statistiques des jeux" />
+    </div>
+    <div v-else class="gs-games">
       <SingleGameSetting
         class="gs-m"
         v-for="g in games_values"
@@ -32,6 +35,7 @@
 </template>
 <script setup>
 import SingleGameSetting from "../components/SingleGameSetting.vue";
+import Loading from "../components/Loading.vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
@@ -42,6 +46,8 @@ const games_values = ref([]);
 const value = ref("");
 const gameSessionCount = ref({});
 
+const loaded = ref(false);
+
 const sort_value = ref({ name: "Ordre alphabétique", value: 0 });
 const options = ref([
   { name: "Ordre alphabétique", value: 0 },
@@ -49,10 +55,13 @@ const options = ref([
 ]);
 
 onMounted(() => {
-  games_values.value = games.value.toSorted((a, b) =>
-    a.name.localeCompare(b.name)
-  );
-  addSessionCountToGames();
+  setTimeout(() => {
+    games_values.value = games.value.toSorted((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+    addSessionCountToGames();
+    loaded.value = true;
+  }, 500);
 });
 
 watch(value, () => {

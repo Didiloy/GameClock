@@ -1,5 +1,8 @@
 <template>
-  <div class="dv-container">
+  <div v-if="!loaded">
+    <Loading msg="Calcul des statistiques" />
+  </div>
+  <div v-else class="dv-container">
     <div class="dv-dashboard">
       <LittleCard
         class="dv-lc-sessions"
@@ -83,6 +86,7 @@
 </template>
 <script setup>
 import LittleCard from "./LittleCard.vue";
+import Loading from "../components/Loading.vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
@@ -93,20 +97,25 @@ import GamesFunPercentage from "./GamesFunPercentage.vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import { getPreferences } from "../preferences/preferences";
 
+const loaded = ref(false);
+
 const props = defineProps(["teamName"]);
 
 const store = useStore();
 const { sessions, games, teams } = storeToRefs(store);
 
 onMounted(() => {
-  init();
+  setTimeout(() => {
+    init();
+    loaded.value = true;
+  }, 500);
 });
 
 watch(sessions, () => {
   init();
 });
 
-async function init() {
+function init() {
   total_time.value = calculateTotalTime();
   number_of_games.value = getNumberOfGames();
   fun_percentage.value = calculateFunPercentage();
