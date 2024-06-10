@@ -1,6 +1,7 @@
 <script setup>
 import TitleBar from "./components/TitleBar.vue";
 import Sidebar from "./components/Sidebar.vue";
+import Loading from "./components/Loading.vue";
 import { useRouter } from "vue-router";
 import { initialiseFirebase } from "./database/firebaseConfig";
 import { getPreferences } from "./preferences/preferences";
@@ -97,10 +98,7 @@ function toggleChrono() {
         <Sidebar></Sidebar>
       </div>
       <div v-if="!loaded && stored_databases.length > 0" class="content">
-        <div class="a-loading">
-          <h2>Chargement des données</h2>
-          <ProgressSpinner />
-        </div>
+        <Loading msg="Chargement des données" />
       </div>
       <div v-else class="content">
         <router-view @toggleChronoListener="toggleChronoListener" />
