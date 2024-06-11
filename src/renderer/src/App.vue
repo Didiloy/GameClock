@@ -9,6 +9,7 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 const router = useRouter();
 const storeDatabases = useStoredDatabases();
 const { stored_databases, loadDatabases } = storeToRefs(storeDatabases);
+
 if (stored_databases.value.length === 0) {
   router.push("/adddatabase");
 } else {
@@ -17,6 +18,7 @@ if (stored_databases.value.length === 0) {
     getPreferences("selected_database_index")
   );
 }
+
 import { useStore, useStoredDatabases } from "./store/store";
 import { storeToRefs } from "pinia";
 const store = useStore();
@@ -41,9 +43,10 @@ const prefered_page = ref({
 watch(teams, () => {
   if (verifyIfTeamExist()) {
     if (first_load.value) router.push(prefered_page.value.route);
-  } else {
-    router.push("/");
   }
+  // else {
+  //   router.push("/");
+  // }
 });
 
 onMounted(() => {
