@@ -96,6 +96,7 @@ import PlayTimeHome from "./PlayTimeHome.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import { getPreferences } from "../preferences/preferences";
+import { convertMinuteToHoursMinute } from "../common/main";
 
 const loaded = ref(false);
 
@@ -167,12 +168,6 @@ const total_time = ref(0);
 const total_time_hours = computed(() => {
   return convertMinuteToHoursMinute(total_time.value);
 });
-
-function convertMinuteToHoursMinute(minute) {
-  return (
-    (minute - (minute % 60)) / 60 + "h" + (minute % 60 === 0 ? "" : minute % 60)
-  );
-}
 
 function calculateTotalTime() {
   let cpt = 0;
