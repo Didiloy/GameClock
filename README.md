@@ -37,6 +37,7 @@ GameClock is an Electron application with <a href="https://vuejs.org/">Vue</a> a
 
 ![Capture home](./resources/images/gameclock_home.png)
 ![Capture home 2](./resources/images/gameclock_home2.png)
+![Capture home 2](./resources/images/gameclock_home3.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
