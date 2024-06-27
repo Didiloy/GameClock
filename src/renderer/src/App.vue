@@ -21,7 +21,6 @@ if (stored_databases.value.length === 0) {
 
 import { useStore, useStoredDatabases } from "./store/store";
 import { storeToRefs } from "pinia";
-import { deleteGame } from "./database/database";
 const store = useStore();
 const { loaded, teams, first_load } = storeToRefs(store);
 const chrono = ref(false);

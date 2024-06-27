@@ -110,7 +110,7 @@ const emit = defineEmits(["toggleChronoListener"]);
 const storeChrono = useStoreChrono();
 const { chrono_value } = storeToRefs(storeChrono);
 const store = useStore();
-const { games } = storeToRefs(store);
+const { games, teams } = storeToRefs(store);
 const toast = useToast();
 const props = defineProps(["teamName", "gameName"]);
 const all_games = ref(games);
@@ -118,7 +118,7 @@ const items = ref([]);
 const loading = ref(false);
 const icon = ref("pi pi-plus");
 const game = ref("");
-const duration = ref();
+const duration = ref("");
 const was_cool = ref({});
 const options_cool = ref([
   { name: "Bien", value: true },
@@ -184,9 +184,22 @@ const autocomplete = (event) => {
 
 const regex = new RegExp("^[1-9]\\d*$"); //vérifie si le nombre entré ne commence pas par un 0
 
+function getTeamId() {
+  return teams.value.find((g) => g.name === props.teamName).id;
+}
+
 async function addNewSession() {
   loading.value = true;
-
+  if (duration.value === "") {
+    toast.add({
+      severity: "error",
+      summary: "",
+      detail: "Veuillez remplir tous les champs correctement.",
+      life: 3000,
+    });
+    loading.value = false;
+    return;
+  }
   if (duration.value[0] === "=") {
     duration.value = duration.value.replace(/\s+/g, "");
     let operandes = duration.value.slice(1).split("+");
@@ -218,7 +231,7 @@ async function addNewSession() {
   }
 
   const success = await addSession(
-    props.teamName,
+    getTeamId(),
     game.value,
     parseInt(duration.value),
     was_cool.value.value

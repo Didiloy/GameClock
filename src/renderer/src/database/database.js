@@ -54,25 +54,22 @@ export const getSessions = async () => {
   return sessionsList;
 };
 
-export async function addSession(teamName, gameName, duration, was_cool) {
-  try {
-    let gameAlreadyExists = false;
-    let teamId;
-    let gamePath = "";
-    const gamesSnapshot = await getDocs(collection(db, "games"));
-    for (let s of gamesSnapshot.docs) {
-      if (s.data().name === gameName) {
-        gameAlreadyExists = true;
-        gamePath = s.id;
-      }
-    }
+import { useStore } from "../store/store";
+function getIfGameExist(gameName) {
+  const games = useStore().games;
+  const exist = games.filter((g) => g.name === gameName).length > 0;
+  if (exist) {
+    return { exist: true, id: games.filter((g) => g.name === gameName)[0].id };
+  }
+  return { exist: false };
+}
 
-    const teamsSnapshot = await getDocs(collection(db, "teams"));
-    for (let doc of teamsSnapshot.docs) {
-      if (doc.data().name === teamName) {
-        teamId = doc.id;
-      }
-    }
+export async function addSession(teamId, gameName, duration, was_cool) {
+  try {
+    let { exist, id } = getIfGameExist(gameName);
+    let gamePath = id ? id : "";
+    let gameAlreadyExists = exist;
+
     if (!gameAlreadyExists) {
       const gamesRef = collection(db, "games");
       await setDoc(doc(gamesRef), {
@@ -106,6 +103,7 @@ export async function addSession(teamName, gameName, duration, was_cool) {
     }
     return true;
   } catch (err) {
+    console.log("err: ", err);
     return false;
   }
 }
