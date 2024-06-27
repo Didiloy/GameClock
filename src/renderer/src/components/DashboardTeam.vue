@@ -17,6 +17,14 @@
         "
       ></LittleCard>
       <LittleCard
+        class="dt-lc-average-time"
+        iconName="pi pi-hourglass"
+        backgroundColor="#a6abfe"
+        titleColor="#0f1f18"
+        :name="convertMinuteToHoursMinute(team_average_session_duration)"
+        :value="'Temps moyen d\'une session, tous jeux confondus'"
+      ></LittleCard>
+      <LittleCard
         iconName="pi pi-hashtag"
         class="dt-lc-position"
         :name="ranking_computed"
@@ -145,6 +153,28 @@ function init() {
   ranking.value = calculateRanking(props.teamName);
   number_of_games.value = getNumberOfGames();
   total_fun_percentage.value = getTotalFunPercentage();
+  team_average_session_duration.value = calculateAverageSessionDuration();
+}
+
+const team_average_session_duration = ref(0);
+function calculateAverageSessionDuration() {
+  if (id_of_team.value === "") return 0;
+  let cpt = 0;
+  if (props.sessions === undefined) {
+    sessions.value.forEach((element) => {
+      if (element.team.id === id_of_team.value) {
+        cpt += element.duration;
+      }
+    });
+  } else {
+    props.sessions.forEach((element) => {
+      if (element.team.id === id_of_team.value) {
+        cpt += element.duration;
+      }
+    });
+  }
+  cpt = (cpt / sessions_number.value).toFixed(2);
+  return cpt;
 }
 
 const sessions_number = ref(0);
@@ -329,6 +359,16 @@ const text_movies = `<div style="display: flex; flex-direction: column; justify-
   width: 100%;
   height: 100%;
   grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+.dt-lc-average-time {
+  display: inline-grid;
+  width: 100%;
+  height: 100%;
+  grid-column-start: 4;
   grid-column-end: 7;
   grid-row-start: 1;
   grid-row-end: 3;
