@@ -35,6 +35,12 @@
             </p>
             <p>Durée moyenne des sessions</p>
           </div>
+          <div class="individual-info sgs-total-playtime">
+            <p class="individual-info-lg">
+              {{ convertMinuteToHoursMinute(total_playtime) }}
+            </p>
+            <p>Temps de jeu total</p>
+          </div>
           <div class="individual-info sgs-team">
             <p class="individual-info-lg">{{ team_who_play_the_most }}</p>
             <p>Équipe qui joue le plus</p>
@@ -106,6 +112,14 @@ const longuest_session = ref(0);
 const smallest_session = ref(0);
 const average_session = ref(0);
 
+const total_playtime = ref(0);
+
+function getTotalPlaytime() {
+  let s = sessions.value.filter((s) => s.game.id === game_id.value);
+  if (s.length === 0) return 0;
+  return s.reduce((acc, s) => acc + s.duration, 0);
+}
+
 function getTotalSessions() {
   return sessions.value.filter((s) => s.game.id === game_id.value).length;
 }
@@ -156,6 +170,7 @@ onMounted(() => {
   smallest_session.value = getSmallestSession();
   average_session.value = getAverageSession();
   team_who_play_the_most.value = getTeamWhoPlayTheMost();
+  total_playtime.value = getTotalPlaytime();
 });
 
 watch(name, () => {
@@ -242,6 +257,13 @@ async function useModifyGame() {
 
 .sgs-average-session {
   grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 2;
+}
+
+.sgs-total-playtime {
+  grid-column-start: 3;
   grid-column-end: 5;
   grid-row-start: 2;
   grid-row-end: 2;
