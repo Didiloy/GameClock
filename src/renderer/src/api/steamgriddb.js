@@ -21,8 +21,9 @@ export async function getGameId(name) {
 }
 
 export async function getGameGrid(id) {
-  const grids = await client.getGrids({ type: "game", id: id });
-  return grids[0].url;
+  const url = BASE_URL + "/grids/game/" + id;
+  const data = await fetch(url, { headers: header }).then((res) => res.json());
+  return data.data[0].url;
 }
 
 export async function getGameLogo(id) {

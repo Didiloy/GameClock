@@ -29,6 +29,7 @@
         :name="g.name"
         :heroe="g.heroe"
         :logo="g.logo"
+        :grid="g.grid"
       />
     </div>
   </div>

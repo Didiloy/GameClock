@@ -7,7 +7,12 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { getGameId, getGameLogo, getGameHeroe } from "../api/steamgriddb";
+import {
+  getGameId,
+  getGameLogo,
+  getGameHeroe,
+  getGameGrid,
+} from "../api/steamgriddb";
 
 //Teams
 export async function getTeams() {
@@ -121,7 +126,7 @@ export async function getGames() {
   return gamesList;
 }
 
-export async function modifyGame(name, logo, heroe) {
+export async function modifyGame(name, logo, heroe, grid) {
   try {
     const q = query(collection(db, "games"), where("name", "==", name));
     const gameDocument = (await getDocs(q)).docs[0];
@@ -129,6 +134,7 @@ export async function modifyGame(name, logo, heroe) {
       name: name,
       logo: logo === undefined ? "" : logo,
       heroe: heroe === undefined ? "" : heroe,
+      grid: grid === undefined ? "" : grid,
     });
     return true;
   } catch (error) {
@@ -152,6 +158,7 @@ export async function addImagesToGame(gameName) {
   let gameid = "";
   let gameLogo = "";
   let gameHeroe = "";
+  let gameGrid = "";
   try {
     gameid = await getGameId(gameName);
   } catch (err) {
@@ -162,6 +169,7 @@ export async function addImagesToGame(gameName) {
   try {
     gameLogo = await getGameLogo(gameid);
     gameHeroe = await getGameHeroe(gameid);
+    gameGrid = await getGameGrid(gameid);
   } catch (err) {
     console.log("error getting game images from steamgriddb", err);
     return;
@@ -172,5 +180,6 @@ export async function addImagesToGame(gameName) {
     name: game.name,
     logo: gameLogo,
     heroe: gameHeroe,
+    grid: gameGrid,
   });
 }

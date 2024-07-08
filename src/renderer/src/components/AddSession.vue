@@ -8,37 +8,42 @@
   >
     <template #content>
       <div class="content-container">
-        <div class="as-input">
-          <AutoComplete
-            class="input-field mb10"
-            v-model="game"
-            placeholder="Nom du jeu"
-            :suggestions="items"
-            @complete="autocomplete"
-          ></AutoComplete>
-          <div class="as-duration-input">
-            <span class="as-icon" @click="toggleOverlay"
-              ><i class="pi pi-info"></i
-            ></span>
-            <OverlayPanel ref="op">
-              <span>
-                Vous pouvez entrer une durée en minutes ou utiliser une formule
-                pour additionner plusieurs durées. Par exemple, pour ajouter 10
-                minutes et 20 minutes, entrez "=10+20".
-              </span>
-            </OverlayPanel>
-            <InputText
-              class="input-number"
-              v-model="duration"
-              placeholder="Durée en minute"
-            ></InputText>
-            <div>
-              <Button
-                icon="pi pi-clock"
-                @click="startStopWatch"
-                style="background-color: var(--primary-400)"
-                class="as-chrono-button"
-              />
+        <div class="as-input-container">
+          <div class="as-game-image">
+            <img :src="game_grid" alt="game image" class="as-img-game-image" />
+          </div>
+          <div class="as-input">
+            <AutoComplete
+              class="input-field mb10"
+              v-model="game"
+              placeholder="Nom du jeu"
+              :suggestions="items"
+              @complete="autocomplete"
+            ></AutoComplete>
+            <div class="as-duration-input">
+              <span class="as-icon" @click="toggleOverlay"
+                ><i class="pi pi-info"></i
+              ></span>
+              <OverlayPanel ref="op">
+                <span>
+                  Vous pouvez entrer une durée en minutes ou utiliser une
+                  formule pour additionner plusieurs durées. Par exemple, pour
+                  ajouter 10 minutes et 20 minutes, entrez "=10+20".
+                </span>
+              </OverlayPanel>
+              <InputText
+                class="input-number"
+                v-model="duration"
+                placeholder="Durée en minute"
+              ></InputText>
+              <div>
+                <Button
+                  icon="pi pi-clock"
+                  @click="startStopWatch"
+                  style="background-color: var(--primary-400)"
+                  class="as-chrono-button"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -99,12 +104,13 @@
   <Toast />
 </template>
 <script setup>
-import { onMounted, onUnmounted, ref, watch, defineEmits } from "vue";
+import { onMounted, onUnmounted, ref, watch, defineEmits, computed } from "vue";
 import { useToast } from "primevue/usetoast";
 import { useStore, useStoreChrono } from "../store/store";
 import { storeToRefs } from "pinia";
 import { addSession } from "../database/database";
 import { getPreferences } from "../preferences/preferences";
+import gameNotFound from "../assets/images/game_not_found.jpg";
 
 const emit = defineEmits(["toggleChronoListener"]);
 const storeChrono = useStoreChrono();
@@ -118,6 +124,11 @@ const items = ref([]);
 const loading = ref(false);
 const icon = ref("pi pi-plus");
 const game = ref("");
+const game_grid = computed(() => {
+  return (
+    all_games.value.find((g) => g.name === game.value)?.grid || gameNotFound
+  );
+});
 const duration = ref("");
 const was_cool = ref({});
 const options_cool = ref([
@@ -278,11 +289,29 @@ async function addNewSession() {
   width: 100%;
 }
 
+.as-input-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  width: 450px;
+}
+
+.as-img-game-image {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 190px;
+  width: 160px;
+  border-radius: 15px;
+}
+
 .as-input {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: end;
   width: 100%;
 }
 
@@ -294,12 +323,9 @@ async function addNewSession() {
   width: 100%;
 }
 
-.input-field {
-  width: 300px;
-}
-
 .input-number {
-  margin-right: 80px;
+  margin-right: 10px;
+  width: 200px;
 }
 
 .as-fun-selector {
@@ -312,6 +338,7 @@ async function addNewSession() {
   background-color: whitesmoke;
   border-radius: 10px;
   padding: 5px;
+  margin-top: 30px;
 }
 
 .toggle-button {

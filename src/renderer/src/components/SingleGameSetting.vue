@@ -57,7 +57,16 @@
               @contextmenu="onRightClickLogo"
             />
             <ContextMenu ref="menu_logo" :model="items" />
-            <label for="heroe">Image du jeu</label>
+            <label for="heroe">Grille du jeu</label>
+            <InputText
+              id="grid"
+              type="text"
+              v-model="grid"
+              style="width: 400px"
+              @contextmenu="onRightClickGrid"
+            />
+            <ContextMenu ref="menu_grid" :model="items_grid" />
+            <label for="heroe">Heroe du jeu</label>
             <InputText
               id="heroe"
               type="text"
@@ -89,12 +98,13 @@ import { storeToRefs } from "pinia";
 import { useToast } from "primevue/usetoast";
 import { convertMinuteToHoursMinute } from "../common/main";
 
-const props = defineProps(["name", "logo", "heroe"]);
+const props = defineProps(["name", "logo", "heroe", "grid"]);
 const name = computed(() => {
   return props.name;
 });
 const logo = ref(props.logo);
 const heroe = ref(props.heroe);
+const grid = ref(props.grid);
 const heroe_url = computed(() => {
   return "url(" + props.heroe + ")";
 });
@@ -146,12 +156,34 @@ const items_heroe = ref([
   },
 ]);
 
+const menu_grid = ref();
+const items_grid = ref([
+  {
+    label: "Copier",
+    icon: "pi pi-copy",
+    command: () => {
+      navigator.clipboard.writeText(grid.value);
+    },
+  },
+  {
+    label: "Coller",
+    icon: "pi pi-clone",
+    command: () => {
+      paste(grid);
+    },
+  },
+]);
+
 const onRightClickLogo = (event) => {
   menu_logo.value.show(event);
 };
 
 const onRightClickHeroe = (event) => {
   menu_heroe.value.show(event);
+};
+
+const onRightClickGrid = (event) => {
+  menu_grid.value.show(event);
 };
 
 const game_id = ref("");
@@ -238,7 +270,12 @@ watch(name, () => {
 
 async function useModifyGame() {
   loading.value = true;
-  const success = await modifyGame(name.value, logo.value, heroe.value);
+  const success = await modifyGame(
+    name.value,
+    logo.value,
+    heroe.value,
+    grid.value
+  );
   loading.value = false;
   if (success) {
     icon.value = "pi pi-check";
