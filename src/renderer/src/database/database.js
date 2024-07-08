@@ -127,8 +127,8 @@ export async function modifyGame(name, logo, heroe) {
     const gameDocument = (await getDocs(q)).docs[0];
     await setDoc(doc(db, "games", gameDocument.id), {
       name: name,
-      logo: logo,
-      heroe: heroe,
+      logo: logo === undefined ? "" : logo,
+      heroe: heroe === undefined ? "" : heroe,
     });
     return true;
   } catch (error) {

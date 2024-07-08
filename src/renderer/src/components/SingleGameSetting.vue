@@ -248,7 +248,9 @@ async function useModifyGame() {
       detail: "C'est tout bon !",
       life: 3000,
     });
-    await store.reloadStore();
+    setTimeout(async () => {
+      await store.reloadStore();
+    }, 3000);
   } else {
     toast.add({
       severity: "error",
