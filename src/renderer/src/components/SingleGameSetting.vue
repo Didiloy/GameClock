@@ -210,6 +210,7 @@ function getTeamWhoPlayTheMost() {
       acc[id] = (acc[id] || 0) + 1;
       return acc;
     }, {});
+  if (Object.keys(team_id).length === 0) return ""; //check if the object if empty
   const team_id_max = Object.keys(team_id).reduce((a, b) =>
     team_id[a] > team_id[b] ? a : b
   );
