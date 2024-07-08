@@ -34,6 +34,7 @@ import Dialog from "primevue/dialog";
 import InputSwitch from "primevue/inputswitch";
 import ToggleButton from "primevue/togglebutton";
 import ProgressSpinner from "primevue/progressspinner";
+import ContextMenu from "primevue/contextmenu";
 import OverlayPanel from "primevue/overlaypanel";
 import Message from "primevue/message";
 import { createRouter, createWebHashHistory } from "vue-router";
@@ -82,6 +83,7 @@ app.component("Chip", Chip);
 app.component("Dropdown", Dropdown);
 app.component("InputSwitch", InputSwitch);
 app.component("Message", Message);
+app.component("ContextMenu", ContextMenu);
 
 //Router
 const routes = [

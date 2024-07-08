@@ -54,14 +54,18 @@
               type="text"
               v-model="logo"
               style="width: 400px"
+              @contextmenu="onRightClickLogo"
             />
+            <ContextMenu ref="menu_logo" :model="items" />
             <label for="heroe">Image du jeu</label>
             <InputText
               id="heroe"
               type="text"
               v-model="heroe"
               style="width: 400px"
+              @contextmenu="onRightClickHeroe"
             />
+            <ContextMenu ref="menu_heroe" :model="items_heroe" />
           </div>
           <Button
             label="Modifier"
@@ -100,6 +104,55 @@ const { games, sessions, teams } = storeToRefs(store);
 const icon = ref("pi pi-cloud-upload");
 const loading = ref(false);
 const toast = useToast();
+
+async function paste(input) {
+  const text = await navigator.clipboard.readText();
+  input.value = text;
+}
+
+const menu_logo = ref();
+const items = ref([
+  {
+    label: "Copier",
+    icon: "pi pi-copy",
+    command: () => {
+      navigator.clipboard.writeText(logo.value);
+    },
+  },
+  {
+    label: "Coller",
+    icon: "pi pi-clone",
+    command: () => {
+      paste(logo);
+    },
+  },
+]);
+
+const menu_heroe = ref();
+const items_heroe = ref([
+  {
+    label: "Copier",
+    icon: "pi pi-copy",
+    command: () => {
+      navigator.clipboard.writeText(heroe.value);
+    },
+  },
+  {
+    label: "Coller",
+    icon: "pi pi-clone",
+    command: () => {
+      paste(heroe);
+    },
+  },
+]);
+
+const onRightClickLogo = (event) => {
+  menu_logo.value.show(event);
+};
+
+const onRightClickHeroe = (event) => {
+  menu_heroe.value.show(event);
+};
 
 const game_id = ref("");
 
