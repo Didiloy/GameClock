@@ -75,7 +75,9 @@ export async function addSession(teamId, gameName, duration, was_cool) {
       await setDoc(doc(gamesRef), {
         name: gameName,
       });
+
       await addImagesToGame(gameName);
+
       const gamesSnapshot = await getDocs(collection(db, "games"));
       for (let s of gamesSnapshot.docs) {
         if (s.data().name === gameName) {
@@ -147,9 +149,23 @@ export async function addImagesToGame(gameName) {
   }
 
   //get the logo from steamgriddb
-  const gameid = await getGameId(gameName);
-  const gameLogo = await getGameLogo(gameid);
-  const gameHeroe = await getGameHeroe(gameid);
+  let gameid = "";
+  let gameLogo = "";
+  let gameHeroe = "";
+  try {
+    gameid = await getGameId(gameName);
+  } catch (err) {
+    console.log("error getting game id from steamgriddb", err);
+    return;
+  }
+
+  try {
+    gameLogo = await getGameLogo(gameid);
+    gameHeroe = await getGameHeroe(gameid);
+  } catch (err) {
+    console.log("error getting game images from steamgriddb", err);
+    return;
+  }
 
   // Add the logo in database
   await setDoc(doc(db, "games", gameId), {
