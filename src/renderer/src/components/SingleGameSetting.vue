@@ -266,6 +266,7 @@ watch(name, () => {
   smallest_session.value = getSmallestSession();
   average_session.value = getAverageSession();
   team_who_play_the_most.value = getTeamWhoPlayTheMost();
+  total_playtime.value = getTotalPlaytime();
 });
 
 async function useModifyGame() {
