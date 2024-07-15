@@ -14,25 +14,45 @@ export const useStore = defineStore("store", () => {
   const loaded = ref(false);
   const first_load = ref(true);
 
+  const store_error = ref("");
   reloadStore();
-  first_load.value = true;
 
   async function reloadStore() {
     loaded.value = false;
     teams.value = [];
     games.value = [];
     sessions.value = [];
+    store_error.value = "";
 
-    if (getStoredDatabases().length === 0) return;
+    if (getStoredDatabases().length === 0) {
+      store_error.value = "No databases found";
+      loaded.value = true;
+      return;
+    }
 
-    teams.value = await getTeams();
-    games.value = await getGames();
-    sessions.value = await getSessions();
-    loaded.value = true;
+    try {
+      teams.value = await getTeams();
+      games.value = await getGames();
+      sessions.value = await getSessions();
+    } catch (e) {
+      store_error.value = "Erreur durant le chargement des données" + e.message;
+      loaded.value = true;
+      return;
+    }
+
     first_load.value = false;
+    loaded.value = true;
   }
 
-  return { teams, games, sessions, reloadStore, loaded, first_load };
+  return {
+    teams,
+    games,
+    sessions,
+    reloadStore,
+    loaded,
+    first_load,
+    store_error,
+  };
 });
 
 export const useStoredDatabases = defineStore("storedDatabases", () => {

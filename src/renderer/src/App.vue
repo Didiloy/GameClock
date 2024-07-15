@@ -22,7 +22,7 @@ if (stored_databases.value.length === 0) {
 import { useStore, useStoredDatabases } from "./store/store";
 import { storeToRefs } from "pinia";
 const store = useStore();
-const { loaded, teams, first_load } = storeToRefs(store);
+const { loaded, teams, first_load, store_error } = storeToRefs(store);
 const chrono = ref(false);
 const listener_added = ref(false);
 
@@ -85,9 +85,12 @@ function verifyIfTeamExist() {
 }
 
 function toggleChrono() {
-  console.log("toggle chrono");
   chrono.value = !chrono.value;
 }
+
+watch(store_error, () => {
+  console.log(store_error.value);
+});
 </script>
 
 <template>
@@ -99,6 +102,12 @@ function toggleChrono() {
       </div>
       <div v-if="!loaded && stored_databases.length > 0" class="content">
         <Loading msg="Chargement des données" />
+      </div>
+      <div
+        v-else-if="store_error !== undefined && store_error !== ''"
+        class="content a-center"
+      >
+        <h4>Erreur lors du chargement des données: {{ store_error }}</h4>
       </div>
       <div v-else class="content">
         <router-view @toggleChronoListener="toggleChronoListener" />
@@ -139,13 +148,11 @@ function toggleChrono() {
   border-right: 1px solid var(--primary-100);
 }
 
-.a-loading {
+.a-center {
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: center;
   align-items: center;
-  height: 50vh;
-  width: 100%;
 }
 
 h2 {

@@ -16,8 +16,8 @@ import {
 
 //Teams
 export async function getTeams() {
-  const teamsList = [];
   const teamsSnapshot = await getDocs(collection(db, "teams"));
+  const teamsList = [];
   teamsSnapshot.forEach((doc) => {
     let doc_id = doc.id;
     teamsList.push({ ...doc.data(), id: doc_id });

@@ -1,8 +1,14 @@
 <template>
   <div class="h-container">
     <Image :src="logo" class="header" width="250" />
-    <div class="h-dash">
+    <div class="h-dash" v-if="teams.length !== 0">
       <Dashboard class="dashboard" teamName=""></Dashboard>
+    </div>
+    <div v-else>
+      <h4>
+        Aucune équipe pour le moment.
+        <router-link to="/addteam">Ajoutez-en une !</router-link>
+      </h4>
     </div>
   </div>
 </template>
@@ -13,8 +19,12 @@ import Dashboard from "../components/Dashboard.vue";
 import { getPreferences } from "../preferences/preferences";
 import { onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
-
 const router = useRouter();
+
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
+const store = useStore();
+const { teams } = storeToRefs(store);
 
 function keyEventAddSession(e) {
   if (
