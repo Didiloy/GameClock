@@ -20,7 +20,7 @@
       modal
       dismissableMask
       header="Ajouter une session"
-      :style="{ width: '600px' }"
+      :style="{ width: '800px', height: '515px' }"
     >
       <AddSession
         :teamName="$route.params.name"
