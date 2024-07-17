@@ -267,6 +267,9 @@ watch(name, () => {
   average_session.value = getAverageSession();
   team_who_play_the_most.value = getTeamWhoPlayTheMost();
   total_playtime.value = getTotalPlaytime();
+  logo.value = props.logo;
+  heroe.value = props.heroe;
+  grid.value = props.grid;
 });
 
 async function useModifyGame() {

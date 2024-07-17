@@ -115,7 +115,7 @@ router.beforeEach((to, from) => {
       to.name !== 'adddatabase' &&
       stored_databases.value.length === 0
   ) {
-    // redirect the user to the login page
+    // redirect the user to the adddatabase page
     return { name: 'adddatabase' }
   }
 })
