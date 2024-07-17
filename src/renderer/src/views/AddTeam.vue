@@ -2,45 +2,43 @@
   <div class="container">
     <h2>Ajouter une équipe</h2>
     <Card
-      class="card"
-      :pt="{
-        root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+        class="card"
+        :pt="{
+        root: { style: 'box-shadow: 0px 0px 0px 0px; border-radius: 15px;' },
         body: { style: 'height:100%; ' },
         content: { style: 'height:100%; ' },
       }"
     >
       <template #content>
         <div class="card-content">
-          <div class="form-content">
-            <h4 class="title">Nom de l'équipe:</h4>
-            <InputText type="text" v-model="name" />
-          </div>
+          <InputText type="text" v-model="name" placeholder="Nom de l'équipe"/>
           <Button
-            label="Ajouter"
-            :icon="icon"
-            class="btn-add"
-            @click="onAddTeam"
-            :loading="loading"
+              label="Ajouter"
+              :icon="icon"
+              class="btn-add"
+              @click="onAddTeam"
+              :loading="loading"
           ></Button>
         </div>
       </template>
     </Card>
-    <Toast />
+    <Toast/>
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
-import { addTeam } from "../database/database";
-import { useToast } from "primevue/usetoast";
-import { useStore } from "../store/store";
+import {ref} from "vue";
+import {addTeam} from "../database/database";
+import {useToast} from "primevue/usetoast";
+import {useStore} from "../store/store";
 
 const store = useStore();
 const toast = useToast();
 const name = ref("");
 const loading = ref(false);
 const icon = ref("pi pi-plus");
+
 async function onAddTeam() {
-  if (name.value == "") {
+  if (name.value === "") {
     toast.add({
       severity: "error",
       summary: "",
@@ -76,7 +74,7 @@ async function onAddTeam() {
       severity: "error",
       summary: "",
       detail:
-        "Une erreur est survenue lors de l'ajout de l'équipe. Une équipe de ce nom existe peut être déjà",
+          "Une erreur est survenue lors de l'ajout de l'équipe. Une équipe de ce nom existe peut être déjà",
       life: 3000,
     });
   }
@@ -88,7 +86,7 @@ async function onAddTeam() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   height: 100%;
 }
 
@@ -100,23 +98,14 @@ async function onAddTeam() {
 
 .card-content {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-}
-
-.form-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
 }
 
 .btn-add {
-  margin-top: 50px;
-}
-
-.title {
-  margin-right: 10px;
+  margin-left: 15px;
 }
 
 @font-face {

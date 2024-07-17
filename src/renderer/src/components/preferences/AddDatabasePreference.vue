@@ -17,7 +17,6 @@ onMounted(() => {});
 function deleteDatabase(name, apiKey, authDomain, index) {
   store.useDeleteDatabase(name, apiKey, authDomain);
   store.loadDatabases();
-  console.log(index);
   setPreferences("selected_database_index", index > 0 ? index - 1 : 0);
   router.go();
 }
@@ -140,11 +139,5 @@ function goToAddDatabase() {
   background-color: var(--primary-100);
   border-radius: 10px;
   padding: 0 10px;
-}
-
-.tp-item-right-container {
-  display: flex;
-  justify-content: end;
-  align-items: center;
 }
 </style>
