@@ -47,6 +47,7 @@ import { createPinia, storeToRefs } from "pinia";
 import Settings from "./views/Settings.vue";
 import AddDatabaseForFirstTime from "./views/AddDatabaseForFirstTime.vue";
 import {useStoredDatabases} from "./store/store";
+import DatabaseSettings from "./views/DatabaseSettings.vue";
 
 const app = createApp(App);
 
@@ -99,6 +100,7 @@ const routes = [
   { path: "/addteam", component: AddTeam },
   { path: "/settings/games", component: GamesSettings },
   { path: "/settings/general", component: Settings },
+  { path: "/settings/databases", component: DatabaseSettings },
   { path: "/adddatabase", component: AddDatabaseForFirstTime, name: 'adddatabase' },
 ];
 

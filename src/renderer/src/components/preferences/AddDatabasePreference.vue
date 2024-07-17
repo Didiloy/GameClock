@@ -55,21 +55,15 @@ function goToAddDatabase() {
 
 <template>
   <div class="tp-container">
-    <h2 class="tp-title">Bases de données</h2>
+    <div class="adp-div-title">
+      <span class="tp-title">Bases de données</span>
+      <Button label="Ajouter une base de données" @click="goToAddDatabase" />
+    </div>
     <b class="text-color">Active:</b>
     <div class="tp-item">
       <h2>
         {{ stored_databases[getPreferences("selected_database_index")].name }}
       </h2>
-      <div>
-        <!-- <Button
-          icon="pi pi-share-alt"
-          label="Partager"
-          class="p-button-secondary"
-          style="margin-right: 10px"
-          @click="shareDatabase(getPreferences('selected_database_index'))"
-        ></Button> -->
-      </div>
     </div>
     <b class="text-color" style="margin-top: 10px"
       >Toutes les bases de données:</b
@@ -104,10 +98,6 @@ function goToAddDatabase() {
         ></Button>
       </div>
     </div>
-    <div class="tp-item" style="background-color: var(--primary-50)">
-      <div></div>
-      <Button label="Ajouter une base de données" @click="goToAddDatabase" />
-    </div>
     <Toast />
   </div>
 </template>
@@ -127,8 +117,18 @@ function goToAddDatabase() {
   color: var(--text-color);
 }
 
+.adp-div-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+ }
+
 .tp-title {
   color: var(--primary-500);
+  font-weight: bold;
+  font-size: 2rem;
 }
 
 .tp-item {

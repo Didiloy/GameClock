@@ -95,6 +95,11 @@ const items = ref([
         icon: "pi pi-cog",
         route: "/settings/general",
       },
+      {
+        label: "Base de données",
+      icon: "pi pi-database",
+      route: "/settings/databases"
+      },
     ],
   },
 ]);
