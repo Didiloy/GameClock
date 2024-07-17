@@ -25,7 +25,7 @@ export const useStore = defineStore("store", () => {
     store_error.value = "";
 
     if (getStoredDatabases().length === 0) {
-      store_error.value = "No databases found";
+      store_error.value = ""; //do not set error so that in app.vue we can push a page to the router
       loaded.value = true;
       return;
     }

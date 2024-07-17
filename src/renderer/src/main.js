@@ -46,6 +46,7 @@ import GamesSettings from "./views/GamesSettings.vue";
 import { createPinia, storeToRefs } from "pinia";
 import Settings from "./views/Settings.vue";
 import AddDatabaseForFirstTime from "./views/AddDatabaseForFirstTime.vue";
+import {useStoredDatabases} from "./store/store";
 
 const app = createApp(App);
 
@@ -85,6 +86,10 @@ app.component("InputSwitch", InputSwitch);
 app.component("Message", Message);
 app.component("ContextMenu", ContextMenu);
 
+//Pinia
+const pinia = createPinia();
+app.use(pinia);
+
 //Router
 const routes = [
   { path: "/", component: Home },
@@ -94,7 +99,7 @@ const routes = [
   { path: "/addteam", component: AddTeam },
   { path: "/settings/games", component: GamesSettings },
   { path: "/settings/general", component: Settings },
-  { path: "/adddatabase", component: AddDatabaseForFirstTime },
+  { path: "/adddatabase", component: AddDatabaseForFirstTime, name: 'adddatabase' },
 ];
 
 const router = createRouter({
@@ -102,10 +107,19 @@ const router = createRouter({
   routes: routes,
 });
 
-app.use(router);
+const storeDatabases = useStoredDatabases();
+const { stored_databases, loadDatabases } = storeToRefs(storeDatabases);
 
-//Pinia
-const pinia = createPinia();
-app.use(pinia);
+router.beforeEach((to, from) => {
+  if (
+      to.name !== 'adddatabase' &&
+      stored_databases.value.length === 0
+  ) {
+    // redirect the user to the login page
+    return { name: 'adddatabase' }
+  }
+})
+
+app.use(router);
 
 app.mount("#app");
