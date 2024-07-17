@@ -35,7 +35,7 @@
               <ol>
                 <li>
                   Pour créer votre base de données rendez-vous sur
-                  <a href="https://console.firebase.google.com/"
+                  <a href="https://console.firebase.google.com/" target="_blank"
                     >https://console.firebase.google.com/</a
                   >, authentifier vous avec votre compte Google et créez un
                   projet.
