@@ -111,10 +111,7 @@ const storeDatabases = useStoredDatabases();
 const { stored_databases, loadDatabases } = storeToRefs(storeDatabases);
 
 router.beforeEach((to, from) => {
-  if (
-      to.name !== 'adddatabase' &&
-      stored_databases.value.length === 0
-  ) {
+  if (to.name !== 'adddatabase' && stored_databases.value.length === 0) {
     // redirect the user to the adddatabase page
     return { name: 'adddatabase' }
   }

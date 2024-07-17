@@ -3,14 +3,16 @@ import { ref, watch } from "vue";
 import {getPreferences, setPreferences} from "../../preferences/preferences";
 
 const sort_order_options = ref([
-    "playtime",
-    "name",
-    "game"
+  {name: "playtime", label: "Temps de jeu"},
+  {name: "name", label: "Nom"},
+  {name: "game", label: "Jeu le plus joué"},
 ]);
-const sort_order = ref(getPreferences("sort_order_team_list"));
+const sort_order = ref();
+
+sort_order.value = sort_order_options.value.find(option => option.name === getPreferences("sort_order_team_list"));
 
 watch(sort_order, () => {
-    setPreferences("sort_order_team_list", sort_order.value);
+    setPreferences("sort_order_team_list", sort_order.value.name);
 });
 </script>
 
@@ -19,7 +21,7 @@ watch(sort_order, () => {
     <h2 class="tp-title">Équipes</h2>
     <div class="tp-item">
       <b class="text-color">Ordre de tri de la liste des équipes:</b>
-      <Dropdown v-model="sort_order" :options="sort_order_options" />
+      <Dropdown v-model="sort_order" :options="sort_order_options" optionLabel="label"/>
     </div>
   </div>
 </template>

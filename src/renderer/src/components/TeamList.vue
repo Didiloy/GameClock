@@ -88,6 +88,7 @@ function setTeamItem() {
       if (gameData.duration > maxDuration) {
         maxDuration = gameData.duration;
         team.logo = gameData.logo;
+        team.game_name = gameName;
       }
     });
 
