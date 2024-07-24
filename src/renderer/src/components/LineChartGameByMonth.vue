@@ -45,7 +45,7 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import { getIdOfTeam } from "../database/database.js";
+import {getIdOfTeam, getIdsOfTeam} from "../database/database.js";
 import { convertMinuteToHoursMinute} from "../common/main";
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
@@ -64,13 +64,13 @@ const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--p
 const sessions_of_the_team = ref([]);
 function setSessionsOfTheTeam() {
   for (let s of sessions.value) {
-    if (s.team.id === id_of_team.value) {
+    if (id_of_team.value.includes(s.team.id)) {
       sessions_of_the_team.value.push(s);
     }
   }
 }
 
-const id_of_team = ref("");
+const id_of_team = ref([]);
 
 const game_duration_by_month = ref([]);
 function setGameDuration() {
@@ -115,7 +115,7 @@ const chartData = ref({});
 const chartOptions = ref();
 
 async function init() {
-  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
+  id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
   setSessionsOfTheTeam();
   setGameDuration();
   setJoyrate();

@@ -2,14 +2,19 @@
   <div v-if="loading">
     <Loading msg="Chargement des équipes"/>
   </div>
-  <DataView v-else :value="teamItem" class="dataview">
+  <div v-else class="tl-container">
+    <div class="tl-container-buttons">
+      <ToggleButton v-model="toggle_select_team" onLabel="Abandonner" offLabel="Sélectionner plusieurs équipes" />
+      <Button label="" icon="pi pi-arrow-right" :disabled="!toggle_select_team" @click="onClickMultipleTeam"/>
+    </div>
+    <DataView :value="teamItem" class="dataview">
     <template #list="slotProps">
       <div
         v-for="(item, index) in slotProps.items"
         :key="index"
         :class="getClassNameFromIndex(index)"
         :style=" item.gradient_color && 'background: linear-gradient(to left, ' + item.gradient_color + ', var(--primary-100) 70%);'"
-        @click="navigateToTeam(item.name)"
+        @click="onClickHandler(item.name, index)"
       >
         <div class="team-name">
           <img
@@ -21,12 +26,16 @@
         <div class="team-playtime">
           <h4>{{ convertMinuteToHoursMinute(item.playtime) }}</h4>
         </div>
-        <div class="icon-action">
+        <div v-if="!toggle_select_team" class="icon-action">
           <i class="pi pi-arrow-right"></i>
+        </div>
+        <div v-else class="icon-action">
+          <Checkbox v-model="item.selected" :binary="true"/>
         </div>
       </div>
     </template>
   </DataView>
+  </div>
 </template>
 <script setup>
 import { onMounted, ref, watch, onUpdated } from "vue";
@@ -43,6 +52,8 @@ const store = useStore();
 const { teams, sessions, games } = storeToRefs(store);
 
 const loading = ref(true);
+
+const toggle_select_team = ref(false);
 
 onMounted(async () => {
   loading.value = true;
@@ -70,6 +81,7 @@ async function setTeamItem() {
       playtime: 0,
       gameDurations: {}, // To track duration per game
       logo: "",
+      selected: ref(false),
     };
     return acc;
   }, {});
@@ -93,7 +105,6 @@ async function setTeamItem() {
   // // Determine the most played game for each team
   Object.values(teamData).forEach((team) => {
     let maxDuration = 0;
-
     Object.keys(team.gameDurations).forEach((gameName) => {
       const gameData = team.gameDurations[gameName];
       if (gameData.duration > maxDuration) {
@@ -152,11 +163,40 @@ function getClassNameFromIndex(index) {
   }
 }
 
+function onClickMultipleTeam(){
+  let selected_teams = teamItem.value.filter((t) => t.selected);
+  let team_names = selected_teams.map((t) => t.name);
+  router.push("/team/" + team_names.join(","));
+}
+
+function onClickHandler(teamName, index){
+  if(toggle_select_team.value){
+    teamItem.value[index].selected = !teamItem.value[index].selected;
+  } else {
+    navigateToTeam(teamName);
+  }
+}
+
 function navigateToTeam(teamName) {
   router.push("/team/" + teamName);
 }
 </script>
 <style scoped>
+.tl-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.tl-container-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 750px;
+}
+
 .dataview {
   width: 750px;
   background-color: var(--primary-100);

@@ -44,7 +44,7 @@ import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
 import {convertMinuteToHoursMinute, generateRandomColor} from "../common/main";
 import {getPreferences} from "../preferences/preferences";
-import { getIdOfTeam} from "../database/database";
+import {getIdOfTeam, getIdsOfTeam} from "../database/database";
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor", "sessions"]);
 const store = useStore();
@@ -81,7 +81,7 @@ function setLabels() {
 
 const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
 
-const id_of_team = ref("");
+const id_of_team = ref([]);
 
 const games_name = ref([]);
 
@@ -92,11 +92,11 @@ const games_percentage = ref([]);
 function setGamesNameAndPlaytime() {
   let temp_games = [];
   let total_playtime = 0;
-  if (id_of_team.value) {
+  if (id_of_team.value.length > 0) {
     for (let g of games.value) {
       let acc = 0;
       for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
-        if (s.team.id === id_of_team.value && s.game.id === g.id) {
+        if (id_of_team.value.includes(s.team.id) && s.game.id === g.id) {
           acc += s.duration;
           total_playtime += s.duration;
         }
@@ -157,7 +157,7 @@ const chartData = ref({});
 const chartOptions = ref();
 
 function init() {
-  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
+  id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
   setGamesNameAndPlaytime();
   setColorsOfPieParts();
   chartOptions.value = setChartOptions();

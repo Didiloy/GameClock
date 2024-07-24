@@ -47,11 +47,11 @@ async function onAddTeam() {
     });
     return;
   }
-  if (name.value.includes("/")) {
+  if (name.value.includes("/")|| name.value.includes(',')) {
     toast.add({
       severity: "error",
       summary: "",
-      detail: "Vous ne pouvez pas créer une équipe dont le nom contient des /.",
+      detail: "Vous ne pouvez pas créer une équipe dont le nom contient des / ou des ,.",
       life: 3000,
     });
     return;

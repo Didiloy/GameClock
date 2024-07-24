@@ -96,7 +96,7 @@ import { onMounted, ref, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import {convertMinuteToHoursMinute, getMostDominantColor} from "../common/main";
-import { getIdOfTeam } from "../database/database";
+import {getIdOfTeam, getIdsOfTeam} from "../database/database";
 import { getPreferences } from "../preferences/preferences";
 
 const props = defineProps([
@@ -113,7 +113,7 @@ const store = useStore();
 const { games, sessions, teams } = storeToRefs(store);
 
 const sessions_values = ref([]);
-const id_of_team = ref("");
+const id_of_team = ref([]);
 onMounted(async () => {
   await init();
 });
@@ -124,11 +124,11 @@ watch([sessions], async () => {
 
 async function init() {
   sessions_values.value = [];
-  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
+  id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
 
   if (props.teamName !== undefined) {
     for (let s of sessions.value) {
-      if (s.team.id === id_of_team.value) {
+      if (id_of_team.value.includes(s.team.id)) {
         let [game_name, logo] = getGameNameAndLogoById(s.game.id);
         sessions_values.value.push({
           name: game_name,

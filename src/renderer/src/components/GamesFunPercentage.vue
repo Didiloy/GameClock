@@ -2,7 +2,7 @@
 import {onMounted, ref, watch} from "vue";
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
-import {getIdOfTeam} from "../database/database";
+import {getIdOfTeam, getIdsOfTeam} from "../database/database";
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor", "sessions"]);
 const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
@@ -24,7 +24,7 @@ watch(() => props.sessions, () => {
   init();
 });
 
-const id_of_team = ref("");
+const id_of_team = ref([]);
 
 
 const games_names = ref([]);
@@ -47,7 +47,7 @@ function setPercentages() {
     let bad = 0;
     let cpt = 0;
     for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
-      if (id_of_team.value === "") {
+      if (id_of_team.value.length === 0) {
         if (s.game.id === g.id) {
           cpt++;
           if (s.was_cool) {
@@ -59,7 +59,7 @@ function setPercentages() {
           }
         }
       } else {
-        if (s.game.id === g.id && s.team.id === id_of_team.value) {
+        if (s.game.id === g.id && id_of_team.value.includes(s.team.id)) {
           cpt++;
           if (s.was_cool) {
             fun++;
@@ -81,7 +81,7 @@ function init() {
   fun_percentage.value = [];
   neutral_percentage.value = [];
   bad_percentage.value = [];
-  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
+  id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
   games_copy.value = games.value.slice();
   games_names.value = getGamesNames();
   setPercentages();

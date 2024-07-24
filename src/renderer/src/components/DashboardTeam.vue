@@ -118,13 +118,13 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import { convertMinuteToHoursMinute } from "../common/main";
-import { getIdOfTeam } from "../database/database";
+import {getIdsOfTeam} from "../database/database";
 
 const props = defineProps(["teamName", "sessions"]);
 
 const store = useStore();
 const { sessions, games, teams } = storeToRefs(store);
-const id_of_team = ref("");
+const id_of_team = ref([]);
 const loaded = ref(false);
 
 onMounted(() => {
@@ -134,19 +134,19 @@ onMounted(() => {
   }, 500);
 });
 
-watch([sessions, id_of_team], () => {
-  init();
-});
+// watch([sessions, id_of_team], () => {
+//   init();
+// });
 
-watch(
-  () => props.sessions,
-  () => {
-    init();
-  }
-);
+// watch(
+//   () => props.sessions,
+//   () => {
+//     init();
+//   }
+// );
 
 function init() {
-  id_of_team.value = getIdOfTeam(props.teamName, teams.value);
+  id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
   total_time.value = calculateTotalTime();
   team_time.value = calculateTeamTime();
   sessions_number.value = getNumberOfSessions();
@@ -158,17 +158,17 @@ function init() {
 
 const team_average_session_duration = ref(0);
 function calculateAverageSessionDuration() {
-  if (id_of_team.value === "") return 0;
+  if (id_of_team.value.length === 0) return 0;
   let cpt = 0;
   if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
-      if (element.team.id === id_of_team.value) {
+      if (id_of_team.value.includes(element.team.id)) {
         cpt += element.duration;
       }
     });
   } else {
     props.sessions.forEach((element) => {
-      if (element.team.id === id_of_team.value) {
+      if (id_of_team.value.includes(element.team.id)) {
         cpt += element.duration;
       }
     });
@@ -180,17 +180,17 @@ function calculateAverageSessionDuration() {
 const sessions_number = ref(0);
 
 function getNumberOfSessions() {
-  if (id_of_team.value === "") return 0;
+  if (id_of_team.value.length === 0) return 0;
   let cpt = 0;
   if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
-      if (element.team.id === id_of_team.value) {
+      if (id_of_team.value.includes(element.team.id)) {
         cpt++;
       }
     });
   } else {
     props.sessions.forEach((element) => {
-      if (element.team.id === id_of_team.value) {
+      if (id_of_team.value.includes(element.team.id)) {
         cpt++;
       }
     });
@@ -226,17 +226,17 @@ function calculateTotalTime() {
 }
 
 function calculateTeamTime() {
-  if (id_of_team.value === "") return 0;
+  if (id_of_team.value.length === 0) return 0;
   let cpt = 0;
   if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
-      if (element.team.id === id_of_team.value) {
+      if (id_of_team.value.includes(element.team.id)) {
         cpt += element.duration;
       }
     });
   } else {
     props.sessions.forEach((element) => {
-      if (element.team.id === id_of_team.value) {
+      if (id_of_team.value.includes(element.team.id)) {
         cpt += element.duration;
       }
     });
@@ -247,12 +247,12 @@ function calculateTeamTime() {
 const number_of_games = ref(0);
 
 function getNumberOfGames() {
-  if (id_of_team.value === "") return 0;
+  if (id_of_team.value.length === 0 ) return 0;
   let cpt = 0;
   let played_games = [];
   if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
-      if (element.team.id === id_of_team.value) {
+      if (id_of_team.value.includes(element.team.id)) {
         if (!played_games.includes(element.game.id)) {
           played_games.push(element.game.id);
           cpt++;
@@ -261,7 +261,7 @@ function getNumberOfGames() {
     });
   } else {
     props.sessions.forEach((element) => {
-      if (element.team.id === id_of_team.value) {
+      if (id_of_team.value.includes(element.team.id)) {
         if (!played_games.includes(element.game.id)) {
           played_games.push(element.game.id);
           cpt++;
@@ -285,6 +285,10 @@ const ranking_computed = computed(() => {
 });
 
 function calculateRanking(teamName) {
+  //if its a mix of multiple teams we don't calculate it
+  if(teamName.split(',').length > 1){
+    return "N/A";
+  }
   //calculate the playtime of all teams
   let playtime = [];
   for (let t of teams.value) {
@@ -316,9 +320,9 @@ const total_fun_percentage = ref(0);
 function getTotalFunPercentage() {
   let tmp;
   if (props.sessions === undefined) {
-    tmp = sessions.value.filter((s) => s.team.id === id_of_team.value);
+    tmp = sessions.value.filter((s) => id_of_team.value.includes(s.team.id));
   } else {
-    tmp = props.sessions.filter((s) => s.team.id === id_of_team.value);
+    tmp = props.sessions.filter((s) => id_of_team.value.includes(s.team.id));
   }
   let cpt = 0;
   tmp.map((s) => (cpt += s.was_cool ? 1 : 0));

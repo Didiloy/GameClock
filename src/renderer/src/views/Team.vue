@@ -38,12 +38,12 @@
 <script setup>
 import AddSession from "../components/AddSession.vue";
 import DashboardTeam from "../components/DashboardTeam.vue";
-import { onMounted, onUnmounted, ref, defineEmits, onUpdated } from "vue";
+import { onMounted, onUnmounted, ref, defineEmits } from "vue";
 import { getPreferences } from "../preferences/preferences";
 import { useRoute } from "vue-router";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import { getIdOfTeam } from "../database/database";
+import {getIdsOfTeam} from "../database/database";
 
 const store = useStore();
 const { sessions, games, teams } = storeToRefs(store);
@@ -52,13 +52,20 @@ const game_if_we_come_from_home = useRoute().params.game;
 const add_session_game_name = ref("");
 const add_session_dialog_visible = ref(false);
 
-const id_of_team = ref("");
+const id_of_team = ref([]);
 
 const emit = defineEmits(["toggleChronoListener"]);
 
 const sessions_of_team = ref([]);
 function getSessionsOfTeam() {
-  return sessions.value.filter((s) => s.team.id === id_of_team.value);
+  let sessions_of_team = [];
+  for(let sess of sessions.value){
+    if(id_of_team.value.includes(sess.team.id)){
+      sessions_of_team.push(sess);
+    }
+  }
+  return sessions_of_team;
+  // return sessions.value.filter((s) => s.team.id === id_of_team.value);
 }
 
 const month_year = ref([]);
@@ -183,7 +190,7 @@ function keyEventAddSession(e) {
 }
 
 onMounted(() => {
-  id_of_team.value = getIdOfTeam(useRoute().params.name, teams.value);
+  id_of_team.value = getIdsOfTeam(useRoute().params.name, teams.value);
   sessions_of_team.value = getSessionsOfTeam();
   month_year.value = createMonthYearArray();
   setLabelsDropdown();
