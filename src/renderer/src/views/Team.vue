@@ -5,6 +5,7 @@
         label="Nouvelle session"
         icon="pi pi-plus"
         @click="toggleAddSession"
+        v-if="id_of_team.length === 1"
       ></Button>
       <div class="t-title">
         <h2 class="team-name">{{ $route.params.name }}</h2>
