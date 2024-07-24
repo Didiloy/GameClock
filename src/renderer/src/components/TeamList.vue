@@ -1,10 +1,14 @@
 <template>
-  <DataView :value="teamItem" class="dataview">
+  <div v-if="loading">
+    <Loading msg="Chargement des équipes"/>
+  </div>
+  <DataView v-else :value="teamItem" class="dataview">
     <template #list="slotProps">
       <div
         v-for="(item, index) in slotProps.items"
         :key="index"
         :class="getClassNameFromIndex(index)"
+        :style=" item.gradient_color && 'background: linear-gradient(to left, ' + item.gradient_color + ', var(--primary-100) 70%);'"
         @click="navigateToTeam(item.name)"
       >
         <div class="team-name">
@@ -29,27 +33,34 @@ import { onMounted, ref, watch, onUpdated } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import { convertMinuteToHoursMinute } from "../common/main";
+import {convertMinuteToHoursMinute, getMostDominantColor} from "../common/main";
 import { getPreferences } from "../preferences/preferences";
+import Loading from "./Loading.vue";
 
 const router = useRouter();
 
 const store = useStore();
 const { teams, sessions, games } = storeToRefs(store);
 
-onMounted(() => {
-  init();
+const loading = ref(true);
+
+onMounted(async () => {
+  loading.value = true;
+  await init();
+  loading.value = false;
 });
 
 onUpdated(() => {});
 
-watch(sessions, () => {
-  init();
+watch(sessions, async () => {
+  loading.value = true;
+  await init();
+  loading.value = false;
 });
 
 const teamItem = ref([]);
 
-function setTeamItem() {
+async function setTeamItem() {
   teamItem.value = [];
 
   // calculate gametime and most played game for each team
@@ -96,6 +107,12 @@ function setTeamItem() {
   });
 
   const result = Object.values(teamData);
+  if(getPreferences("use_logo_color_in_team_list")){
+    for(let r of result){
+      r.gradient_color = await getMostDominantColor(r.logo, 0.4);
+    }
+  }
+
   teamItem.value = result;
 }
 
@@ -119,10 +136,11 @@ function getGameById(gameId) {
   return { name: game.name, heroe: game.heroe, logo: game.logo };
 }
 
-const init = () => {
-  setTeamItem();
+const init = async () => {
+  await setTeamItem();
   sortTeams();
 };
+
 
 function getClassNameFromIndex(index) {
   if (index === 0) {
@@ -140,6 +158,8 @@ function navigateToTeam(teamName) {
 </script>
 <style scoped>
 .dataview {
+  width: 750px;
+  background-color: var(--primary-100);
 }
 
 .team-item {
@@ -154,8 +174,9 @@ function navigateToTeam(teamName) {
 }
 
 .team-item:hover {
-  background-color: var(--primary-300);
   cursor: pointer;
+  width: 755px;
+  height: 78px;
 }
 
 .rounded-top {

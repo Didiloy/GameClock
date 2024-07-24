@@ -19,6 +19,7 @@
             :value="sessions_values"
             stripedRows
             tableStyle="min-width: 50rem"
+            :rowStyle="({gradient_color}) => gradient_color && 'background: linear-gradient(to left, ' + gradient_color + ', white 70%);'"
           >
             <Column field="name" header="Nom du jeu">
               <template #body="slotProps">
@@ -74,11 +75,14 @@
             </Column>
             <Column field="date" header="Date">
               <template #body="slotProps">
+                <div
+                >
                 {{
                   new Date(
                     slotProps.data.date.seconds * 1000
                   ).toLocaleDateString()
                 }}
+                </div>
               </template>
             </Column>
           </DataTable>
@@ -91,8 +95,9 @@
 import { onMounted, ref, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import { convertMinuteToHoursMinute } from "../common/main";
+import {convertMinuteToHoursMinute, getMostDominantColor} from "../common/main";
 import { getIdOfTeam } from "../database/database";
+import { getPreferences } from "../preferences/preferences";
 
 const props = defineProps([
   "teamName",
@@ -109,15 +114,15 @@ const { games, sessions, teams } = storeToRefs(store);
 
 const sessions_values = ref([]);
 const id_of_team = ref("");
-onMounted(() => {
-  init();
+onMounted(async () => {
+  await init();
 });
 
-watch([sessions], () => {
-  init();
+watch([sessions], async () => {
+  await init();
 });
 
-function init() {
+async function init() {
   sessions_values.value = [];
   id_of_team.value = getIdOfTeam(props.teamName, teams.value);
 
@@ -160,6 +165,12 @@ function init() {
 
   if (props.historySize) {
     sessions_values.value = sessions_values.value.slice(0, props.historySize);
+  }
+
+  if(getPreferences("use_logo_color_in_session_history")) {
+    for (let s of sessions_values.value) {
+      s.gradient_color = await getMostDominantColor(s.logo, 0.4);
+    }
   }
 }
 

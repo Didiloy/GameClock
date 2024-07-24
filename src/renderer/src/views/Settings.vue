@@ -1,8 +1,9 @@
 <script setup>
 import TeamsPreferences from "../components/preferences/TeamsPreferences.vue";
 import AddSessionPreferences from "../components/preferences/AddSessionPreferences.vue";
-import PieChartPreferences from "../components/preferences/PieChartPreferences.vue";
+import AppearencePreference from "../components/preferences/AppearencePreference.vue";
 import GeneralPreference from "../components/preferences/GeneralPreference.vue";
+import PieChartPreferences from "../components/preferences/PieChartPreferences.vue";
 const emit = defineEmits(["toggleChronoListener"]);
 
 function toggleChronoListener() {
@@ -19,7 +20,9 @@ function toggleChronoListener() {
     <Divider />
     <AddSessionPreferences />
     <Divider />
-    <PieChartPreferences />
+    <AppearencePreference />
+    <Divider />
+    <PieChartPreferences/>
   </div>
 </template>
 
