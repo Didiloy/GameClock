@@ -118,7 +118,7 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import { convertMinuteToHoursMinute } from "../common/main";
-import {getIdsOfTeam} from "../database/database";
+import { getIdsOfTeam } from "../database/database";
 
 const props = defineProps(["teamName", "sessions"]);
 
@@ -133,17 +133,6 @@ onMounted(() => {
     loaded.value = true;
   }, 500);
 });
-
-// watch([sessions, id_of_team], () => {
-//   init();
-// });
-
-// watch(
-//   () => props.sessions,
-//   () => {
-//     init();
-//   }
-// );
 
 function init() {
   id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
@@ -247,7 +236,7 @@ function calculateTeamTime() {
 const number_of_games = ref(0);
 
 function getNumberOfGames() {
-  if (id_of_team.value.length === 0 ) return 0;
+  if (id_of_team.value.length === 0) return 0;
   let cpt = 0;
   let played_games = [];
   if (props.sessions === undefined) {
@@ -286,7 +275,7 @@ const ranking_computed = computed(() => {
 
 function calculateRanking(teamName) {
   //if its a mix of multiple teams we don't calculate it
-  if(teamName.split(',').length > 1){
+  if (teamName.split(",").length > 1) {
     return "N/A";
   }
   //calculate the playtime of all teams
