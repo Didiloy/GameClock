@@ -103,10 +103,7 @@
 import { onMounted, ref, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import {
-  convertMinuteToHoursMinute,
-  getMostDominantColor,
-} from "../common/main";
+import { convertMinuteToHoursMinute } from "../common/main";
 import { getIdsOfTeam } from "../database/database";
 import { getPreferences } from "../preferences/preferences";
 

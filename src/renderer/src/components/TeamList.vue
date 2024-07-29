@@ -56,10 +56,7 @@ import { onMounted, ref, watch, onUpdated } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import {
-  convertMinuteToHoursMinute,
-  getMostDominantColor,
-} from "../common/main";
+import { convertMinuteToHoursMinute } from "../common/main";
 import { getPreferences } from "../preferences/preferences";
 import Loading from "./Loading.vue";
 
@@ -77,7 +74,6 @@ onMounted(async () => {
   await init();
   loading.value = false;
   if (getPreferences("use_logo_color_in_team_list")) {
-    // await getTeamColor();
     await getTeamColorWithWorker();
   }
 });
@@ -89,7 +85,6 @@ watch(sessions, async () => {
   await init();
   loading.value = false;
   if (getPreferences("use_logo_color_in_team_list")) {
-    // await getTeamColor();
     await getTeamColorWithWorker();
   }
 });
@@ -157,12 +152,6 @@ function sortTeams() {
     case "game":
       teamItem.value.sort((a, b) => a.game_name.localeCompare(b.game_name));
       break;
-  }
-}
-
-async function getTeamColor() {
-  for (let r of teamItem.value) {
-    r.gradient_color = await getMostDominantColor(r.logo, 0.4);
   }
 }
 
