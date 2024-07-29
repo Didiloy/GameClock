@@ -42,7 +42,9 @@
               </template>
             </Column>
             <Column
-              v-if="props.teamName === undefined"
+              v-if="
+                props.teamName === undefined || props.teamName.includes(',')
+              "
               field="team_name"
               header="Équipe"
               v-once
@@ -142,10 +144,21 @@ async function init() {
   id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
 
   if (props.teamName !== undefined) {
+    //if we are in a team page
     for (let s of sessions.value) {
       if (id_of_team.value.includes(s.team.id)) {
+        let team_name;
+        if (props.teamName.includes(",")) {
+          // if we are in a multi team page
+          for (let t of teams.value) {
+            if (s.team.id === t.id) {
+              team_name = t.name;
+            }
+          }
+        }
         let [game_name, logo] = getGameNameAndLogoById(s.game.id);
         sessions_values.value.push({
+          team_name: team_name,
           name: game_name,
           playtime: s.duration,
           date: s.date,
