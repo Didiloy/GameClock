@@ -98,7 +98,7 @@ watch(store_error, () => {
     <TitleBar :toggleChrono="chrono" />
     <div class="app-container main-background">
       <div class="sidebar">
-        <Sidebar></Sidebar>
+        <Sidebar v-once></Sidebar>
       </div>
       <div v-if="!loaded && stored_databases.length > 0" class="content">
         <Loading msg="Chargement des données" />

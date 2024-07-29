@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div class="container" v-once>
     <h2>Ajouter une équipe</h2>
     <Card
-        class="card"
-        :pt="{
+      class="card"
+      :pt="{
         root: { style: 'box-shadow: 0px 0px 0px 0px; border-radius: 15px;' },
         body: { style: 'height:100%; ' },
         content: { style: 'height:100%; ' },
@@ -11,25 +11,25 @@
     >
       <template #content>
         <div class="card-content">
-          <InputText type="text" v-model="name" placeholder="Nom de l'équipe"/>
+          <InputText type="text" v-model="name" placeholder="Nom de l'équipe" />
           <Button
-              label="Ajouter"
-              :icon="icon"
-              class="btn-add"
-              @click="onAddTeam"
-              :loading="loading"
+            label="Ajouter"
+            :icon="icon"
+            class="btn-add"
+            @click="onAddTeam"
+            :loading="loading"
           ></Button>
         </div>
       </template>
     </Card>
-    <Toast/>
+    <Toast />
   </div>
 </template>
 <script setup>
-import {ref} from "vue";
-import {addTeam} from "../database/database";
-import {useToast} from "primevue/usetoast";
-import {useStore} from "../store/store";
+import { ref } from "vue";
+import { addTeam } from "../database/database";
+import { useToast } from "primevue/usetoast";
+import { useStore } from "../store/store";
 
 const store = useStore();
 const toast = useToast();
@@ -47,11 +47,12 @@ async function onAddTeam() {
     });
     return;
   }
-  if (name.value.includes("/")|| name.value.includes(',')) {
+  if (name.value.includes("/") || name.value.includes(",")) {
     toast.add({
       severity: "error",
       summary: "",
-      detail: "Vous ne pouvez pas créer une équipe dont le nom contient des / ou des ,.",
+      detail:
+        "Vous ne pouvez pas créer une équipe dont le nom contient des / ou des ,.",
       life: 3000,
     });
     return;
@@ -74,7 +75,7 @@ async function onAddTeam() {
       severity: "error",
       summary: "",
       detail:
-          "Une erreur est survenue lors de l'ajout de l'équipe. Une équipe de ce nom existe peut être déjà",
+        "Une erreur est survenue lors de l'ajout de l'équipe. Une équipe de ce nom existe peut être déjà",
       life: 3000,
     });
   }

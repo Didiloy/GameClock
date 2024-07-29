@@ -1,40 +1,54 @@
 <template>
   <div v-if="loading">
-    <Loading msg="Chargement des équipes"/>
+    <Loading msg="Chargement des équipes" />
   </div>
   <div v-else class="tl-container">
     <div class="tl-container-buttons">
-      <ToggleButton v-model="toggle_select_team" onLabel="Abandonner" offLabel="Sélectionner plusieurs équipes" />
-      <Button label="" icon="pi pi-arrow-right" :disabled="!toggle_select_team" @click="onClickMultipleTeam"/>
+      <ToggleButton
+        v-model="toggle_select_team"
+        onLabel="Abandonner"
+        offLabel="Sélectionner plusieurs équipes"
+      />
+      <Button
+        label=""
+        icon="pi pi-arrow-right"
+        :disabled="!toggle_select_team"
+        @click="onClickMultipleTeam"
+      />
     </div>
     <DataView :value="teamItem" class="dataview">
-    <template #list="slotProps">
-      <div
-        v-for="(item, index) in slotProps.items"
-        :key="index"
-        :class="getClassNameFromIndex(index)"
-        :style=" item.gradient_color && 'background: linear-gradient(to left, ' + item.gradient_color + ', var(--primary-100) 70%);'"
-        @click="onClickHandler(item.name, index)"
-      >
-        <div class="team-name">
-          <img
-            :src="item.logo"
-            style="max-width: 60px; max-height: 60px; margin-right: 10px"
-          />
-          <h3>{{ item.name }}</h3>
+      <template #list="slotProps">
+        <div
+          v-for="(item, index) in slotProps.items"
+          :key="index"
+          :class="getClassNameFromIndex(index)"
+          :style="
+            item.gradient_color &&
+            'background: linear-gradient(to left, ' +
+              item.gradient_color +
+              ', var(--primary-100) 70%);'
+          "
+          @click="onClickHandler(item.name, index)"
+        >
+          <div class="team-name">
+            <img
+              :src="item.logo"
+              style="max-width: 60px; max-height: 60px; margin-right: 10px"
+            />
+            <h3>{{ item.name }}</h3>
+          </div>
+          <div class="team-playtime">
+            <h4>{{ convertMinuteToHoursMinute(item.playtime) }}</h4>
+          </div>
+          <div v-if="!toggle_select_team" class="icon-action">
+            <i class="pi pi-arrow-right"></i>
+          </div>
+          <div v-else class="icon-action">
+            <Checkbox v-model="item.selected" :binary="true" />
+          </div>
         </div>
-        <div class="team-playtime">
-          <h4>{{ convertMinuteToHoursMinute(item.playtime) }}</h4>
-        </div>
-        <div v-if="!toggle_select_team" class="icon-action">
-          <i class="pi pi-arrow-right"></i>
-        </div>
-        <div v-else class="icon-action">
-          <Checkbox v-model="item.selected" :binary="true"/>
-        </div>
-      </div>
-    </template>
-  </DataView>
+      </template>
+    </DataView>
   </div>
 </template>
 <script setup>
@@ -42,7 +56,10 @@ import { onMounted, ref, watch, onUpdated } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import {convertMinuteToHoursMinute, getMostDominantColor} from "../common/main";
+import {
+  convertMinuteToHoursMinute,
+  getMostDominantColor,
+} from "../common/main";
 import { getPreferences } from "../preferences/preferences";
 import Loading from "./Loading.vue";
 
@@ -59,6 +76,7 @@ onMounted(async () => {
   loading.value = true;
   await init();
   loading.value = false;
+  await getTeamColor();
 });
 
 onUpdated(() => {});
@@ -67,6 +85,7 @@ watch(sessions, async () => {
   loading.value = true;
   await init();
   loading.value = false;
+  await getTeamColor();
 });
 
 const teamItem = ref([]);
@@ -118,12 +137,6 @@ async function setTeamItem() {
   });
 
   const result = Object.values(teamData);
-  if(getPreferences("use_logo_color_in_team_list")){
-    for(let r of result){
-      r.gradient_color = await getMostDominantColor(r.logo, 0.4);
-    }
-  }
-
   teamItem.value = result;
 }
 
@@ -141,6 +154,14 @@ function sortTeams() {
   }
 }
 
+async function getTeamColor() {
+  if (getPreferences("use_logo_color_in_team_list")) {
+    for (let r of teamItem.value) {
+      r.gradient_color = await getMostDominantColor(r.logo, 0.4);
+    }
+  }
+}
+
 function getGameById(gameId) {
   let game = games.value.find((g) => g.id === gameId);
   if (game === undefined) return { name: "", heroe: "", logo: "" };
@@ -152,7 +173,6 @@ const init = async () => {
   sortTeams();
 };
 
-
 function getClassNameFromIndex(index) {
   if (index === 0) {
     return "team-item rounded-top";
@@ -163,14 +183,14 @@ function getClassNameFromIndex(index) {
   }
 }
 
-function onClickMultipleTeam(){
+function onClickMultipleTeam() {
   let selected_teams = teamItem.value.filter((t) => t.selected);
   let team_names = selected_teams.map((t) => t.name);
   router.push("/team/" + team_names.join(","));
 }
 
-function onClickHandler(teamName, index){
-  if(toggle_select_team.value){
+function onClickHandler(teamName, index) {
+  if (toggle_select_team.value) {
     teamItem.value[index].selected = !teamItem.value[index].selected;
   } else {
     navigateToTeam(teamName);
