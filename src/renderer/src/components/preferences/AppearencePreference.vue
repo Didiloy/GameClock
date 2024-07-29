@@ -1,15 +1,25 @@
 <script setup>
-import {ref, watch} from "vue";
-import {getPreferences, setPreferences} from "../../preferences/preferences";
+import { ref, watch } from "vue";
+import { getPreferences, setPreferences } from "../../preferences/preferences";
 
-const use_logo_color_in_team_list = ref(getPreferences("use_logo_color_in_team_list"));
+const use_logo_color_in_team_list = ref(
+  getPreferences("use_logo_color_in_team_list")
+);
 watch(use_logo_color_in_team_list, () => {
-  setPreferences("use_logo_color_in_team_list", use_logo_color_in_team_list.value);
+  setPreferences(
+    "use_logo_color_in_team_list",
+    use_logo_color_in_team_list.value
+  );
 });
 
-const use_logo_color_in_session_history = ref(getPreferences("use_logo_color_in_session_history"));
+const use_logo_color_in_session_history = ref(
+  getPreferences("use_logo_color_in_session_history")
+);
 watch(use_logo_color_in_session_history, () => {
-  setPreferences("use_logo_color_in_session_history", use_logo_color_in_session_history.value);
+  setPreferences(
+    "use_logo_color_in_session_history",
+    use_logo_color_in_session_history.value
+  );
 });
 </script>
 
@@ -17,11 +27,17 @@ watch(use_logo_color_in_session_history, () => {
   <div class="tp-container">
     <h2 class="tp-title">Apparence</h2>
     <div class="tp-item">
-      <b class="text-color">Utiliser la couleur du logo du jeu le plus joué dans la liste des équipes (ralenti le chargement):</b>
+      <b class="text-color"
+        >Utiliser la couleur du logo du jeu le plus joué dans la liste des
+        équipes (peut ralentir le chargement):</b
+      >
       <InputSwitch v-model="use_logo_color_in_team_list" />
     </div>
     <div class="tp-item">
-      <b class="text-color">Utiliser la couleur du logo du jeu dans l'historique des sessions (ralenti le chargement):</b>
+      <b class="text-color"
+        >Utiliser la couleur du logo du jeu dans l'historique des sessions (peut
+        ralentir le chargement):</b
+      >
       <InputSwitch v-model="use_logo_color_in_session_history" />
     </div>
   </div>

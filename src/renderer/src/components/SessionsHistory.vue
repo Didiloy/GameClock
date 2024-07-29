@@ -139,6 +139,9 @@ watch([sessions], async () => {
   }
 });
 
+// Using Map to store unique games so that we don't compute color multiple time for the same game
+const uniqueGames = ref(new Map());
+
 async function init() {
   sessions_values.value = [];
   id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
@@ -157,6 +160,11 @@ async function init() {
           }
         }
         let [game_name, logo] = getGameNameAndLogoById(s.game.id);
+        //add the game to the map to compute the color after
+        if (!uniqueGames.value.has(game_name)) {
+          uniqueGames.value.set(game_name, { logo: logo });
+        }
+
         sessions_values.value.push({
           team_name: team_name,
           name: game_name,
@@ -170,6 +178,10 @@ async function init() {
   } else {
     for (let s of sessions.value) {
       let [game_name, logo] = getGameNameAndLogoById(s.game.id);
+      //add the game to the map to compute the color after
+      if (!uniqueGames.value.has(game_name)) {
+        uniqueGames.value.set(game_name, { logo: logo });
+      }
       let team_name;
       for (let t of teams.value) {
         if (s.team.id === t.id) {
@@ -197,17 +209,37 @@ async function init() {
 }
 
 async function computeSessionColor() {
-  // Using Map to store unique games so that we don't compute color multiple time for the same game
-  const uniqueGames = new Map();
+  for (let [game, data] of uniqueGames.value) {
+    const worker = new Worker(
+      new URL("../workers/colorWorker.js", import.meta.url)
+    );
 
+    worker.onmessage = (event) => {
+      const { logo, color, error } = event.data;
+
+      if (error) {
+        console.error(`Error processing logo ${logo}: ${error}`);
+        return;
+      }
+
+      uniqueGames.value.set(game, { logo, color });
+      setColorOfGamesSession(game, color);
+    };
+
+    worker.onerror = (error) => {
+      console.error(`Worker error: ${error.message}`);
+      reject(error);
+    };
+
+    if (data.logo !== undefined && data.logo !== "")
+      worker.postMessage({ logo: data.logo, transparency: 0.4 });
+  }
+}
+
+function setColorOfGamesSession(game, color) {
   for (let session of sessions_values.value) {
-    const gameName = session.name;
-    if (!uniqueGames.has(gameName)) {
-      const color = await getMostDominantColor(session.logo, 0.4);
-      uniqueGames.set(gameName, color);
+    if (session.name === game) {
       session.gradient_color = color;
-    } else {
-      session.gradient_color = uniqueGames.get(gameName);
     }
   }
 }

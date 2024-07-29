@@ -76,7 +76,10 @@ onMounted(async () => {
   loading.value = true;
   await init();
   loading.value = false;
-  await getTeamColor();
+  if (getPreferences("use_logo_color_in_team_list")) {
+    // await getTeamColor();
+    await getTeamColorWithWorker();
+  }
 });
 
 onUpdated(() => {});
@@ -85,7 +88,10 @@ watch(sessions, async () => {
   loading.value = true;
   await init();
   loading.value = false;
-  await getTeamColor();
+  if (getPreferences("use_logo_color_in_team_list")) {
+    // await getTeamColor();
+    await getTeamColorWithWorker();
+  }
 });
 
 const teamItem = ref([]);
@@ -155,10 +161,34 @@ function sortTeams() {
 }
 
 async function getTeamColor() {
-  if (getPreferences("use_logo_color_in_team_list")) {
-    for (let r of teamItem.value) {
-      r.gradient_color = await getMostDominantColor(r.logo, 0.4);
-    }
+  for (let r of teamItem.value) {
+    r.gradient_color = await getMostDominantColor(r.logo, 0.4);
+  }
+}
+
+async function getTeamColorWithWorker() {
+  for (let team of teamItem.value) {
+    const worker = new Worker(
+      new URL("../workers/colorWorker.js", import.meta.url)
+    );
+
+    worker.onmessage = (event) => {
+      const { logo, color, error } = event.data;
+
+      if (error) {
+        console.error(`Error processing logo ${logo}: ${error}`);
+        return;
+      }
+
+      team.gradient_color = color;
+    };
+
+    worker.onerror = (error) => {
+      console.error(`Worker error: ${error.message}`);
+      reject(error);
+    };
+
+    worker.postMessage({ logo: team.logo, transparency: 0.4 });
   }
 }
 
