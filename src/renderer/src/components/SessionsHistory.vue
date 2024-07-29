@@ -13,15 +13,21 @@
       }}</span></template
     >
     <template #content>
-      <Accordion class="">
+      <Accordion>
         <AccordionTab header="Sessions">
           <DataTable
             :value="sessions_values"
             stripedRows
             tableStyle="min-width: 50rem"
-            :rowStyle="({gradient_color}) => gradient_color && 'background: linear-gradient(to left, ' + gradient_color + ', white 70%);'"
+            :rowStyle="
+              ({ gradient_color }) =>
+                gradient_color &&
+                'background: linear-gradient(to left, ' +
+                  gradient_color +
+                  ', white 70%);'
+            "
           >
-            <Column field="name" header="Nom du jeu">
+            <Column field="name" header="Nom du jeu" v-once>
               <template #body="slotProps">
                 <div class="sh-name">
                   <img
@@ -39,6 +45,7 @@
               v-if="props.teamName === undefined"
               field="team_name"
               header="Équipe"
+              v-once
             >
               <template #body="slotProps">
                 <RouterLink
@@ -48,12 +55,12 @@
                 >
               </template>
             </Column>
-            <Column field="playtime" header="Durée de la session">
+            <Column field="playtime" header="Durée de la session" v-once>
               <template #body="slotProps">
                 {{ convertMinuteToHoursMinute(slotProps.data.playtime) }}
               </template>
             </Column>
-            <Column field="joyrate" header="Bonheur">
+            <Column field="joyrate" header="Bonheur" v-once>
               <template #body="slotProps">
                 <Chip
                   :label="
@@ -73,15 +80,14 @@
                 />
               </template>
             </Column>
-            <Column field="date" header="Date">
+            <Column field="date" header="Date" v-once>
               <template #body="slotProps">
-                <div
-                >
-                {{
-                  new Date(
-                    slotProps.data.date.seconds * 1000
-                  ).toLocaleDateString()
-                }}
+                <div>
+                  {{
+                    new Date(
+                      slotProps.data.date.seconds * 1000
+                    ).toLocaleDateString()
+                  }}
                 </div>
               </template>
             </Column>
@@ -95,8 +101,11 @@
 import { onMounted, ref, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import {convertMinuteToHoursMinute, getMostDominantColor} from "../common/main";
-import {getIdOfTeam, getIdsOfTeam} from "../database/database";
+import {
+  convertMinuteToHoursMinute,
+  getMostDominantColor,
+} from "../common/main";
+import { getIdsOfTeam } from "../database/database";
 import { getPreferences } from "../preferences/preferences";
 
 const props = defineProps([
@@ -116,10 +125,16 @@ const sessions_values = ref([]);
 const id_of_team = ref([]);
 onMounted(async () => {
   await init();
+  if (getPreferences("use_logo_color_in_session_history")) {
+    await computeSessionColor();
+  }
 });
 
 watch([sessions], async () => {
   await init();
+  if (getPreferences("use_logo_color_in_session_history")) {
+    await computeSessionColor();
+  }
 });
 
 async function init() {
@@ -166,10 +181,20 @@ async function init() {
   if (props.historySize) {
     sessions_values.value = sessions_values.value.slice(0, props.historySize);
   }
+}
 
-  if(getPreferences("use_logo_color_in_session_history")) {
-    for (let s of sessions_values.value) {
-      s.gradient_color = await getMostDominantColor(s.logo, 0.4);
+async function computeSessionColor() {
+  // Using Map to store unique games so that we don't compute color multiple time for the same game
+  const uniqueGames = new Map();
+
+  for (let session of sessions_values.value) {
+    const gameName = session.name;
+    if (!uniqueGames.has(gameName)) {
+      const color = await getMostDominantColor(session.logo, 0.4);
+      uniqueGames.set(gameName, color);
+      session.gradient_color = color;
+    } else {
+      session.gradient_color = uniqueGames.get(gameName);
     }
   }
 }
