@@ -58,7 +58,7 @@ const options = ref([
 onMounted(() => {
   setTimeout(() => {
     games_values.value = games.value.toSorted((a, b) =>
-      a.name.localeCompare(b.name)
+      a.name.localeCompare(b.name),
     );
     addSessionCountToGames();
     loaded.value = true;
@@ -67,7 +67,7 @@ onMounted(() => {
 
 watch(value, () => {
   games_values.value = games.value.filter((g) =>
-    g.name.toLowerCase().includes(value.value.toLowerCase())
+    g.name.toLowerCase().includes(value.value.toLowerCase()),
   );
   addSessionCountToGames();
   games_values.value = games_values.value.sort((a, b) => {

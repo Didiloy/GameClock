@@ -254,8 +254,8 @@ function navigateToTeam(teamName) {
 
 .team-item:hover {
   cursor: pointer;
-  width: 755px;
-  height: 78px;
+  font-size: 15pt;
+  color: black;
 }
 
 .rounded-top {

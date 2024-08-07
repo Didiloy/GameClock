@@ -196,7 +196,6 @@ const total_sessions = ref(0);
 const longuest_session = ref(0);
 const smallest_session = ref(0);
 const average_session = ref(0);
-
 const total_playtime = ref(0);
 
 function getTotalPlaytime() {
