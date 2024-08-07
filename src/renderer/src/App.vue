@@ -5,10 +5,10 @@ import Loading from "./components/Loading.vue";
 import { useRouter } from "vue-router";
 import { initialiseFirebase } from "./database/firebaseConfig";
 import { getPreferences } from "./preferences/preferences";
-import { onMounted, onUnmounted, ref, watch, unref } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 const router = useRouter();
 const storeDatabases = useStoredDatabases();
-const { stored_databases, loadDatabases } = storeToRefs(storeDatabases);
+const { stored_databases } = storeToRefs(storeDatabases);
 
 if (stored_databases.value.length === 0) {
   router.push("/adddatabase");

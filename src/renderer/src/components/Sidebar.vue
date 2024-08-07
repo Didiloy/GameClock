@@ -6,12 +6,13 @@
     <Divider /> -->
     <div class="s-content">
       <div style="width: 100%">
-        <div v-for="item in items" class="menu">
+        <div v-for="(item, i) in items" :key="i" class="menu">
           <h3 class="menu-item">{{ item.label }}</h3>
           <router-link
-            v-for="subitem in item.items"
+            v-for="(subitem , j) in item.items"
             v-slot="{ navigate }"
             :to="subitem.route"
+            :key="j"
             class="router-link link"
           >
             <div>
@@ -72,16 +73,6 @@ const items = ref([
       },
     ],
   },
-  // {
-  //   label: "Général",
-  //   items: [
-  //     {
-  //       label: "Statistiques",
-  //       icon: "pi pi-chart-line",
-  //       route: "/stats",
-  //     },
-  //   ],
-  // },
   {
     label: "Paramètres",
     items: [

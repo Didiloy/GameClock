@@ -1,5 +1,4 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
 import { useStoredDatabases } from "../../store/store";
 import { getPreferences, setPreferences } from "../../preferences/preferences";
 import { storeToRefs } from "pinia";
@@ -12,7 +11,6 @@ const router = useRouter();
 const store = useStoredDatabases();
 const { stored_databases } = storeToRefs(store);
 
-onMounted(() => {});
 
 function deleteDatabase(name, apiKey, authDomain, index) {
   store.useDeleteDatabase(name, apiKey, authDomain);
@@ -64,37 +62,24 @@ function goToAddDatabase() {
         {{ stored_databases[getPreferences("selected_database_index")].name }}
       </h2>
     </div>
-    <b class="text-color" style="margin-top: 10px"
-      >Toutes les bases de données:</b
-    >
-    <div class="tp-item" v-for="(database, index) in stored_databases">
-      <h2>{{ database.name }}</h2>
-      <div>
-        <Button
-          label="Définir comme active"
-          style="margin-right: 10px"
-          @click="setAsActiveDatabase(index)"
-        ></Button>
-        <Button
-          icon="pi pi-share-alt"
-          label="Partager"
-          class="p-button-secondary"
-          style="margin-right: 10px"
-          @click="shareDatabase(index)"
-        ></Button>
-        <Button
-          icon="pi pi-trash"
-          label="Supprimer"
-          class="p-button-danger"
-          @click="
+    <b class="text-color" style="margin-top: 10px">Toutes les bases de données:</b>
+    <div class="w-100" v-for="(database, index) in stored_databases" :key="index">
+      <div class="tp-item">
+        <h2>{{ database.name }}</h2>
+        <div>
+          <Button label="Définir comme active" style="margin-right: 10px"
+            v-if="index !== getPreferences('selected_database_index')" @click="setAsActiveDatabase(index)"></Button>
+          <Button icon="pi pi-share-alt" label="Partager" class="p-button-secondary" style="margin-right: 10px"
+            @click="shareDatabase(index)"></Button>
+          <Button icon="pi pi-trash" label="Supprimer" class="p-button-danger" @click="
             deleteDatabase(
               database.name,
               database.apiKey,
               database.authDomain,
               index
             )
-          "
-        ></Button>
+            "></Button>
+        </div>
       </div>
     </div>
     <Toast />
@@ -122,12 +107,16 @@ function goToAddDatabase() {
   justify-content: space-between;
   align-items: center;
   width: 100%;
- }
+}
 
 .tp-title {
   color: var(--primary-500);
   font-weight: bold;
   font-size: 2rem;
+}
+
+.w-100 {
+  width: 100%;
 }
 
 .tp-item {
