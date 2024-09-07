@@ -1,0 +1,540 @@
+{
+  "fr": {
+    "Loading": {
+      "loading_data": "Chargement des données",
+      "calculating_statistics": "Calcul des statistiques",
+      "calculating_games_statistics": "Calcul des statistiques des jeux",
+      "team_loading": "Chargement des équipes"
+    },
+    "App": {
+      "error_loading_data": "Erreur lors du chargement des données: "
+    },
+    "Sidebar": {
+      "version": "Version",
+      "home": "Acceuil",
+      "teams": {
+        "label": "Équipes",
+        "add": "Ajouter",
+        "list": "Liste"
+      },
+      "settings": {
+        "label": "Paramètres",
+        "games": "Jeux",
+        "general": "Général",
+        "databases": "Base de données"
+      },
+      "reload_data": "Recharger les données"
+    },
+    "AddDatabaseForFirstTime": {
+      "add_database": "Ajouter une base de données",
+      "you_have_no_databases": "Vous n'avez pas encore de base de données. Vous devez en ajouter une pour continuer.",
+      "import_database": "Importer une base de données",
+      "ask_your_friends": "Vous pouvez demander à vos amis de vous partager leur base de données.Il ne vous restera plus qu'à copier le texte et le coller dans le champs ci-dessous !",
+      "import": "Importer",
+      "add_new_database": "Ajouter une nouvelle base de données",
+      "gameclock_use_firebase": "GameClock utilise des bases de données Firebase Firestore.",
+      "instruction_to_create_database": {
+        "label": "Instructions pour créer une base de données",
+        "first": "Pour créer votre base de données rendez-vous sur console.firebase.google.com authentifier vous avec votre compte Google et créez un projet.",
+        "second": "Saisissez le nom de votre projet, désactivez ou pas Google analytics puis cliquez sur 'créer un projet.'",
+        "third": "Une fois fait, dans le menu de gauche, sélectionnez 'Créer' et choisissez 'Realtime Database'.",
+        "fourth": "Cliquez sur 'Créer une base de données', sélectionnez votre emplacement, puis sélectionnez 'Commencer en mode verrouillé'.",
+        "fifth": "Ensuite, sélectionnez de nouveau 'Créer' dans le menu de gauche puis cliquez sur 'Firestore Database'.",
+        "sixth": "Cliquez sur 'Créer une base de données', choisissez un emplacement 'Régional' de votre choix. Cliquez ensuite sur 'démarrer en mode production', puis 'Créer'.",
+        "seventh": "Rendez vous dans l'onglet 'Règles' de votre projet et changez le mot 'false' par 'true'.",
+        "eighth": "Enfin pour récupérer les informations demandées, cliquez sur l'engrenage en haut à gauche de votre écran, puis sur 'Paramètres du projet' et ajoutez une application web (celle ayant une icône ressemblant à </>) que vous appelerez comme vous voudrez. Vous pouvez maintenant récupérer toutes les informations demandées sur cette page."
+      },
+      "database_name": "Nom de la base de données à votre guise:",
+      "database_api_key": "Clé d'API:",
+      "database_auth_domain": "Domaine d'authentification:",
+      "database_url": "URL de la base de données:",
+      "database_id": "ID du projet",
+      "database_storage_bucket": "Bucket de stockage:",
+      "database_messaging_sender_id": "messagingSenderId:",
+      "database_app_id": "App ID:",
+      "add": "Ajouter",
+      "errors": {
+        "no_empty_field": "Aucun champ ne doit être vide !"
+      }
+    },
+    "AddTeam": {
+      "add_team": "Ajouter une équipe",
+      "team_name": "Nom de l'équipe",
+      "add": "Ajouter",
+      "all_good": "C'est tout bon !",
+      "errors": {
+        "no_empty_field": "Aucun champ ne doit être vide !",
+        "no_slashes_or_commas": "Vous ne pouvez pas créer une équipe dont le nom contient des / ou des ,.",
+        "an_error_happened": "Une erreur est survenue lors de l'ajout de l'équipe. Une équipe de ce nom existe peut être déjà"
+      }
+    },
+    "DatabaseSettings": {
+      "databases": "Bases de données"
+    },
+    "AddDatabasePreference": {
+      "databases": "Bases de données",
+      "add_database": "Ajouter une base de données",
+      "database_copied": "Base de données copiée dans le presse papier",
+      "impossible_to_copy": "Impossible de copier dans le presse papier. Copiez le texte suivant: ",
+      "active": "Active:",
+      "all_databases": "Toutes les bases de données:",
+      "set_as_active": "Définir comme active",
+      "share": "Partager",
+      "delete": "Supprimer"
+    },
+    "Home": {
+      "no_teams": "Vous n'avez pas encore d'équipes.",
+      "add_team": "Ajoutez-en une !"
+    },
+    "Dashboard": {
+      "last_sessions": "dernières sessions entrées",
+      "fun_to_play": "de plaisir à jouer !",
+      "neutral": "Neutre",
+      "bad": "Nul",
+      "biggest_games_sessions_part_one": "Fait les plus grosses sessions de jeu (",
+      "biggest_games_sessions_part_two": " en moyenne)",
+      "spent_playing": "passées à jouer",
+      "games_played": " Jeux joués",
+      "have_most_sessions_part_one": "A le plus de sessions avec ",
+      "have_most_sessions_part_two": " sessions"
+    },
+    "PieChartGamePercentage": {
+      "title": "Classement des jeux en pourcentage",
+      "show_names": "Montrer les noms"
+    },
+    "BarChartAllGames": {
+      "title": "Informations des jeux",
+      "number_of_sessions": "Nombre de sessions",
+      "medium_session_time": "Temps moyen d'une session"
+    },
+    "PlayTimeHome": {
+      "title": "Classement des équipes par temps de jeu",
+      "click_to_see_details": "Clique sur une équipe pour voir le détail",
+      "playtime": "Temps de jeu "
+    },
+    "GamesFunPercentage": {
+      "title": "Taux de fun par jeux",
+      "fun": "Fun",
+      "neutral": "Neutre",
+      "bad": "Nul"
+    },
+    "SessionsHistory": {
+      "title": "Historique des sessions",
+      "sessions": "Sessions",
+      "game_name": "Nom du jeu",
+      "team": "Équipe",
+      "session_duration": "Durée de la session",
+      "joyrate": "Bonheur",
+      "good": "Bien",
+      "neutral": "Neutre",
+      "bad": "Nul",
+      "date": "Date",
+      "deleted_game": "Jeu supprimé ou introuvable"
+    },
+    "DashboardTeam": {
+      "team_time": "passées à jouer. Soit <b> {percentage_total_time} </b> du temps total de jeu",
+      "average_time": "Temps moyen d'une session, tous jeux confondus",
+      "position_in_ranking": "position de l'équipe dans le classement par temps de jeu",
+      "text_movies": "<div style=\"display: flex; flex-direction: column; justify-content: center; align-items: center;\"> <span>C'est le nombre de <b>films</b> d'environ 1h50 que vous auriez pu regarder pendant ce temps.</span></div>",
+      "text_books": "<div style=\"display: flex; flex-direction: column; justify-content: center; align-items: center;\"><span>C'est le nombre de <b>livres</b> d'environ 400 pages que vous auriez pu lire pendant ce temps.</span></div>",
+      "fun_to_play": "Plaisir ressenti tous jeux confondus",
+      "games_played": "jeux joués",
+      "games_sessions": "sessions de jeu"
+    },
+    "TopGamesLittleGameCard": {
+      "title": "Top 3 des jeux les plus joués"
+    },
+    "Team": {
+      "new_session": "Nouvelle session",
+      "add_session": "Ajouter une session",
+      "all_time": "Toutes périodes"
+    },
+    "AddSession": {
+      "game_name": "Nom du jeu",
+      "informative_text_formulas": " Vous pouvez entrer une durée en minutes ou utiliser une formule pour additionner plusieurs durées. Par exemple, pour ajouter 10 minutes et 20 minutes, entrez \"=10+20\".",
+      "duration_in_minute": "Durée en minutes",
+      "fun": "Fun",
+      "neutral": "Neutre",
+      "bad": "Nul",
+      "add": "Ajouter",
+      "errors": {
+        "fill_all_fields": "Veuillez remplir tous les champs correctement.",
+        "formulas_error": "Les opérandes d'une formule doivent être des nombres entiers et vous ne pouvez utiliser que l'addition.",
+        "unexpected_error": "Une erreur est survenue lors de l'ajout de la session de jeu."
+      },
+      "all_good": "C'est tout bon !"
+    },
+    "Teams": {
+      "title": "Choisissez votre équipe !"
+    },
+    "TeamList": {
+      "abandon": "Abandonner",
+      "select_teams": "Selectionner plusieurs équipes"
+    },
+    "Settings": {
+      "title": "Paramètres"
+    },
+    "GeneralPreference": {
+      "title": "Général",
+      "select_language": "Langue (requiert un redemarrage de l'application pour que tout soit appliqué correctement)",
+      "pages_list": {
+        "home": "Acceuil",
+        "teams_list": "Liste des équipes",
+        "games": "Jeux",
+        "general": "Général"
+      },
+      "errors": {
+        "invalid_shortcut": "Vous ne pouvez mettre qu'une lettre en tant que raccourci"
+      },
+      "shortcut_toggle_chronometer": "Raccourci clavier pour lancer/stopper le chronomètre:",
+      "page_start_application": "Page dans laquelle démarrer l'application:",
+      "number_of_last_session": "Nombre de dernières sessions à afficher sur la page d'accueil"
+    },
+    "TeamsPreferences": {
+      "sort_order": {
+        "playtime": "Temps de jeu",
+        "name": "Nom",
+        "game": "Jeu le plus joué"
+      },
+      "teams": "Équipes",
+      "sort_order_label": "Ordre de tri de la liste des équipes:"
+    },
+    "AddSessionPreferences": {
+      "erros": {
+        "only_one_letter": "Vous ne pouvez mettre qu'une seule lettre",
+        "only_letters": "Vous ne pouvez mettre que des lettres"
+      },
+      "title": "Ajouter une session",
+      "on_team_page": "Sur la page d'équipe",
+      "shortcut_add_session": "Raccourci clavier pour ajouter une session sans nom de jeu:",
+      "shortcut_add_session_with_name_1": "Raccourci clavier pour ajouter une session avec un nom de jeu 1:",
+      "shortcut_add_session_with_name_2": "Raccourci clavier pour ajouter une session avec un nom de jeu 2:",
+      "reload_data_after_adding_a_session": "Recharger les données après l'ajout d'une session:",
+      "shortcut_add_session_in_team": "Raccourci clavier pour ajouter une session dans une équipe:",
+      "on_home_page": "Sur la page d'accueil"
+    },
+    "AppearancePreference": {
+      "title": "Apparence",
+      "use_color_of_most_played_game_in_team_list": "Utiliser la couleur du logo du jeu le plus joué dans la liste des équipes (peut ralentir le chargement):",
+      "use_color_of_game_in_history": "Utiliser la couleur du logo du jeu dans l'historique des sessions (peut ralentir le chargement):"
+    },
+    "PieChartPreferences": {
+      "title": "Graphique camembert",
+      "show_legend": "Montrer la légende par défaut:",
+      "use_random_colors": "Utiliser des couleurs générées aléatoirement:"
+    },
+    "SingleGameSetting": {
+      "sessions": "sessions",
+      "longest_session": "Session la plus longue",
+      "shortest_session": "Session la plus courte",
+      "mean_duration": "Durée moyenne des sessions",
+      "total_playtime": "Temps de jeu total",
+      "team_who_play_the_most": "Équipe qui joue le plus",
+      "game_logo": "Logo du jeu",
+      "game_grid": "Grille du jeu",
+      "game_heroe": "Heroe du jeu",
+      "modify": "Modifier",
+      "copy": "Copier",
+      "paste": "Coller",
+      "all_good": "C'est tout bon !",
+      "error_when_modifying": "Une erreur est survenue lors de la modification du jeu."
+    },
+    "LineChartGameByMonth": {
+      "title": "Temps de jeu et de bonheur par mois",
+      "total_game_time": "Temps de jeu total",
+      "fun_to_play": "Plaisir à jouer (%)"
+    },
+    "GamesSettings": {
+      "title": "Modifiez vos jeux",
+      "search_game": "Chercher un jeu...",
+      "games": "Jeux",
+      "alphabetical_order": "Ordre Alphabétique",
+      "sessions_number": "Nombre de sessions"
+    },
+    "Common": {
+      "months_names": {
+        "0": "Janvier",
+        "1": "Février",
+        "2": "Mars",
+        "3": "Avril",
+        "4": "Mai",
+        "5": "Juin",
+        "6": "Juillet",
+        "7": "Août",
+        "8": "Septembre",
+        "9": "Octobre",
+        "10": "Novembre",
+        "11": "Décembre"
+      }
+    }
+  },
+  "en": {
+    "Loading": {
+      "loading_data": "Loading data",
+      "calculating_statistics": "Calculating statistics",
+      "calculating_games_statistics": "Calculating game statistics",
+      "team_loading": "Loading teams"
+    },
+    "App": {
+      "error_loading_data": "Error loading data: "
+    },
+    "Sidebar": {
+      "version": "Version",
+      "home": "Home",
+      "teams": {
+        "label": "Teams",
+        "add": "Add",
+        "list": "List"
+      },
+      "settings": {
+        "label": "Settings",
+        "games": "Games",
+        "general": "General",
+        "databases": "Databases"
+      },
+      "reload_data": "Reload data"
+    },
+    "AddDatabaseForFirstTime": {
+      "add_database": "Add a database",
+      "you_have_no_databases": "You don't have any databases yet. You need to add one to continue.",
+      "import_database": "Import a database",
+      "ask_your_friends": "You can ask your friends to share their database with you. All you need to do is copy the text and paste it into the field below!",
+      "import": "Import",
+      "add_new_database": "Add a new database",
+      "gameclock_use_firebase": "GameClock uses Firebase Firestore databases.",
+      "instruction_to_create_database": {
+        "label": "Instructions for creating a database",
+        "first": "To create your database, go to console.firebase.google.com, sign in with your Google account, and create a project.",
+        "second": "Enter the name of your project, enable or disable Google Analytics, then click 'Create project.'",
+        "third": "Once done, in the left menu, select 'Create' and choose 'Realtime Database'.",
+        "fourth": "Click on 'Create a database', select your location, then choose 'Start in locked mode'.",
+        "fifth": "Next, select 'Create' again from the left menu, and click 'Firestore Database'.",
+        "sixth": "Click on 'Create a database', choose a 'Regional' location of your choice, then click 'Start in production mode' and 'Create'.",
+        "seventh": "Go to the 'Rules' tab of your project and change the word 'false' to 'true'.",
+        "eighth": "Finally, to retrieve the requested information, click the gear icon in the upper left corner of your screen, then 'Project settings', and add a web app (the one with an icon like </>) that you can name as you like. You can now retrieve all the requested information from this page."
+      },
+      "database_name": "Database name of your choice:",
+      "database_api_key": "API key:",
+      "database_auth_domain": "Authentication domain:",
+      "database_url": "Database URL:",
+      "database_id": "Project ID:",
+      "database_storage_bucket": "Storage bucket:",
+      "database_messaging_sender_id": "messagingSenderId:",
+      "database_app_id": "App ID:",
+      "add": "Add",
+      "errors": {
+        "no_empty_field": "No field should be empty!"
+      }
+    },
+    "AddTeam": {
+      "add_team": "Add a team",
+      "team_name": "Team name",
+      "add": "Add",
+      "all_good": "All good!",
+      "errors": {
+        "no_empty_field": "No field should be empty!",
+        "no_slashes_or_commas": "You cannot create a team with a name containing / or ,.",
+        "an_error_happened": "An error occurred while adding the team. A team with this name might already exist."
+      }
+    },
+    "DatabaseSettings": {
+      "databases": "Databases"
+    },
+    "AddDatabasePreference": {
+      "databases": "Databases",
+      "add_database": "Add a database",
+      "database_copied": "Database copied in clipboard",
+      "impossible_to_copy": "Impossible to copy in clipboard. Copy the following text: ",
+      "active": "Active:",
+      "all_databases": "All databases:",
+      "set_as_active": "Set as active",
+      "share": "Share",
+      "delete": "Delete"
+    },
+    "Home": {
+      "no_teams": "You don't have any teams yet.",
+      "add_team": "Add one!"
+    },
+    "Dashboard": {
+      "last_sessions": "Last entered sessions",
+      "fun_to_play": "Fun to play!",
+      "neutral": "Neutral",
+      "bad": "Bad",
+      "biggest_games_sessions_part_one": "Has the biggest game sessions (",
+      "biggest_games_sessions_part_two": " on average)",
+      "spent_playing": "Spent playing",
+      "games_played": " Games played",
+      "have_most_sessions_part_one": "Has the most sessions with ",
+      "have_most_sessions_part_two": " sessions"
+    },
+    "PieChartGamePercentage": {
+      "title": "Game ranking by percentage",
+      "show_names": "Show names"
+    },
+    "BarChartAllGames": {
+      "title": "Game information",
+      "number_of_sessions": "Number of sessions",
+      "medium_session_time": "Average session time"
+    },
+    "PlayTimeHome": {
+      "title": "Team ranking by playtime",
+      "click_to_see_details": "Click on a team to see details",
+      "playtime": "Playtime "
+    },
+    "GamesFunPercentage": {
+      "title": "Fun rate by game",
+      "fun": "Fun",
+      "neutral": "Neutral",
+      "bad": "Bad"
+    },
+    "SessionsHistory": {
+      "title": "Session History",
+      "sessions": "Sessions",
+      "game_name": "Game Name",
+      "team": "Team",
+      "session_duration": "Session Duration",
+      "joyrate": "Happiness",
+      "good": "Good",
+      "neutral": "Neutral",
+      "bad": "Bad",
+      "date": "Date",
+      "deleted_game": "Deleted or unavailable game"
+    },
+    "DashboardTeam": {
+      "team_time": "spent playing. This is <b>{percentage_total_time}</b> of the total playtime",
+      "average_time": "Average session time across all games",
+      "position_in_ranking": "Team's position in the playtime ranking",
+      "text_movies": "<div style=\"display: flex; flex-direction: column; justify-content: center; align-items: center;\"> <span>This is the number of <b>movies</b> of about 1h50 that you could have watched during this time.</span></div>",
+      "text_books": "<div style=\"display: flex; flex-direction: column; justify-content: center; align-items: center;\"><span>This is the number of <b>books</b> of about 400 pages that you could have read during this time.</span></div>",
+      "fun_to_play": "Fun experienced across all games",
+      "games_played": "Games played",
+      "games_sessions": "Game sessions"
+    },
+    "TopGamesLittleGameCard": {
+      "title": "Top 3 Most Played Games"
+    },
+    "Team": {
+      "new_session": "New session",
+      "add_session": "Add a session",
+      "all_time": "All periods"
+    },
+    "AddSession": {
+      "game_name": "Game Name",
+      "informative_text_formulas": "You can enter a duration in minutes or use a formula to sum multiple durations. For example, to add 10 minutes and 20 minutes, enter \"=10+20.\"",
+      "duration_in_minute": "Duration in minutes",
+      "fun": "Fun",
+      "neutral": "Neutral",
+      "bad": "Bad",
+      "add": "Add",
+      "errors": {
+        "fill_all_fields": "Please fill in all fields correctly.",
+        "formulas_error": "The operands of a formula must be whole numbers and you can only use addition.",
+        "unexpected_error": "An error occurred while adding the game session."
+      },
+      "all_good": "All good!"
+    },
+    "Teams": {
+      "title": "Choose your team!"
+    },
+    "TeamList": {
+      "abandon": "Cancel",
+      "select_teams": "Select multiple teams"
+    },
+    "Settings": {
+      "title": "Settings"
+    },
+    "GeneralPreference": {
+      "title": "General",
+      "select_language": "Language (requires a restart of the application for all changes to be applied correctly)",
+      "pages_list": {
+        "home": "Home",
+        "teams_list": "Teams List",
+        "games": "Games",
+        "general": "General"
+      },
+      "errors": {
+        "invalid_shortcut": "You can only set one letter as a shortcut"
+      },
+      "shortcut_toggle_chronometer": "Keyboard shortcut to start/stop the timer:",
+      "page_start_application": "Page to start the application on:",
+      "number_of_last_session": "Number of last sessions to display on the homepage"
+    },
+    "TeamsPreferences": {
+      "sort_order": {
+        "playtime": "Playtime",
+        "name": "Name",
+        "game": "Most Played Game"
+      },
+      "teams": "Teams",
+      "sort_order_label": "Sort order of the teams list:"
+    },
+    "AddSessionPreferences": {
+      "errors": {
+        "only_one_letter": "You can only enter one letter",
+        "only_letters": "You can only enter letters"
+      },
+      "title": "Add a Session",
+      "on_team_page": "On the team page",
+      "shortcut_add_session": "Keyboard shortcut to add a session without game name:",
+      "shortcut_add_session_with_name_1": "Keyboard shortcut to add a session with game name 1:",
+      "shortcut_add_session_with_name_2": "Keyboard shortcut to add a session with game name 2:",
+      "reload_data_after_adding_a_session": "Reload data after adding a session:",
+      "shortcut_add_session_in_team": "Keyboard shortcut to add a session in a team:",
+      "on_home_page": "On the homepage"
+    },
+    "AppearancePreference": {
+      "title": "Appearance",
+      "use_color_of_most_played_game_in_team_list": "Use the logo color of the most played game in the team list (may slow down loading):",
+      "use_color_of_game_in_history": "Use the logo color of the game in the session history (may slow down loading):"
+    },
+    "PieChartPreferences": {
+      "title": "Pie Chart",
+      "show_legend": "Show legend by default:",
+      "use_random_colors": "Use randomly generated colors:"
+    },
+    "SingleGameSetting": {
+      "sessions": "sessions",
+      "longest_session": "Longest session",
+      "shortest_session": "Shortest session",
+      "mean_duration": "Average session duration",
+      "total_playtime": "Total playtime",
+      "team_who_play_the_most": "Team that plays the most",
+      "game_logo": "Game logo",
+      "game_grid": "Game grid",
+      "game_heroe": "Game hero",
+      "modify": "Modify",
+      "copy": "Copy",
+      "paste": "Paste",
+      "all_good": "It's all good!",
+      "error_when_modifying": "An error occurred while modifying the game."
+    },
+    "LineChartGameByMonth": {
+      "title": "Playtime and Happiness by Month",
+      "total_game_time": "Total playtime",
+      "fun_to_play": "Fun to play (%)"
+    },
+    "GamesSettings": {
+      "title": "Modify your games",
+      "search_game": "Search for a game...",
+      "games": "games",
+      "alphabetical_order": "Alphabetical order",
+      "sessions_number": "session number"
+    },
+    "Common": {
+      "months_names": {
+        "0": "January",
+        "1": "February",
+        "2": "March",
+        "3": "April",
+        "4": "May",
+        "5": "June",
+        "6": "July",
+        "7": "August",
+        "8": "September",
+        "9": "October",
+        "10": "November",
+        "11": "December"
+      }
+    }
+  }
+}

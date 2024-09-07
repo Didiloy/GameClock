@@ -1,13 +1,13 @@
 <template>
   <div v-if="loading">
-    <Loading msg="Chargement des équipes" />
+    <Loading msg="team_loading" />
   </div>
   <div v-else class="tl-container">
     <div class="tl-container-buttons">
       <ToggleButton
         v-model="toggle_select_team"
-        onLabel="Abandonner"
-        offLabel="Sélectionner plusieurs équipes"
+        :onLabel="i18n.t('TeamList.abandon')"
+        :offLabel="i18n.t('TeamList.select_teams')"
       />
       <Button
         label=""
@@ -59,6 +59,9 @@ import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
 import { getPreferences } from "../preferences/preferences";
 import Loading from "./Loading.vue";
+
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const router = useRouter();
 

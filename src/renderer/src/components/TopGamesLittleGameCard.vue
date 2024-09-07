@@ -1,15 +1,20 @@
 <script setup>
 import LittleGameCard from "./LittleGameCard.vue";
-import {useStore} from "../store/store";
-import {storeToRefs} from "pinia";
-import {onMounted, ref, watch} from "vue";
-import {getIdOfTeam, getIdsOfTeam} from "../database/database";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
+import { onMounted, ref, watch } from "vue";
+import { getIdOfTeam, getIdsOfTeam } from "../database/database";
+
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
 
 const store = useStore();
-const {sessions, games, teams} = storeToRefs(store);
-const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
+const { sessions, games, teams } = storeToRefs(store);
+const backgroundColor = props.backgroundColor
+  ? props.backgroundColor
+  : "var(--primary-100)";
 
 onMounted(() => {
   init();
@@ -29,7 +34,7 @@ function init() {
     if (games_by_year_months.value.length === 0) {
       games_by_year_months.value.push({
         year: g.date.toDate().getFullYear(),
-        months: [{month: g.date.toDate().getMonth(), games: [g]}]
+        months: [{ month: g.date.toDate().getMonth(), games: [g] }],
       });
     } else {
       let year_exist = false;
@@ -44,14 +49,14 @@ function init() {
             }
           }
           if (!month_exist) {
-            y.months.push({month: g.date.toDate().getMonth(), games: [g]});
+            y.months.push({ month: g.date.toDate().getMonth(), games: [g] });
           }
         }
       }
       if (!year_exist) {
         games_by_year_months.value.push({
           year: g.date.toDate().getFullYear(),
-          months: [{month: g.date.toDate().getMonth(), games: [g]}]
+          months: [{ month: g.date.toDate().getMonth(), games: [g] }],
         });
       }
     }
@@ -97,7 +102,12 @@ function getFirstGamesByPlaytime(number, sessions_array) {
       }
     }
     if (!exist) {
-      tmp.push({gameid: s.game.id, duration: s.duration, was_cool_number: s.was_cool ? 1 : 0, total_sessions: 1});
+      tmp.push({
+        gameid: s.game.id,
+        duration: s.duration,
+        was_cool_number: s.was_cool ? 1 : 0,
+        total_sessions: 1,
+      });
     }
   }
   tmp.sort((a, b) => {
@@ -114,61 +124,62 @@ function getGameDetailsById(id) {
     if (id === g.id) return [g.name, g.logo, g.heroe];
   }
 }
-
-const months_name = [
-  "Janvier",
-  "Février",
-  "Mars",
-  "Avril",
-  "Mai",
-  "Juin",
-  "Juillet",
-  "Août",
-  "Septembre",
-  "Octobre",
-  "Novembre",
-  "Décembre",
-];
 </script>
 
 <template>
-  <Card class="dt-card"
-        :pt="{
-            root: { style: 'box-shadow: 0px 0px 0px 0px;' },
-            content: { style: 'height:100%; width: auto; padding:0;' }
-        }">
-    <template #subtitle><span class="tglc-font">Top 3 des jeux les plus joués</span></template>
+  <Card
+    class="dt-card"
+    :pt="{
+      root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+      content: { style: 'height:100%; width: auto; padding:0;' },
+    }"
+  >
+    <template #subtitle
+      ><span class="tglc-font">{{
+        $t("TopGamesLittleGameCard.title")
+      }}</span></template
+    >
     <template #content>
-      <TabView :scrollable="true" :activeIndex="games_by_year_months.length - 1"
-               :pt="{
-            panelContainer: { style: 'padding:0;' },
-        }">
-        <TabPanel v-for="tab in games_by_year_months" :key="tab.year" :header="tab.year">
+      <TabView
+        :scrollable="true"
+        :activeIndex="games_by_year_months.length - 1"
+        :pt="{
+          panelContainer: { style: 'padding:0;' },
+        }"
+      >
+        <TabPanel
+          v-for="tab in games_by_year_months"
+          :key="tab.year"
+          :header="tab.year"
+        >
           <TabView :scrollable="true" :activeIndex="tab.months.length - 1">
-            <TabPanel v-for="m in tab.months" :key="m.month" :header="months_name[m.month]">
+            <TabPanel
+              v-for="m in tab.months"
+              :key="m.month"
+              :header="i18n.t('Common.months_names.' + m.month)"
+            >
               <div class="dt-little-game-card">
                 <LittleGameCard
-                    v-for="(g, i) in getFirstGamesByPlaytime(3, m.games)"
-                    :key="i"
-                    :gameName="getGameDetailsById(g.gameid)[0]"
-                    :playtime="g.duration"
-                    :joyRate="g.joyrate"
-                    :heroe="getGameDetailsById(g.gameid)[2]"
-                    :icon="getGameDetailsById(g.gameid)[1]"
+                  v-for="(g, i) in getFirstGamesByPlaytime(3, m.games)"
+                  :key="i"
+                  :gameName="getGameDetailsById(g.gameid)[0]"
+                  :playtime="g.duration"
+                  :joyRate="g.joyrate"
+                  :heroe="getGameDetailsById(g.gameid)[2]"
+                  :icon="getGameDetailsById(g.gameid)[1]"
                 ></LittleGameCard>
               </div>
             </TabPanel>
           </TabView>
         </TabPanel>
       </TabView>
-
     </template>
   </Card>
 </template>
 
 <style scoped>
 .dt-card {
-  background-color: v-bind('backgroundColor');
+  background-color: v-bind("backgroundColor");
   width: 100%;
   height: 100%;
   border-radius: 30px;
@@ -183,14 +194,13 @@ const months_name = [
 
 @font-face {
   font-family: sephir;
-  src: url('../assets/fonts/sephir/sephir.otf');
+  src: url("../assets/fonts/sephir/sephir.otf");
 }
 
 .tglc-font {
   font-family: sephir, serif;
   font-size: 1.5rem;
   font-weight: bold;
-  color: v-bind('props.titleColor');
+  color: v-bind("props.titleColor");
 }
-
 </style>

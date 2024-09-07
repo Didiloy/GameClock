@@ -35,7 +35,7 @@ export const useStore = defineStore("store", () => {
       games.value = await getGames();
       sessions.value = await getSessions();
     } catch (e) {
-      store_error.value = "Erreur durant le chargement des données" + e.message;
+      store_error.value = e.message;
       loaded.value = true;
       return;
     }

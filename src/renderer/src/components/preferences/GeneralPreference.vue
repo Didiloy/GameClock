@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, defineEmits } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { getPreferences, setPreferences } from "../../preferences/preferences";
 import { useStore } from "../../store/store";
 import { storeToRefs } from "pinia";
@@ -8,11 +8,34 @@ const { teams } = storeToRefs(store);
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
 
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
+
 const emit = defineEmits(["toggleChronoListener"]);
 
 onMounted(() => {
   addTeamsToPageList();
 });
+
+const pages_list = ref([
+  {
+    label: i18n.t("GeneralPreference.pages_list.home"),
+    route: "/",
+  },
+  {
+    label: i18n.t("GeneralPreference.pages_list.teams_list"),
+    route: "/teams",
+  },
+
+  {
+    label: i18n.t("GeneralPreference.pages_list.games"),
+    route: "/settings/games",
+  },
+  {
+    label: i18n.t("GeneralPreference.pages_list.general"),
+    route: "/settings/general",
+  },
+]);
 
 function addTeamsToPageList() {
   for (const t of teams.value) {
@@ -23,33 +46,14 @@ function addTeamsToPageList() {
   }
 }
 
-const toggle_chronometer_key_shortcut = ref(
-  getPreferences("toggle_chronometer_key_shortcut")
-);
-
 const selected_page = ref({
   label: getPreferences("default_start_page"),
   route: getPreferences("default_start_page_route"),
 });
-const pages_list = ref([
-  {
-    label: "Accueil",
-    route: "/",
-  },
-  {
-    label: "Liste des équipes",
-    route: "/teams",
-  },
 
-  {
-    label: "Jeux",
-    route: "/settings/games",
-  },
-  {
-    label: "Général",
-    route: "/settings/general",
-  },
-]);
+const toggle_chronometer_key_shortcut = ref(
+  getPreferences("toggle_chronometer_key_shortcut")
+);
 
 const number_of_last_session_possible = ref(["5", "10", "15"]);
 const selected_number_of_last_sessions = ref(
@@ -86,7 +90,7 @@ function validateShortCut(shortcut) {
     toast.add({
       severity: "error",
       summary: "",
-      detail: "Vous ne pouvez mettre qu'une seule lettre",
+      detail: i18n.t("GeneralPreference.errors.invalid_shortcut"),
       life: 3000,
     });
     return false;
@@ -95,7 +99,7 @@ function validateShortCut(shortcut) {
     toast.add({
       severity: "error",
       summary: "",
-      detail: "Vous ne pouvez mettre que des lettres",
+      detail: i18n.t("GeneralPreference.errors.invalid_shortcut"),
       life: 3000,
     });
     return false;
@@ -106,15 +110,25 @@ function validateShortCut(shortcut) {
 function isValidChar(character) {
   return /[a-z]|[A-Z]|^$/.test(character);
 }
+
+//Language
+watch(i18n.locale, () => {
+  console.log("changed language to -> ", i18n.locale.value);
+  setPreferences("language", i18n.locale.value);
+});
 </script>
 
 <template>
   <div class="tp-container">
-    <h2 class="tp-title">Général</h2>
+    <h2 class="tp-title">{{ $t("GeneralPreference.title") }}</h2>
     <div class="tp-item">
-      <b class="text-color"
-        >Raccourci clavier pour lancer/stopper le chronomètre:</b
-      >
+      <b class="text-color">{{ $t("GeneralPreference.select_language") }}</b>
+      <Dropdown v-model="$i18n.locale" :options="$i18n.availableLocales" />
+    </div>
+    <div class="tp-item">
+      <b class="text-color">{{
+        $t("GeneralPreference.shortcut_toggle_chronometer")
+      }}</b>
       <InputText
         type="text"
         :modelValue="toggle_chronometer_key_shortcut"
@@ -124,7 +138,9 @@ function isValidChar(character) {
       />
     </div>
     <div class="tp-item">
-      <b class="text-color">Page dans laquelle démarrer l'application:</b>
+      <b class="text-color">{{
+        $t("GeneralPreference.page_start_application")
+      }}</b>
       <Dropdown
         v-model="selected_page"
         :options="pages_list"
@@ -132,9 +148,9 @@ function isValidChar(character) {
       />
     </div>
     <div class="tp-item">
-      <b class="text-color"
-        >Nombre de dernières sessions à afficher sur la page d'accueil</b
-      >
+      <b class="text-color">{{
+        $t("GeneralPreference.number_of_last_session")
+      }}</b>
       <Dropdown
         v-model="selected_number_of_last_sessions"
         :options="number_of_last_session_possible"

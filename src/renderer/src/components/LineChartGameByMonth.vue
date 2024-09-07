@@ -1,14 +1,21 @@
 <template>
   <div class="container">
-    <Card class="card"
-          :pt="{
-            root: { style: 'box-shadow: 0px 0px 0px 0px;' },
-            body: { style: 'height:100%; width: auto;' },
-            content: { style: 'height:100%; width: auto;' }
-        }">
-      <template #subtitle> <span class="lcgm-font">Temps de jeu et de bonheur par mois
-      <i class="pi pi-window-maximize" @click="fullscreen = !fullscreen"></i>
-      </span></template>
+    <Card
+      class="card"
+      :pt="{
+        root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+        body: { style: 'height:100%; width: auto;' },
+        content: { style: 'height:100%; width: auto;' },
+      }"
+    >
+      <template #subtitle>
+        <span class="lcgm-font"
+          >{{ $t("LineChartGameByMonth.title") }}
+          <i
+            class="pi pi-window-maximize"
+            @click="fullscreen = !fullscreen"
+          ></i> </span
+      ></template>
       <template #content>
         <Chart
           type="line"
@@ -16,26 +23,31 @@
           :options="chartOptions"
           :pt="{
             root: { style: 'height: 100%; width: auto' },
-              canvas: {
-                style: 'height: 100%; width: auto',
-              },
-            }"
+            canvas: {
+              style: 'height: 100%; width: auto',
+            },
+          }"
         />
       </template>
     </Card>
-    <Dialog v-model:visible="fullscreen" modal dismissableMask header="Temps de jeu et de bonheur par mois"
-            :style="{ width: '90%', height: '90%' }">
-      <div style="height: 80vh; width: 100%;">
+    <Dialog
+      v-model:visible="fullscreen"
+      modal
+      dismissableMask
+      :header="i18n.t('LineChartGameByMonth.title')"
+      :style="{ width: '90%', height: '90%' }"
+    >
+      <div style="height: 80vh; width: 100%">
         <Chart
-            type="line"
-            :data="chartData"
-            :options="chartOptions"
-            :pt="{
+          type="line"
+          :data="chartData"
+          :options="chartOptions"
+          :pt="{
             root: { style: 'height: 100%; width: auto' },
-              canvas: {
-                style: 'height: 100%; width: auto',
-              },
-            }"
+            canvas: {
+              style: 'height: 100%; width: auto',
+            },
+          }"
         />
       </div>
     </Dialog>
@@ -45,8 +57,11 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import {getIdOfTeam, getIdsOfTeam} from "../database/database.js";
-import { convertMinuteToHoursMinute} from "../common/main";
+import { getIdsOfTeam } from "../database/database.js";
+import { convertMinuteToHoursMinute } from "../common/main";
+
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
 
@@ -59,7 +74,9 @@ onMounted(() => {
 const store = useStore();
 const { sessions, teams } = storeToRefs(store);
 
-const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
+const backgroundColor = props.backgroundColor
+  ? props.backgroundColor
+  : "var(--primary-100)";
 
 const sessions_of_the_team = ref([]);
 function setSessionsOfTheTeam() {
@@ -74,7 +91,7 @@ const id_of_team = ref([]);
 
 const game_duration_by_month = ref([]);
 function setGameDuration() {
-   game_duration_by_month.value = [];
+  game_duration_by_month.value = [];
   for (let s of sessions_of_the_team.value) {
     let date = new Date(s.date.seconds * 1000);
     let month = date.getMonth();
@@ -88,7 +105,7 @@ function setGameDuration() {
 
 const joyrate_by_month = ref([]);
 function setJoyrate() {
-   joyrate_by_month.value = [];
+  joyrate_by_month.value = [];
   let joyrate_number = [];
   for (let s of sessions_of_the_team.value) {
     let date = new Date(s.date.seconds * 1000);
@@ -114,13 +131,21 @@ function setJoyrate() {
 const chartData = ref({});
 const chartOptions = ref();
 
-async function init() {
+function init() {
   id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
   setSessionsOfTheTeam();
   setGameDuration();
   setJoyrate();
+  set_months_names();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
+}
+
+const months_names = ref([]);
+function set_months_names() {
+  for (let i = 0; i < 12; i++) {
+    months_names.value.push(i18n.t("Common.months_names." + i));
+  }
 }
 
 watch(teams, () => {
@@ -135,30 +160,17 @@ const setChartData = () => {
   const documentStyle = getComputedStyle(document.documentElement);
 
   return {
-    labels: [
-      "Janvier",
-      "Fevrier",
-      "Mars",
-      "Avril",
-      "Mai",
-      "Juin",
-      "Juillet",
-      "Août",
-      "Septembre",
-      "Octobre",
-      "Novembre",
-      "Décembre",
-    ].slice(0, game_duration_by_month.value.length),
+    labels: months_names.value.slice(0, game_duration_by_month.value.length),
     datasets: [
       {
-        label: "Temps de jeu total",
+        label: i18n.t("LineChartGameByMonth.total_game_time"),
         data: game_duration_by_month.value,
         fill: false,
         borderColor: documentStyle.getPropertyValue("--cyan-500"),
         tension: 0.4,
       },
       {
-        label: "Plaisir à jouer (%)",
+        label: i18n.t("LineChartGameByMonth.fun_to_play"),
         data: joyrate_by_month.value,
         fill: false,
         borderColor: documentStyle.getPropertyValue("--gray-500"),
@@ -182,9 +194,15 @@ const setChartOptions = () => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            return "" + convertMinuteToHoursMinute(
-              game_duration_by_month.value[context.dataIndex]
-            ) + " - " + joyrate_by_month.value[context.dataIndex].toFixed(2) + "%";
+            return (
+              "" +
+              convertMinuteToHoursMinute(
+                game_duration_by_month.value[context.dataIndex]
+              ) +
+              " - " +
+              joyrate_by_month.value[context.dataIndex].toFixed(2) +
+              "%"
+            );
           },
         },
       },
@@ -217,7 +235,7 @@ const setChartOptions = () => {
 </script>
 <style scoped>
 .card {
-  background-color: v-bind('backgroundColor');
+  background-color: v-bind("backgroundColor");
   width: 100%;
   height: 100%;
   border-radius: 30px;
@@ -225,18 +243,17 @@ const setChartOptions = () => {
 
 @font-face {
   font-family: sephir;
-  src: url('../assets/fonts/sephir/sephir.otf');
+  src: url("../assets/fonts/sephir/sephir.otf");
 }
 
 .lcgm-font {
   font-family: sephir, serif;
   font-size: 1.5rem;
   font-weight: bold;
-  color: v-bind('props.titleColor');
+  color: v-bind("props.titleColor");
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center
+  align-items: center;
 }
-
 </style>

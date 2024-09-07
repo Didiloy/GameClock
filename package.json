@@ -23,8 +23,9 @@
     "firebase": "latest",
     "pinia": "latest",
     "primeicons": "latest",
-    "primevue": "latest",
+    "primevue": "v3-stable",
     "steamgriddb": "latest",
+    "vue-i18n": "^9.13.1",
     "vue-router": "latest"
   },
   "devDependencies": {

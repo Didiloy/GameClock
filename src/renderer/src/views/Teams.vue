@@ -1,6 +1,6 @@
 <template>
   <div class="t-container">
-    <h2 class="t-title">Choisissez votre équipe !</h2>
+    <h2 class="t-title">{{ $t("Teams.title") }}</h2>
     <TeamList></TeamList>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div v-if="!loaded">
-    <Loading msg="Calcul des statistiques" />
+    <Loading msg="calculating_statistics" />
   </div>
   <div v-else class="dv-container">
     <div class="dv-dashboard">
@@ -11,11 +11,11 @@
         titleColor="#241a00"
         :name="team_with_greatest_session_average_playtime"
         :value="
-          'Fait les plus grosses sessions de jeu (' +
+          i18n.t('Dashboard.biggest_games_sessions_part_one') +
           convertMinuteToHoursMinute(
             team_with_greatest_session_average_playtime_value
           ) +
-          ' en moyenne)'
+          i18n.t('Dashboard.biggest_games_sessions_part_two')
         "
       ></LittleCard>
       <LittleCard
@@ -24,14 +24,14 @@
         backgroundColor="#d4e7dc"
         titleColor="#0f1f18"
         :name="total_time_hours"
-        value="passées à jouer"
+        :value="i18n.t('Dashboard.spent_playing')"
       ></LittleCard>
       <LittleCard
         class="dv-lc-game-number"
         iconName="pi pi-sort-amount-up"
         backgroundColor="#c5eae7"
         titleColor="#00201f"
-        :name="number_of_games + ' jeux joués'"
+        :name="number_of_games + i18n.t('Dashboard.games_played')"
         value=""
       ></LittleCard>
       <LittleCard
@@ -41,9 +41,9 @@
         titleColor="#341100"
         :name="team_with_most_sessions"
         :value="
-          'A le plus de sessions avec ' +
+          i18n.t('Dashboard.have_most_sessions_part_one') +
           team_with_most_sessions_value +
-          ' sessions'
+          i18n.t('Dashboard.have_most_sessions_part_two')
         "
       ></LittleCard>
       <GameTimeHome
@@ -79,7 +79,8 @@
       :historySize="getPreferences('number_of_last_sessions')"
       :title="
         getPreferences('number_of_last_sessions') +
-        ' dernières sessions entrées'
+        ' ' +
+        i18n.t('Dashboard.last_sessions')
       "
     />
   </div>
@@ -97,6 +98,9 @@ import GamesFunPercentage from "./GamesFunPercentage.vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import { getPreferences } from "../preferences/preferences";
 import { convertMinuteToHoursMinute } from "../common/main";
+
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const loaded = ref(false);
 
@@ -191,7 +195,7 @@ const neutral_percentage = ref(0);
 const not_fun_percentage = ref(0);
 const percentage_card_computed = computed(() => {
   return `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <b>de plaisir à jouer !</b><br><h2>Neutre:</h2> ${neutral_percentage.value}% <br><h2>Nul:</h2> ${not_fun_percentage.value}%
+            <b>${i18n.t("Dashboard.fun_to_play")}</b><br><h2>${i18n.t("Dashboard.neutral")}:</h2> ${neutral_percentage.value}% <br><h2>${i18n.t("Dashboard.bad")}:</h2> ${not_fun_percentage.value}%
           </div>`;
 });
 

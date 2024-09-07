@@ -1,54 +1,70 @@
 <template>
-    <Card
-        class="card"
-        :pt="{
-    root: { style: 'box-shadow: 0px 0px 0px 0px;' },
-      content: { style: 'height:100%; ' }
+  <Card
+    class="card"
+    :pt="{
+      root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+      content: { style: 'height:100%; ' },
     }"
-    >
-      <template #subtitle> <span class="gth-font">
-      <span class="gth-subtitle">
-        Classement des jeux en pourcentage
+  >
+    <template #subtitle>
+      <span class="gth-font">
+        <span class="gth-subtitle">
+          {{ $t("PieChartGamePercentage.title") }}
+        </span>
       </span>
-    </span>
-      </template>
-      <template #content>
-        <Checkbox v-model="showLabel" inputId="show_label" :binary="true" @click="onShowLabelClick"
-                  style="height: 20px;"/>
-        <label for="show_label" class="ml-2" style="font-size: 10pt;"> Montrer les noms </label>
-        <div class="chart-wrapper">
-          <div class="center-pie">
-            <Chart
-                type="pie"
-                ref="chart"
-                :data="chartData"
-                :options="chartOptions"
-                :plugins="[htmlLegendPlugin]"
-                class="pie"
-                :pt="{
-            canvas: {
-              class: 'p-chart',
-              style: 'height: auto; width: 100%',
-            },
-          }"
-            />
-          </div>
-          <div class="legend-container" id="legend-container"></div>
+    </template>
+    <template #content>
+      <Checkbox
+        v-model="showLabel"
+        inputId="show_label"
+        :binary="true"
+        @click="onShowLabelClick"
+        style="height: 20px"
+      />
+      <label for="show_label" class="ml-2" style="font-size: 10pt">
+        {{ $t("PieChartGamePercentage.show_names") }}
+      </label>
+      <div class="chart-wrapper">
+        <div class="center-pie">
+          <Chart
+            type="pie"
+            ref="chart"
+            :data="chartData"
+            :options="chartOptions"
+            :plugins="[htmlLegendPlugin]"
+            class="pie"
+            :pt="{
+              canvas: {
+                class: 'p-chart',
+                style: 'height: auto; width: 100%',
+              },
+            }"
+          />
         </div>
-      </template>
-    </Card>
+        <div class="legend-container" id="legend-container"></div>
+      </div>
+    </template>
+  </Card>
 </template>
 <script setup>
-import {onMounted, ref, watch} from "vue";
-import {useStore} from "../store/store";
-import {storeToRefs} from "pinia";
-import {convertMinuteToHoursMinute, generateRandomColor} from "../common/main";
-import {getPreferences} from "../preferences/preferences";
-import {getIdOfTeam, getIdsOfTeam} from "../database/database";
+import { onMounted, ref, watch } from "vue";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
+import {
+  convertMinuteToHoursMinute,
+  generateRandomColor,
+} from "../common/main";
+import { getPreferences } from "../preferences/preferences";
+import { getIdsOfTeam } from "../database/database";
 
-const props = defineProps(["teamName", "backgroundColor", "titleColor", "sessions"]);
+const props = defineProps([
+  "teamName",
+  "backgroundColor",
+  "titleColor",
+  "sessions",
+]);
 const store = useStore();
-const {games, sessions, teams} = storeToRefs(store);
+const { games, sessions, teams } = storeToRefs(store);
 
 onMounted(() => {
   init();
@@ -58,28 +74,35 @@ watch([games, sessions, teams], () => {
   init();
 });
 
-watch(() => props.sessions, () => {
-  init();
-});
+watch(
+  () => props.sessions,
+  () => {
+    init();
+  }
+);
 
 const chart = ref({});
 
-const showLabel = ref(getPreferences("pie_chart_labels_shown"));
+const showLabel = ref(true);
 
 function onShowLabelClick() {
-  showLabel.value = !showLabel.value;
+  console.log("show ", showLabel.value);
+  // showLabel.value = !showLabel.value;
   setLabels();
 }
 
 function setLabels() {
-  if (showLabel.value) {
+  console.log("setLabels", showLabel.value);
+  if (!showLabel.value) {
     chart.value.data.labels = games_name.value;
   } else {
     chart.value.data.labels = games_name.value.map((g) => "");
   }
 }
 
-const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
+const backgroundColor = props.backgroundColor
+  ? props.backgroundColor
+  : "var(--primary-100)";
 
 const id_of_team = ref([]);
 
@@ -95,31 +118,35 @@ function setGamesNameAndPlaytime() {
   if (id_of_team.value.length > 0) {
     for (let g of games.value) {
       let acc = 0;
-      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
+      for (let s of props.sessions === undefined
+        ? sessions.value
+        : props.sessions) {
         if (id_of_team.value.includes(s.team.id) && s.game.id === g.id) {
           acc += s.duration;
           total_playtime += s.duration;
         }
       }
-      temp_games.push({name: g.name, playtime: acc});
+      temp_games.push({ name: g.name, playtime: acc });
     }
   } else {
     for (let g of games.value) {
       let acc = 0;
-      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
+      for (let s of props.sessions === undefined
+        ? sessions.value
+        : props.sessions) {
         if (s.game.id === g.id) {
           acc += s.duration;
           total_playtime += s.duration;
         }
       }
-      temp_games.push({name: g.name, playtime: acc});
+      temp_games.push({ name: g.name, playtime: acc });
     }
   }
   temp_games.sort((a, b) => b.playtime - a.playtime);
   temp_games = temp_games.filter((g) => g.playtime > 0);
   games_name.value = temp_games.map((g) => g.name);
   games_percentage.value = temp_games.map((g) =>
-      ((g.playtime / total_playtime) * 100).toFixed(0)
+    ((g.playtime / total_playtime) * 100).toFixed(0)
   );
   games_playtime.value = temp_games.map((g) => g.playtime);
 }
@@ -159,6 +186,7 @@ const chartOptions = ref();
 function init() {
   id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
   setGamesNameAndPlaytime();
+  showLabel.value = getPreferences("pie_chart_labels_shown");
   setColorsOfPieParts();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
@@ -168,7 +196,9 @@ const setChartData = () => {
   const documentStyle = getComputedStyle(document.body);
 
   return {
-    labels: showLabel.value ? games_name.value : games_name.value.map((g) => ""),
+    labels: showLabel.value
+      ? games_name.value
+      : games_name.value.map((g) => ""),
     datasets: [
       {
         data: games_playtime.value,
@@ -192,12 +222,12 @@ const setChartOptions = () => {
           },
           label: function (context) {
             return (
-                convertMinuteToHoursMinute(
-                    games_playtime.value[context.dataIndex]
-                ) +
-                " -> " +
-                games_percentage.value[context.dataIndex] +
-                "%"
+              convertMinuteToHoursMinute(
+                games_playtime.value[context.dataIndex]
+              ) +
+              " -> " +
+              games_percentage.value[context.dataIndex] +
+              "%"
             );
           },
         },
@@ -218,14 +248,14 @@ const setChartOptions = () => {
 
 const getOrCreateLegendList = (chart, id) => {
   const legendContainer = document.getElementById(id);
-  let listContainer = legendContainer.querySelector('ul');
+  let listContainer = legendContainer.querySelector("ul");
 
   if (!listContainer) {
-    listContainer = document.createElement('ul');
-    listContainer.style.display = 'flex';
-    listContainer.style.flexDirection = 'column';
-    listContainer.style.overflowY = 'scroll';
-    listContainer.style.maxHeight = '300px';
+    listContainer = document.createElement("ul");
+    listContainer.style.display = "flex";
+    listContainer.style.flexDirection = "column";
+    listContainer.style.overflowY = "scroll";
+    listContainer.style.maxHeight = "300px";
     listContainer.style.margin = "0";
     listContainer.style.padding = "0";
 
@@ -236,7 +266,7 @@ const getOrCreateLegendList = (chart, id) => {
 };
 
 const htmlLegendPlugin = {
-  id: 'htmlLegend',
+  id: "htmlLegend",
   afterUpdate(chart, args, options) {
     const ul = getOrCreateLegendList(chart, options.containerID);
     ul.style.maxWidth = "200px";
@@ -249,44 +279,47 @@ const htmlLegendPlugin = {
     // Reuse the built-in legendItems generator
     const items = chart.options.plugins.legend.labels.generateLabels(chart);
 
-    items.forEach(item => {
-      const li = document.createElement('li');
-      li.style.alignItems = 'center';
-      li.style.cursor = 'pointer';
-      li.style.display = 'flex';
-      li.style.flexDirection = 'row';
-      li.style.marginLeft = '0px';
-      li.style.marginTop = '5px';
+    items.forEach((item) => {
+      const li = document.createElement("li");
+      li.style.alignItems = "center";
+      li.style.cursor = "pointer";
+      li.style.display = "flex";
+      li.style.flexDirection = "row";
+      li.style.marginLeft = "0px";
+      li.style.marginTop = "5px";
 
       li.onclick = () => {
-        const {type} = chart.config;
-        if (type === 'pie' || type === 'doughnut') {
+        const { type } = chart.config;
+        if (type === "pie" || type === "doughnut") {
           // Pie and doughnut charts only have a single dataset and visibility is per item
           chart.toggleDataVisibility(item.index);
         } else {
-          chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
+          chart.setDatasetVisibility(
+            item.datasetIndex,
+            !chart.isDatasetVisible(item.datasetIndex)
+          );
         }
         chart.update();
       };
 
       // Color box
-      const boxSpan = document.createElement('span');
+      const boxSpan = document.createElement("span");
       boxSpan.style.background = item.fillStyle;
       boxSpan.style.borderColor = item.strokeStyle;
-      boxSpan.style.borderWidth = item.lineWidth + 'px';
-      boxSpan.style.borderRadius = '10px';
-      boxSpan.style.display = 'inline-block';
+      boxSpan.style.borderWidth = item.lineWidth + "px";
+      boxSpan.style.borderRadius = "10px";
+      boxSpan.style.display = "inline-block";
       boxSpan.style.flexShrink = 0;
-      boxSpan.style.height = '20px';
-      boxSpan.style.marginRight = '10px';
-      boxSpan.style.width = '20px';
+      boxSpan.style.height = "20px";
+      boxSpan.style.marginRight = "10px";
+      boxSpan.style.width = "20px";
 
       // Text
-      const textContainer = document.createElement('p');
+      const textContainer = document.createElement("p");
       textContainer.style.color = item.fontColor;
       textContainer.style.margin = 0;
       textContainer.style.padding = 0;
-      textContainer.style.textDecoration = item.hidden ? 'line-through' : '';
+      textContainer.style.textDecoration = item.hidden ? "line-through" : "";
 
       const text = document.createTextNode(item.text);
       textContainer.appendChild(text);
@@ -295,12 +328,12 @@ const htmlLegendPlugin = {
       li.appendChild(textContainer);
       ul.appendChild(li);
     });
-  }
+  },
 };
 </script>
 <style scoped>
 .card {
-  background-color: v-bind('backgroundColor');
+  background-color: v-bind("backgroundColor");
   width: 100%;
   height: 100%;
   border-radius: 30px;
@@ -308,7 +341,7 @@ const htmlLegendPlugin = {
 
 @font-face {
   font-family: sephir;
-  src: url('../assets/fonts/sephir/sephir.otf');
+  src: url("../assets/fonts/sephir/sephir.otf");
 }
 
 .gth-font {
@@ -318,7 +351,7 @@ const htmlLegendPlugin = {
 }
 
 .gth-subtitle {
-  color: v-bind('props.titleColor');
+  color: v-bind("props.titleColor");
 }
 
 .p-chart {

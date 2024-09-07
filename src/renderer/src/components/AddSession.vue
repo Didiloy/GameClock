@@ -1,215 +1,113 @@
 <template>
-  <!--  <Card-->
-  <!--    class="card"-->
-  <!--    :pt="{-->
-  <!--      root: { style: 'box-shadow: 0px 0px 0px 0px;' },-->
-  <!--      content: { style: 'height:100%; width: auto;' },-->
-  <!--    }"-->
-  <!--  >-->
-  <!--    <template #content>-->
-  <!--      <div class="content-container">-->
-  <!--        <div class="as-input-container">-->
-  <!--          <div class="as-game-image">-->
-  <!--            <img :src="game_grid" alt="game image" class="as-img-game-image" />-->
-  <!--          </div>-->
-  <!--          <div class="as-input">-->
-  <!--            <AutoComplete-->
-  <!--              class="input-field mb10"-->
-  <!--              v-model="game"-->
-  <!--              placeholder="Nom du jeu"-->
-  <!--              :suggestions="items"-->
-  <!--              @complete="autocomplete"-->
-  <!--            ></AutoComplete>-->
-  <!--            <div class="as-duration-input">-->
-  <!--              <span class="as-icon" @click="toggleOverlay"-->
-  <!--                ><i class="pi pi-info"></i-->
-  <!--              ></span>-->
-  <!--              <OverlayPanel ref="op">-->
-  <!--                <span>-->
-  <!--                  Vous pouvez entrer une durée en minutes ou utiliser une-->
-  <!--                  formule pour additionner plusieurs durées. Par exemple, pour-->
-  <!--                  ajouter 10 minutes et 20 minutes, entrez "=10+20".-->
-  <!--                </span>-->
-  <!--              </OverlayPanel>-->
-  <!--              <InputText-->
-  <!--                class="input-number"-->
-  <!--                v-model="duration"-->
-  <!--                placeholder="Durée en minute"-->
-  <!--              ></InputText>-->
-  <!--              <div>-->
-  <!--                <Button-->
-  <!--                  icon="pi pi-clock"-->
-  <!--                  @click="startStopWatch"-->
-  <!--                  style="background-color: var(&#45;&#45;primary-400)"-->
-  <!--                  class="as-chrono-button"-->
-  <!--                />-->
-  <!--              </div>-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--        </div>-->
-  <!--        <div class="as-fun-selector mb10">-->
-  <!--          <ToggleButton-->
-  <!--            v-model="toggle_fun"-->
-  <!--            onLabel="Fun"-->
-  <!--            offLabel="Fun"-->
-  <!--            class="toggle-button"-->
-  <!--            style="color: var(&#45;&#45;text-primary)"-->
-  <!--            :pt="{-->
-  <!--              root: {-->
-  <!--                style: toggle_fun-->
-  <!--                  ? 'background-color: var(&#45;&#45;primary-400);'-->
-  <!--                  : 'background-color: whitesmoke;',-->
-  <!--              },-->
-  <!--            }"-->
-  <!--          />-->
-  <!--          <ToggleButton-->
-  <!--            v-model="toggle_neutre"-->
-  <!--            onLabel="Neutre"-->
-  <!--            offLabel="Neutre"-->
-  <!--            class="toggle-button"-->
-  <!--            style="color: var(&#45;&#45;text-primary)"-->
-  <!--            :pt="{-->
-  <!--              root: {-->
-  <!--                style: toggle_neutre-->
-  <!--                  ? 'background-color: var(&#45;&#45;primary-400);'-->
-  <!--                  : 'background-color: whitesmoke;',-->
-  <!--              },-->
-  <!--            }"-->
-  <!--          />-->
-  <!--          <ToggleButton-->
-  <!--            v-model="toggle_nul"-->
-  <!--            onLabel="Nul"-->
-  <!--            offLabel="Nul"-->
-  <!--            class="toggle-button"-->
-  <!--            style="color: var(&#45;&#45;text-primary)"-->
-  <!--            :pt="{-->
-  <!--              root: {-->
-  <!--                style: toggle_nul-->
-  <!--                  ? 'background-color: var(&#45;&#45;primary-400);'-->
-  <!--                  : 'background-color: whitesmoke;',-->
-  <!--              },-->
-  <!--            }"-->
-  <!--          />-->
-  <!--        </div>-->
-  <!--        <Button-->
-  <!--          label="Ajouter"-->
-  <!--          :icon="icon"-->
-  <!--          class="btn-add"-->
-  <!--          @click="addNewSession"-->
-  <!--          :loading="loading"-->
-  <!--        ></Button>-->
-  <!--      </div>-->
-  <!--    </template>-->
-  <!--  </Card>-->
   <div class="as-background">
     <div class="as-container">
       <div class="as-game-image">
-        <img :src="game_grid" alt="game image" class="as-img-game-image"/>
+        <img :src="game_grid" alt="game image" class="as-img-game-image" />
       </div>
       <div class="as-input">
         <AutoComplete
-            class="mb10"
-            v-model="game"
-            placeholder="Nom du jeu"
-            :suggestions="items"
-            @complete="autocomplete"
+          class="mb10"
+          v-model="game"
+          :placeholder="i18n.t('AddSession.game_name')"
+          :suggestions="items"
+          @complete="autocomplete"
         >
         </AutoComplete>
         <div class="as-duration-input">
-                        <span class="as-icon" @click="toggleOverlay"
-                        ><i class="pi pi-info"></i
-                        ></span>
-          <OverlayPanel ref="op" style="width: 50%;">
+          <span class="as-icon" @click="toggleOverlay"
+            ><i class="pi pi-info"></i
+          ></span>
+          <OverlayPanel ref="op" style="width: 50%">
             <span>
-              Vous pouvez entrer une durée en minutes ou utiliser une
-              formule pour additionner plusieurs durées. Par exemple, pour
-              ajouter 10 minutes et 20 minutes, entrez "=10+20".
+              {{ $t("AddSession.informative_text_formulas") }}
             </span>
           </OverlayPanel>
           <InputText
-              class="input-number"
-              v-model="duration"
-              placeholder="Durée en minute"
+            class="input-number"
+            v-model="duration"
+            :placeholder="i18n.t('AddSession.duration_in_minute')"
           ></InputText>
           <div>
             <Button
-                icon="pi pi-clock"
-                @click="startStopWatch"
-                style="background-color: var(--primary-400)"
-                class="as-chrono-button"
+              icon="pi pi-clock"
+              @click="startStopWatch"
+              style="background-color: var(--primary-400)"
+              class="as-chrono-button"
             />
           </div>
-
         </div>
         <div class="as-fun-selector">
           <ToggleButton
-              v-model="toggle_fun"
-              onLabel="Fun"
-              offLabel="Fun"
-              class="toggle-button"
-              :pt="{
-                      root: {
-                        style: toggle_fun
-                          ? 'background-color: var(--green-400);'
-                          : 'background-color: whitesmoke;',
-                      },
-                    }"
+            v-model="toggle_fun"
+            :onLabel="i18n.t('AddSession.fun')"
+            :offLabel="i18n.t('AddSession.fun')"
+            class="toggle-button"
+            :pt="{
+              box: {
+                style: toggle_fun
+                  ? 'background-color: var(--green-400);'
+                  : 'background-color: whitesmoke; border: none;',
+              },
+            }"
           />
           <ToggleButton
-              v-model="toggle_neutre"
-              onLabel="Neutre"
-              offLabel="Neutre"
-              class="toggle-button"
-              :pt="{
-                      root: {
-                        style: toggle_neutre
-                          ? 'background-color: var(--primary-400);'
-                          : 'background-color: whitesmoke;',
-                      },
-                    }"
+            v-model="toggle_neutre"
+            :onLabel="i18n.t('AddSession.neutral')"
+            :offLabel="i18n.t('AddSession.neutral')"
+            class="toggle-button"
+            :pt="{
+              box: {
+                style: toggle_neutre
+                  ? 'background-color: var(--primary-400);'
+                  : 'background-color: whitesmoke; border: none;',
+              },
+            }"
           />
           <ToggleButton
-              v-model="toggle_nul"
-              onLabel="Nul"
-              offLabel="Nul"
-              class="toggle-button"
-              :pt="{
-                      root: {
-                        style: toggle_nul
-                          ? 'background-color: var(--red-400);'
-                          : 'background-color: whitesmoke;',
-                      },
-                    }"
+            v-model="toggle_nul"
+            :onLabel="i18n.t('AddSession.bad')"
+            :offLabel="i18n.t('AddSession.bad')"
+            class="toggle-button"
+            :pt="{
+              box: {
+                style: toggle_nul
+                  ? 'background-color: var(--red-400);'
+                  : 'background-color: whitesmoke; border: none;',
+              },
+            }"
           />
         </div>
       </div>
       <div class="as-button-add">
         <Button
-            label="Ajouter"
-            :icon="icon"
-            class="btn-add"
-            @click="addNewSession"
-            :loading="loading"
+          :label="i18n.t('AddSession.add')"
+          :icon="icon"
+          class="btn-add"
+          @click="addNewSession"
+          :loading="loading"
         ></Button>
       </div>
     </div>
   </div>
-  <Toast/>
+  <Toast />
 </template>
 <script setup>
-import {computed, defineEmits, onMounted, onUnmounted, ref, watch} from "vue";
-import {useToast} from "primevue/usetoast";
-import {useStore, useStoreChrono} from "../store/store";
-import {storeToRefs} from "pinia";
-import {addSession} from "../database/database";
-import {getPreferences} from "../preferences/preferences";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { useToast } from "primevue/usetoast";
+import { useStore, useStoreChrono } from "../store/store";
+import { storeToRefs } from "pinia";
+import { addSession } from "../database/database";
+import { getPreferences } from "../preferences/preferences";
 import gameNotFound from "../assets/images/game_not_found.jpg";
+
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const emit = defineEmits(["toggleChronoListener"]);
 const storeChrono = useStoreChrono();
-const {chrono_value} = storeToRefs(storeChrono);
+const { chrono_value } = storeToRefs(storeChrono);
 const store = useStore();
-const {games, teams} = storeToRefs(store);
+const { games, teams } = storeToRefs(store);
 const toast = useToast();
 const props = defineProps(["teamName", "gameName"]);
 const all_games = ref(games);
@@ -219,18 +117,20 @@ const icon = ref("pi pi-plus");
 const game = ref("");
 const game_grid = computed(() => {
   return (
-      all_games.value.find((g) => g.name === game.value)?.grid || gameNotFound
+    all_games.value.find((g) => g.name === game.value)?.grid || gameNotFound
   );
 });
 const heroe_url = computed(() => {
-  return all_games.value.find((g) => g.name === game.value)?.heroe !== undefined ? `url(${all_games.value.find((g) => g.name === game.value)?.heroe})` : ``;
+  return all_games.value.find((g) => g.name === game.value)?.heroe !== undefined
+    ? `url(${all_games.value.find((g) => g.name === game.value)?.heroe})`
+    : ``;
 });
 const duration = ref("");
 const was_cool = ref({});
 const options_cool = ref([
-  {name: "Bien", value: true},
-  {name: "Neutre", value: undefined},
-  {name: "Nul", value: false},
+  { name: "Bien", value: true },
+  { name: "Neutre", value: undefined },
+  { name: "Nul", value: false },
 ]);
 const toggle_fun = ref(false);
 const toggle_neutre = ref(false);
@@ -240,7 +140,7 @@ watch(toggle_fun, () => {
   if (toggle_fun.value) {
     toggle_neutre.value = false;
     toggle_nul.value = false;
-    was_cool.value = {value: true};
+    was_cool.value = { value: true };
   }
 });
 
@@ -248,7 +148,7 @@ watch(toggle_neutre, () => {
   if (toggle_neutre.value) {
     toggle_fun.value = false;
     toggle_nul.value = false;
-    was_cool.value = {value: undefined};
+    was_cool.value = { value: undefined };
   }
 });
 
@@ -256,7 +156,7 @@ watch(toggle_nul, () => {
   if (toggle_nul.value) {
     toggle_neutre.value = false;
     toggle_fun.value = false;
-    was_cool.value = {value: false};
+    was_cool.value = { value: false };
   }
 });
 
@@ -297,11 +197,11 @@ function getTeamId() {
 
 async function addNewSession() {
   loading.value = true;
-  if (duration.value === "") {
+  if (duration.value === "" || game.value === "") {
     toast.add({
       severity: "error",
       summary: "",
-      detail: "Veuillez remplir tous les champs correctement.",
+      detail: i18n.t("AddSession.errors.fill_all_fields"),
       life: 3000,
     });
     loading.value = false;
@@ -311,13 +211,12 @@ async function addNewSession() {
     duration.value = duration.value.replace(/\s+/g, "");
     let operandes = duration.value.slice(1).split("+");
     duration.value = 0;
-    operandes.forEach((operand) => {
+    for (let operand of operandes) {
       if (!regex.test(operand)) {
         toast.add({
           severity: "error",
           summary: "",
-          detail:
-              "Les opérandes d'une formule doivent être des nombres entiers et vous ne pouvez utiliser que l'addition.",
+          detail: i18n.t("AddSession.errors.formulas_error"),
           life: 3000,
         });
         loading.value = false;
@@ -325,12 +224,12 @@ async function addNewSession() {
         return;
       }
       duration.value += parseInt(operand);
-    });
+    }
   } else if (!regex.test(duration.value || !game.value)) {
     toast.add({
       severity: "error",
       summary: "",
-      detail: "Veuillez remplir tous les champs correctement.",
+      detail: i18n.t("AddSession.errors.fill_all_fields"),
       life: 3000,
     });
     loading.value = false;
@@ -338,10 +237,10 @@ async function addNewSession() {
   }
 
   const success = await addSession(
-      getTeamId(),
-      game.value,
-      parseInt(duration.value),
-      was_cool.value.value
+    getTeamId(),
+    game.value,
+    parseInt(duration.value),
+    was_cool.value.value
   );
   loading.value = false;
   if (success) {
@@ -349,7 +248,7 @@ async function addNewSession() {
     toast.add({
       severity: "success",
       summary: "",
-      detail: "C'est tout bon !",
+      detail: i18n.t("AddSession.all_good"),
       life: 3000,
     });
     if (getPreferences("reload_data_after_adding_session")) {
@@ -361,7 +260,7 @@ async function addNewSession() {
     toast.add({
       severity: "error",
       summary: "",
-      detail: "Une erreur est survenue lors de l'ajout de la session de jeu.",
+      detail: i18n.t("AddSession.errors.unexpected_error"),
       life: 3000,
     });
   }
@@ -423,7 +322,6 @@ async function addNewSession() {
 .btn-add {
   width: 95%;
 }
-
 
 .as-input {
   display: flex;

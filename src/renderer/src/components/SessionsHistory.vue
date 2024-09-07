@@ -9,12 +9,12 @@
   >
     <template #subtitle
       ><span class="sh-font">{{
-        props.title ? props.title : "Historique des sessions"
+        props.title ? props.title : $t("SessionsHistory.title")
       }}</span></template
     >
     <template #content>
       <Accordion>
-        <AccordionTab header="Sessions">
+        <AccordionTab :header="i18n.t('SessionsHistory.sessions')">
           <DataTable
             :value="sessions_values"
             stripedRows
@@ -27,7 +27,11 @@
                   ', white 70%);'
             "
           >
-            <Column field="name" header="Nom du jeu" v-once>
+            <Column
+              field="name"
+              :header="i18n.t('SessionsHistory.game_name')"
+              v-once
+            >
               <template #body="slotProps">
                 <div class="sh-name">
                   <img
@@ -46,7 +50,7 @@
                 props.teamName === undefined || props.teamName.includes(',')
               "
               field="team_name"
-              header="Équipe"
+              :header="i18n.t('SessionsHistory.team')"
               v-once
             >
               <template #body="slotProps">
@@ -57,20 +61,28 @@
                 >
               </template>
             </Column>
-            <Column field="playtime" header="Durée de la session" v-once>
+            <Column
+              field="playtime"
+              :header="i18n.t('SessionsHistory.session_duration')"
+              v-once
+            >
               <template #body="slotProps">
                 {{ convertMinuteToHoursMinute(slotProps.data.playtime) }}
               </template>
             </Column>
-            <Column field="joyrate" header="Bonheur" v-once>
+            <Column
+              field="joyrate"
+              :header="i18n.t('SessionsHistory.joyrate')"
+              v-once
+            >
               <template #body="slotProps">
                 <Chip
                   :label="
                     slotProps.data.joyrate == null
-                      ? 'Neutre'
+                      ? i18n.t('SessionsHistory.neutral')
                       : slotProps.data.joyrate === true
-                        ? 'Bien'
-                        : 'Nul'
+                        ? i18n.t('SessionsHistory.good')
+                        : i18n.t('SessionsHistory.bad')
                   "
                   :class="
                     slotProps.data.joyrate == null
@@ -82,7 +94,11 @@
                 />
               </template>
             </Column>
-            <Column field="date" header="Date" v-once>
+            <Column
+              field="date"
+              :header="i18n.t('SessionsHistory.date')"
+              v-once
+            >
               <template #body="slotProps">
                 <div>
                   {{
@@ -106,6 +122,9 @@ import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
 import { getIdsOfTeam } from "../database/database";
 import { getPreferences } from "../preferences/preferences";
+
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const props = defineProps([
   "teamName",
@@ -245,7 +264,7 @@ function getGameNameAndLogoById(id) {
   for (let g of games.value) {
     if (id === g.id) return [g.name, g.logo];
   }
-  return ["[Jeu supprimé ou introuvable]", ""];
+  return ["[" + i18n.t("SessionsHistory.deleted_game") + "]", ""];
 }
 </script>
 <style scoped>

@@ -1,58 +1,75 @@
 <template>
   <div class="container">
     <Card
-        class="card"
-        :pt="{
-            root: { style: 'box-shadow: 0px 0px 0px 0px;' },
-            content: { style: 'height:100%; width: auto;' }
-        }">
+      class="card"
+      :pt="{
+        root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+        content: { style: 'height:100%; width: auto;' },
+      }"
+    >
       <template #subtitle>
         <span class="bcag-font">
-          Informations des jeux
-          <i class="pi pi-window-maximize" @click="fullscreen = !fullscreen"></i>
+          {{ $t("BarChartAllGames.title") }}
+          <i
+            class="pi pi-window-maximize"
+            @click="fullscreen = !fullscreen"
+          ></i>
         </span>
       </template>
       <template #content>
         <Chart
-            type="bar"
-            :data="chartData"
-            :options="chartOptions"
-            :pt="{
-              canvas: {
-                style: 'height: 100%; max-height: 350px; width: auto'
-              }
-            }"
+          type="bar"
+          :data="chartData"
+          :options="chartOptions"
+          :pt="{
+            canvas: {
+              style: 'height: 100%; max-height: 350px; width: auto',
+            },
+          }"
         />
       </template>
     </Card>
-    <Dialog v-model:visible="fullscreen" modal dismissableMask header="Informations des jeux"
-            :style="{ width: '90%', height: '90%' }">
-      <div style="height: 80vh; width: 100%;">
+    <Dialog
+      v-model:visible="fullscreen"
+      modal
+      dismissableMask
+      :header="i18n.t('BarChartAllGames.title')"
+      :style="{ width: '90%', height: '90%' }"
+    >
+      <div style="height: 80vh; width: 100%">
         <Chart
-            type="bar"
-            :data="chartData"
-            :options="chartOptions"
-            :pt="{
-              root: { style: 'height: 100%; width: 100%' },
-              canvas: {
-                style: 'height: 100%; max-height: 100%',
-              },
-            }"
+          type="bar"
+          :data="chartData"
+          :options="chartOptions"
+          :pt="{
+            root: { style: 'height: 100%; width: 100%' },
+            canvas: {
+              style: 'height: 100%; max-height: 100%',
+            },
+          }"
         />
       </div>
     </Dialog>
   </div>
 </template>
 <script setup>
-import {onMounted, ref, watch} from "vue";
-import {useStore} from "../store/store";
-import {storeToRefs} from "pinia";
-import {convertMinuteToHoursMinute} from "../common/main";
-import {getIdOfTeam, getIdsOfTeam} from "../database/database";
+import { onMounted, ref, watch } from "vue";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
+import { convertMinuteToHoursMinute } from "../common/main";
+import { getIdsOfTeam } from "../database/database";
 
-const props = defineProps(["teamName", "backgroundColor", "titleColor", "sessions"]);
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
+
+const props = defineProps([
+  "teamName",
+  "backgroundColor",
+  "titleColor",
+  "sessions",
+]);
 const store = useStore();
-const {games, sessions, teams} = storeToRefs(store);
+const { games, sessions, teams } = storeToRefs(store);
 
 const fullscreen = ref(false);
 
@@ -64,17 +81,22 @@ watch([games, sessions, teams], () => {
   init();
 });
 
-watch(() => props.sessions, () => {
-  init();
-});
+watch(
+  () => props.sessions,
+  () => {
+    init();
+  }
+);
 
-const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
+const backgroundColor = props.backgroundColor
+  ? props.backgroundColor
+  : "var(--primary-100)";
 
 const games_names = ref([]);
 const getGamesNames = () => {
   let res = [];
   games.value.map((g) =>
-      res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name)
+    res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name)
   );
   return res;
 };
@@ -84,13 +106,17 @@ const getSessionNumber = () => {
   for (let g of games.value) {
     let acc = 0;
     if (props.teamName) {
-      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
+      for (let s of props.sessions === undefined
+        ? sessions.value
+        : props.sessions) {
         if (s.game.id === g.id && id_of_team.value.includes(s.team.id)) {
           acc += 1;
         }
       }
     } else {
-      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
+      for (let s of props.sessions === undefined
+        ? sessions.value
+        : props.sessions) {
         if (s.game.id === g.id) {
           acc += 1;
         }
@@ -110,14 +136,18 @@ const getAverageDuration = () => {
     let acc = 0;
     let ss_num = 0;
     if (props.teamName) {
-      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
+      for (let s of props.sessions === undefined
+        ? sessions.value
+        : props.sessions) {
         if (s.game.id === g.id && id_of_team.value.includes(s.team.id)) {
           acc += s.duration;
           ss_num++;
         }
       }
     } else {
-      for (let s of props.sessions === undefined ? sessions.value : props.sessions) {
+      for (let s of props.sessions === undefined
+        ? sessions.value
+        : props.sessions) {
         if (s.game.id === g.id) {
           acc += s.duration;
           ss_num++;
@@ -160,7 +190,7 @@ const setChartData = () => {
     labels: games_names.value,
     datasets: [
       {
-        label: "Nombre de sessions",
+        label: i18n.t("BarChartAllGames.number_of_sessions"),
         borderColor: documentStyle.getPropertyValue("--blue-500"),
         pointBackgroundColor: documentStyle.getPropertyValue("--blue-500"),
         pointBorderColor: documentStyle.getPropertyValue("--blue-500"),
@@ -170,7 +200,7 @@ const setChartData = () => {
         backgroundColor: documentStyle.getPropertyValue("--blue-500"),
       },
       {
-        label: "Temps moyen d'une session",
+        label: i18n.t("BarChartAllGames.medium_session_time"),
         borderColor: documentStyle.getPropertyValue("--pink-400"),
         pointBackgroundColor: documentStyle.getPropertyValue("--pink-400"),
         pointBorderColor: documentStyle.getPropertyValue("--pink-400"),
@@ -187,7 +217,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-      "--text-color-secondary"
+    "--text-color-secondary"
   );
 
   return {
@@ -200,13 +230,19 @@ const setChartOptions = () => {
       tooltip: {
         callbacks: {
           beforeLabel: function (context) {
-            return (games_copy.value[context.dataIndex].name);
+            return games_copy.value[context.dataIndex].name;
           },
-          label: function(tooltipItem){
-            if(tooltipItem.datasetIndex === 1){
-              return "Temps moyen d'une session: " + convertMinuteToHoursMinute(avg_duration.value[tooltipItem.dataIndex]);
+          label: function (tooltipItem) {
+            if (tooltipItem.datasetIndex === 1) {
+              return (
+                i18n.t("BarChartAllGames.medium_session_time") +
+                ": " +
+                convertMinuteToHoursMinute(
+                  avg_duration.value[tooltipItem.dataIndex]
+                )
+              );
             }
-          }
+          },
         },
       },
     },
@@ -222,7 +258,7 @@ const setChartOptions = () => {
 </script>
 <style scoped>
 .card {
-  background-color: v-bind('backgroundColor');
+  background-color: v-bind("backgroundColor");
   width: 100%;
   height: 100%;
   border-radius: 30px;
@@ -230,17 +266,17 @@ const setChartOptions = () => {
 
 @font-face {
   font-family: sephir;
-  src: url('../assets/fonts/sephir/sephir.otf');
+  src: url("../assets/fonts/sephir/sephir.otf");
 }
 
 .bcag-font {
   font-family: sephir, serif;
   font-size: 1.5rem;
   font-weight: bold;
-  color: v-bind('props.titleColor');
+  color: v-bind("props.titleColor");
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center
+  align-items: center;
 }
 </style>

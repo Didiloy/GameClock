@@ -6,8 +6,8 @@
     </div>
     <div v-else>
       <h4>
-        Aucune équipe pour le moment.
-        <router-link to="/addteam">Ajoutez-en une !</router-link>
+        {{ $t("Home.no_teams") }}
+        <router-link to="/addteam">{{ $t("Home.add_team") }}</router-link>
       </h4>
     </div>
   </div>

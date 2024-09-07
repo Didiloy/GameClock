@@ -2,7 +2,7 @@
   <div class="t-container">
     <div class="t-top-row">
       <Button
-        label="Nouvelle session"
+        :label="i18n.t('Team.new_session')"
         icon="pi pi-plus"
         @click="toggleAddSession"
         v-if="id_of_team.length === 1"
@@ -20,7 +20,7 @@
       v-model:visible="add_session_dialog_visible"
       modal
       dismissableMask
-      header="Ajouter une session"
+      :header="i18n.t('Team.add_session')"
       :style="{ width: '800px', height: '515px' }"
     >
       <AddSession
@@ -39,15 +39,18 @@
 <script setup>
 import AddSession from "../components/AddSession.vue";
 import DashboardTeam from "../components/DashboardTeam.vue";
-import { onMounted, onUnmounted, ref, defineEmits } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { getPreferences } from "../preferences/preferences";
 import { useRoute } from "vue-router";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import {getIdsOfTeam} from "../database/database";
+import { getIdsOfTeam } from "../database/database";
+
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const store = useStore();
-const { sessions, games, teams } = storeToRefs(store);
+const { sessions, teams } = storeToRefs(store);
 
 const game_if_we_come_from_home = useRoute().params.game;
 const add_session_game_name = ref("");
@@ -60,8 +63,8 @@ const emit = defineEmits(["toggleChronoListener"]);
 const sessions_of_team = ref([]);
 function getSessionsOfTeam() {
   let sessions_of_team = [];
-  for(let sess of sessions.value){
-    if(id_of_team.value.includes(sess.team.id)){
+  for (let sess of sessions.value) {
+    if (id_of_team.value.includes(sess.team.id)) {
       sessions_of_team.push(sess);
     }
   }
@@ -114,13 +117,13 @@ function createMonthYearArray() {
 const labels_dropdown = ref([]);
 function setLabelsDropdown() {
   labels_dropdown.value.push({
-    label: "Toutes périodes",
+    label: i18n.t("Team.all_time"),
     game_sessions: sessions_of_team.value,
   });
   for (let year of month_year.value) {
     for (let month of year.months) {
       labels_dropdown.value.push({
-        label: months[month.month] + " " + year.year,
+        label: i18n.t("Common.months_names." + month.month) + " " + year.year,
         game_sessions: month.games,
       });
     }
@@ -128,21 +131,6 @@ function setLabelsDropdown() {
 }
 
 const selected_month = ref({});
-
-const months = [
-  "Janvier",
-  "Février",
-  "Mars",
-  "Avril",
-  "Mai",
-  "Juin",
-  "Juillet",
-  "Août",
-  "Septembre",
-  "Octobre",
-  "Novembre",
-  "Décembre",
-];
 
 function toggleAddSession() {
   add_session_dialog_visible.value = !add_session_dialog_visible.value;

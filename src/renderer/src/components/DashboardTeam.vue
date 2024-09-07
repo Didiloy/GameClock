@@ -1,6 +1,6 @@
 <template>
   <div v-if="!loaded">
-    <Loading msg="Calcul des statistiques" />
+    <Loading msg="calculating_statistics" />
   </div>
   <div v-else class="dt-container">
     <div class="dt-dashboard">
@@ -11,9 +11,9 @@
         titleColor="#0f1f18"
         :name="team_time_hours"
         :value="
-          'passées à jouer. Soit <b>' +
-          percentage_total_time +
-          '</b> du temps total de jeu'
+          i18n.t('DashboardTeam.team_time', {
+            percentage_total_time: percentage_total_time,
+          })
         "
       ></LittleCard>
       <LittleCard
@@ -22,7 +22,7 @@
         backgroundColor="#a6abfe"
         titleColor="#0f1f18"
         :name="convertMinuteToHoursMinute(team_average_session_duration)"
-        :value="'Temps moyen d\'une session, tous jeux confondus'"
+        :value="i18n.t('DashboardTeam.average_time')"
       ></LittleCard>
       <LittleCard
         iconName="pi pi-hashtag"
@@ -30,7 +30,7 @@
         :name="ranking_computed"
         backgroundColor="#f7d8fe"
         titleColor="#27142f"
-        value="position de l'équipe dans le classement par temps de jeu"
+        :value="i18n.t('DashboardTeam.position_in_ranking')"
       ></LittleCard>
       <GameTimeHome
         class="dt-pie-chart"
@@ -57,7 +57,7 @@
         backgroundColor="#c5eae7"
         titleColor="#00201f"
         :name="number_of_books"
-        :value="text_book"
+        :value="i18n.t('DashboardTeam.text_books')"
       ></LittleCard>
       <TopGamesLittleGameCard
         :teamName="props.teamName"
@@ -69,7 +69,7 @@
         :name="number_of_movies"
         backgroundColor="#f9e09f"
         titleColor="#241a00"
-        :value="text_movies"
+        :value="i18n.t('DashboardTeam.text_movies')"
       ></LittleCard>
       <LittleCard
         class="dt-lc-joy-all-game"
@@ -77,7 +77,7 @@
         :name="total_fun_percentage + '%'"
         backgroundColor="#90a1b9"
         titleColor="#303a48"
-        value="Plaisir ressenti tous jeux confondus"
+        :value="i18n.t('DashboardTeam.fun_to_play')"
       ></LittleCard>
       <LineChartGameByMonth
         class="dt-line-chart"
@@ -91,7 +91,7 @@
         backgroundColor="#ffdbcb"
         titleColor="#341100"
         :name="number_of_games"
-        value="jeux joués"
+        :value="i18n.t('DashboardTeam.games_played')"
       ></LittleCard>
       <LittleCard
         class="dt-lc-todo"
@@ -99,7 +99,7 @@
         :name="sessions_number"
         backgroundColor="#dae1ff"
         titleColor="#001849"
-        :value="'sessions de jeu'"
+        :value="i18n.t('DashboardTeam.games_sessions')"
       ></LittleCard>
     </div>
     <SessionsHistory :teamName="props.teamName" />
@@ -119,6 +119,9 @@ import { computed, onMounted, ref, watch } from "vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import { convertMinuteToHoursMinute } from "../common/main";
 import { getIdsOfTeam } from "../database/database";
+
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const props = defineProps(["teamName", "sessions"]);
 
@@ -317,13 +320,6 @@ function getTotalFunPercentage() {
   tmp.map((s) => (cpt += s.was_cool ? 1 : 0));
   return ((cpt / tmp.length) * 100).toFixed(0);
 }
-
-const text_book = `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <span>C'est le nombre de <b>livres</b> d'environ 400 pages que vous auriez pu lire pendant ce temps.</span>
-          </div>`;
-const text_movies = `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <span>C'est le nombre de <b>films</b> d'environ 1h50 que vous auriez pu regarder pendant ce temps.</span>
-          </div>`;
 </script>
 <style scoped>
 .dt-container {

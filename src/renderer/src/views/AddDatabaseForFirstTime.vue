@@ -1,88 +1,110 @@
 <template>
   <div class="container">
-    <h2 class="s-title">Ajouter une base de données</h2>
+    <h2 class="s-title">{{ $t("AddDatabaseForFirstTime.add_database") }}</h2>
     <Message
+      v-if="stored_databases.length === 0"
       :closable="false"
       style="display: inline-block; width: 100%; text-align: center"
-      >Vous n'avez pas encore de base de données. Vous devez en ajouter une pour
-      continuer.</Message
+      >{{ $t("AddDatabaseForFirstTime.you_have_no_databases") }}</Message
     >
     <div class="import-db-elem-container">
       <div class="elem-container">
-        <h2 class="elem-title">Importer une base de données</h2>
+        <h2 class="elem-title">
+          {{ $t("AddDatabaseForFirstTime.import_database") }}
+        </h2>
         <p class="text-color">
-          Vous pouvez demander à vos amis de vous partager leur base de données.
-          Il ne vous restera plus qu'à copier le texte et le coller dans le
-          champs ci-dessous !
+          {{ $t("AddDatabaseForFirstTime.ask_your_friends") }}
         </p>
         <div class="elem-item">
           <InputText type="text" v-model="import_string" style="width: 70%" />
-          <Button label="Importer" icon="pi pi-check" @click="importDatabase" />
+          <Button
+            :label="$t('AddDatabaseForFirstTime.import')"
+            icon="pi pi-check"
+            @click="importDatabase"
+          />
         </div>
       </div>
     </div>
     <Divider />
     <div class="add-db-elem-container">
       <div class="elem-container">
-        <h2 class="elem-title">Ajouter une nouvelle base de données</h2>
+        <h2 class="elem-title">
+          {{ $t("AddDatabaseForFirstTime.add_new_database") }}
+        </h2>
         <Accordion class="accordion-tab">
           <AccordionTab
             class="accordion-tab"
-            header="Instructions pour créer une base de données"
+            :header="
+              $t('AddDatabaseForFirstTime.instruction_to_create_database.label')
+            "
           >
             <div class="accordion-tab">
-              <p>GameClock utilise des bases de données Firebase Firestore.</p>
+              <p>{{ $t("AddDatabaseForFirstTime.gameclock_use_firebase") }}</p>
               <ol>
                 <li>
-                  Pour créer votre base de données rendez-vous sur
-                  <a href="https://console.firebase.google.com/" target="_blank"
-                    >https://console.firebase.google.com/</a
-                  >, authentifier vous avec votre compte Google et créez un
-                  projet.
+                  {{
+                    $t(
+                      "AddDatabaseForFirstTime.instruction_to_create_database.first"
+                    )
+                  }}
                 </li>
                 <li>
-                  Saisissez le nom de votre projet, désactivez ou pas Google
-                  analytics puis cliquez sur <b>créer un projet</b>.
+                  {{
+                    $t(
+                      "AddDatabaseForFirstTime.instruction_to_create_database.second"
+                    )
+                  }}
                 </li>
                 <li>
-                  Une fois fait, dans le menu de gauche, sélectionnez
-                  <b>Créer</b> et choisissez <b>Realtime Database</b>.
+                  {{
+                    $t(
+                      "AddDatabaseForFirstTime.instruction_to_create_database.third"
+                    )
+                  }}
                 </li>
                 <li>
-                  Cliquez sur <b>Créer une base de données</b>, sélectionnez
-                  votre emplacement, puis sélectionnez
-                  <b>Commencer en mode verrouillé</b>.
+                  {{
+                    $t(
+                      "AddDatabaseForFirstTime.instruction_to_create_database.fourth"
+                    )
+                  }}
                 </li>
                 <li>
-                  Ensuite, sélectionnez de nouveau <b>Créer</b> dans le menu de
-                  gauche puis cliquez sur <b>Firestore Database</b>.
+                  {{
+                    $t(
+                      "AddDatabaseForFirstTime.instruction_to_create_database.fifth"
+                    )
+                  }}
                 </li>
                 <li>
-                  Cliquez sur <b>Créer une base de données</b>, choisissez un
-                  emplacement <b>Régional</b> de votre choix. Cliquez ensuite
-                  sur <b>démarrer en mode production</b>, puis <b>Créer</b>.
+                  {{
+                    $t(
+                      "AddDatabaseForFirstTime.instruction_to_create_database.sixth"
+                    )
+                  }}
                 </li>
                 <li>
-                  Rendez vous dans l'onglet <b>Règles</b> de votre projet et
-                  changez le mot <b>false</b> par <b>true</b>.
+                  {{
+                    $t(
+                      "AddDatabaseForFirstTime.instruction_to_create_database.seventh"
+                    )
+                  }}
                 </li>
                 <li>
-                  Enfin pour récupérer les informations demandées, cliquez sur
-                  l'engrenage en haut à gauche de votre écran, puis sur
-                  <b>Paramètres du projet</b> et ajoutez une application web
-                  (celle ayant une icône ressemblant à
-                  <i class="pi pi-code"></i>) que vous appelerez comme vous
-                  voudrez. Vous pouvez maintenant récupérer toutes les
-                  informations demandées sur cette page.
+                  {{
+                    $t(
+                      "AddDatabaseForFirstTime.instruction_to_create_database.eighth"
+                    )
+                  }}
                 </li>
               </ol>
             </div>
           </AccordionTab>
         </Accordion>
         <div class="text-input">
-          <label for="database_name"
-            >Nom de la base de données à votre guise:</label
-          >
+          <label for="database_name">{{
+            $t("AddDatabaseForFirstTime.database_name")
+          }}</label>
           <InputText
             id="database_name"
             v-model="database_name"
@@ -90,7 +112,9 @@
           />
         </div>
         <div class="text-input">
-          <label for="database_api_key">Clé d'API:</label>
+          <label for="database_api_key">{{
+            $t("AddDatabaseForFirstTime.database_api_key")
+          }}</label>
           <InputText
             id="database_api_key"
             v-model="database_api_key"
@@ -98,7 +122,9 @@
           />
         </div>
         <div class="text-input">
-          <label for="database_auth_domain">Domaine d'authentification:</label>
+          <label for="database_auth_domain">{{
+            $t("AddDatabaseForFirstTime.database_auth_domain")
+          }}</label>
           <InputText
             id="database_auth_domain"
             v-model="database_auth_domain"
@@ -106,7 +132,9 @@
           />
         </div>
         <div class="text-input">
-          <label for="database_url">URL de la base de données:</label>
+          <label for="database_url">{{
+            $t("AddDatabaseForFirstTime.database_url")
+          }}</label>
           <InputText
             id="database_url"
             v-model="database_url"
@@ -114,7 +142,9 @@
           />
         </div>
         <div class="text-input">
-          <label for="database_id">Id du projet:</label>
+          <label for="database_id">{{
+            $t("AddDatabaseForFirstTime.database_id")
+          }}</label>
           <InputText
             id="database_id"
             v-model="database_id"
@@ -122,7 +152,9 @@
           />
         </div>
         <div class="text-input">
-          <label for="database_storage_bucket">storageBucket:</label>
+          <label for="database_storage_bucket">{{
+            $t("AddDatabaseForFirstTime.database_storage_bucket")
+          }}</label>
           <InputText
             id="database_storage_bucket"
             v-model="database_storage_bucket"
@@ -130,7 +162,9 @@
           />
         </div>
         <div class="text-input">
-          <label for="database_messaging_sender_id">messagingSenderId:</label>
+          <label for="database_messaging_sender_id">{{
+            $t("AddDatabaseForFirstTime.database_messaging_sender_id")
+          }}</label>
           <InputText
             id="database_messaging_sender_id"
             v-model="database_messaging_sender_id"
@@ -140,14 +174,20 @@
 
         <div class="elem-item">
           <div class="text-input">
-            <label for="database_app_id">App Id:</label>
+            <label for="database_app_id">{{
+              $t("AddDatabaseForFirstTime.database_app_id")
+            }}</label>
             <InputText
               id="database_app_id"
               v-model="database_app_id"
               style="width: 79%"
             />
           </div>
-          <Button label="Ajouter" icon="pi pi-check" @click="addNewDatabase" />
+          <Button
+            :label="$t('AddDatabaseForFirstTime.add')"
+            icon="pi pi-check"
+            @click="addNewDatabase"
+          />
         </div>
       </div>
     </div>
@@ -162,6 +202,12 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
+import { storeToRefs } from "pinia";
+import { useStoredDatabases } from "../store/store";
+const store = useStoredDatabases();
+const { stored_databases } = storeToRefs(store);
 
 const import_string = ref("");
 
@@ -179,7 +225,7 @@ function importDatabase() {
     toast.add({
       severity: "error",
       summary: "",
-      detail: "Aucun champ ne doit être vide !",
+      detail: i18n.t("AddDatabaseForFirstTime.errors.no_empty_field"),
       life: 3000,
     });
     return;
@@ -215,7 +261,7 @@ function addNewDatabase() {
     toast.add({
       severity: "error",
       summary: "",
-      detail: "Aucun champ ne doit être vide !",
+      detail: i18n.t("AddDatabaseForFirstTime.errors.no_empty_field"),
       life: 3000,
     });
     return;

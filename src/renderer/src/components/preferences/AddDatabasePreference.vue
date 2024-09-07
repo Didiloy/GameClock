@@ -3,6 +3,9 @@ import { useStoredDatabases } from "../../store/store";
 import { getPreferences, setPreferences } from "../../preferences/preferences";
 import { storeToRefs } from "pinia";
 
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
+
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
 
@@ -10,7 +13,6 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const store = useStoredDatabases();
 const { stored_databases } = storeToRefs(store);
-
 
 function deleteDatabase(name, apiKey, authDomain, index) {
   store.useDeleteDatabase(name, apiKey, authDomain);
@@ -26,16 +28,14 @@ async function shareDatabase(index) {
     toast.add({
       severity: "success",
       summary: "",
-      detail: "Base de données copiée dans le presse-papiers.",
+      detail: i18n.t("AddDatabasePreference.database_copied"),
       life: 3000,
     });
   } catch (err) {
     toast.add({
       severity: "error",
       summary: "",
-      detail:
-        "Impossible de copier dans le presse papier. Copiez le texte suivant: " +
-        encoded_string,
+      detail: i18n.t("AddDatabasePreference.database_copied") + encoded_string,
     });
   }
 }
@@ -53,32 +53,55 @@ function goToAddDatabase() {
 <template>
   <div class="tp-container">
     <div class="adp-div-title">
-      <span class="tp-title">Bases de données</span>
-      <Button label="Ajouter une base de données" @click="goToAddDatabase" />
+      <span class="tp-title">{{ $t("AddDatabasePreference.databases") }}</span>
+      <Button
+        :label="i18n.t('AddDatabasePreference.add_database')"
+        @click="goToAddDatabase"
+      />
     </div>
-    <b class="text-color">Active:</b>
+    <b class="text-color">{{ $t("AddDatabasePreference.active") }}</b>
     <div class="tp-item">
       <h2>
         {{ stored_databases[getPreferences("selected_database_index")].name }}
       </h2>
     </div>
-    <b class="text-color" style="margin-top: 10px">Toutes les bases de données:</b>
-    <div class="w-100" v-for="(database, index) in stored_databases" :key="index">
+    <b class="text-color" style="margin-top: 10px">{{
+      $t("AddDatabasePreference.all_databases")
+    }}</b>
+    <div
+      class="w-100"
+      v-for="(database, index) in stored_databases"
+      :key="index"
+    >
       <div class="tp-item">
         <h2>{{ database.name }}</h2>
         <div>
-          <Button label="Définir comme active" style="margin-right: 10px"
-            v-if="index !== getPreferences('selected_database_index')" @click="setAsActiveDatabase(index)"></Button>
-          <Button icon="pi pi-share-alt" label="Partager" class="p-button-secondary" style="margin-right: 10px"
-            @click="shareDatabase(index)"></Button>
-          <Button icon="pi pi-trash" label="Supprimer" class="p-button-danger" @click="
-            deleteDatabase(
-              database.name,
-              database.apiKey,
-              database.authDomain,
-              index
-            )
-            "></Button>
+          <Button
+            :label="$t('AddDatabasePreference.set_as_active')"
+            style="margin-right: 10px"
+            v-if="index !== getPreferences('selected_database_index')"
+            @click="setAsActiveDatabase(index)"
+          ></Button>
+          <Button
+            icon="pi pi-share-alt"
+            :label="$t('AddDatabasePreference.share')"
+            class="p-button-secondary"
+            style="margin-right: 10px"
+            @click="shareDatabase(index)"
+          ></Button>
+          <Button
+            icon="pi pi-trash"
+            :label="$t('AddDatabasePreference.delete')"
+            class="p-button-danger"
+            @click="
+              deleteDatabase(
+                database.name,
+                database.apiKey,
+                database.authDomain,
+                index
+              )
+            "
+          ></Button>
         </div>
       </div>
     </div>

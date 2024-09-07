@@ -1,26 +1,33 @@
 <template>
   <div class="container">
-    <Card class="card"
-          :pt="{
-            root: { style: 'box-shadow: 0px 0px 0px 0px;' },
-            content: { style: 'height:100%; ' }
-        }"
+    <Card
+      class="card"
+      :pt="{
+        root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+        content: { style: 'height:100%; ' },
+      }"
     >
       <template #title>
         <span class="pth-font">
-        Classement des équipes par temps de jeu
-          <i class="pi pi-window-maximize" @click="fullscreen = !fullscreen"></i>
-        </span></template>
+          {{ $t("PlayTimeHome.title") }}
+          <i
+            class="pi pi-window-maximize"
+            @click="fullscreen = !fullscreen"
+          ></i> </span
+      ></template>
       <template #subtitle>
-        <Chip label="Clique sur une équipe pour voir le détail" icon="pi pi-info-circle"
-              style="background-color: var(--primary-100);"/>
+        <Chip
+          :label="i18n.t('PlayTimeHome.click_to_see_details')"
+          icon="pi pi-info-circle"
+          style="background-color: var(--primary-100)"
+        />
       </template>
       <template #content>
         <Chart
-            type="bar"
-            :data="chartData"
-            :options="chartOptions"
-            :pt="{
+          type="bar"
+          :data="chartData"
+          :options="chartOptions"
+          :pt="{
             canvas: {
               style: 'height: 100%; max-height:300px;  width: auto;',
             },
@@ -28,16 +35,21 @@
         />
       </template>
     </Card>
-    <Dialog v-model:visible="fullscreen" modal dismissableMask header="Classement des équipes par temps de jeu"
-            :style="{ width: '90%', height: '90%' }">
-      <div style="height: 80vh; width: 100%;">
+    <Dialog
+      v-model:visible="fullscreen"
+      modal
+      dismissableMask
+      :header="i18n.t('PlayTimeHome.title')"
+      :style="{ width: '90%', height: '90%' }"
+    >
+      <div style="height: 80vh; width: 100%">
         <Chart
-            type="bar"
-            :data="chartData"
-            :options="chartOptions"
-            :pt="{
+          type="bar"
+          :data="chartData"
+          :options="chartOptions"
+          :pt="{
             root: {
-               style: 'height: 100%; width: auto;',
+              style: 'height: 100%; width: auto;',
             },
             canvas: {
               style: 'height: 100%; width: auto;',
@@ -49,13 +61,15 @@
   </div>
 </template>
 <script setup>
-import {computed, onMounted, ref} from "vue";
-import {useStore} from "../store/store";
-import {storeToRefs} from "pinia";
-import {convertMinuteToHoursMinute} from "../common/main";
-import {useRouter} from "vue-router";
-
+import { computed, onMounted, ref } from "vue";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
+import { convertMinuteToHoursMinute } from "../common/main";
+import { useRouter } from "vue-router";
 const router = useRouter();
+
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const fullscreen = ref(false);
 
@@ -64,10 +78,12 @@ onMounted(() => {
 });
 
 const props = defineProps(["backgroundColor", "titleColor"]);
-const backgroundColor = props.backgroundColor ? props.backgroundColor : "var(--primary-100)";
+const backgroundColor = props.backgroundColor
+  ? props.backgroundColor
+  : "var(--primary-100)";
 
 const store = useStore();
-const {teams, sessions} = storeToRefs(store);
+const { teams, sessions } = storeToRefs(store);
 const teams_from_db = ref([]);
 const teams_name = ref([]);
 
@@ -87,7 +103,7 @@ const teams_name_spliced = ref([]);
 const getTeamNamesSpliced = () => {
   let res = [];
   teams_name.value.map((g) =>
-      res.push(g.length > 10 ? g.slice(0, 6) + "..." : g)
+    res.push(g.length > 10 ? g.slice(0, 6) + "..." : g)
   );
   return res;
 };
@@ -95,24 +111,24 @@ const getTeamNamesSpliced = () => {
 const chartData = ref({});
 const chartOptions = ref();
 
-function getFirstTeamsByPlaytime(length){
+function getFirstTeamsByPlaytime(length) {
   let teams_to_return = [];
-  for(const team of teams.value){
+  for (const team of teams.value) {
     teams_to_return.push({
       name: team.name,
       playtime: sessions.value.reduce((acc, s) => {
-        if(s.team.id === team.id){
+        if (s.team.id === team.id) {
           return acc + s.duration;
         }
         return acc;
-      }, 0)
-    })
+      }, 0),
+    });
   }
   return teams_to_return
-      .sort((a, b) => {
-        return b.playtime - a.playtime;
-      })
-      .slice(0, length !== undefined ? length : -1);
+    .sort((a, b) => {
+      return b.playtime - a.playtime;
+    })
+    .slice(0, length !== undefined ? length : -1);
 }
 
 function init() {
@@ -129,7 +145,7 @@ const setChartData = () => {
     labels: teams_name_spliced.value,
     datasets: [
       {
-        label: "Temps de jeu",
+        label: i18n.t("PlayTimeHome.playtime"),
         data: teams_playtime.value,
         backgroundColor: [
           documentStyle.getPropertyValue("--indigo-500"),
@@ -154,7 +170,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-      "--text-color-secondary"
+    "--text-color-secondary"
   );
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
@@ -167,13 +183,14 @@ const setChartOptions = () => {
       tooltip: {
         callbacks: {
           beforeLabel: function (context) {
-            return (teams_name.value[context.dataIndex]);
+            return teams_name.value[context.dataIndex];
           },
           label: function (context) {
-            return ("temps de jeu: " +
-                convertMinuteToHoursMinute(
-                    teams_playtime.value[context.dataIndex]
-                )
+            return (
+              i18n.t("PlayTimeHome.playtime") +
+              convertMinuteToHoursMinute(
+                teams_playtime.value[context.dataIndex]
+              )
             );
           },
         },
@@ -208,7 +225,7 @@ const setChartOptions = () => {
 </script>
 <style scoped>
 .card {
-  background-color: v-bind('backgroundColor');
+  background-color: v-bind("backgroundColor");
   width: 100%;
   height: 100%;
   border-radius: 30px;
@@ -216,17 +233,17 @@ const setChartOptions = () => {
 
 @font-face {
   font-family: sephir;
-  src: url('../assets/fonts/sephir/sephir.otf');
+  src: url("../assets/fonts/sephir/sephir.otf");
 }
 
 .pth-font {
   font-family: sephir, serif;
   font-size: 1.5rem;
   font-weight: bold;
-  color: v-bind('titleColor');
+  color: v-bind("titleColor");
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center
+  align-items: center;
 }
 </style>

@@ -1,15 +1,11 @@
 <template>
   <div class="main-background container">
-    <!-- <div>
-      <Image :src="logo" width="150" class="header" />
-    </div>
-    <Divider /> -->
     <div class="s-content">
       <div style="width: 100%">
         <div v-for="(item, i) in items" :key="i" class="menu">
           <h3 class="menu-item">{{ item.label }}</h3>
           <router-link
-            v-for="(subitem , j) in item.items"
+            v-for="(subitem, j) in item.items"
             v-slot="{ navigate }"
             :to="subitem.route"
             :key="j"
@@ -28,12 +24,14 @@
         <Divider />
         <Button
           class="reload-button"
-          label="Recharger les données"
+          :label="$t('Sidebar.reload_data')"
           @click="onReload"
           :icon="icon"
           :loading="loading"
         ></Button>
-        <span class="sidebar-version">Version {{ app_info.version }}</span>
+        <span class="sidebar-version"
+          >{{ $t("Sidebar.version") }} {{ app_info.version }}</span
+        >
       </div>
     </div>
   </div>
@@ -43,6 +41,8 @@
 import { ref } from "vue";
 import { useStore } from "../store/store.js";
 import app_info from "../../../../package.json";
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const loading = ref(false);
 const icon = ref("pi pi-replay");
@@ -52,44 +52,44 @@ const items = ref([
     label: "",
     items: [
       {
-        label: "Accueil",
+        label: i18n.t("Sidebar.home"),
         icon: "pi pi-home",
         route: "/",
       },
     ],
   },
   {
-    label: "Équipes",
+    label: i18n.t("Sidebar.teams.label"),
     items: [
       {
-        label: "Ajouter",
+        label: i18n.t("Sidebar.teams.add"),
         icon: "pi pi-plus",
         route: "/addteam",
       },
       {
-        label: "Liste",
+        label: i18n.t("Sidebar.teams.list"),
         icon: "pi pi-list",
         route: "/teams",
       },
     ],
   },
   {
-    label: "Paramètres",
+    label: i18n.t("Sidebar.settings.label"),
     items: [
       {
-        label: "Jeux",
+        label: i18n.t("Sidebar.settings.games"),
         icon: "pi pi-play",
         route: "/settings/games",
       },
       {
-        label: "Général",
+        label: i18n.t("Sidebar.settings.general"),
         icon: "pi pi-cog",
         route: "/settings/general",
       },
       {
-        label: "Base de données",
-      icon: "pi pi-database",
-      route: "/settings/databases"
+        label: i18n.t("Sidebar.settings.databases"),
+        icon: "pi pi-database",
+        route: "/settings/databases",
       },
     ],
   },

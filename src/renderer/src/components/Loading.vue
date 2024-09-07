@@ -1,6 +1,6 @@
 <template>
   <div class="loading-container">
-    <h3>{{ msg }}</h3>
+    <h3>{{ $t("Loading." + msg) }}</h3>
     <ProgressSpinner />
   </div>
 </template>

@@ -98,16 +98,16 @@ watch(store_error, () => {
     <TitleBar :toggleChrono="chrono" />
     <div class="app-container main-background">
       <div class="sidebar">
-        <Sidebar v-once></Sidebar>
+        <Sidebar></Sidebar>
       </div>
       <div v-if="!loaded && stored_databases.length > 0" class="content">
-        <Loading msg="Chargement des données" />
+        <Loading msg="loading_data" />
       </div>
       <div
         v-else-if="store_error !== undefined && store_error !== ''"
         class="content a-center"
       >
-        <h4>Erreur lors du chargement des données: {{ store_error }}</h4>
+        <h4>{{ $t("App.error_loading_data") + store_error }}</h4>
       </div>
       <div v-else class="content">
         <router-view @toggleChronoListener="toggleChronoListener" />

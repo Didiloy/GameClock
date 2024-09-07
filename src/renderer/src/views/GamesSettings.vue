@@ -1,11 +1,11 @@
 <template>
   <div class="gs-container">
-    <h2 class="gs-title">Modifiez vos jeux</h2>
+    <h2 class="gs-title">{{ $t("GamesSettings.title") }}</h2>
     <div class="gs-search">
       <InputText
         type="text"
         v-model="value"
-        placeholder="Chercher un jeu..."
+        :placeholder="i18n.t('GamesSettings.search_game')"
         style="height: 30px"
       />
       <SelectButton
@@ -18,9 +18,9 @@
         }"
       />
     </div>
-    <i>{{ games_values.length }} jeux</i>
+    <i>{{ games_values.length + " " + $t("GamesSettings.games") }} </i>
     <div v-if="!loaded">
-      <Loading msg="Calcul des statistiques des jeux" />
+      <Loading msg="calculating_games_statistics" />
     </div>
     <div v-else class="gs-games">
       <SingleGameSetting
@@ -41,6 +41,9 @@ import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
+
 const store = useStore();
 const { games, sessions } = storeToRefs(store);
 const games_values = ref([]);
@@ -49,16 +52,19 @@ const gameSessionCount = ref({});
 
 const loaded = ref(false);
 
-const sort_value = ref({ name: "Ordre alphabétique", value: 0 });
+const sort_value = ref({
+  name: i18n.t("GamesSettings.alphabetical_order"),
+  value: 0,
+});
 const options = ref([
-  { name: "Ordre alphabétique", value: 0 },
-  { name: "Nombre de sessions", value: 1 },
+  { name: i18n.t("GamesSettings.alphabetical_order"), value: 0 },
+  { name: i18n.t("GamesSettings.sessions_number"), value: 1 },
 ]);
 
 onMounted(() => {
   setTimeout(() => {
     games_values.value = games.value.toSorted((a, b) =>
-      a.name.localeCompare(b.name),
+      a.name.localeCompare(b.name)
     );
     addSessionCountToGames();
     loaded.value = true;
@@ -67,7 +73,7 @@ onMounted(() => {
 
 watch(value, () => {
   games_values.value = games.value.filter((g) =>
-    g.name.toLowerCase().includes(value.value.toLowerCase()),
+    g.name.toLowerCase().includes(value.value.toLowerCase())
   );
   addSessionCountToGames();
   games_values.value = games_values.value.sort((a, b) => {

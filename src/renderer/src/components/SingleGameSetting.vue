@@ -15,40 +15,40 @@
         <div class="sessions-info">
           <div class="individual-info sgs-session-number">
             <p class="individual-info-lg">{{ total_sessions }}</p>
-            <p>sessions</p>
+            <p>{{ $t("SingleGameSetting.sessions") }}</p>
           </div>
           <div class="individual-info sgs-longest-session">
             <p class="individual-info-lg">
               {{ convertMinuteToHoursMinute(longuest_session) }}
             </p>
-            <p>Session la plus longue</p>
+            <p>{{ $t("SingleGameSetting.longest_session") }}</p>
           </div>
           <div class="individual-info sgs-smallest-session">
             <p class="individual-info-lg">
               {{ convertMinuteToHoursMinute(smallest_session) }}
             </p>
-            <p>Session la plus courte</p>
+            <p>{{ $t("SingleGameSetting.shortest_session") }}</p>
           </div>
           <div class="individual-info sgs-average-session">
             <p class="individual-info-lg">
               {{ convertMinuteToHoursMinute(average_session) }}
             </p>
-            <p>Durée moyenne des sessions</p>
+            <p>{{ $t("SingleGameSetting.mean_duration") }}</p>
           </div>
           <div class="individual-info sgs-total-playtime">
             <p class="individual-info-lg">
               {{ convertMinuteToHoursMinute(total_playtime) }}
             </p>
-            <p>Temps de jeu total</p>
+            <p>{{ $t("SingleGameSetting.total_playtime") }}</p>
           </div>
           <div class="individual-info sgs-team">
             <p class="individual-info-lg">{{ team_who_play_the_most }}</p>
-            <p>Équipe qui joue le plus</p>
+            <p>{{ $t("SingleGameSetting.team_who_play_the_most") }}</p>
           </div>
         </div>
         <div class="sgs-content">
           <div class="sgs-left">
-            <label for="logo">Logo du jeu</label>
+            <label for="logo">{{ $t("SingleGameSetting.game_logo") }}</label>
             <InputText
               id="logo"
               type="text"
@@ -57,7 +57,7 @@
               @contextmenu="onRightClickLogo"
             />
             <ContextMenu ref="menu_logo" :model="items" />
-            <label for="heroe">Grille du jeu</label>
+            <label for="heroe">{{ $t("SingleGameSetting.game_grid") }}</label>
             <InputText
               id="grid"
               type="text"
@@ -66,7 +66,7 @@
               @contextmenu="onRightClickGrid"
             />
             <ContextMenu ref="menu_grid" :model="items_grid" />
-            <label for="heroe">Heroe du jeu</label>
+            <label for="heroe">{{ $t("SingleGameSetting.game_heroe") }}</label>
             <InputText
               id="heroe"
               type="text"
@@ -77,7 +77,7 @@
             <ContextMenu ref="menu_heroe" :model="items_heroe" />
           </div>
           <Button
-            label="Modifier"
+            :label="i18n.t('SingleGameSetting.modify')"
             :icon="icon"
             class="btn-add"
             @click="useModifyGame"
@@ -97,6 +97,9 @@ import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { useToast } from "primevue/usetoast";
 import { convertMinuteToHoursMinute } from "../common/main";
+
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const props = defineProps(["name", "logo", "heroe", "grid"]);
 const name = computed(() => {
@@ -123,14 +126,14 @@ async function paste(input) {
 const menu_logo = ref();
 const items = ref([
   {
-    label: "Copier",
+    label: i18n.t("SingleGameSetting.copy"),
     icon: "pi pi-copy",
     command: () => {
       navigator.clipboard.writeText(logo.value);
     },
   },
   {
-    label: "Coller",
+    label: i18n.t("SingleGameSetting.paste"),
     icon: "pi pi-clone",
     command: () => {
       paste(logo);
@@ -141,14 +144,14 @@ const items = ref([
 const menu_heroe = ref();
 const items_heroe = ref([
   {
-    label: "Copier",
+    label: i18n.t("SingleGameSetting.copy"),
     icon: "pi pi-copy",
     command: () => {
       navigator.clipboard.writeText(heroe.value);
     },
   },
   {
-    label: "Coller",
+    label: i18n.t("SingleGameSetting.paste"),
     icon: "pi pi-clone",
     command: () => {
       paste(heroe);
@@ -159,14 +162,14 @@ const items_heroe = ref([
 const menu_grid = ref();
 const items_grid = ref([
   {
-    label: "Copier",
+    label: i18n.t("SingleGameSetting.copy"),
     icon: "pi pi-copy",
     command: () => {
       navigator.clipboard.writeText(grid.value);
     },
   },
   {
-    label: "Coller",
+    label: i18n.t("SingleGameSetting.paste"),
     icon: "pi pi-clone",
     command: () => {
       paste(grid);
@@ -285,7 +288,7 @@ async function useModifyGame() {
     toast.add({
       severity: "success",
       summary: "",
-      detail: "C'est tout bon !",
+      detail: i18n.t("SingleGameSetting.all_good"),
       life: 3000,
     });
     setTimeout(async () => {
@@ -295,7 +298,7 @@ async function useModifyGame() {
     toast.add({
       severity: "error",
       summary: "",
-      detail: "Une erreur est survenue lors de la modification du jeu.",
+      detail: i18n.t("SingleGameSetting.error_when_modifying"),
       life: 3000,
     });
   }

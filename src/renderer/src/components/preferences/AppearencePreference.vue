@@ -25,19 +25,17 @@ watch(use_logo_color_in_session_history, () => {
 
 <template>
   <div class="tp-container">
-    <h2 class="tp-title">Apparence</h2>
+    <h2 class="tp-title">{{ $t("AppearancePreference.title") }}</h2>
     <div class="tp-item">
-      <b class="text-color"
-        >Utiliser la couleur du logo du jeu le plus joué dans la liste des
-        équipes (peut ralentir le chargement):</b
-      >
+      <b class="text-color">{{
+        $t("AppearancePreference.use_color_of_most_played_game_in_team_list")
+      }}</b>
       <InputSwitch v-model="use_logo_color_in_team_list" />
     </div>
     <div class="tp-item">
-      <b class="text-color"
-        >Utiliser la couleur du logo du jeu dans l'historique des sessions (peut
-        ralentir le chargement):</b
-      >
+      <b class="text-color">{{
+        $t("AppearancePreference.use_color_of_game_in_history")
+      }}</b>
       <InputSwitch v-model="use_logo_color_in_session_history" />
     </div>
   </div>

@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { createI18n } from "vue-i18n";
 import PrimeVue from "primevue/config";
 import App from "./App.vue";
 import "primevue/resources/themes/lara-light-blue/theme.css";
@@ -46,7 +47,7 @@ import GamesSettings from "./views/GamesSettings.vue";
 import { createPinia, storeToRefs } from "pinia";
 import Settings from "./views/Settings.vue";
 import AddDatabaseForFirstTime from "./views/AddDatabaseForFirstTime.vue";
-import {useStoredDatabases} from "./store/store";
+import { useStoredDatabases } from "./store/store";
 import DatabaseSettings from "./views/DatabaseSettings.vue";
 
 const app = createApp(App);
@@ -101,7 +102,11 @@ const routes = [
   { path: "/settings/games", component: GamesSettings },
   { path: "/settings/general", component: Settings },
   { path: "/settings/databases", component: DatabaseSettings },
-  { path: "/adddatabase", component: AddDatabaseForFirstTime, name: 'adddatabase' },
+  {
+    path: "/adddatabase",
+    component: AddDatabaseForFirstTime,
+    name: "adddatabase",
+  },
 ];
 
 const router = createRouter({
@@ -113,12 +118,23 @@ const storeDatabases = useStoredDatabases();
 const { stored_databases } = storeToRefs(storeDatabases);
 
 router.beforeEach((to, from) => {
-  if (to.name !== 'adddatabase' && stored_databases.value.length === 0) {
+  if (to.name !== "adddatabase" && stored_databases.value.length === 0) {
     // redirect the user to the adddatabase page
-    return { name: 'adddatabase' }
+    return { name: "adddatabase" };
   }
-})
+});
 
 app.use(router);
+
+//Translations
+import translations from "./i18n/i18n.json";
+import { getPreferences } from "./preferences/preferences";
+const i18n = createI18n({
+  legacy: false,
+  locale: getPreferences("language"),
+  fallbackLocale: "en",
+  messages: translations,
+});
+app.use(i18n);
 
 app.mount("#app");

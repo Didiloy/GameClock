@@ -13,7 +13,7 @@ function toggleChronoListener() {
 
 <template>
   <div class="s-container">
-    <h2 class="s-title">Paramètres</h2>
+    <h2 class="s-title">{{ $t("Settings.title") }}</h2>
     <GeneralPreference @toggleChronoListener="toggleChronoListener" />
     <Divider />
     <TeamsPreferences />
@@ -22,7 +22,7 @@ function toggleChronoListener() {
     <Divider />
     <AppearencePreference />
     <Divider />
-    <PieChartPreferences/>
+    <PieChartPreferences />
   </div>
 </template>
 

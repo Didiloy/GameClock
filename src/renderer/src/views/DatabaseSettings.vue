@@ -4,7 +4,7 @@ import AddDatabasePreference from "../components/preferences/AddDatabasePreferen
 
 <template>
   <div class="s-container">
-    <h2 class="s-title">Bases de données</h2>
+    <h2 class="s-title">{{ $t("DatabaseSettings.databases") }}</h2>
     <AddDatabasePreference />
   </div>
 </template>

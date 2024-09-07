@@ -25,6 +25,8 @@ const defaults = {
   //colors
   use_logo_color_in_team_list: false,
   use_logo_color_in_session_history: false,
+  //language
+  language: "en",
 };
 
 const preferences_name = "preferences";
