@@ -9,9 +9,12 @@
     >
     <div class="import-db-elem-container">
       <div class="elem-container">
-        <h2 class="elem-title">
-          {{ $t("AddDatabaseForFirstTime.import_database") }}
-        </h2>
+        <div class="title-container">
+          <h2 class="elem-title">
+            {{ $t("AddDatabaseForFirstTime.import_database") }}
+          </h2>
+          <Dropdown v-model="$i18n.locale" :options="$i18n.availableLocales" />
+        </div>
         <p class="text-color">
           {{ $t("AddDatabaseForFirstTime.ask_your_friends") }}
         </p>
@@ -44,56 +47,56 @@
                 <li>
                   {{
                     $t(
-                      "AddDatabaseForFirstTime.instruction_to_create_database.first"
+                      "AddDatabaseForFirstTime.instruction_to_create_database.first",
                     )
                   }}
                 </li>
                 <li>
                   {{
                     $t(
-                      "AddDatabaseForFirstTime.instruction_to_create_database.second"
+                      "AddDatabaseForFirstTime.instruction_to_create_database.second",
                     )
                   }}
                 </li>
                 <li>
                   {{
                     $t(
-                      "AddDatabaseForFirstTime.instruction_to_create_database.third"
+                      "AddDatabaseForFirstTime.instruction_to_create_database.third",
                     )
                   }}
                 </li>
                 <li>
                   {{
                     $t(
-                      "AddDatabaseForFirstTime.instruction_to_create_database.fourth"
+                      "AddDatabaseForFirstTime.instruction_to_create_database.fourth",
                     )
                   }}
                 </li>
                 <li>
                   {{
                     $t(
-                      "AddDatabaseForFirstTime.instruction_to_create_database.fifth"
+                      "AddDatabaseForFirstTime.instruction_to_create_database.fifth",
                     )
                   }}
                 </li>
                 <li>
                   {{
                     $t(
-                      "AddDatabaseForFirstTime.instruction_to_create_database.sixth"
+                      "AddDatabaseForFirstTime.instruction_to_create_database.sixth",
                     )
                   }}
                 </li>
                 <li>
                   {{
                     $t(
-                      "AddDatabaseForFirstTime.instruction_to_create_database.seventh"
+                      "AddDatabaseForFirstTime.instruction_to_create_database.seventh",
                     )
                   }}
                 </li>
                 <li>
                   {{
                     $t(
-                      "AddDatabaseForFirstTime.instruction_to_create_database.eighth"
+                      "AddDatabaseForFirstTime.instruction_to_create_database.eighth",
                     )
                   }}
                 </li>
@@ -240,7 +243,7 @@ function importDatabase() {
     database.projectId,
     database.storageBucket,
     database.messagingSenderId,
-    database.appId
+    database.appId,
   );
   router.push({ path: "/" }).then(() => {
     router.go();
@@ -274,7 +277,7 @@ function addNewDatabase() {
     database_id.value,
     database_storage_bucket.value,
     database_messaging_sender_id.value,
-    database_app_id.value
+    database_app_id.value,
   );
   router.go("/");
 }
@@ -324,6 +327,7 @@ function addNewDatabase() {
 }
 
 .elem-container {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -335,6 +339,14 @@ function addNewDatabase() {
 
 .elem-text-color {
   color: var(--text-color);
+}
+
+.title-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .elem-title {
