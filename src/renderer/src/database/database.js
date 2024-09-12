@@ -51,13 +51,13 @@ export const getIdOfTeam = (teamName, teams) => {
 export function getIdsOfTeam(teamName, teams) {
   if (teamName === undefined || teams === undefined) return [];
   let team_names = teamName.split(",");
-  if(team_names.length === 1){
+  if (team_names.length === 1) {
     return teams.filter((t) => t.name === teamName)[0].id !== undefined
-        ? [teams.filter((t) => t.name === teamName)[0].id]
-        : [];
+      ? [teams.filter((t) => t.name === teamName)[0].id]
+      : [];
   }
   let ids = [];
-  for(let team of team_names){
+  for (let team of team_names) {
     ids.push(teams.filter((t) => t.name === team)[0].id);
   }
   return ids;

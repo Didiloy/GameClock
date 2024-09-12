@@ -47,8 +47,9 @@ import GamesSettings from "./views/GamesSettings.vue";
 import { createPinia, storeToRefs } from "pinia";
 import Settings from "./views/Settings.vue";
 import AddDatabaseForFirstTime from "./views/AddDatabaseForFirstTime.vue";
-import { useStoredDatabases } from "./store/store";
+import { useStoredDatabases, useStore } from "./store/store";
 import DatabaseSettings from "./views/DatabaseSettings.vue";
+import DatabaseError from "./components/DatabaseError.vue";
 
 const app = createApp(App);
 
@@ -100,8 +101,13 @@ const routes = [
   { path: "/team/:name/:game", component: Team },
   { path: "/addteam", component: AddTeam },
   { path: "/settings/games", component: GamesSettings },
-  { path: "/settings/general", component: Settings },
-  { path: "/settings/databases", component: DatabaseSettings },
+  { path: "/settings/general", component: Settings, name: "settings-general" },
+  {
+    path: "/settings/databases",
+    component: DatabaseSettings,
+    name: "settings-databases",
+  },
+  { path: "/database-error", component: DatabaseError, name: "database-error" },
   {
     path: "/adddatabase",
     component: AddDatabaseForFirstTime,
@@ -117,10 +123,47 @@ const router = createRouter({
 const storeDatabases = useStoredDatabases();
 const { stored_databases } = storeToRefs(storeDatabases);
 
-router.beforeEach((to, from) => {
+import { initialiseFirebase } from "./database/firebaseConfig";
+//if the user don't have databases he must add one else we initialise the firebase database
+if (stored_databases.value.length === 0) {
+  router.push("/adddatabase");
+} else {
+  initialiseFirebase(
+    stored_databases,
+    getPreferences("selected_database_index")
+  );
+}
+
+const store = useStore();
+const { store_error } = storeToRefs(store);
+
+//if we don't have databases we can only go to add database
+router.beforeEach((to) => {
   if (to.name !== "adddatabase" && stored_databases.value.length === 0) {
     // redirect the user to the adddatabase page
     return { name: "adddatabase" };
+  }
+});
+
+//if the database isn't accessible we can still change databases and see our parameters
+router.beforeEach((to, from) => {
+  if (
+    store_error.value !== undefined &&
+    store_error.value !== "" &&
+    to.name !== "database-error"
+  ) {
+    if (from.name === "database-error") {
+      if (to.name !== "settings-general" && to.name !== "settings-databases")
+        return false;
+    }
+
+    if (from.name === "settings-databases") {
+      if (to.name !== "settings-general") return false;
+    }
+
+    if (from.name === "settings-general") {
+      if (to.name !== "settings-databases") return false;
+    }
   }
 });
 

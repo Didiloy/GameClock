@@ -10,15 +10,6 @@ const router = useRouter();
 const storeDatabases = useStoredDatabases();
 const { stored_databases } = storeToRefs(storeDatabases);
 
-if (stored_databases.value.length === 0) {
-  router.push("/adddatabase");
-} else {
-  initialiseFirebase(
-    stored_databases,
-    getPreferences("selected_database_index")
-  );
-}
-
 import { useStore, useStoredDatabases } from "./store/store";
 import { storeToRefs } from "pinia";
 const store = useStore();
@@ -49,6 +40,13 @@ watch(teams, () => {
 onMounted(() => {
   addChronoListener();
 });
+
+watch(store_error, () => {
+  if (store_error.value !== undefined && store_error.value !== "") {
+    router.push("/database-error");
+  }
+});
+
 onUnmounted(() => {
   removeChronoListener();
 });
@@ -87,10 +85,6 @@ function verifyIfTeamExist() {
 function toggleChrono() {
   chrono.value = !chrono.value;
 }
-
-watch(store_error, () => {
-  console.log(store_error.value);
-});
 </script>
 
 <template>
@@ -102,12 +96,6 @@ watch(store_error, () => {
       </div>
       <div v-if="!loaded && stored_databases.length > 0" class="content">
         <Loading msg="loading_data" />
-      </div>
-      <div
-        v-else-if="store_error !== undefined && store_error !== ''"
-        class="content a-center"
-      >
-        <h4>{{ $t("App.error_loading_data") + store_error }}</h4>
       </div>
       <div v-else class="content">
         <router-view @toggleChronoListener="toggleChronoListener" />
