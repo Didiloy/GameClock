@@ -103,7 +103,7 @@
                 <div>
                   {{
                     new Date(
-                      slotProps.data.date.seconds * 1000
+                      slotProps.data.date.seconds * 1000,
                     ).toLocaleDateString()
                   }}
                 </div>
@@ -116,7 +116,7 @@
   </Card>
 </template>
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
@@ -148,13 +148,6 @@ onMounted(async () => {
   }
 });
 
-watch([sessions], async () => {
-  await init();
-  if (getPreferences("use_logo_color_in_session_history")) {
-    await computeSessionColor();
-  }
-});
-
 // Using Map to store unique games so that we don't compute color multiple time for the same game
 const uniqueGames = ref(new Map());
 
@@ -162,9 +155,17 @@ async function init() {
   sessions_values.value = [];
   id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
 
+  let session_copy = sessions.value;
+  session_copy.sort((a, b) => {
+    return b.date.seconds - a.date.seconds;
+  });
+  if (props.historySize) {
+    session_copy = session_copy.slice(0, props.historySize);
+  }
+
   if (props.teamName !== undefined) {
     //if we are in a team page
-    for (let s of sessions.value) {
+    for (let s of session_copy) {
       if (id_of_team.value.includes(s.team.id)) {
         let team_name;
         if (props.teamName.includes(",")) {
@@ -192,7 +193,7 @@ async function init() {
       }
     }
   } else {
-    for (let s of sessions.value) {
+    for (let s of session_copy) {
       let [game_name, logo] = getGameNameAndLogoById(s.game.id);
       //add the game to the map to compute the color after
       if (!uniqueGames.value.has(game_name)) {
@@ -214,41 +215,38 @@ async function init() {
       });
     }
   }
-
-  sessions_values.value.sort((a, b) => {
-    return b.date.seconds - a.date.seconds;
-  });
-
-  if (props.historySize) {
-    sessions_values.value = sessions_values.value.slice(0, props.historySize);
-  }
 }
 
 async function computeSessionColor() {
+  let id = 0;
   for (let [game, data] of uniqueGames.value) {
     const worker = new Worker(
-      new URL("../workers/colorWorker.js", import.meta.url)
+      new URL("../workers/colorWorker.js", import.meta.url),
     );
 
     worker.onmessage = (event) => {
       const { logo, color, error } = event.data;
 
       if (error) {
-        console.error(`Error processing logo ${logo}: ${error}`);
+        console.log(`Error processing logo ${logo}: ${error}`);
+        worker.terminate();
         return;
       }
 
       uniqueGames.value.set(game, { logo, color });
       setColorOfGamesSession(game, color);
+      worker.terminate();
     };
 
     worker.onerror = (error) => {
-      console.error(`Worker error: ${error.message}`);
-      reject(error);
+      console.log(`Worker error: ${error.message}`);
+      worker.terminate();
     };
 
     if (data.logo !== undefined && data.logo !== "")
-      worker.postMessage({ logo: data.logo, transparency: 0.4 });
+      worker.postMessage({ logo: data.logo, transparency: 0.4, id: id });
+    else worker.terminate();
+    id++;
   }
 }
 

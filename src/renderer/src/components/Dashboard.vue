@@ -13,7 +13,7 @@
         :value="
           i18n.t('Dashboard.biggest_games_sessions_part_one') +
           convertMinuteToHoursMinute(
-            team_with_greatest_session_average_playtime_value
+            team_with_greatest_session_average_playtime_value,
           ) +
           i18n.t('Dashboard.biggest_games_sessions_part_two')
         "
@@ -164,7 +164,7 @@ function getTeamWithGreatestSessionAveragePlaytime() {
     }
   }
   team_with_greatest_session_average_playtime_value.value = Math.round(
-    team_with_greatest_session_average_playtime_value.value
+    team_with_greatest_session_average_playtime_value.value,
   );
 }
 

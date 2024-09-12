@@ -159,9 +159,10 @@ function sortTeams() {
 }
 
 async function getTeamColorWithWorker() {
+  let id = 0;
   for (let team of teamItem.value) {
     const worker = new Worker(
-      new URL("../workers/colorWorker.js", import.meta.url)
+      new URL("../workers/colorWorker.js", import.meta.url),
     );
 
     worker.onmessage = (event) => {
@@ -169,18 +170,21 @@ async function getTeamColorWithWorker() {
 
       if (error) {
         console.error(`Error processing logo ${logo}: ${error}`);
+        worker.terminate();
         return;
       }
 
       team.gradient_color = color;
+      worker.terminate();
     };
 
     worker.onerror = (error) => {
       console.error(`Worker error: ${error.message}`);
-      reject(error);
+      worker.terminate();
     };
 
-    worker.postMessage({ logo: team.logo, transparency: 0.4 });
+    worker.postMessage({ logo: team.logo, transparency: 0.4, id: id });
+    id++;
   }
 }
 

@@ -1,10 +1,9 @@
-// import { getMostDominantColor } from "../common/main";
-
 async function getMostDominantColor(image, transparency = 0.5) {
   let colors;
   try {
     colors = await getDominantColors(image, transparency);
   } catch (error) {
+    console.log("error getting dominants colors. returning rgb(255, 255, 255)");
     return "rgb(255,255,255)";
   }
   if (colors.length === 0) {
@@ -83,12 +82,11 @@ async function getDominantColors(imageUrl, transparency) {
 }
 
 self.onmessage = async (event) => {
-  const { logo, transparency } = event.data;
-
+  const { logo, transparency, id } = event.data;
   try {
     const color = await getMostDominantColor(logo, transparency);
-    self.postMessage({ logo, color });
+    self.postMessage({ logo, color, idw: id });
   } catch (error) {
-    self.postMessage({ error: error.message });
+    self.postMessage({ error: error.message, logo: logo, idw: id });
   }
 };

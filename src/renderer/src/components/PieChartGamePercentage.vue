@@ -78,7 +78,7 @@ watch(
   () => props.sessions,
   () => {
     init();
-  }
+  },
 );
 
 const chart = ref({});
@@ -86,13 +86,10 @@ const chart = ref({});
 const showLabel = ref(true);
 
 function onShowLabelClick() {
-  console.log("show ", showLabel.value);
-  // showLabel.value = !showLabel.value;
   setLabels();
 }
 
 function setLabels() {
-  console.log("setLabels", showLabel.value);
   if (!showLabel.value) {
     chart.value.data.labels = games_name.value;
   } else {
@@ -146,7 +143,7 @@ function setGamesNameAndPlaytime() {
   temp_games = temp_games.filter((g) => g.playtime > 0);
   games_name.value = temp_games.map((g) => g.name);
   games_percentage.value = temp_games.map((g) =>
-    ((g.playtime / total_playtime) * 100).toFixed(0)
+    ((g.playtime / total_playtime) * 100).toFixed(0),
   );
   games_playtime.value = temp_games.map((g) => g.playtime);
 }
@@ -223,7 +220,7 @@ const setChartOptions = () => {
           label: function (context) {
             return (
               convertMinuteToHoursMinute(
-                games_playtime.value[context.dataIndex]
+                games_playtime.value[context.dataIndex],
               ) +
               " -> " +
               games_percentage.value[context.dataIndex] +
@@ -296,7 +293,7 @@ const htmlLegendPlugin = {
         } else {
           chart.setDatasetVisibility(
             item.datasetIndex,
-            !chart.isDatasetVisible(item.datasetIndex)
+            !chart.isDatasetVisible(item.datasetIndex),
           );
         }
         chart.update();
