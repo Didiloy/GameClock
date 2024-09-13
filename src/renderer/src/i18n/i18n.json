@@ -187,6 +187,7 @@
         "invalid_shortcut": "Vous ne pouvez mettre qu'une lettre en tant que raccourci"
       },
       "shortcut_toggle_chronometer": "Raccourci clavier pour lancer/stopper le chronomètre:",
+      "shortcut_reload_data": "Raccourci clavier pour recharger les données:",
       "page_start_application": "Page dans laquelle démarrer l'application:",
       "number_of_last_session": "Nombre de dernières sessions à afficher sur la page d'accueil"
     },
@@ -456,6 +457,7 @@
         "invalid_shortcut": "You can only set one letter as a shortcut"
       },
       "shortcut_toggle_chronometer": "Keyboard shortcut to start/stop the timer:",
+      "shortcut_reload_data": "Keyboard shortcut to reload data:",
       "page_start_application": "Page to start the application on:",
       "number_of_last_session": "Number of last sessions to display on the homepage"
     },

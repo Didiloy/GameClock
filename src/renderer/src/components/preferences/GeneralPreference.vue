@@ -52,18 +52,22 @@ const selected_page = ref({
 });
 
 const toggle_chronometer_key_shortcut = ref(
-  getPreferences("toggle_chronometer_key_shortcut")
+  getPreferences("toggle_chronometer_key_shortcut"),
+);
+
+const reload_data_key_shortcut = ref(
+  getPreferences("reload_data_key_shortcut"),
 );
 
 const number_of_last_session_possible = ref(["5", "10", "15"]);
 const selected_number_of_last_sessions = ref(
-  getPreferences("number_of_last_sessions")
+  getPreferences("number_of_last_sessions"),
 );
 
 watch(selected_number_of_last_sessions, () => {
   setPreferences(
     "number_of_last_sessions",
-    selected_number_of_last_sessions.value
+    selected_number_of_last_sessions.value,
   );
 });
 
@@ -72,10 +76,25 @@ watch(selected_page, () => {
   setPreferences("default_start_page_route", selected_page.value.route);
 });
 
+//update the shortcut, emit the event to stop listening to the event while we are changing the key
 const update_shortcut = (update_value) => {
   emit("toggleChronoListener");
   if (!validateShortCut(update_value)) return;
   setPreferences("toggle_chronometer_key_shortcut", update_value);
+  if (update_value === "") {
+    emit("toggleChronoListener");
+    return;
+  }
+  setTimeout(function () {
+    emit("toggleChronoListener");
+  }, 1000);
+};
+
+//update the shortcut, emit the event to stop listening to the event while we are changing the key
+const update_shortcut_reload_data = (update_value) => {
+  emit("toggleChronoListener");
+  if (!validateShortCut(update_value)) return;
+  setPreferences("reload_data_key_shortcut", update_value);
   if (update_value === "") {
     emit("toggleChronoListener");
     return;
@@ -133,6 +152,18 @@ watch(i18n.locale, () => {
         type="text"
         :modelValue="toggle_chronometer_key_shortcut"
         @update:modelValue="update_shortcut"
+        style="width: 50px"
+        maxlength="1"
+      />
+    </div>
+    <div class="tp-item">
+      <b class="text-color">{{
+        $t("GeneralPreference.shortcut_reload_data")
+      }}</b>
+      <InputText
+        type="text"
+        :modelValue="reload_data_key_shortcut"
+        @update:modelValue="update_shortcut_reload_data"
         style="width: 50px"
         maxlength="1"
       />

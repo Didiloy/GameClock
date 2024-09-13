@@ -27,6 +27,8 @@ const defaults = {
   use_logo_color_in_session_history: false,
   //language
   language: "en",
+  //data loading
+  reload_data_key_shortcut: "r"
 };
 
 const preferences_name = "preferences";

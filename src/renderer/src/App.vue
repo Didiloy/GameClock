@@ -3,7 +3,6 @@ import TitleBar from "./components/TitleBar.vue";
 import Sidebar from "./components/Sidebar.vue";
 import Loading from "./components/Loading.vue";
 import { useRouter } from "vue-router";
-import { initialiseFirebase } from "./database/firebaseConfig";
 import { getPreferences } from "./preferences/preferences";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 const router = useRouter();
@@ -17,12 +16,18 @@ const { loaded, teams, first_load, store_error } = storeToRefs(store);
 const chrono = ref(false);
 const listener_added = ref(false);
 
-function keyEventToggleChrono(e) {
+async function keyEventToggleChrono(e) {
   if (
     e.key === getPreferences("toggle_chronometer_key_shortcut").toLowerCase() ||
     e.key === getPreferences("toggle_chronometer_key_shortcut").toUpperCase()
   ) {
     toggleChrono();
+  }
+  if (
+    e.key === getPreferences("reload_data_key_shortcut").toLowerCase() ||
+    e.key === getPreferences("reload_data_key_shortcut").toUpperCase()
+  ) {
+    store.reloadStore();
   }
 }
 
