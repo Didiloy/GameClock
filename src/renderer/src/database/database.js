@@ -84,7 +84,7 @@ function getIfGameExist(gameName) {
   return { exist: false };
 }
 
-export async function addSession(teamId, gameName, duration, was_cool) {
+export async function addSession(teamId, gameName, duration, was_cool, comment) {
   try {
     let { exist, id } = getIfGameExist(gameName);
     let gamePath = id ? id : "";
@@ -114,6 +114,7 @@ export async function addSession(teamId, gameName, duration, was_cool) {
         date: new Date(),
         game: doc(collection(db, "games"), gamePath),
         team: doc(collection(db, "teams"), teamId),
+        comment: comment
       });
     } else {
       await setDoc(doc(sessionRef), {
@@ -121,6 +122,7 @@ export async function addSession(teamId, gameName, duration, was_cool) {
         date: new Date(),
         game: doc(collection(db, "games"), gamePath),
         team: doc(collection(db, "teams"), teamId),
+        comment: comment
       });
     }
     return true;

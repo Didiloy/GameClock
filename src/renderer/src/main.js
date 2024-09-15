@@ -6,6 +6,7 @@ import "primevue/resources/themes/lara-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import InputText from "primevue/inputtext";
+import Textarea from 'primevue/textarea';
 import InputNumber from "primevue/inputnumber";
 import Button from "primevue/button";
 import Toast from "primevue/toast";
@@ -88,6 +89,7 @@ app.component("Dropdown", Dropdown);
 app.component("InputSwitch", InputSwitch);
 app.component("Message", Message);
 app.component("ContextMenu", ContextMenu);
+app.component("TextArea", Textarea);
 
 //Pinia
 const pinia = createPinia();

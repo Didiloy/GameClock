@@ -40,7 +40,9 @@
                     style="width: 50px; height: auto; border-radius: 5px"
                   />
                   <span>
-                    {{ slotProps.data.name }}
+                    {{ slotProps.data.name.length > 20
+                      ? slotProps.data.name.substring(0, 20) + "..."
+                      : slotProps.data.name }}
                   </span>
                 </div>
               </template>
@@ -57,7 +59,10 @@
                 <RouterLink
                   :to="'/team/' + slotProps.data.team_name"
                   style="color: var(--primary-500)"
-                  >{{ slotProps.data.team_name }}</RouterLink
+                  >{{ slotProps.data.team_name.length > 20
+                      ? slotProps.data.team_name.substring(0, 20) + "..."
+                      : slotProps.data.team_name }}
+                </RouterLink
                 >
               </template>
             </Column>
@@ -76,6 +81,8 @@
               v-once
             >
               <template #body="slotProps">
+                <div class="sh-hover-div">
+                  <div v-if="slotProps.data.comment" class="sh-popup">{{ slotProps.data.comment}}</div>
                 <Chip
                   :label="
                     slotProps.data.joyrate == null
@@ -92,6 +99,8 @@
                         : 'c-bad'
                   "
                 />
+                  <i v-if="slotProps.data.comment" class="pi pi-comment" style="margin-left: 5px;"/>
+                </div>
               </template>
             </Column>
             <Column
@@ -189,6 +198,7 @@ async function init() {
           date: s.date,
           logo: logo,
           joyrate: s.was_cool,
+          comment: s.comment
         });
       }
     }
@@ -212,6 +222,7 @@ async function init() {
         date: s.date,
         logo: logo,
         joyrate: s.was_cool,
+        comment: s.comment
       });
     }
   }
@@ -306,5 +317,46 @@ function getGameNameAndLogoById(id) {
 
 .c-bad {
   background-color: var(--red-100);
+}
+
+.sh-hover-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sh-hover-div .sh-popup {
+  visibility: hidden;
+  background-color: var(--primary-100);
+  color: var(--text-color);
+  text-align: center;
+  width: 350px;
+  border-radius: 5px;
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  top: auto;
+  left: auto;
+  right: 20%;
+  bottom: auto;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.sh-hover-div:hover .sh-popup {
+  visibility: visible;
+  opacity: 1;
+}
+
+.sh-popup::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
 }
 </style>

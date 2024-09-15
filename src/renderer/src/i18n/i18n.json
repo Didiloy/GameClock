@@ -160,6 +160,7 @@
       "neutral": "Neutre",
       "bad": "Nul",
       "add": "Ajouter",
+      "comments": "Commentaires (optionnels)",
       "errors": {
         "fill_all_fields": "Veuillez remplir tous les champs correctement.",
         "formulas_error": "Les opérandes d'une formule doivent être des nombres entiers et vous ne pouvez utiliser que l'addition.",
@@ -426,13 +427,14 @@
       "all_time": "All periods"
     },
     "AddSession": {
-      "game_name": "Game Name",
+      "game_name": "Game's name",
       "informative_text_formulas": "You can enter a duration in minutes or use a formula to sum multiple durations. For example, to add 10 minutes and 20 minutes, enter \"=10+20.\"",
       "duration_in_minute": "Duration in minutes",
       "fun": "Fun",
       "neutral": "Neutral",
       "bad": "Bad",
       "add": "Add",
+      "comments": "Comments (optionnals)",
       "errors": {
         "fill_all_fields": "Please fill in all fields correctly.",
         "formulas_error": "The operands of a formula must be whole numbers and you can only use addition.",

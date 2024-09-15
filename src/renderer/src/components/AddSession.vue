@@ -30,7 +30,7 @@
           <div>
             <Button
               icon="pi pi-clock"
-              @click="startStopWatch"
+              @click="getChronoValue"
               style="background-color: var(--primary-400)"
               class="as-chrono-button"
             />
@@ -77,6 +77,9 @@
             }"
           />
         </div>
+        <div class="as-comments">
+          <TextArea v-model="comment" rows="4" cols="23"  :placeholder="i18n.t('AddSession.comments')"/>
+        </div>
       </div>
       <div class="as-button-add">
         <Button
@@ -113,6 +116,7 @@ const props = defineProps(["teamName", "gameName"]);
 const all_games = ref(games);
 const items = ref([]);
 const loading = ref(false);
+const comment = ref("");
 const icon = ref("pi pi-plus");
 const game = ref("");
 const game_grid = computed(() => {
@@ -125,6 +129,7 @@ const heroe_url = computed(() => {
     ? `url(${all_games.value.find((g) => g.name === game.value)?.heroe})`
     : ``;
 });
+
 const duration = ref("");
 const was_cool = ref({});
 const options_cool = ref([
@@ -160,7 +165,7 @@ watch(toggle_nul, () => {
   }
 });
 
-function startStopWatch() {
+function getChronoValue() {
   duration.value = chrono_value.value;
 }
 
@@ -240,7 +245,8 @@ async function addNewSession() {
     getTeamId(),
     game.value,
     parseInt(duration.value),
-    was_cool.value.value
+    was_cool.value.value,
+    comment.value
   );
   loading.value = false;
   if (success) {
@@ -332,6 +338,11 @@ async function addNewSession() {
   width: 100%;
 }
 
+.as-comments {
+  margin-top: 10px;
+  height: 100px;
+}
+
 .as-duration-input {
   display: flex;
   flex-direction: row;
@@ -354,7 +365,7 @@ async function addNewSession() {
   background-color: whitesmoke;
   border-radius: 10px;
   padding: 5px;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .toggle-button {
