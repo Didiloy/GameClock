@@ -58,7 +58,7 @@
             :pt="{
               box: {
                 style: toggle_neutre
-                  ? 'background-color: var(--primary-400);'
+                  ? 'background-color: var(--yellow-400);'
                   : 'background-color: whitesmoke; border: none;',
               },
             }"

@@ -3,7 +3,7 @@ import LittleGameCard from "./LittleGameCard.vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
-import { getIdOfTeam, getIdsOfTeam } from "../database/database";
+import { getIdsOfTeam } from "../database/database";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -97,7 +97,11 @@ function getFirstGamesByPlaytime(number, sessions_array) {
       if (t.gameid === s.game.id) {
         exist = true;
         t.duration += s.duration;
-        t.was_cool_number += s.was_cool ? 1 : 0;
+        if (s.was_cool === undefined) {
+          t.was_neutral_number += 1;
+        } else {
+          t.was_cool_number += s.was_cool ? 1 : 0;
+        }
         t.total_sessions += 1;
       }
     }
@@ -105,6 +109,7 @@ function getFirstGamesByPlaytime(number, sessions_array) {
       tmp.push({
         gameid: s.game.id,
         duration: s.duration,
+        was_neutral_number: s.was_cool === undefined ? 1 : 0,
         was_cool_number: s.was_cool ? 1 : 0,
         total_sessions: 1,
       });
@@ -115,6 +120,9 @@ function getFirstGamesByPlaytime(number, sessions_array) {
   });
   tmp.map((t) => {
     t.joyrate = (t.was_cool_number / t.total_sessions) * 100;
+  });
+  tmp.map((t) => {
+    t.neutralRate = (t.was_neutral_number / t.total_sessions) * 100;
   });
   return tmp.slice(0, number);
 }
@@ -165,6 +173,7 @@ function getGameDetailsById(id) {
                   :gameName="getGameDetailsById(g.gameid)[0]"
                   :playtime="g.duration"
                   :joyRate="g.joyrate"
+                  :neutralRate="g.neutralRate"
                   :heroe="getGameDetailsById(g.gameid)[2]"
                   :icon="getGameDetailsById(g.gameid)[1]"
                 ></LittleGameCard>

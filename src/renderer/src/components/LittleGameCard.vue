@@ -9,6 +9,7 @@
       </div>
       <div class="joyrate">
         <div class="good"></div>
+        <div class="neutral"></div>
         <div class="bad"></div>
       </div>
     </div>
@@ -17,13 +18,23 @@
 <script setup>
 import { ref, computed } from "vue";
 
-const props = defineProps(["gameName", "playtime", "joyRate", "heroe", "icon"]);
+const props = defineProps([
+  "gameName",
+  "playtime",
+  "joyRate",
+  "neutralRate",
+  "heroe",
+  "icon",
+]);
 const card_size = ref("450px");
 const joyrate_bad = computed(() => {
-  return 100 - props.joyRate + "%";
+  return 100 - props.joyRate - props.neutralRate + "%";
 });
 const joyrate_good = computed(() => {
   return props.joyRate + "%";
+});
+const joyrate_neutral = computed(() => {
+  return props.neutralRate + "%";
 });
 
 const heroe_url = computed(() => {
@@ -37,9 +48,8 @@ function convertMinuteToHoursMinute(minute) {
     (minute % 60 === 0
       ? ""
       : minute % 60 < 10
-        ? "0" + (minute % 60)
-        : minute % 60) +
-    " M "
+        ? "0" + (minute % 60) + " M"
+        : (minute % 60) + " M")
   );
 }
 </script>
@@ -99,6 +109,13 @@ function convertMinuteToHoursMinute(minute) {
 .good {
   background-color: green;
   width: v-bind(joyrate_good);
+  height: 100%;
+  border-radius: 10px;
+}
+
+.neutral {
+  background-color: yellow;
+  width: v-bind(joyrate_neutral);
   height: 100%;
   border-radius: 10px;
 }

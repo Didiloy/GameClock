@@ -103,7 +103,7 @@
                 <div>
                   {{
                     new Date(
-                      slotProps.data.date.seconds * 1000,
+                      slotProps.data.date.seconds * 1000
                     ).toLocaleDateString()
                   }}
                 </div>
@@ -221,7 +221,7 @@ async function computeSessionColor() {
   let id = 0;
   for (let [game, data] of uniqueGames.value) {
     const worker = new Worker(
-      new URL("../workers/colorWorker.js", import.meta.url),
+      new URL("../workers/colorWorker.js", import.meta.url)
     );
 
     worker.onmessage = (event) => {
@@ -297,7 +297,7 @@ function getGameNameAndLogoById(id) {
 }
 
 .c-neutral {
-  background-color: var(--primary-100);
+  background-color: var(--yellow-100);
 }
 
 .c-good {

@@ -2,7 +2,7 @@
 import { onMounted, ref, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import { getIdOfTeam, getIdsOfTeam } from "../database/database";
+import { getIdsOfTeam } from "../database/database";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -138,13 +138,13 @@ const setChartData = () => {
       },
       {
         label: i18n.t("GamesFunPercentage.neutral"),
-        borderColor: documentStyle.getPropertyValue("--orange-400"),
-        pointBackgroundColor: documentStyle.getPropertyValue("--orange-400"),
-        pointBorderColor: documentStyle.getPropertyValue("--orange-400"),
+        borderColor: documentStyle.getPropertyValue("--yellow-400"),
+        pointBackgroundColor: documentStyle.getPropertyValue("--yellow-400"),
+        pointBorderColor: documentStyle.getPropertyValue("--yellow-400"),
         pointHoverBackgroundColor: textColor,
-        pointHoverBorderColor: documentStyle.getPropertyValue("--orange-400"),
+        pointHoverBorderColor: documentStyle.getPropertyValue("--yellow-400"),
         data: neutral_percentage.value,
-        backgroundColor: documentStyle.getPropertyValue("--orange-500"),
+        backgroundColor: documentStyle.getPropertyValue("--yellow-500"),
       },
       {
         label: i18n.t("GamesFunPercentage.bad"),
