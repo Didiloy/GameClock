@@ -9,6 +9,9 @@
     "App": {
       "error_loading_data": "Erreur lors du chargement des données: "
     },
+    "TitleBar": {
+      "last_chronometer_value": "Dernière valeur du chronomètre: "
+    },
     "Sidebar": {
       "version": "Version",
       "home": "Accueil",
@@ -278,6 +281,9 @@
     },
     "App": {
       "error_loading_data": "Error loading data: "
+    },
+    "TitleBar": {
+      "last_chronometer_value": "Last value of the chronometer: "
     },
     "Sidebar": {
       "version": "Version",

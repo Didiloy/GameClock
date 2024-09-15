@@ -3,16 +3,19 @@
     <div id="drag-region">
       <div id="window-title">
         <img
-          src="../assets/images/icons.png"
-          draggable="false"
-          style="height: 25px; width: auto"
+            src="../assets/images/icons.png"
+            draggable="false"
+            style="height: 23px; width: auto"
+            alt="logo"
         />
       </div>
       <div
-        id="chronometer"
-        @click="startStopWatch"
-        :style="'background-color:' + background_color + ';'"
+          id="chronometer"
+          @click="startStopWatch"
+          :style="'background-color:' + background_color + ';'"
+          class="hover-div"
       >
+        <div class="popup">{{ $t("TitleBar.last_chronometer_value") + convertSecondsToHourMinutesSeconds(last_chrono_value)}}</div>
         <span v-if="duration_seconds !== 0">
           {{ convertSecondsToHourMinutesSeconds(duration_seconds) }}
         </span>
@@ -22,25 +25,28 @@
       <div id="window-controls">
         <div class="button" id="min-button">
           <img
-            class="icon"
-            src="../assets/images/minimize_icon.svg"
-            draggable="false"
+              class="icon"
+              src="../assets/images/minimize_icon.svg"
+              draggable="false"
+              alt="minimize"
           />
         </div>
 
         <div class="button" id="max-button">
           <img
-            class="icon-max"
-            src="../assets/images/maximize_icon.svg"
-            draggable="false"
+              class="icon-max"
+              src="../assets/images/maximize_icon.svg"
+              draggable="false"
+              alt="maximize"
           />
         </div>
 
         <div class="button" id="close-button">
           <img
-            class="icon"
-            src="../assets/images/close_icon.svg"
-            draggable="false"
+              class="icon"
+              src="../assets/images/close_icon.svg"
+              draggable="false"
+              alt="close"
           />
         </div>
       </div>
@@ -48,22 +54,24 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, watch } from "vue";
-import { useStoreChrono } from "../store/store";
+import {onMounted, ref, watch} from "vue";
+import {useStoreChrono} from "../store/store";
+import {getPreferences, setPreferences} from "../preferences/preferences";
+
 const props = defineProps(["toggleChrono"]);
 const store = useStoreChrono();
 
 function handleWindowControls() {
   // Make minimise/maximise/close buttons work when they are clicked
-  document.getElementById("min-button").addEventListener("click", (event) => {
+  document.getElementById("min-button").addEventListener("click", () => {
     window.electron.ipcRenderer.send("minimize");
   });
 
-  document.getElementById("max-button").addEventListener("click", (event) => {
+  document.getElementById("max-button").addEventListener("click", () => {
     window.electron.ipcRenderer.send("maximize");
   });
 
-  document.getElementById("close-button").addEventListener("click", (event) => {
+  document.getElementById("close-button").addEventListener("click", () => {
     window.electron.ipcRenderer.send("close");
   });
 }
@@ -77,6 +85,7 @@ const duration = ref(0);
 const duration_seconds = ref(0);
 const is_chrono_running = ref(false);
 const background_color = ref("var(--primary-500)");
+const last_chrono_value = ref(getPreferences("last_chronometer_value"));
 
 setInterval(() => {
   if (is_chrono_running.value) {
@@ -90,10 +99,10 @@ watch(duration_seconds, () => {
 });
 
 watch(
-  () => props.toggleChrono,
-  () => {
-    startStopWatch();
-  }
+    () => props.toggleChrono,
+    () => {
+      startStopWatch();
+    }
 );
 
 function startStopWatch() {
@@ -105,6 +114,8 @@ function startStopWatch() {
   } else {
     is_chrono_running.value = !is_chrono_running.value;
     background_color.value = "var(--primary-500)";
+    last_chrono_value.value = duration_seconds.value;
+    setPreferences("last_chronometer_value", last_chrono_value.value);
   }
 }
 
@@ -196,12 +207,15 @@ function convertSecondsToHourMinutesSeconds(seconds) {
   width: 100%;
   height: 100%;
 }
+
 #min-button {
   grid-column: 1;
 }
+
 #max-button {
   grid-column: 2;
 }
+
 #close-button {
   grid-column: 3;
 }
@@ -223,9 +237,11 @@ function convertSecondsToHourMinutesSeconds(seconds) {
 #window-controls .button {
   user-select: none;
 }
+
 #window-controls .button:hover {
   background: var(--primary-200);
 }
+
 #window-controls .button:active {
   background: var(--primary-300);
 }
@@ -233,10 +249,46 @@ function convertSecondsToHourMinutesSeconds(seconds) {
 #close-button:hover {
   background: #e81123 !important;
 }
+
 #close-button:active {
   background: #f1707a !important;
 }
+
 #close-button:active .icon {
   filter: invert(1);
+}
+
+.hover-div {
+  cursor: pointer;
+}
+
+.hover-div .popup {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: -120%; /* Position the popup beside the div */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.hover-div:hover .popup {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
 }
 </style>

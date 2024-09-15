@@ -18,8 +18,9 @@ const defaults = {
   selected_database_index: 0,
   //chronometer
   toggle_chronometer_key_shortcut: "p",
+  last_chronometer_value: 0,
   //start page
-  default_start_page: "Accueil",
+  default_start_page: "",
   default_start_page_route: "/",
   number_of_last_sessions: 5,
   //colors
