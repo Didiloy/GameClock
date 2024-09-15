@@ -44,7 +44,7 @@
             <i class="pi pi-arrow-right"></i>
           </div>
           <div v-else class="icon-action">
-            <Checkbox v-model="item.selected" :binary="true" />
+            <Checkbox v-model="item.selected" :binary="true" @click="onClickHandler(item.name, index)"/>
           </div>
         </div>
       </template>
