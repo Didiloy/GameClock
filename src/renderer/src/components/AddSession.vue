@@ -81,6 +81,19 @@
           <TextArea v-model="comment" rows="4" cols="23"  :placeholder="i18n.t('AddSession.comments')"/>
         </div>
       </div>
+      <div class="as-select-platform">
+        <SelectButton v-model="selected_platform"
+                      :options="platforms_options"
+                      optionLabel="name"
+                      dataKey="id"
+                      :pt="{
+                          button: {
+                            style: 'height: 10px;',
+                          },
+                        }"
+        >
+        </SelectButton>
+      </div>
       <div class="as-button-add">
         <Button
           :label="i18n.t('AddSession.add')"
@@ -110,10 +123,11 @@ const emit = defineEmits(["toggleChronoListener"]);
 const storeChrono = useStoreChrono();
 const { chrono_value } = storeToRefs(storeChrono);
 const store = useStore();
-const { games, teams } = storeToRefs(store);
+const { games, teams, platforms } = storeToRefs(store);
 const toast = useToast();
 const props = defineProps(["teamName", "gameName"]);
 const all_games = ref(games);
+const selected_platform = ref();
 const items = ref([]);
 const loading = ref(false);
 const comment = ref("");
@@ -129,6 +143,8 @@ const heroe_url = computed(() => {
     ? `url(${all_games.value.find((g) => g.name === game.value)?.heroe})`
     : ``;
 });
+
+const platforms_options = ref([]);
 
 const duration = ref("");
 const was_cool = ref({});
@@ -174,6 +190,12 @@ onMounted(() => {
   if (props.gameName) {
     game.value = props.gameName;
   }
+  platforms_options.value = platforms.value.map((p) => {
+    return { name: i18n.t("Platform." + p.name), id: p.id };
+  });
+  selected_platform.value = platforms.value.filter(
+    (p) => p.name === "Not specified"
+  )[0];
 });
 
 onUnmounted(() => {
@@ -246,7 +268,8 @@ async function addNewSession() {
     game.value,
     parseInt(duration.value),
     was_cool.value.value,
-    comment.value
+    comment.value,
+      selected_platform.value.id
   );
   loading.value = false;
   if (success) {
@@ -280,7 +303,7 @@ async function addNewSession() {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  height: 400px;
+  height: 450px;
   width: 750px;
   border-radius: 30px;
   display: flex;
@@ -323,6 +346,15 @@ async function addNewSession() {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.as-select-platform {
+  grid-column: 1 / span 2;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
 }
 
 .btn-add {

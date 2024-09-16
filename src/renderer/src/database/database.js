@@ -84,7 +84,7 @@ function getIfGameExist(gameName) {
   return { exist: false };
 }
 
-export async function addSession(teamId, gameName, duration, was_cool, comment) {
+export async function addSession(teamId, gameName, duration, was_cool, comment, platform) {
   try {
     let { exist, id } = getIfGameExist(gameName);
     let gamePath = id ? id : "";
@@ -114,7 +114,8 @@ export async function addSession(teamId, gameName, duration, was_cool, comment) 
         date: new Date(),
         game: doc(collection(db, "games"), gamePath),
         team: doc(collection(db, "teams"), teamId),
-        comment: comment
+        comment: comment,
+        platform:  doc(collection(db, "platforms"), platform)
       });
     } else {
       await setDoc(doc(sessionRef), {
@@ -122,7 +123,8 @@ export async function addSession(teamId, gameName, duration, was_cool, comment) 
         date: new Date(),
         game: doc(collection(db, "games"), gamePath),
         team: doc(collection(db, "teams"), teamId),
-        comment: comment
+        comment: comment,
+        platform: doc(collection(db, "platforms"), platform)
       });
     }
     return true;
@@ -199,4 +201,31 @@ export async function addImagesToGame(gameName) {
     heroe: gameHeroe,
     grid: gameGrid,
   });
+}
+
+//Platforms
+export async function getPlatforms() {
+  let platformsList = [];
+  const platformsSnapshot = await getDocs(collection(db, "platforms"));
+  platformsSnapshot.forEach((doc) => {
+    let doc_id = doc.id;
+    platformsList.push({ ...doc.data(), id: doc_id });
+  });
+
+  //if the platforms list is empty we add the default platforms
+    if (platformsList.length === 0) {
+        await addPlatformsToDatabase();
+        return await getPlatforms();
+    }
+  return platformsList;
+}
+
+async function addPlatformsToDatabase(){
+  const platforms = [ "PC", "Playstation", "Xbox", "Nintendo", "Not specified", "Mobile"];
+  const platformsRef = collection(db, "platforms");
+  for(let platform of platforms){
+    await setDoc(doc(platformsRef), {
+      name: platform,
+    });
+  }
 }

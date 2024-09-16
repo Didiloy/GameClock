@@ -1,7 +1,7 @@
 // stores/counter.js
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { getTeams, getGames, getSessions } from "../database/database.js";
+import {getTeams, getGames, getSessions, getPlatforms} from "../database/database.js";
 import {
   getStoredDatabases,
   deleteDatabase,
@@ -11,6 +11,7 @@ export const useStore = defineStore("store", () => {
   const teams = ref([]);
   const games = ref([]);
   const sessions = ref([]);
+  const platforms = ref([]);
   const loaded = ref(false);
   const first_load = ref(true);
 
@@ -22,6 +23,7 @@ export const useStore = defineStore("store", () => {
     teams.value = [];
     games.value = [];
     sessions.value = [];
+    platforms.value = [];
     store_error.value = "";
 
     if (getStoredDatabases().length === 0) {
@@ -34,6 +36,7 @@ export const useStore = defineStore("store", () => {
       teams.value = await getTeams();
       games.value = await getGames();
       sessions.value = await getSessions();
+      platforms.value = await getPlatforms();
     } catch (e) {
       store_error.value = e.message;
       loaded.value = true;
@@ -48,6 +51,7 @@ export const useStore = defineStore("store", () => {
     teams,
     games,
     sessions,
+    platforms,
     reloadStore,
     loaded,
     first_load,

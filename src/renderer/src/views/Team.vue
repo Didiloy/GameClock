@@ -21,7 +21,7 @@
       modal
       dismissableMask
       :header="i18n.t('Team.add_session')"
-      :style="{ width: '800px', height: '515px' }"
+      :style="{ width: '800px', height: '530px' }"
     >
       <AddSession
         :teamName="$route.params.name"

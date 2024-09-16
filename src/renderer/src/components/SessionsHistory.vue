@@ -40,9 +40,22 @@
                     style="width: 50px; height: auto; border-radius: 5px"
                   />
                   <span>
-                    {{ slotProps.data.name.length > 20
+                    {{ slotProps.data.name.length > 20 && !slotProps.data.name.includes(" ")
                       ? slotProps.data.name.substring(0, 20) + "..."
                       : slotProps.data.name }}
+                  </span>
+                </div>
+              </template>
+            </Column>
+            <Column
+                field="platform"
+                :header="i18n.t('SessionsHistory.platform')"
+                v-once
+            >
+              <template #body="slotProps">
+                <div class="sh-name">
+                  <span>
+                    {{ slotProps.data.platform }}
                   </span>
                 </div>
               </template>
@@ -59,7 +72,7 @@
                 <RouterLink
                   :to="'/team/' + slotProps.data.team_name"
                   style="color: var(--primary-500)"
-                  >{{ slotProps.data.team_name.length > 20
+                  >{{ slotProps.data.team_name.length > 20 && !slotProps.data.name.includes(" ")
                       ? slotProps.data.team_name.substring(0, 20) + "..."
                       : slotProps.data.team_name }}
                 </RouterLink
@@ -146,7 +159,7 @@ const backgroundColor = props.backgroundColor
   ? props.backgroundColor
   : "var(--primary-100)";
 const store = useStore();
-const { games, sessions, teams } = storeToRefs(store);
+const { games, sessions, teams, platforms } = storeToRefs(store);
 
 const sessions_values = ref([]);
 const id_of_team = ref([]);
@@ -191,6 +204,17 @@ async function init() {
           uniqueGames.value.set(game_name, { logo: logo });
         }
 
+        let platform_name;
+        for (let p of platforms.value) {
+          if(!s.platform){
+            platform_name = i18n.t("Platform.Not specified");
+            continue;
+          }
+          if (s.platform.id === p.id) {
+            platform_name = p.name;
+          }
+        }
+
         sessions_values.value.push({
           team_name: team_name,
           name: game_name,
@@ -198,7 +222,8 @@ async function init() {
           date: s.date,
           logo: logo,
           joyrate: s.was_cool,
-          comment: s.comment
+          comment: s.comment,
+          platform: platform_name
         });
       }
     }
@@ -215,6 +240,18 @@ async function init() {
           team_name = t.name;
         }
       }
+
+      let platform_name;
+      for (let p of platforms.value) {
+        if(!s.platform){
+          platform_name = i18n.t("Platform.Not specified");
+          continue;
+        }
+        if (s.platform.id === p.id) {
+          platform_name = p.name;
+        }
+      }
+
       sessions_values.value.push({
         team_name: team_name,
         name: game_name,
@@ -222,7 +259,8 @@ async function init() {
         date: s.date,
         logo: logo,
         joyrate: s.was_cool,
-        comment: s.comment
+        comment: s.comment,
+        platform: platform_name
       });
     }
   }

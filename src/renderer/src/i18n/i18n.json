@@ -60,6 +60,14 @@
         "no_empty_field": "Aucun champ ne doit être vide !"
       }
     },
+    "Platform": {
+      "Playstation": "PlayStation",
+      "Xbox": "Xbox",
+      "PC": "PC",
+      "Nintendo": "Nintendo",
+      "Mobile": "Mobile",
+      "Not specified": "Non specifiée"
+    },
     "AddTeam": {
       "add_team": "Ajouter une équipe",
       "team_name": "Nom de l'équipe",
@@ -125,6 +133,7 @@
       "title": "Historique des sessions",
       "sessions": "Sessions",
       "game_name": "Nom du jeu",
+      "platform": "Plateforme",
       "team": "Équipe",
       "session_duration": "Durée de la session",
       "joyrate": "Bonheur",
@@ -220,8 +229,8 @@
     },
     "AppearancePreference": {
       "title": "Apparence",
-      "use_color_of_most_played_game_in_team_list": "Utiliser la couleur du logo du jeu le plus joué dans la liste des équipes (peut ralentir le chargement):",
-      "use_color_of_game_in_history": "Utiliser la couleur du logo du jeu dans l'historique des sessions (peut ralentir le chargement):"
+      "use_color_of_most_played_game_in_team_list": "Utiliser la couleur du logo du jeu le plus joué dans la liste des équipes:",
+      "use_color_of_game_in_history": "Utiliser la couleur du logo du jeu dans l'historique des sessions:"
     },
     "PieChartPreferences": {
       "title": "Graphique camembert",
@@ -334,6 +343,14 @@
         "no_empty_field": "No field should be empty!"
       }
     },
+    "Platform": {
+      "Playstation": "PlayStation",
+      "Xbox": "Xbox",
+      "PC": "PC",
+      "Nintendo": "Nintendo",
+      "Mobile": "Mobile",
+      "Not specified": "Not specified"
+    },
     "AddTeam": {
       "add_team": "Add a team",
       "team_name": "Team name",
@@ -399,6 +416,7 @@
       "title": "Session History",
       "sessions": "Sessions",
       "game_name": "Game Name",
+      "platform": "Platform",
       "team": "Team",
       "session_duration": "Session Duration",
       "joyrate": "Happiness",
@@ -494,8 +512,8 @@
     },
     "AppearancePreference": {
       "title": "Appearance",
-      "use_color_of_most_played_game_in_team_list": "Use the logo color of the most played game in the team list (may slow down loading):",
-      "use_color_of_game_in_history": "Use the logo color of the game in the session history (may slow down loading):"
+      "use_color_of_most_played_game_in_team_list": "Use the logo color of the most played game in the team list:",
+      "use_color_of_game_in_history": "Use the logo color of the game in the session history:"
     },
     "PieChartPreferences": {
       "title": "Pie Chart",
