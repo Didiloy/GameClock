@@ -237,7 +237,6 @@ function calculateFunPercentage() {
   height: 100%;
   grid-template-columns: repeat(12, 1fr);
   grid-auto-rows: 100px;
-  margin-top: 15px;
   padding: 15px;
 }
 

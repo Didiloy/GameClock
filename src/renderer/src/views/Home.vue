@@ -1,6 +1,9 @@
 <template>
   <div class="h-container">
-    <Image :src="logo" class="header" width="250" />
+<!--    <Image :src="logo" class="header" width="250" />-->
+    <span class="h-span">{{ total_time_hours.toUpperCase() }}</span>
+    <br/>
+    <span class="h-subtitle">{{ $t("Dashboard.spent_playing").toUpperCase()}}</span>
     <div class="h-dash" v-if="teams.length !== 0">
       <Dashboard class="dashboard" teamName=""></Dashboard>
     </div>
@@ -17,7 +20,7 @@
 import logo from "../assets/images/icons.png";
 import Dashboard from "../components/Dashboard.vue";
 import { getPreferences } from "../preferences/preferences";
-import { onMounted, onUnmounted } from "vue";
+import {onMounted, onUnmounted} from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
@@ -25,6 +28,9 @@ import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 const store = useStore();
 const { teams } = storeToRefs(store);
+
+import {useTotalTime} from "../composables/total_time";
+const { total_time_hours, calculateTotalTime } = useTotalTime();
 
 function keyEventAddSession(e) {
   if (
@@ -45,6 +51,7 @@ function keyEventAddSession(e) {
 
 onMounted(() => {
   document.addEventListener("keyup", keyEventAddSession);
+  calculateTotalTime();
 });
 onUnmounted(() => {
   document.removeEventListener("keyup", keyEventAddSession);
@@ -67,5 +74,25 @@ onUnmounted(() => {
 
 .dashboard {
   width: 100%;
+}
+
+@font-face {
+  font-family: dishcek;
+  src: url("../assets/fonts/dishcek/Dishcek.otf");
+}
+
+.h-span {
+  font-size: 3rem;
+  font-family: dishcek, serif;
+  color: #5a5d9d;
+  font-weight: bold;
+  margin-bottom: -30px;
+  padding-bottom: 0px;
+}
+
+.h-subtitle {
+  font-size: 1.2rem;
+  font-family: dishcek, serif;
+  color: #5a5d9d;
 }
 </style>
