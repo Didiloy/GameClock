@@ -7,6 +7,8 @@
         v-model="value"
         :placeholder="i18n.t('GamesSettings.search_game')"
         style="height: 30px"
+        @focus="emit('toggleChronoListener')"
+        @blur="emit('toggleChronoListener')"
       />
       <SelectButton
         v-model="sort_value"
@@ -44,6 +46,8 @@ import { onMounted, ref, watch } from "vue";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
+
+const emit = defineEmits(["toggleChronoListener"]);
 
 const store = useStore();
 const { games, sessions } = storeToRefs(store);
