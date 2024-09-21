@@ -1,14 +1,14 @@
 <template>
   <Card
     class="lc-container"
-    :pt="{ root: { style: 'box-shadow: 0px 0px 0px 0px;' } }"
+    :pt="{ root: { style: 'box-shadow: 0px 0px 0px 0px; width: 100%;' },
+          body: { style: 'width: 100%;' }
+  }"
   >
     <template #title>
       <div class="lc-center">
         <b><i :class="props.iconName + ' icon'"></i></b>
-        <div class="lc-title">
-          <p class="lc-title-p">{{ props.name }}</p>
-        </div>
+        <span class="lc-title-p" :title="props.name">{{ props.name }}</span>
       </div>
     </template>
     <template #content>
@@ -61,6 +61,8 @@ const backgroundColor = props.backgroundColor
 .lc-content {
   font-family: peachcake, serif;
   font-size: 1.5rem;
+  white-space: wrap;
+  width: 100%;
 }
 
 :deep(h2) {
@@ -68,23 +70,16 @@ const backgroundColor = props.backgroundColor
   font-family: dishcek, serif;
   font-size: 1.8rem;
 }
-.lc-title {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  font-family: dishcek, serif;
-  font-size: 2rem;
-  text-overflow: ellipsis;
-}
 
 .lc-title-p {
-  margin: 0;
+  display: inline-block;
+  margin: 0 auto 0 auto;
   padding: 0;
   font-family: dishcek, serif;
   font-size: 2rem;
-  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>

@@ -102,15 +102,23 @@
       "fun_to_play": "de plaisir à jouer !",
       "neutral": "Neutre",
       "bad": "Nul",
+      "sessions_played": "sessions de jeu au total !",
       "biggest_games_sessions_part_one": "Fait les plus grosses sessions de jeu (",
       "biggest_games_sessions_part_two": " en moyenne)",
       "spent_playing": "passées à jouer",
       "games_played": " Jeux joués",
+      "game_of_the_week": "Est le jeu de la semaine",
+      "no_game_of_the_week": "Il n'y a pas de jeu de la semaine",
+      "player_of_the_week": "Est le joueur de la semaine",
+      "no_player_of_the_week": "Personne n'a joué cette semaine",
+      "unhappiest_player": "Est le joueur le moins heureux cette semaine",
+      "average_session_per_day": "Sessions par jour en moyenne",
       "have_most_sessions_part_one": "A le plus de sessions avec ",
       "have_most_sessions_part_two": " sessions"
     },
     "PieChartGamePercentage": {
       "title": "Classement des jeux en pourcentage",
+      "title_platform": "Classement des plateformes",
       "show_names": "Montrer les noms"
     },
     "BarChartAllGames": {
@@ -385,15 +393,23 @@
       "fun_to_play": "Fun to play!",
       "neutral": "Neutral",
       "bad": "Bad",
+      "sessions_played": "Total game sessions",
       "biggest_games_sessions_part_one": "Has the biggest game sessions (",
       "biggest_games_sessions_part_two": " on average)",
       "spent_playing": "Spent playing",
       "games_played": " Games played",
+      "game_of_the_week": "Is the game of the week",
+      "no_game_of_the_week": "There is no game this week",
+      "player_of_the_week": "Is the player of the week",
+      "no_player_of_the_week": "Nobody played this week",
+      "unhappiest_player": "Est le joueur le moins heureux cette semaine",
+      "average_session_per_day": "Average session played per day",
       "have_most_sessions_part_one": "Has the most sessions with ",
       "have_most_sessions_part_two": " sessions"
     },
     "PieChartGamePercentage": {
       "title": "Game ranking by percentage",
+      "title_platform": "Platform ranking by percentage",
       "show_names": "Show names"
     },
     "BarChartAllGames": {
