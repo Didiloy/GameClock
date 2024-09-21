@@ -80,11 +80,11 @@ export function useDashboard() {
                     player_happiness.set(session.team.id, [session.was_cool !== undefined ? session.was_cool : 0, 1]);
                 }
 
-                //==================fun_percentage, neutral_percentage, not_fun_percentage================
-                if (session.was_cool === undefined) cpt_neutral++;
-                else if (session.was_cool) cpt_fun++;
-                else cpt_not_fun++;
             }
+            //==================fun_percentage, neutral_percentage, not_fun_percentage================
+            if (session.was_cool === undefined) cpt_neutral++;
+            else if (session.was_cool) cpt_fun++;
+            else cpt_not_fun++;
         }
 
         //set team with most sessions and team with greatest session average playtime

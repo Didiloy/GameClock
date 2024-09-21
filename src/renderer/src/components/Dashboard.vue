@@ -148,7 +148,7 @@ const loaded = ref(false);
 const props = defineProps(["teamName"]);
 
 const store = useStore();
-const { sessions, games, teams } = storeToRefs(store);
+const { sessions } = storeToRefs(store);
 
 const {
     initDashboard,

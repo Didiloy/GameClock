@@ -192,7 +192,6 @@ function init() {
   setColorsOfPieParts();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
-  console.log(chartData.value);
 }
 
 const setChartData = () => {
