@@ -26,6 +26,7 @@
       <SingleGameSetting
         class="gs-m"
         v-for="g in games_values"
+        :key="g.id"
         :name="g.name"
         :heroe="g.heroe"
         :logo="g.logo"
