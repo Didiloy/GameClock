@@ -20,6 +20,10 @@
         "add": "Ajouter",
         "list": "Liste"
       },
+      "sessions": {
+        "label": "Sessions",
+        "retry_list": "Liste d'attente"
+      },
       "settings": {
         "label": "Paramètres",
         "games": "Jeux",
@@ -27,6 +31,23 @@
         "databases": "Base de données"
       },
       "reload_data": "Recharger les données"
+    },
+    "WaitingListSession": {
+      "add_session_to_list": "Ajouter une session à la liste d'attente",
+      "synchronize_with_database": "Synchroniser avec la base de données",
+      "Sessions": {
+        "team_name": "Nom de l'équipe",
+        "game_name": "Nom du jeu",
+        "duration": "Durée",
+        "date": "Date",
+        "joyrate": "Bonheur",
+        "fun": "Fun",
+        "neutral": "Neutre",
+        "bad": "Nul",
+        "comments": "Commentaires",
+        "platform": "Plateforme",
+        "delete": "Supprimer"
+      }
     },
     "AddDatabaseForFirstTime": {
       "add_database": "Ajouter une base de données",
@@ -171,6 +192,7 @@
     },
     "AddSession": {
       "game_name": "Nom du jeu",
+      "team_name": "Nom de l'équipe",
       "informative_text_formulas": " Vous pouvez entrer une durée en minutes ou utiliser une formule pour additionner plusieurs durées. Par exemple, pour ajouter 10 minutes et 20 minutes, entrez \"=10+20\".",
       "duration_in_minute": "Durée en minutes",
       "fun": "Fun",
@@ -181,7 +203,8 @@
       "errors": {
         "fill_all_fields": "Veuillez remplir tous les champs correctement.",
         "formulas_error": "Les opérandes d'une formule doivent être des nombres entiers et vous ne pouvez utiliser que l'addition.",
-        "unexpected_error": "Une erreur est survenue lors de l'ajout de la session de jeu."
+        "unexpected_error": "Une erreur est survenue lors de l'ajout de la session de jeu.",
+        "adding_to_waiting_list": "Ajout de la session à la liste d'attente"
       },
       "all_good": "C'est tout bon !"
     },
@@ -317,7 +340,28 @@
         "general": "General",
         "databases": "Databases"
       },
+      "sessions": {
+        "label": "Sessions",
+        "retry_list": "Waiting list"
+      },
       "reload_data": "Reload data"
+    },
+    "WaitingListSession": {
+      "add_session_to_list": "Add a session to waiting list",
+      "synchronize_with_database": "Synchronize with database",
+      "Sessions": {
+        "team_name": "Team name",
+        "game_name": "Game name",
+        "duration": "Duration",
+        "date": "Date",
+        "joyrate": "Joyrate",
+        "fun": "Fun",
+        "neutral": "Neutral",
+        "bad": "Bad",
+        "comments": "Comment",
+        "platform": "Plateform",
+        "delete": "Delete"
+      }
     },
     "AddDatabaseForFirstTime": {
       "add_database": "Add a database",
@@ -462,6 +506,7 @@
     },
     "AddSession": {
       "game_name": "Game's name",
+      "team_name": "Team's name",
       "informative_text_formulas": "You can enter a duration in minutes or use a formula to sum multiple durations. For example, to add 10 minutes and 20 minutes, enter \"=10+20.\"",
       "duration_in_minute": "Duration in minutes",
       "fun": "Fun",
@@ -472,7 +517,8 @@
       "errors": {
         "fill_all_fields": "Please fill in all fields correctly.",
         "formulas_error": "The operands of a formula must be whole numbers and you can only use addition.",
-        "unexpected_error": "An error occurred while adding the game session."
+        "unexpected_error": "An error occurred while adding the game session.",
+        "adding_to_waiting_list": "Adding session to the waiting list"
       },
       "all_good": "All good!"
     },

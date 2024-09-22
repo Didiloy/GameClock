@@ -6,6 +6,8 @@ import {
   getStoredDatabases,
   deleteDatabase,
 } from "../database/stored_databases.js";
+import { useStorage } from '@vueuse/core'
+
 
 export const useStore = defineStore("store", () => {
   const teams = ref([]);
@@ -91,5 +93,28 @@ export const useStoreChrono = defineStore("storeChrono", () => {
   return {
     chrono_value,
     updateChrono,
+  };
+});
+
+export const useStoreWaitingList = defineStore("storeWaitingList", () => {
+  const waiting_list = useStorage('waiting_list', []);
+
+  function addSession(session_object) {
+    waiting_list.value.push(session_object);
+  }
+
+  function deleteSession(session_object) {
+    waiting_list.value = waiting_list.value.filter(s => s !== session_object);
+  }
+
+  function cleanSession() {
+    waiting_list.value = [];
+  }
+
+  return {
+    waiting_list,
+    addSession,
+    cleanSession,
+    deleteSession
   };
 });

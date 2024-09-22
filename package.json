@@ -19,6 +19,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "latest",
     "@electron-toolkit/utils": "latest",
+    "@vueuse/core": "^11.1.0",
     "chart.js": "latest",
     "firebase": "latest",
     "pinia": "latest",

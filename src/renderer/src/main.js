@@ -51,6 +51,7 @@ import AddDatabaseForFirstTime from "./views/AddDatabaseForFirstTime.vue";
 import { useStoredDatabases, useStore } from "./store/store";
 import DatabaseSettings from "./views/DatabaseSettings.vue";
 import DatabaseError from "./components/DatabaseError.vue";
+import WaitingListSession from "./views/WaitingListSession.vue";
 
 const app = createApp(App);
 
@@ -104,6 +105,7 @@ const routes = [
   { path: "/addteam", component: AddTeam },
   { path: "/settings/games", component: GamesSettings },
   { path: "/settings/general", component: Settings, name: "settings-general" },
+  { path: "/waiting-list-sessions", component: WaitingListSession, name: "waiting-list-sessions" },
   {
     path: "/settings/databases",
     component: DatabaseSettings,
@@ -147,7 +149,7 @@ router.beforeEach((to) => {
   }
 });
 
-//if the database isn't accessible we can still change databases and see our parameters
+//if the database isn't accessible we can still change databases and see our parameters and add sessions to the waiting list
 router.beforeEach((to, from) => {
   if (
     store_error.value !== undefined &&
@@ -155,16 +157,20 @@ router.beforeEach((to, from) => {
     to.name !== "database-error"
   ) {
     if (from.name === "database-error") {
-      if (to.name !== "settings-general" && to.name !== "settings-databases")
+      if (to.name !== "settings-general" && to.name !== "settings-databases" && to.name !== "waiting-list-sessions")
         return false;
     }
 
     if (from.name === "settings-databases") {
-      if (to.name !== "settings-general") return false;
+      if (to.name !== "settings-general" && to.name !== "waiting-list-sessions") return false;
     }
 
     if (from.name === "settings-general") {
-      if (to.name !== "settings-databases") return false;
+      if (to.name !== "settings-databases" && to.name !== "waiting-list-sessions") return false;
+    }
+
+    if (from.name === "waiting-list-sessions") {
+      if (to.name !== "settings-general" && to.name !== "settings-databases") return false;
     }
   }
 });

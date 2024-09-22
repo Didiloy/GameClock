@@ -74,6 +74,16 @@ const items = ref([
     ],
   },
   {
+    label: i18n.t("Sidebar.sessions.label"),
+    items: [
+      {
+        label: i18n.t("Sidebar.sessions.retry_list"),
+        icon: "pi pi-hourglass",
+        route: "/waiting-list-sessions",
+      },
+    ],
+  },
+  {
     label: i18n.t("Sidebar.settings.label"),
     items: [
       {

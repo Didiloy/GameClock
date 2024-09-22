@@ -2,20 +2,29 @@
   <div class="as-background">
     <div class="as-container">
       <div class="as-game-image">
-        <img :src="game_grid" alt="game image" class="as-img-game-image" />
+        <img :src="game_grid" alt="game image" class="as-img-game-image"/>
       </div>
       <div class="as-input">
         <AutoComplete
-          class="mb10"
-          v-model="game"
-          :placeholder="i18n.t('AddSession.game_name')"
-          :suggestions="items"
-          @complete="autocomplete"
+            v-if="props.addToWaitingList"
+            class="mb10"
+            v-model="teamName"
+            :placeholder="i18n.t('AddSession.team_name')"
+            :suggestions="items_suggest_team"
+            @complete="autocompleteTeam"
+        >
+        </AutoComplete>
+        <AutoComplete
+            class="mb10"
+            v-model="game"
+            :placeholder="i18n.t('AddSession.game_name')"
+            :suggestions="items"
+            @complete="autocomplete"
         >
         </AutoComplete>
         <div class="as-duration-input">
           <span class="as-icon" @click="toggleOverlay"
-            ><i class="pi pi-info"></i
+          ><i class="pi pi-info"></i
           ></span>
           <OverlayPanel ref="op" style="width: 50%">
             <span>
@@ -23,26 +32,26 @@
             </span>
           </OverlayPanel>
           <InputText
-            class="input-number"
-            v-model="duration"
-            :placeholder="i18n.t('AddSession.duration_in_minute')"
+              class="input-number"
+              v-model="duration"
+              :placeholder="i18n.t('AddSession.duration_in_minute')"
           ></InputText>
           <div>
             <Button
-              icon="pi pi-clock"
-              @click="getChronoValue"
-              style="background-color: var(--primary-400)"
-              class="as-chrono-button"
+                icon="pi pi-clock"
+                @click="getChronoValue"
+                style="background-color: var(--primary-400)"
+                class="as-chrono-button"
             />
           </div>
         </div>
         <div class="as-fun-selector">
           <ToggleButton
-            v-model="toggle_fun"
-            :onLabel="i18n.t('AddSession.fun')"
-            :offLabel="i18n.t('AddSession.fun')"
-            class="toggle-button"
-            :pt="{
+              v-model="toggle_fun"
+              :onLabel="i18n.t('AddSession.fun')"
+              :offLabel="i18n.t('AddSession.fun')"
+              class="toggle-button"
+              :pt="{
               box: {
                 style: toggle_fun
                   ? 'background-color: var(--green-400);'
@@ -51,11 +60,11 @@
             }"
           />
           <ToggleButton
-            v-model="toggle_neutre"
-            :onLabel="i18n.t('AddSession.neutral')"
-            :offLabel="i18n.t('AddSession.neutral')"
-            class="toggle-button"
-            :pt="{
+              v-model="toggle_neutre"
+              :onLabel="i18n.t('AddSession.neutral')"
+              :offLabel="i18n.t('AddSession.neutral')"
+              class="toggle-button"
+              :pt="{
               box: {
                 style: toggle_neutre
                   ? 'background-color: var(--yellow-400);'
@@ -64,11 +73,11 @@
             }"
           />
           <ToggleButton
-            v-model="toggle_nul"
-            :onLabel="i18n.t('AddSession.bad')"
-            :offLabel="i18n.t('AddSession.bad')"
-            class="toggle-button"
-            :pt="{
+              v-model="toggle_nul"
+              :onLabel="i18n.t('AddSession.bad')"
+              :offLabel="i18n.t('AddSession.bad')"
+              class="toggle-button"
+              :pt="{
               box: {
                 style: toggle_nul
                   ? 'background-color: var(--red-400);'
@@ -78,7 +87,7 @@
           />
         </div>
         <div class="as-comments">
-          <TextArea v-model="comment" rows="4" cols="23"  :placeholder="i18n.t('AddSession.comments')"/>
+          <TextArea v-model="comment" rows="4" cols="23" :placeholder="i18n.t('AddSession.comments')"/>
         </div>
       </div>
       <div class="as-select-platform">
@@ -96,52 +105,56 @@
       </div>
       <div class="as-button-add">
         <Button
-          :label="i18n.t('AddSession.add')"
-          :icon="icon"
-          class="btn-add"
-          @click="addNewSession"
-          :loading="loading"
+            :label="i18n.t('AddSession.add')"
+            :icon="icon"
+            class="btn-add"
+            @click="addNewSession"
+            :loading="loading"
         ></Button>
       </div>
     </div>
   </div>
-  <Toast />
+  <Toast/>
 </template>
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import { useToast } from "primevue/usetoast";
-import { useStore, useStoreChrono } from "../store/store";
-import { storeToRefs } from "pinia";
-import { addSession } from "../database/database";
-import { getPreferences } from "../preferences/preferences";
+import {computed, onMounted, onUnmounted, ref, watch} from "vue";
+import {useToast} from "primevue/usetoast";
+import {useStore, useStoreChrono, useStoreWaitingList} from "../store/store";
+import {storeToRefs} from "pinia";
+import {addSession} from "../database/database";
+import {getPreferences} from "../preferences/preferences";
 import gameNotFound from "../assets/images/game_not_found.jpg";
 
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n";
+
 const i18n = useI18n();
+
+const storeWaitingList = useStoreWaitingList();
 
 const emit = defineEmits(["toggleChronoListener"]);
 const storeChrono = useStoreChrono();
-const { chrono_value } = storeToRefs(storeChrono);
+const {chrono_value} = storeToRefs(storeChrono);
 const store = useStore();
-const { games, teams, platforms } = storeToRefs(store);
+const {games, teams, platforms} = storeToRefs(store);
 const toast = useToast();
-const props = defineProps(["teamName", "gameName"]);
+const props = defineProps(["teamName", "gameName", "addToWaitingList"]);
 const all_games = ref(games);
 const selected_platform = ref();
 const items = ref([]);
+const items_suggest_team = ref([]);
 const loading = ref(false);
 const comment = ref("");
 const icon = ref("pi pi-plus");
 const game = ref("");
 const game_grid = computed(() => {
   return (
-    all_games.value.find((g) => g.name === game.value)?.grid || gameNotFound
+      all_games.value.find((g) => g.name === game.value)?.grid || gameNotFound
   );
 });
 const heroe_url = computed(() => {
   return all_games.value.find((g) => g.name === game.value)?.heroe !== undefined
-    ? `url(${all_games.value.find((g) => g.name === game.value)?.heroe})`
-    : ``;
+      ? `url(${all_games.value.find((g) => g.name === game.value)?.heroe})`
+      : ``;
 });
 
 const platforms_options = ref([]);
@@ -149,9 +162,9 @@ const platforms_options = ref([]);
 const duration = ref("");
 const was_cool = ref({});
 const options_cool = ref([
-  { name: "Bien", value: true },
-  { name: "Neutre", value: undefined },
-  { name: "Nul", value: false },
+  {name: "Bien", value: true},
+  {name: "Neutre", value: undefined},
+  {name: "Nul", value: false},
 ]);
 const toggle_fun = ref(false);
 const toggle_neutre = ref(false);
@@ -161,7 +174,7 @@ watch(toggle_fun, () => {
   if (toggle_fun.value) {
     toggle_neutre.value = false;
     toggle_nul.value = false;
-    was_cool.value = { value: true };
+    was_cool.value = {value: true};
   }
 });
 
@@ -169,7 +182,7 @@ watch(toggle_neutre, () => {
   if (toggle_neutre.value) {
     toggle_fun.value = false;
     toggle_nul.value = false;
-    was_cool.value = { value: undefined };
+    was_cool.value = {value: undefined};
   }
 });
 
@@ -177,7 +190,7 @@ watch(toggle_nul, () => {
   if (toggle_nul.value) {
     toggle_neutre.value = false;
     toggle_fun.value = false;
-    was_cool.value = { value: false };
+    was_cool.value = {value: false};
   }
 });
 
@@ -191,10 +204,10 @@ onMounted(() => {
     game.value = props.gameName;
   }
   platforms_options.value = platforms.value.map((p) => {
-    return { name: i18n.t("Platform." + p.name), id: p.id };
+    return {name: i18n.t("Platform." + p.name), id: p.id};
   });
   selected_platform.value = platforms.value.filter(
-    (p) => p.name === "Not specified"
+      (p) => p.name === "Not specified"
   )[0];
 });
 
@@ -216,10 +229,24 @@ const autocomplete = (event) => {
   });
 };
 
+const teamName = ref("");
+if (props.teamName) {
+  teamName.value = props.teamName;
+}
+
+const autocompleteTeam = (event) => {
+  let tmpArray = teams.value.filter((item) => {
+    return item.name.toLowerCase().includes(event.query.toLowerCase());
+  });
+  items_suggest_team.value = tmpArray.map((item) => {
+    return item.name;
+  });
+};
+
 const regex = new RegExp("^[1-9]\\d*$"); //vérifie si le nombre entré ne commence pas par un 0
 
 function getTeamId() {
-  return teams.value.find((g) => g.name === props.teamName).id;
+  return teams.value.find((g) => g.name === teamName.value).id;
 }
 
 async function addNewSession() {
@@ -262,15 +289,33 @@ async function addNewSession() {
     loading.value = false;
     return;
   }
+  let success = false;
+  if (props.addToWaitingList) {
+    storeWaitingList.addSession({
+      teamId: getTeamId(),
+      gameName: game.value,
+      duration: parseInt(duration.value),
+      was_cool: was_cool.value.value,
+      platform: selected_platform.value.id,
+      comment: comment.value,
+      date: new Date()
+    });
+    success = true;
+  } else {
+    if (!navigator.onLine) {
+      success = false;
+    } else {
+      success = await addSession(
+          getTeamId(),
+          game.value,
+          parseInt(duration.value),
+          was_cool.value.value,
+          comment.value,
+          selected_platform.value.id
+      );
+    }
+  }
 
-  const success = await addSession(
-    getTeamId(),
-    game.value,
-    parseInt(duration.value),
-    was_cool.value.value,
-    comment.value,
-      selected_platform.value.id
-  );
   loading.value = false;
   if (success) {
     icon.value = "pi pi-check";
@@ -286,12 +331,36 @@ async function addNewSession() {
       }, 3000);
     }
   } else {
-    toast.add({
-      severity: "error",
-      summary: "",
-      detail: i18n.t("AddSession.errors.unexpected_error"),
-      life: 3000,
-    });
+    if (!props.addToWaitingList) {
+      storeWaitingList.addSession({
+        teamId: getTeamId(),
+        gameName: game.value,
+        duration: parseInt(duration.value),
+        was_cool: was_cool.value.value,
+        platform: selected_platform.value.id,
+        comment: comment.value,
+        date: new Date()
+      });
+      toast.add({
+        severity: "error",
+        summary: "",
+        detail: i18n.t("AddSession.errors.unexpected_error"),
+        life: 3000,
+      });
+      toast.add({
+        severity: "error",
+        summary: "",
+        detail: i18n.t("AddSession.errors.adding_to_waiting_list"),
+        life: 3000,
+      });
+    } else {
+      toast.add({
+        severity: "error",
+        summary: "",
+        detail: i18n.t("AddSession.errors.unexpected_error"),
+        life: 3000,
+      });
+    }
   }
   game.value = "";
   duration.value = "";
@@ -303,7 +372,7 @@ async function addNewSession() {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  height: 450px;
+  height: 500px;
   width: 750px;
   border-radius: 30px;
   display: flex;
