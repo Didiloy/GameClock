@@ -1,7 +1,7 @@
 // stores/counter.js
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import {getTeams, getGames, getSessions, getPlatforms} from "../database/database.js";
+import {getTeams, getGames, getSessions, getPlatforms, addPlatformsToDatabase} from "../database/database.js";
 import {
   getStoredDatabases,
   deleteDatabase,
@@ -39,6 +39,14 @@ export const useStore = defineStore("store", () => {
       games.value = await getGames();
       sessions.value = await getSessions();
       platforms.value = await getPlatforms();
+      //if teams, or games, or sessions is empty and platform too we add the defaults platforms
+      if(platforms.value.length === 0){
+        if(!(teams.value.length === 0 && games.value.length === 0 && sessions.value.length === 0)){
+        //if the platforms list is empty we add the default platforms
+          await addPlatformsToDatabase();
+          platforms.value = await getPlatforms();
+        }
+      }
     } catch (e) {
       store_error.value = e.message;
       loaded.value = true;

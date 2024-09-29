@@ -3,7 +3,7 @@
     <div id="drag-region">
       <div id="window-title">
         <img
-            src="../assets/images/icons.png"
+            src="../assets/images/icons/base_icon.png"
             draggable="false"
             style="height: 23px; width: auto"
             alt="logo"

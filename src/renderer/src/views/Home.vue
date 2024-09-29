@@ -1,6 +1,5 @@
 <template>
   <div class="h-container">
-<!--    <Image :src="logo" class="header" width="250" />-->
     <span class="h-span">{{ total_time_hours.toUpperCase() }}</span>
     <br/>
     <span class="h-subtitle">{{ $t("Dashboard.spent_playing").toUpperCase()}}</span>
@@ -17,7 +16,6 @@
 </template>
 
 <script setup>
-import logo from "../assets/images/icons.png";
 import Dashboard from "../components/Dashboard.vue";
 import { getPreferences } from "../preferences/preferences";
 import {onMounted, onUnmounted} from "vue";

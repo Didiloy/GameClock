@@ -58,6 +58,9 @@ import {
 import { getPreferences } from "../preferences/preferences";
 import { getIdsOfTeam } from "../database/database";
 
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
+
 const props = defineProps([
   "teamName",
   "backgroundColor",
@@ -106,9 +109,9 @@ const id_of_team = ref([]);
 
 const games_name = ref([]);
 
-const games_playtime = ref([]);
-
-const games_percentage = ref([]);
+const platform_playtime = ref([]);
+const platform_percentage = ref([]);
+const platform_number_of_sessions = ref([]);
 
 function setGamesNameAndPlaytime() {
   let temp_games = [];
@@ -116,6 +119,7 @@ function setGamesNameAndPlaytime() {
   if (id_of_team.value.length > 0) {
     for (let g of platforms.value) {
       let acc = 0;
+      let number_of_sessions = 0;
       for (let s of props.sessions === undefined
           ? sessions.value
           : props.sessions) {
@@ -123,14 +127,16 @@ function setGamesNameAndPlaytime() {
           if (id_of_team.value.includes(s.team.id) && s.platform.id === g.id) {
             acc += s.duration;
             total_playtime += s.duration;
+            number_of_sessions++;
           }
         }
       }
-      temp_games.push({ name: g.name, playtime: acc });
+      temp_games.push({ name: g.name, playtime: acc, number_of_sessions: number_of_sessions });
     }
   } else {
     for (let g of platforms.value) {
       let acc = 0;
+      let number_of_sessions = 0;
       for (let s of props.sessions === undefined
           ? sessions.value
           : props.sessions) {
@@ -138,19 +144,21 @@ function setGamesNameAndPlaytime() {
           if (s.platform.id === g.id) {
             acc += s.duration;
             total_playtime += s.duration;
+            number_of_sessions++;
           }
         }
       }
-      temp_games.push({ name: g.name, playtime: acc });
+      temp_games.push({ name: g.name, playtime: acc, number_of_sessions: number_of_sessions });
     }
   }
   temp_games.sort((a, b) => b.playtime - a.playtime);
   temp_games = temp_games.filter((g) => g.playtime > 0);
   games_name.value = temp_games.map((g) => g.name);
-  games_percentage.value = temp_games.map((g) =>
+  platform_percentage.value = temp_games.map((g) =>
       ((g.playtime / total_playtime) * 100).toFixed(0),
   );
-  games_playtime.value = temp_games.map((g) => g.playtime);
+  platform_playtime.value = temp_games.map((g) => g.playtime);
+  platform_number_of_sessions.value = temp_games.map((g) => g.number_of_sessions);
 }
 
 const colors_of_pie_parts = ref([]);
@@ -203,7 +211,7 @@ const setChartData = () => {
         : games_name.value.map((g) => ""),
     datasets: [
       {
-        data: games_playtime.value,
+        data: platform_playtime.value,
         backgroundColor: colors_of_pie_parts.value,
         hoverBackgroundColor: colors_of_pie_parts.value,
       },
@@ -225,11 +233,13 @@ const setChartOptions = () => {
           label: function (context) {
             return (
                 convertMinuteToHoursMinute(
-                    games_playtime.value[context.dataIndex],
+                    platform_playtime.value[context.dataIndex],
                 ) +
                 " -> " +
-                games_percentage.value[context.dataIndex] +
-                "%"
+                platform_percentage.value[context.dataIndex] +
+                "%, " +
+                i18n.t("GamesSettings.sessions_number") + " " +
+                platform_number_of_sessions.value[context.dataIndex]
             );
           },
         },

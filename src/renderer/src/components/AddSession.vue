@@ -87,7 +87,7 @@
           />
         </div>
         <div class="as-comments">
-          <TextArea v-model="comment" rows="4" cols="23" :placeholder="i18n.t('AddSession.comments')"/>
+          <TextArea v-model="comment" rows="1" cols="23" :placeholder="i18n.t('AddSession.comments')"/>
         </div>
       </div>
       <div class="as-select-platform">
@@ -325,7 +325,7 @@ async function addNewSession() {
       detail: i18n.t("AddSession.all_good"),
       life: 3000,
     });
-    if (getPreferences("reload_data_after_adding_session")) {
+    if (getPreferences("reload_data_after_adding_session") && !props.addToWaitingList) {
       setTimeout(async () => {
         await store.reloadStore();
       }, 3000);
@@ -441,7 +441,6 @@ async function addNewSession() {
 
 .as-comments {
   margin-top: 10px;
-  height: 100px;
 }
 
 .as-duration-input {

@@ -113,8 +113,8 @@ async function onReload() {
 </script>
 
 <style scoped>
-.header {
-  margin-top: 5px;
+h3 {
+  margin: 10px;
 }
 
 .s-content {
@@ -142,11 +142,9 @@ async function onReload() {
 .menu {
   width: 100%;
   border: none;
-  margin-left: 0px;
 }
 
 .link {
-  margin-top: 0px;
   height: 40px;
   width: 100%;
   border-radius: var(--border-radius);
@@ -190,7 +188,6 @@ a:active {
 }
 
 .sidebar-version {
-  margin-top: 5px;
   font-style: italic;
 }
 </style>

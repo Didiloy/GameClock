@@ -311,6 +311,22 @@
         "10": "Novembre",
         "11": "Décembre"
       }
+    },
+    "Successes": {
+      "descriptions": {
+        "relentless": "Vous avez été acharné dans votre poursuite du bonheur. Vous avez plus de 10 sessions nulles sur le même jeu !",
+        "patient": "Vous avez une session de jeu longue de plus de 8 heures",
+        "enduring": "Vous avez une session de jeu longue de plus de 10 heures",
+        "inexhaustible": "Vous avez une session de jeu longue de plus de 12 heures",
+        "young_gamer": "Vous avez plus de 50 sessions de jeu",
+        "gamer": "Vous avez plus de 100 sessions de jeu",
+        "passionnate": "Vous avez plus de 200 sessions de jeu",
+        "curious": "Vous avez joué à plus de 5 jeux différents",
+        "prospector": "Vous avez joué à plus de 15 jeux différents",
+        "scholar": "Vous avez joué à plus de 30 jeux différents",
+        "depressed": "40% de vos sessions sont nulles",
+        "important_person": "Vous avez 30% ou plus de la totalité du temps de jeu de toutes les équipes"
+      }
     }
   },
   "en": {
@@ -624,6 +640,22 @@
         "9": "October",
         "10": "November",
         "11": "December"
+      }
+    },
+    "Successes": {
+      "descriptions": {
+        "relentless": "You've been relentless in your pursuit of happiness. You have more than 10 bad sessions on the same game!",
+        "patient": "You have a game session lasting more than 8 hours",
+        "enduring": "You have a game session lasting more than 10 hours",
+        "inexhaustible": "You have a game session lasting more than 12 hours",
+        "young_gamer": "You have more than 50 game sessions",
+        "gamer": "You have more than 100 game sessions",
+        "passionnate": "You have more than 200 game sessions",
+        "curious": "You've played more than 5 different games",
+        "prospector": "You've played more than 15 different games",
+        "scholar": "You've played more than 30 different games",
+        "depressed": "40% of your sessions are bad",
+        "important_person": "You have 30% or more of the total playtime of all teams"
       }
     }
   }

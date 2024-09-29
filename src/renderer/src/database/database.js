@@ -84,7 +84,7 @@ function getIfGameExist(gameName) {
   return { exist: false };
 }
 
-export async function addSession(teamId, gameName, duration, was_cool, comment, platform) {
+export async function addSession(teamId, gameName, duration, was_cool, comment, platform, date) {
   try {
     let { exist, id } = getIfGameExist(gameName);
     let gamePath = id ? id : "";
@@ -111,7 +111,7 @@ export async function addSession(teamId, gameName, duration, was_cool, comment, 
       await setDoc(doc(sessionRef), {
         duration: duration,
         was_cool: was_cool,
-        date: new Date(),
+        date: date !== undefined ? date: new Date(),
         game: doc(collection(db, "games"), gamePath),
         team: doc(collection(db, "teams"), teamId),
         comment: comment,
@@ -120,7 +120,7 @@ export async function addSession(teamId, gameName, duration, was_cool, comment, 
     } else {
       await setDoc(doc(sessionRef), {
         duration: duration,
-        date: new Date(),
+        date:  date !== undefined ? date: new Date(),
         game: doc(collection(db, "games"), gamePath),
         team: doc(collection(db, "teams"), teamId),
         comment: comment,
@@ -212,15 +212,10 @@ export async function getPlatforms() {
     platformsList.push({ ...doc.data(), id: doc_id });
   });
 
-  //if the platforms list is empty we add the default platforms
-    if (platformsList.length === 0) {
-        await addPlatformsToDatabase();
-        return await getPlatforms();
-    }
   return platformsList;
 }
 
-async function addPlatformsToDatabase(){
+export async function addPlatformsToDatabase(){
   const platforms = [ "PC", "Playstation", "Xbox", "Nintendo", "Not specified", "Mobile"];
   const platformsRef = collection(db, "platforms");
   for(let platform of platforms){

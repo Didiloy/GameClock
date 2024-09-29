@@ -36,6 +36,78 @@
               style="max-width: 60px; max-height: 60px; margin-right: 10px"
             />
             <h3>{{ item.name }}</h3>
+            <img
+              v-if="item.relentless.unlocked"
+              :src="item.relentless.image"
+              :title="item.relentless.description + ''"
+              class="success"
+            />
+            <img
+                v-if="item.patient.unlocked"
+                :src="item.patient.image"
+                :title="item.patient.description + ''"
+                class="success"
+            />
+            <img
+                v-if="item.enduring.unlocked"
+                :src="item.enduring.image"
+                :title="item.enduring.description + ''"
+                class="success"
+            />
+            <img
+                v-if="item.inexhaustible.unlocked"
+                :src="item.inexhaustible.image"
+                :title="item.inexhaustible.description + ''"
+                class="success"
+            />
+            <img
+                v-if="item.young_gamer.unlocked"
+                :src="item.young_gamer.image"
+                :title="item.young_gamer.description + ''"
+                class="success"
+            />
+            <img
+                v-if="item.gamer.unlocked"
+                :src="item.gamer.image"
+                :title="item.gamer.description + ''"
+                class="success"
+            />
+            <img
+                v-if="item.passionnate.unlocked"
+                :src="item.passionnate.image"
+                :title="item.passionnate.description + ''"
+                class="success"
+            />
+            <img
+                v-if="item.curious.unlocked"
+                :src="item.curious.image"
+                :title="item.curious.description + ''"
+                class="success"
+            />
+            <img
+                v-if="item.prospector.unlocked"
+                :src="item.prospector.image"
+                :title="item.prospector.description + ''"
+                class="success"
+            />
+            <img
+                v-if="item.scholar.unlocked"
+                :src="item.scholar.image"
+                :title="item.scholar.description + ''"
+                class="success"
+            />
+            <img
+                v-if="item.depressed.unlocked"
+                :src="item.depressed.image"
+                :title="item.depressed.description + ''"
+                class="success"
+            />
+            <img
+                v-if="item.important_person.unlocked"
+                :src="item.important_person.image"
+                :title="item.important_person.description + ''"
+                class="success"
+            />
           </div>
           <div class="team-playtime">
             <h4>{{ convertMinuteToHoursMinute(item.playtime) }}</h4>
@@ -63,6 +135,8 @@ import Loading from "./Loading.vue";
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
 
+import { useSuccesses } from "../composables/successes";
+
 const router = useRouter();
 
 const store = useStore();
@@ -79,9 +153,9 @@ onMounted(async () => {
   if (getPreferences("use_logo_color_in_team_list")) {
     await getTeamColorWithWorker();
   }
+  // calculateSuccesses("dylan", sessions.value);
+  // console.log(relentless.value);
 });
-
-onUpdated(() => {});
 
 watch(sessions, async () => {
   loading.value = true;
@@ -125,8 +199,9 @@ async function setTeamItem() {
     team.gameDurations[session.game.id].duration += session.duration;
   });
 
-  // // Determine the most played game for each team
+  // // Determine the most played game for each team and calculate their successes
   Object.values(teamData).forEach((team) => {
+    //most played game
     let maxDuration = 0;
     Object.keys(team.gameDurations).forEach((gameName) => {
       const gameData = team.gameDurations[gameName];
@@ -138,10 +213,27 @@ async function setTeamItem() {
     });
 
     delete team.gameDurations;
+
+    //successes
+    const { calculateSuccesses, relentless, patient, enduring, inexhaustible, young_gamer, gamer, passionnate, curious, prospector, scholar, depressed,important_person} = useSuccesses();
+    calculateSuccesses(team.name, sessions.value);
+    team.relentless = relentless.value;
+    team.patient = patient.value;
+    team.enduring = enduring.value;
+    team.inexhaustible = inexhaustible.value;
+    team.young_gamer = young_gamer.value;
+    team.gamer = gamer.value;
+    team.passionnate = passionnate.value;
+    team.curious = curious.value;
+    team.prospector = prospector.value;
+    team.scholar = scholar.value;
+    team.depressed = depressed.value;
+    team.important_person = important_person.value;
   });
 
   const result = Object.values(teamData);
   teamItem.value = result;
+
 }
 
 function sortTeams() {
@@ -257,6 +349,12 @@ function navigateToTeam(teamName) {
   background-color: var(--primary-100);
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.success{
+  max-width: 25px;
+  max-height: 25px;
+  margin-left: 10px
 }
 
 .team-item:hover {

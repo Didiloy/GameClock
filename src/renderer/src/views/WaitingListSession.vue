@@ -48,7 +48,8 @@ async function synchronizeWithDatabase() {
             parseInt(session.duration),
             session.was_cool,
             session.comment,
-            session.platform
+            session.platform,
+            session.date
         );
         if (success) {
           store.deleteSession(session);
