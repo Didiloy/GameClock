@@ -11,9 +11,24 @@
         <h2 class="team-name">{{ $route.params.name }}</h2>
       </div>
       <Dropdown
-        v-model="selected_month"
-        :options="labels_dropdown"
-        optionLabel="label"
+          v-model="selected_success"
+          :options="unlocked_successes"
+      >
+        <template #value="slotProps">
+          <div v-if="slotProps.value" :title="slotProps.value.description" style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center">
+            <img :src="slotProps.value.image" style="width: 20px"  />
+          </div>
+        </template>
+        <template #option="slotProps">
+          <div :title="slotProps.option.description" style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center">
+            <img :src="slotProps.option.image" style="width: 30px"  />
+          </div>
+        </template>
+      </Dropdown>
+      <Dropdown
+          v-model="selected_month"
+          :options="labels_dropdown"
+          optionLabel="label"
       />
     </div>
     <Dialog
@@ -45,6 +60,7 @@ import { useRoute } from "vue-router";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { getIdsOfTeam } from "../database/database";
+import { useSuccesses } from "../composables/successes";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -178,6 +194,9 @@ function keyEventAddSession(e) {
   }
 }
 
+const unlocked_successes = ref([]);
+const selected_success = ref();
+
 onMounted(() => {
   id_of_team.value = getIdsOfTeam(useRoute().params.name, teams.value);
   sessions_of_team.value = getSessionsOfTeam();
@@ -190,6 +209,24 @@ onMounted(() => {
     add_session_game_name.value = game_if_we_come_from_home;
     toggleAddSession();
   }
+  //successes
+  const { calculateSuccesses, relentless, patient, enduring, inexhaustible, young_gamer, gamer, passionnate, curious, prospector, scholar, depressed,important_person} = useSuccesses();
+  calculateSuccesses(useRoute().params.name, sessions_of_team.value);
+  let unlocked = [];
+  unlocked.push(relentless.value);
+  unlocked.push(patient.value);
+  unlocked.push(enduring.value);
+  unlocked.push(inexhaustible.value);
+  unlocked.push(young_gamer.value);
+  unlocked.push(gamer.value);
+  unlocked.push(passionnate.value);
+  unlocked.push(curious.value);
+  unlocked.push(prospector.value);
+  unlocked.push(scholar.value);
+  unlocked.push(depressed.value);
+  unlocked.push(important_person.value);
+  unlocked_successes.value = unlocked.filter((s) => s.unlocked);
+  selected_success.value = unlocked_successes.value[0];
 });
 
 onUnmounted(() => {
