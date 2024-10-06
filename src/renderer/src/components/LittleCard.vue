@@ -6,8 +6,15 @@
   }"
   >
     <template #title>
-      <div class="lc-center">
+      <div class="lc-center" v-if="props.iconName">
         <b><i :class="props.iconName + ' icon'"></i></b>
+        <span class="lc-title-p" :title="props.name">{{ props.name }}</span>
+      </div>
+      <div class="lc-center" v-else-if="props.iconValue">
+        <img :src="props.iconValue" class="image-icon"/>
+        <span class="lc-title-p" :title="props.name">{{ props.name }}</span>
+      </div>
+      <div class="lc-center" v-else>
         <span class="lc-title-p" :title="props.name">{{ props.name }}</span>
       </div>
     </template>
@@ -23,6 +30,7 @@ const props = defineProps([
   "iconName",
   "backgroundColor",
   "titleColor",
+  "iconValue"
 ]);
 const backgroundColor = props.backgroundColor
   ? props.backgroundColor
@@ -81,5 +89,10 @@ const backgroundColor = props.backgroundColor
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.image-icon {
+  width: 30px;
+  height:30px;
 }
 </style>

@@ -3,7 +3,7 @@
     <div id="drag-region">
       <div id="window-title">
         <img
-            src="../assets/images/icons/base_icon.png"
+            :src="icon"
             draggable="false"
             style="height: 23px; width: auto"
             alt="logo"
@@ -57,6 +57,12 @@
 import {onMounted, ref, watch} from "vue";
 import {useStoreChrono} from "../store/store";
 import {getPreferences, setPreferences} from "../preferences/preferences";
+import { isChristmas, isHalloween } from "../common/date";
+import ChristmasIcon from "../assets/images/icons/christmas_icon.svg"
+import HalloweenIcon from "../assets/images/icons/halloween_icon.svg"
+import BaseIcon from "../assets/images/icons/base_icon.png"
+
+const icon = ref(BaseIcon);
 
 const props = defineProps(["toggleChrono"]);
 const store = useStoreChrono();
@@ -78,7 +84,16 @@ function handleWindowControls() {
 
 onMounted(() => {
   handleWindowControls();
+  initializeIcon();
 });
+
+function initializeIcon(){
+  if(isHalloween()){
+    icon.value = HalloweenIcon;
+  } else if(isChristmas()){
+    icon.value = ChristmasIcon;
+  }
+}
 
 const timestamp_start_chrono = ref(0);
 const duration = ref(0);

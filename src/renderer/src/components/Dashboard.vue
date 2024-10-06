@@ -26,7 +26,7 @@
             ></LittleCard>
             <LittleCard
                 class="dv-lc-average-session-day"
-                iconName="pi pi-sort-numeric-up-alt"
+                :iconValue="numberIcon"
                 backgroundColor="#e8defa"
                 titleColor="#1e182c"
                 :name="average_session_per_day.toFixed(2)"
@@ -36,7 +36,7 @@
             ></LittleCard>
             <LittleCard
               class="dv-lc-sessions"
-              iconName="pi pi-users"
+              :iconValue="spinningClock"
               backgroundColor="#f9e09f"
               titleColor="#241a00"
               :name="team_with_greatest_session_average_playtime"
@@ -58,7 +58,7 @@
             ></LittleCard>
             <LittleCard
                 class="dv-lc-game-of-the-week"
-                iconName="pi pi-discord"
+                :iconValue="gameIcon"
                 backgroundColor="#ffdbcb"
                 titleColor="#341100"
                 :name="game_of_the_week"
@@ -74,7 +74,7 @@
             ></LittleCard>
             <LittleCard
                 class="dv-lc-unhappiest"
-                iconName="pi pi-thumbs-down"
+                :iconValue="sadIcon"
                 backgroundColor="#c5eae7"
                 titleColor="#00201f"
                 :name="unhappiest_player"
@@ -139,6 +139,10 @@ import SessionsHistory from "./SessionsHistory.vue";
 import { useDashboard} from "../composables/dashboard";
 import { getPreferences } from "../preferences/preferences";
 import { convertMinuteToHoursMinute } from "../common/main";
+import gameIcon from "../assets/images/icons_games.svg"
+import sadIcon from "../assets/images/sad_icon.svg"
+import numberIcon from "../assets/images/icon_number.svg"
+import spinningClock from "../assets/images/spinning_clock.svg"
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();

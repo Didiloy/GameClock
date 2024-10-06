@@ -6,7 +6,7 @@
     <div class="dt-dashboard">
       <LittleCard
         class="dt-lc-total-time"
-        iconName="pi pi-hourglass"
+        :iconValue="spinningClock"
         backgroundColor="#d4e7dc"
         titleColor="#0f1f18"
         :name="team_time_hours"
@@ -119,6 +119,8 @@ import { computed, onMounted, ref, watch } from "vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import { convertMinuteToHoursMinute } from "../common/main";
 import { getIdsOfTeam } from "../database/database";
+import spinningClock from "../assets/images/spinning_clock.svg"
+
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
