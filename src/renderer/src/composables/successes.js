@@ -34,7 +34,7 @@ export function useSuccesses() {
     const depressed = ref({unlocked: false, image: "", description:""});
     const important_person = ref({unlocked: false, image: "", description:""});
 
-    function calculateSuccesses(teamName, sessions) {
+    function calculateSuccesses(teamName, sessions, compute_important_person = true) {
         const id_of_team = getIdOfTeam(teamName, teams.value);
         if (id_of_team === "") return;
 
@@ -143,12 +143,14 @@ export function useSuccesses() {
 
         //important_person
         //we don't activate the success if there is less than 4 team
-        if(teams.value.length >= 4){
-            let percentage_team = (duration_team / duration_total) * 100;
-            if(percentage_team >= 30){
-                important_person.value.unlocked = true;
-                important_person.value.image = important_person_logo;
-                important_person.value.description = i18n.t("Successes.descriptions.important_person");
+        if(compute_important_person){
+            if(teams.value.length >= 4){
+                let percentage_team = (duration_team / duration_total) * 100;
+                if(percentage_team >= 30){
+                    important_person.value.unlocked = true;
+                    important_person.value.image = important_person_logo;
+                    important_person.value.description = i18n.t("Successes.descriptions.important_person");
+                }
             }
         }
     }

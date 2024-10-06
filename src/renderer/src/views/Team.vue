@@ -211,7 +211,7 @@ onMounted(() => {
   }
   //successes
   const { calculateSuccesses, relentless, patient, enduring, inexhaustible, young_gamer, gamer, passionnate, curious, prospector, scholar, depressed,important_person} = useSuccesses();
-  calculateSuccesses(useRoute().params.name, sessions_of_team.value);
+  calculateSuccesses(useRoute().params.name, sessions_of_team.value, false);
   let unlocked = [];
   unlocked.push(relentless.value);
   unlocked.push(patient.value);
