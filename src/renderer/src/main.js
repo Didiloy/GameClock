@@ -103,7 +103,7 @@ const routes = [
   { path: "/team/:name", component: Team, props: true },
   { path: "/team/:name/:game", component: Team },
   { path: "/addteam", component: AddTeam },
-  { path: "/settings/games", component: GamesSettings },
+  { path: "/settings/games", component: GamesSettings, name: "settings-games" },
   { path: "/settings/general", component: Settings, name: "settings-general" },
   { path: "/waiting-list-sessions", component: WaitingListSession, name: "waiting-list-sessions" },
   {

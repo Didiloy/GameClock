@@ -126,3 +126,16 @@ export const useStoreWaitingList = defineStore("storeWaitingList", () => {
     deleteSession
   };
 });
+
+export const useSearchStore = defineStore('search', () => {
+  const searchValue = ref('');
+
+  function updateSearchValue(value) {
+    searchValue.value = value;
+  }
+
+  return {
+    searchValue,
+    updateSearchValue
+  }
+})

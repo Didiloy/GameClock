@@ -2,20 +2,12 @@
   <div class="gs-container">
     <h2 class="gs-title">{{ $t("GamesSettings.title") }}</h2>
     <div class="gs-search">
-      <InputText
-        type="text"
-        v-model="value"
-        :placeholder="i18n.t('GamesSettings.search_game')"
-        style="height: 30px"
-        @focus="emit('toggleChronoListener')"
-        @blur="emit('toggleChronoListener')"
-      />
       <SelectButton
         v-model="sort_value"
         :options="options"
         optionLabel="name"
         :pt="{
-          root: { style: 'margin-top: 10px;' },
+          root: { style: 'margin-top: 0px;' },
           button: { style: 'height: 30px;' },
         }"
       />
@@ -43,6 +35,9 @@ import Loading from "../components/Loading.vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
+import { useSearchStore } from "../store/store";
+
+const searchStore = useSearchStore();
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -52,7 +47,7 @@ const emit = defineEmits(["toggleChronoListener"]);
 const store = useStore();
 const { games, sessions } = storeToRefs(store);
 const games_values = ref([]);
-const value = ref("");
+// const value = ref("");
 const gameSessionCount = ref({});
 
 const loaded = ref(false);
@@ -76,9 +71,9 @@ onMounted(() => {
   }, 500);
 });
 
-watch(value, () => {
+watch(() => searchStore.searchValue, () => {
   games_values.value = games.value.filter((g) =>
-    g.name.toLowerCase().includes(value.value.toLowerCase())
+    g.name.toLowerCase().includes(searchStore.searchValue.toLowerCase())
   );
   addSessionCountToGames();
   games_values.value = games_values.value.sort((a, b) => {

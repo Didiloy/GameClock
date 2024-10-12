@@ -8,6 +8,17 @@
             style="height: 23px; width: auto"
             alt="logo"
         />
+      </div class="container-center">
+        <div>
+          <div v-if="currentRouteName === 'settings-games'" class="centered-search">
+            <InputText
+            type="text"
+            v-model="searchStore.searchValue"
+            :placeholder="$t('GamesSettings.search_game')"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
+          />
+        </div>
       </div>
       <div
           id="chronometer"
@@ -61,11 +72,18 @@ import { isChristmas, isHalloween } from "../common/date";
 import ChristmasIcon from "../assets/images/icons/christmas_icon.svg"
 import HalloweenIcon from "../assets/images/icons/halloween_icon.svg"
 import BaseIcon from "../assets/images/icons/base_icon.png"
-
+import { useRoute } from 'vue-router';
+import InputText from 'primevue/inputtext';
+import { useSearchStore } from "../store/store";
 const icon = ref(BaseIcon);
 
 const props = defineProps(["toggleChrono"]);
 const store = useStoreChrono();
+const route = useRoute();
+const currentRouteName = ref('');
+const searchStore = useSearchStore();
+
+const emit = defineEmits(["toggleChronoListener"]);
 
 function handleWindowControls() {
   // Make minimise/maximise/close buttons work when they are clicked
@@ -156,6 +174,10 @@ function convertSecondsToHourMinutesSeconds(seconds) {
 
   return result;
 }
+
+watch(() => route.name, (newName) => {
+  currentRouteName.value = newName;
+}, { immediate: true });
 </script>
 <style scoped>
 #header {
@@ -165,7 +187,8 @@ function convertSecondsToHourMinutesSeconds(seconds) {
   height: 32px;
   width: 100%; /*Compensate for body 1px border*/
   background: var(--primary-100);
-  padding: 4px;
+  margin: 0;
+  padding: 0;
   -webkit-user-select: none;
   user-select: none;
   z-index: 1;
@@ -174,9 +197,11 @@ function convertSecondsToHourMinutesSeconds(seconds) {
 #header #drag-region {
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
   -webkit-app-region: drag;
   display: grid;
-  grid-template-columns: auto 130px 138px;
+  grid-template-columns: 150px auto 130px 138px;
 }
 
 #window-title {
@@ -203,6 +228,7 @@ function convertSecondsToHourMinutesSeconds(seconds) {
   align-items: center;
   -webkit-app-region: no-drag;
   border-radius: 10px;
+  margin: 4px;
 }
 
 #window-controls {
@@ -305,5 +331,24 @@ function convertSecondsToHourMinutesSeconds(seconds) {
   border-width: 5px;
   border-style: solid;
   border-color: #555 transparent transparent transparent;
+}
+
+.container-center{
+  height: 32px;
+}
+
+.centered-search {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.centered-search :deep(.p-inputtext) {
+  -webkit-app-region: no-drag;
+  width: 80%;
+  max-width: 100%;
+  height: 20px;
 }
 </style>
