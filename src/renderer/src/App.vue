@@ -157,6 +157,6 @@ h2 {
   padding: 5px;
   width: 100%;
   overflow-y: auto;
-  margin-bottom: 25px;
+  padding-bottom: 25px;
 }
 </style>

@@ -206,6 +206,7 @@ const percentage_card_computed = computed(() => {
   align-items: center;
   height: 100%;
   width: 100%;
+  padding-bottom: 40px;
 }
 
 .dv-dashboard {
