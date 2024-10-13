@@ -16,7 +16,7 @@
         @click="onClickMultipleTeam"
       />
     </div>
-    <DataView :value="teamItem" class="dataview">
+    <DataView :value="teamItemFiltered" class="dataview">
       <template #list="slotProps">
         <div
           v-for="(item, index) in slotProps.items"
@@ -130,6 +130,7 @@ import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
 import { getPreferences } from "../preferences/preferences";
+import { useSearchTeamStore } from "../store/store";
 import Loading from "./Loading.vue";
 
 import { useI18n } from "vue-i18n";
@@ -145,7 +146,7 @@ const { teams, sessions, games } = storeToRefs(store);
 const loading = ref(true);
 
 const toggle_select_team = ref(false);
-
+const searchTeamStore = useSearchTeamStore();
 onMounted(async () => {
   loading.value = true;
   await init();
@@ -165,6 +166,22 @@ watch(sessions, async () => {
     await getTeamColorWithWorker();
   }
 });
+
+watch(() => searchTeamStore.searchTeamValue, () => {
+  filterTeam();
+});
+
+const teamItemFiltered = ref([]);
+
+function filterTeam() {
+  if(searchTeamStore.searchTeamValue === "") {
+    teamItemFiltered.value = teamItem.value;
+    return;
+  }
+  teamItemFiltered.value = teamItem.value.filter((t) =>
+    t.name.toLowerCase().includes(searchTeamStore.searchTeamValue.toLowerCase())
+  );
+}
 
 const teamItem = ref([]);
 
@@ -233,7 +250,7 @@ async function setTeamItem() {
 
   const result = Object.values(teamData);
   teamItem.value = result;
-
+  teamItemFiltered.value = result;
 }
 
 function sortTeams() {

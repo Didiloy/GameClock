@@ -99,7 +99,7 @@ app.use(pinia);
 //Router
 const routes = [
   { path: "/", component: Home },
-  { path: "/teams", component: Teams },
+  { path: "/teams", component: Teams, name: "teams" },
   { path: "/team/:name", component: Team, props: true },
   { path: "/team/:name/:game", component: Team },
   { path: "/addteam", component: AddTeam },

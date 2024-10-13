@@ -2,31 +2,22 @@
   <div id="header">
     <div id="drag-region">
       <div id="window-title">
-        <img
-            :src="icon"
-            draggable="false"
-            style="height: 23px; width: auto"
-            alt="logo"
-        />
+        <img :src="icon" draggable="false" style="height: 23px; width: auto" alt="logo" />
       </div class="container-center">
-        <div>
-          <div v-if="currentRouteName === 'settings-games'" class="centered-search">
-            <InputText
-            type="text"
-            v-model="searchStore.searchValue"
-            :placeholder="$t('GamesSettings.search_game')"
-            @focus="emit('toggleChronoListener')"
-            @blur="emit('toggleChronoListener')"
-          />
+      <div>
+        <div v-if="currentRouteName === 'settings-games'" class="centered-search">
+          <InputText type="text" v-model="searchStore.searchValue" :placeholder="$t('GamesSettings.search_game')"
+            @focus="emit('toggleChronoListener')" @blur="emit('toggleChronoListener')" />
+        </div>
+        <div v-if="currentRouteName === 'teams'" class="centered-search">
+          <InputText type="text" v-model="searchTeamStore.searchTeamValue" :placeholder="$t('Teams.search_team')"
+            @focus="emit('toggleChronoListener')" @blur="emit('toggleChronoListener')" />
         </div>
       </div>
-      <div
-          id="chronometer"
-          @click="startStopWatch"
-          :style="'background-color:' + background_color + ';'"
-          class="hover-div"
-      >
-        <div class="popup">{{ $t("TitleBar.last_chronometer_value") + convertSecondsToHourMinutesSeconds(last_chrono_value)}}</div>
+      <div id="chronometer" @click="startStopWatch" :style="'background-color:' + background_color + ';'"
+        class="hover-div">
+        <div class="popup">{{ $t("TitleBar.last_chronometer_value") +
+          convertSecondsToHourMinutesSeconds(last_chrono_value)}}</div>
         <span v-if="duration_seconds !== 0">
           {{ convertSecondsToHourMinutesSeconds(duration_seconds) }}
         </span>
@@ -35,46 +26,32 @@
       </div>
       <div id="window-controls">
         <div class="button" id="min-button">
-          <img
-              class="icon"
-              src="../assets/images/minimize_icon.svg"
-              draggable="false"
-              alt="minimize"
-          />
+          <img class="icon" src="../assets/images/minimize_icon.svg" draggable="false" alt="minimize" />
         </div>
 
         <div class="button" id="max-button">
-          <img
-              class="icon-max"
-              src="../assets/images/maximize_icon.svg"
-              draggable="false"
-              alt="maximize"
-          />
+          <img class="icon-max" src="../assets/images/maximize_icon.svg" draggable="false" alt="maximize" />
         </div>
 
         <div class="button" id="close-button">
-          <img
-              class="icon"
-              src="../assets/images/close_icon.svg"
-              draggable="false"
-              alt="close"
-          />
+          <img class="icon" src="../assets/images/close_icon.svg" draggable="false" alt="close" />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import {onMounted, ref, watch} from "vue";
-import {useStoreChrono} from "../store/store";
-import {getPreferences, setPreferences} from "../preferences/preferences";
+import { onMounted, ref, watch } from "vue";
+import { useStoreChrono } from "../store/store";
+import { getPreferences, setPreferences } from "../preferences/preferences";
 import { isChristmas, isHalloween } from "../common/date";
 import ChristmasIcon from "../assets/images/icons/christmas_icon.svg"
 import HalloweenIcon from "../assets/images/icons/halloween_icon.svg"
 import BaseIcon from "../assets/images/icons/base_icon.png"
 import { useRoute } from 'vue-router';
 import InputText from 'primevue/inputtext';
-import { useSearchStore } from "../store/store";
+import { useSearchStore, useSearchTeamStore } from "../store/store";
+
 const icon = ref(BaseIcon);
 
 const props = defineProps(["toggleChrono"]);
@@ -82,7 +59,7 @@ const store = useStoreChrono();
 const route = useRoute();
 const currentRouteName = ref('');
 const searchStore = useSearchStore();
-
+const searchTeamStore = useSearchTeamStore();
 const emit = defineEmits(["toggleChronoListener"]);
 
 function handleWindowControls() {
@@ -105,10 +82,10 @@ onMounted(() => {
   initializeIcon();
 });
 
-function initializeIcon(){
-  if(isHalloween()){
+function initializeIcon() {
+  if (isHalloween()) {
     icon.value = HalloweenIcon;
-  } else if(isChristmas()){
+  } else if (isChristmas()) {
     icon.value = ChristmasIcon;
   }
 }
@@ -132,10 +109,10 @@ watch(duration_seconds, () => {
 });
 
 watch(
-    () => props.toggleChrono,
-    () => {
-      startStopWatch();
-    }
+  () => props.toggleChrono,
+  () => {
+    startStopWatch();
+  }
 );
 
 function startStopWatch() {
@@ -185,7 +162,8 @@ watch(() => route.name, (newName) => {
   position: fixed;
   top: 0;
   height: 32px;
-  width: 100%; /*Compensate for body 1px border*/
+  width: 100%;
+  /*Compensate for body 1px border*/
   background: var(--primary-100);
   margin: 0;
   padding: 0;
@@ -312,7 +290,8 @@ watch(() => route.name, (newName) => {
   padding: 8px;
   position: absolute;
   z-index: 1;
-  bottom: -120%; /* Position the popup beside the div */
+  bottom: -120%;
+  /* Position the popup beside the div */
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -333,7 +312,7 @@ watch(() => route.name, (newName) => {
   border-color: #555 transparent transparent transparent;
 }
 
-.container-center{
+.container-center {
   height: 32px;
 }
 

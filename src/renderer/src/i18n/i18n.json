@@ -209,7 +209,8 @@
       "all_good": "C'est tout bon !"
     },
     "Teams": {
-      "title": "Choisissez votre équipe !"
+      "title": "Choisissez votre équipe !",
+      "search_team": "Chercher une équipe..."
     },
     "TeamList": {
       "abandon": "Abandonner",
@@ -539,7 +540,8 @@
       "all_good": "All good!"
     },
     "Teams": {
-      "title": "Choose your team!"
+      "title": "Choose your team!",
+      "search_team": "Search for a team..."
     },
     "TeamList": {
       "abandon": "Cancel",

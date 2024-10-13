@@ -139,3 +139,11 @@ export const useSearchStore = defineStore('search', () => {
     updateSearchValue
   }
 })
+
+export const useSearchTeamStore = defineStore('searchTeam', () => {
+  const searchTeamValue = ref('');
+
+  return {
+    searchTeamValue,
+  }
+})
