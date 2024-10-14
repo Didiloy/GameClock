@@ -94,7 +94,7 @@ function toggleChrono() {
 
 <template>
   <div class="container">
-    <TitleBar :toggleChrono="chrono" @toggleChronoListener="toggleChronoListener"/>
+    <TitleBar :toggleChrono="chrono" @toggleChronoListener="toggleChronoListener" :data_loaded="loaded"/>
     <div class="app-container main-background">
       <div class="sidebar">
         <Sidebar></Sidebar>

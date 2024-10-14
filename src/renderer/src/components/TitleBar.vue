@@ -13,11 +13,15 @@
           <InputText type="text" v-model="searchTeamStore.searchTeamValue" :placeholder="$t('Teams.search_team')"
             @focus="emit('toggleChronoListener')" @blur="emit('toggleChronoListener')" />
         </div>
+        <div v-if="currentRouteName === 'home'" class="centered-title">
+          <span class="h-span">{{ total_time_hours.toUpperCase() }}</span>
+          <span class="h-subtitle">{{ $t("Dashboard.spent_playing").toUpperCase() }}</span>
+        </div>
       </div>
       <div id="chronometer" @click="startStopWatch" :style="'background-color:' + background_color + ';'"
         class="hover-div">
         <div class="popup">{{ $t("TitleBar.last_chronometer_value") +
-          convertSecondsToHourMinutesSeconds(last_chrono_value)}}</div>
+          convertSecondsToHourMinutesSeconds(last_chrono_value) }}</div>
         <span v-if="duration_seconds !== 0">
           {{ convertSecondsToHourMinutesSeconds(duration_seconds) }}
         </span>
@@ -51,10 +55,12 @@ import BaseIcon from "../assets/images/icons/base_icon.png"
 import { useRoute } from 'vue-router';
 import InputText from 'primevue/inputtext';
 import { useSearchStore, useSearchTeamStore } from "../store/store";
+import { useTotalTime } from "../composables/total_time";
+const { total_time_hours, calculateTotalTime } = useTotalTime();
 
 const icon = ref(BaseIcon);
 
-const props = defineProps(["toggleChrono"]);
+const props = defineProps(["toggleChrono", "data_loaded"]);
 const store = useStoreChrono();
 const route = useRoute();
 const currentRouteName = ref('');
@@ -152,9 +158,19 @@ function convertSecondsToHourMinutesSeconds(seconds) {
   return result;
 }
 
+watch(() => props.data_loaded, (newDataLoaded) => {
+  if (newDataLoaded) {
+    calculateTotalTime();
+  }
+});
+
 watch(() => route.name, (newName) => {
   currentRouteName.value = newName;
+  if (newName === 'home') {
+    calculateTotalTime();
+  }
 }, { immediate: true });
+
 </script>
 <style scoped>
 #header {
@@ -329,5 +345,28 @@ watch(() => route.name, (newName) => {
   width: 80%;
   max-width: 100%;
   height: 20px;
+}
+
+.centered-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+}
+
+.h-span {
+  font-size: 25px;
+  font-family: dishcek, serif;
+  color: #5a5d9d;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.h-subtitle {
+  font-size: 25px;
+  font-family: dishcek, serif;
+  color: #5a5d9d;
+  margin-top: 5px;
+  margin-left: 10px;
 }
 </style>
