@@ -362,8 +362,20 @@ async function addNewSession() {
       });
     }
   }
+  resetForm();
+}
+
+
+function resetForm() {
   game.value = "";
   duration.value = "";
+  comment.value = "";
+  toggle_fun.value = false;
+  toggle_neutre.value = false;
+  toggle_nul.value = false;
+  selected_platform.value = platforms.value.filter(
+      (p) => p.name === "Not specified"
+  )[0];
 }
 </script>
 <style scoped>
