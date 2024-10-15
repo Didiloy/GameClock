@@ -19,6 +19,17 @@ sort_order.value = sort_order_options.value.find(
 watch(sort_order, () => {
   setPreferences("sort_order_team_list", sort_order.value.name);
 });
+
+
+const display_successes_in_team_list = ref(
+  getPreferences("display_successes_in_team_list")
+);
+watch(display_successes_in_team_list, () => {
+  setPreferences(
+    "display_successes_in_team_list",
+    display_successes_in_team_list.value
+  );
+});
 </script>
 
 <template>
@@ -31,6 +42,12 @@ watch(sort_order, () => {
         :options="sort_order_options"
         optionLabel="label"
       />
+    </div>
+    <div class="tp-item" style="margin-top: 10px;">
+      <b class="text-color">{{
+        $t("TeamsPreferences.display_successes_in_team_list")
+      }}</b>
+      <InputSwitch v-model="display_successes_in_team_list" />
     </div>
   </div>
 </template>

@@ -36,7 +36,8 @@
               style="max-width: 60px; max-height: 60px; margin-right: 10px"
             />
             <h3>{{ item.name }}</h3>
-            <img
+            <div v-if="getPreferences('display_successes_in_team_list')">
+              <img
               v-if="item.relentless.unlocked"
               :src="item.relentless.image"
               :title="item.relentless.description + ''"
@@ -108,6 +109,7 @@
                 :title="item.important_person.description + ''"
                 class="success"
             />
+            </div>
           </div>
           <div class="team-playtime">
             <h4>{{ convertMinuteToHoursMinute(item.playtime) }}</h4>
@@ -232,6 +234,7 @@ async function setTeamItem() {
     delete team.gameDurations;
 
     //successes
+    if(getPreferences("display_successes_in_team_list")) {
     const { calculateSuccesses, relentless, patient, enduring, inexhaustible, young_gamer, gamer, passionnate, curious, prospector, scholar, depressed,important_person} = useSuccesses();
     calculateSuccesses(team.name, sessions.value);
     team.relentless = relentless.value;
@@ -246,6 +249,7 @@ async function setTeamItem() {
     team.scholar = scholar.value;
     team.depressed = depressed.value;
     team.important_person = important_person.value;
+    }
   });
 
   const result = Object.values(teamData);

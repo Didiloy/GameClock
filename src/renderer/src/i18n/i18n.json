@@ -242,6 +242,7 @@
         "name": "Nom",
         "game": "Jeu le plus joué"
       },
+      "display_successes_in_team_list": "Afficher les succès dans la liste des équipes",
       "teams": "Équipes",
       "sort_order_label": "Ordre de tri de la liste des équipes:"
     },
@@ -573,6 +574,7 @@
         "name": "Name",
         "game": "Most Played Game"
       },
+      "display_successes_in_team_list": "Display successes in the team list",
       "teams": "Teams",
       "sort_order_label": "Sort order of the teams list:"
     },

@@ -14,6 +14,7 @@ const defaults = {
   add_session_from_homepage_game_name: "",
   //team list
   sort_order_team_list: "playtime",
+  display_successes_in_team_list: true,
   //database
   selected_database_index: 0,
   //chronometer
