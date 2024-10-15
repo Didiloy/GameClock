@@ -93,6 +93,12 @@ Distributed under the GPLv3 License.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+## Thanks
+
+- Léa for the support and the suggestions
+- Sébastien for all the help and the ideas
+- all the users for the feedbacks and the ideas
+
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
