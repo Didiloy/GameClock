@@ -14,6 +14,8 @@ export function useDashboard() {
     const number_of_games = ref(0);
     const game_of_the_week = ref("");
     const player_of_the_week = ref("");
+    const second_player_of_the_week = ref("");
+    const difference_between_player_of_the_week = ref(0);
     const unhappiest_player = ref("");
     const fun_percentage = ref(0);
     const neutral_percentage = ref(0);
@@ -137,17 +139,15 @@ export function useDashboard() {
         }
         game_of_the_week.value = games.value.find(g => g.id === game_id) ? games.value.find(g => g.id === game_id).name : "";
 
-        //get the player of the week
-        let max_player = 0;
-        let player_id = "";
-        for (let [key, value] of player_last_week) {
-            if (value > max_player) {
-                max_player = value;
-                player_id = key;
-            }
-        }
+        //get the player of the week and the second player of the week
+        const player_last_week_sorted = [...player_last_week.entries()].sort((a, b) => b[1] - a[1]);
+        let player_id = player_last_week_sorted[0][0];
+        let second_player_id = player_last_week_sorted[1][0];
+ 
         player_of_the_week.value = teams.value.find(t => t.id === player_id) ? teams.value.find(t => t.id === player_id).name : "";
-
+        second_player_of_the_week.value = teams.value.find(t => t.id === second_player_id) ? teams.value.find(t => t.id === second_player_id).name : "";
+        difference_between_player_of_the_week.value = player_last_week_sorted[0][1] - player_last_week_sorted[1][1];
+        
         //get the unhappiest player
         let min_happiness = 1;
         let team_id = "";
@@ -183,6 +183,8 @@ export function useDashboard() {
         number_of_games,
         game_of_the_week,
         player_of_the_week,
+        second_player_of_the_week,
+        difference_between_player_of_the_week,
         unhappiest_player,
         fun_percentage,
         neutral_percentage,

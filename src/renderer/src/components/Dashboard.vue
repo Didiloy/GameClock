@@ -70,7 +70,7 @@
                 backgroundColor="#ffdbcb"
                 titleColor="#341100"
                 :name="player_of_the_week"
-                :value="player_of_the_week === '' ? i18n.t('Dashboard.no_player_of_the_week') : i18n.t('Dashboard.player_of_the_week')"
+                :value="player_of_the_week === '' ? i18n.t('Dashboard.no_player_of_the_week') : i18n.t('Dashboard.player_of_the_week', [second_player_of_the_week, convertMinuteToHoursMinute(difference_between_player_of_the_week)])"
             ></LittleCard>
             <LittleCard
                 class="dv-lc-unhappiest"
@@ -155,7 +155,7 @@ const store = useStore();
 const { sessions } = storeToRefs(store);
 
 const {
-    initDashboard,
+  initDashboard,
   sessions_number,
   team_with_most_sessions,
   team_with_most_sessions_value,
@@ -165,17 +165,18 @@ const {
   number_of_games,
   game_of_the_week,
   player_of_the_week,
+  second_player_of_the_week,
+  difference_between_player_of_the_week,
   unhappiest_player,
   fun_percentage,
   neutral_percentage,
   not_fun_percentage
 } = useDashboard();
 
-
 onMounted(() => {
   setTimeout(() => {
-    init();
-    loaded.value = true;
+  init();
+  loaded.value = true;
   }, 500);
 });
 
