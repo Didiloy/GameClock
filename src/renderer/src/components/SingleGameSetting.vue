@@ -54,6 +54,8 @@
               type="text"
               v-model="logo"
               style="width: 400px"
+              @focus="emit('toggleChronoListener')" 
+              @blur="emit('toggleChronoListener')"
               @contextmenu="onRightClickLogo"
             />
             <ContextMenu ref="menu_logo" :model="items" />
@@ -63,6 +65,8 @@
               type="text"
               v-model="grid"
               style="width: 400px"
+              @focus="emit('toggleChronoListener')" 
+              @blur="emit('toggleChronoListener')"
               @contextmenu="onRightClickGrid"
             />
             <ContextMenu ref="menu_grid" :model="items_grid" />
@@ -72,6 +76,8 @@
               type="text"
               v-model="heroe"
               style="width: 400px"
+              @focus="emit('toggleChronoListener')" 
+              @blur="emit('toggleChronoListener')"
               @contextmenu="onRightClickHeroe"
             />
             <ContextMenu ref="menu_heroe" :model="items_heroe" />
@@ -97,6 +103,7 @@ import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { useToast } from "primevue/usetoast";
 import { convertMinuteToHoursMinute } from "../common/main";
+const emit = defineEmits(["toggleChronoListener"]);
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();

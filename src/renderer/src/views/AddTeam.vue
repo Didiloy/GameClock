@@ -15,6 +15,8 @@
             type="text"
             v-model="name"
             :placeholder="$t('AddTeam.team_name')"
+            @focus="emit('toggleChronoListener')" 
+            @blur="emit('toggleChronoListener')"
           />
           <Button
             :label="$t('AddTeam.add')"
@@ -34,6 +36,8 @@ import { ref } from "vue";
 import { addTeam } from "../database/database";
 import { useToast } from "primevue/usetoast";
 import { useStore } from "../store/store";
+const emit = defineEmits(["toggleChronoListener"]);
+
 
 const store = useStore();
 const toast = useToast();

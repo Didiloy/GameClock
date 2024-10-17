@@ -25,6 +25,7 @@
         :heroe="g.heroe"
         :logo="g.logo"
         :grid="g.grid"
+        @toggleChronoListener="emit('toggleChronoListener')"
       />
     </div>
   </div>
