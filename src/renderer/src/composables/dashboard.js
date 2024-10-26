@@ -13,10 +13,12 @@ export function useDashboard() {
     const team_with_greatest_session_average_playtime_value = ref(0);
     const number_of_games = ref(0);
     const game_of_the_week = ref("");
+    const game_of_the_week_time = ref(0);
     const player_of_the_week = ref("");
     const second_player_of_the_week = ref("");
     const difference_between_player_of_the_week = ref(0);
     const unhappiest_player = ref("");
+    const unhappiest_player_value = ref(0);
     const fun_percentage = ref(0);
     const neutral_percentage = ref(0);
     const not_fun_percentage = ref(0);
@@ -138,6 +140,7 @@ export function useDashboard() {
             }
         }
         game_of_the_week.value = games.value.find(g => g.id === game_id) ? games.value.find(g => g.id === game_id).name : "";
+        game_of_the_week_time.value = max_game;
 
         //get the player of the week and the second player of the week
         const player_last_week_sorted = [...player_last_week.entries()].sort((a, b) => b[1] - a[1]);
@@ -170,6 +173,7 @@ export function useDashboard() {
             }
         }
         unhappiest_player.value = teams.value.find(t => t.id === team_id) ? teams.value.find(t => t.id === team_id).name : "";
+        unhappiest_player_value.value = min_happiness * 100;
 
         //set the percentages of good,nutral and bad games
         neutral_percentage.value = (
@@ -193,10 +197,12 @@ export function useDashboard() {
         team_with_greatest_session_average_playtime_value,
         number_of_games,
         game_of_the_week,
+        game_of_the_week_time,
         player_of_the_week,
         second_player_of_the_week,
         difference_between_player_of_the_week,
         unhappiest_player,
+        unhappiest_player_value,
         fun_percentage,
         neutral_percentage,
         not_fun_percentage

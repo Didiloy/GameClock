@@ -68,7 +68,7 @@ const backgroundColor = props.backgroundColor
 
 .lc-content {
   font-family: peachcake, serif;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   white-space: wrap;
   width: 100%;
 }
@@ -84,9 +84,10 @@ const backgroundColor = props.backgroundColor
   margin: 0 auto 0 auto;
   padding: 0;
   font-family: dishcek, serif;
-  font-size: 2rem;
+  font-size: 1.8rem;
   display: -webkit-box;
   -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

@@ -5,12 +5,16 @@
   <div v-else class="dv-container">
     <div class="dv-dashboard">
       <LittleCard
-          class="dv-lc-sessions-number"
-          iconName="pi pi-asterisk"
-          backgroundColor="#f9e09f"
-          titleColor="#241a00"
-          :name="sessions_number"
-          :value="i18n.t('Dashboard.sessions_played')"
+          class="dv-lc-player-of-the-week"
+          iconName="pi pi-trophy"
+          backgroundColor="#ffdbcb"
+          titleColor="#341100"
+          :name="player_of_the_week"
+          :value="player_of_the_week === ''
+            ? i18n.t('Dashboard.no_player_of_the_week')
+            : second_player_of_the_week === ''
+              ? i18n.t('Dashboard.only_player_of_the_week')
+              : i18n.t('Dashboard.player_of_the_week', [second_player_of_the_week, convertMinuteToHoursMinute(difference_between_player_of_the_week)])"
       ></LittleCard>
       <LittleCard
           class="dv-lc-most-session"
@@ -27,16 +31,16 @@
       <LittleCard
           class="dv-lc-average-session-day"
           :iconValue="numberIcon"
-          backgroundColor="#e8defa"
-          titleColor="#1e182c"
+          backgroundColor="#f9e09f"
+          titleColor="#241a00"
           :name="average_session_per_day.toFixed(2)"
           :value="i18n.t('Dashboard.average_session_per_day')"
       ></LittleCard>
       <LittleCard
           class="dv-lc-sessions"
           :iconValue="spinningClock"
-          backgroundColor="#f9e09f"
-          titleColor="#241a00"
+          backgroundColor="#e8defa"
+          titleColor="#1e182c"
           :name="team_with_greatest_session_average_playtime"
           :value="
                 i18n.t('Dashboard.biggest_games_sessions_part_one') +
@@ -57,22 +61,10 @@
       <LittleCard
           class="dv-lc-game-of-the-week"
           :iconValue="gameIcon"
-          backgroundColor="#ffdbcb"
-          titleColor="#341100"
+          backgroundColor="#f9e09f"
+          titleColor="#241a00"
           :name="game_of_the_week"
-          :value="game_of_the_week === '' ? i18n.t('Dashboard.no_game_of_the_week') : i18n.t('Dashboard.game_of_the_week')"
-      ></LittleCard>
-      <LittleCard
-          class="dv-lc-player-of-the-week"
-          iconName="pi pi-trophy"
-          backgroundColor="#ffdbcb"
-          titleColor="#341100"
-          :name="player_of_the_week"
-          :value="player_of_the_week === ''
-            ? i18n.t('Dashboard.no_player_of_the_week')
-            : second_player_of_the_week === ''
-              ? i18n.t('Dashboard.only_player_of_the_week')
-              : i18n.t('Dashboard.player_of_the_week', [second_player_of_the_week, convertMinuteToHoursMinute(difference_between_player_of_the_week)])"
+          :value="game_of_the_week === '' ? i18n.t('Dashboard.no_game_of_the_week') : i18n.t('Dashboard.game_of_the_week', [convertMinuteToHoursMinute(game_of_the_week_time)])"
       ></LittleCard>
       <LittleCard
           class="dv-lc-unhappiest"
@@ -80,7 +72,15 @@
           backgroundColor="#c5eae7"
           titleColor="#00201f"
           :name="unhappiest_player"
-          :value="i18n.t('Dashboard.unhappiest_player')"
+          :value="i18n.t('Dashboard.unhappiest_player', [unhappiest_player_value])"
+      ></LittleCard>
+      <LittleCard
+          class="dv-lc-sessions-number"
+          iconName="pi pi-asterisk"
+          backgroundColor="#ffdbcb"
+          titleColor="#341100"
+          :name="sessions_number"
+          :value="i18n.t('Dashboard.sessions_played')"
       ></LittleCard>
       <PlayTimeHome
           class="dv-play-time-home"
@@ -167,10 +167,12 @@ const {
   team_with_greatest_session_average_playtime_value,
   number_of_games,
   game_of_the_week,
+  game_of_the_week_time,
   player_of_the_week,
   second_player_of_the_week,
   difference_between_player_of_the_week,
   unhappiest_player,
+  unhappiest_player_value,
   fun_percentage,
   neutral_percentage,
   not_fun_percentage
@@ -224,7 +226,7 @@ const percentage_card_computed = computed(() => {
   padding: 15px;
 }
 
-.dv-lc-sessions-number {
+.dv-lc-player-of-the-week {
   display: inline-grid;
   width: 100%;
   height: 100%;
@@ -284,12 +286,12 @@ const percentage_card_computed = computed(() => {
   grid-row-end: 5;
 }
 
-.dv-lc-player-of-the-week {
+.dv-lc-sessions-number {
   display: inline-grid;
   width: 100%;
   height: 100%;
-  grid-column-start: 7;
-  grid-column-end: 11;
+  grid-column-start: 11;
+  grid-column-end: 13;
   grid-row-start: 3;
   grid-row-end: 5;
 }
@@ -298,8 +300,8 @@ const percentage_card_computed = computed(() => {
   display: inline-grid;
   width: 100%;
   height: 100%;
-  grid-column-start: 11;
-  grid-column-end: 13;
+  grid-column-start: 7;
+  grid-column-end: 11;
   grid-row-start: 3;
   grid-row-end: 5;
 }
