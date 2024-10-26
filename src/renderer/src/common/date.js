@@ -7,7 +7,7 @@ export function isHalloween() {
 
 export function isChristmas() {
   const today = new Date();
-  const before_christmas = new Date(today.getFullYear(), 11, 20); // December 20th
+  const before_christmas = new Date(today.getFullYear(), 11, 15); // December 15th
   const after_christmas = new Date(today.getFullYear(), 11, 30); // December 30th
   return today.getTime() > before_christmas.getTime() && today.getTime() < after_christmas.getTime()
 }
