@@ -141,13 +141,24 @@ export function useDashboard() {
 
         //get the player of the week and the second player of the week
         const player_last_week_sorted = [...player_last_week.entries()].sort((a, b) => b[1] - a[1]);
-        let player_id = player_last_week_sorted[0][0];
-        let second_player_id = player_last_week_sorted[1][0];
+        let player_id;
+        let second_player_id;
+        if(player_last_week_sorted.length === 0){
+            player_id = "";
+            second_player_id = "";
+        }else if(player_last_week_sorted.length === 1){
+            player_id = player_last_week_sorted[0][0];
+            second_player_id = "";
+        }else {
+            player_id = player_last_week_sorted[0][0];
+            second_player_id = player_last_week_sorted[1][0];
+        }
  
         player_of_the_week.value = teams.value.find(t => t.id === player_id) ? teams.value.find(t => t.id === player_id).name : "";
         second_player_of_the_week.value = teams.value.find(t => t.id === second_player_id) ? teams.value.find(t => t.id === second_player_id).name : "";
-        difference_between_player_of_the_week.value = player_last_week_sorted[0][1] - player_last_week_sorted[1][1];
-        
+        if(second_player_of_the_week.value !== "") difference_between_player_of_the_week.value = player_last_week_sorted[0][1] - player_last_week_sorted[1][1];
+        else difference_between_player_of_the_week.value = 0;
+
         //get the unhappiest player
         let min_happiness = 1;
         let team_id = "";
