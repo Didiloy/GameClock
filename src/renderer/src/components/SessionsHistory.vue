@@ -9,7 +9,11 @@
   >
     <template #subtitle
       ><span class="sh-font">{{
-        props.title ? props.title : $t("SessionsHistory.title")
+      props.historySize === "-1"
+          ? $t("SessionsHistory.title_last_days")
+          : props.title
+              ? props.title
+              : $t("SessionsHistory.title")
       }}</span></template
     >
     <template #content>
@@ -181,7 +185,12 @@ async function init() {
   session_copy.sort((a, b) => {
     return b.date.seconds - a.date.seconds;
   });
-  if (props.historySize) {
+
+  if(props.historySize === "-1"){
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    session_copy = session_copy.filter(s => s.date.seconds * 1000 >= today.getTime());
+  }else if (props.historySize) {
     session_copy = session_copy.slice(0, props.historySize);
   }
 
