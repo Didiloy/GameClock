@@ -92,42 +92,73 @@ function setSessionsOfTheTeam() {
 
 const id_of_team = ref([]);
 
-const game_duration_by_month = ref([]);
-function setGameDuration() {
-  game_duration_by_month.value = [];
-  for (let s of sessions_of_the_team.value) {
-    let date = new Date(s.date.seconds * 1000);
-    let month = date.getMonth();
-    if (game_duration_by_month.value[month]) {
-      game_duration_by_month.value[month] += s.duration;
+const labels_year_month = ref([]);
+const game_duration_by_year_month = ref([]);
+const joyrate_by_year_month = ref([]);
+
+let map_game_duration = new Map();
+let joyrate_map = new Map();
+let sessions_map = new Map();
+function calculateDurations() {
+  let tmp_games = sessions_of_the_team.value.sort((a, b) => {
+    return a.date.seconds - b.date.seconds;
+  });
+
+  let cpt = 0;
+  let date = new Date(tmp_games[0].date.seconds * 1000);
+  let year = date.getFullYear();
+  let month = date.getMonth();
+  let last_year = year;
+  let last_month = month;
+  for (const s of tmp_games) {
+    date = new Date(s.date.seconds * 1000);
+    year = date.getFullYear();
+    month = date.getMonth();
+    if (year === last_year && month === last_month) {
+      cpt++;
     } else {
-      game_duration_by_month.value[month] = s.duration;
+      cpt = 1;
+      last_year = year;
+      last_month = month;
+    }
+    //add duration and joyrate to the month
+    if (map_game_duration.has(year)) {
+      if (map_game_duration.get(year).has(month)) {
+        map_game_duration
+          .get(year)
+          .set(month, map_game_duration.get(year).get(month) + s.duration);
+        let joyrate = joyrate_map.get(year).get(month) + (s.was_cool ? 1 : 0);
+        joyrate_map.get(year).set(month, joyrate);
+        sessions_map.get(year).set(month, cpt);
+      } else {
+        //create month
+        map_game_duration.get(year).set(month, s.duration);
+        joyrate_map.get(year).set(month, s.was_cool ? 1 : 0);
+        sessions_map.get(year).set(month, cpt);
+      }
+    } else {
+      //create year
+      map_game_duration.set(year, new Map().set(month, s.duration));
+      joyrate_map.set(year, new Map().set(month, s.was_cool ? 1 : 0));
+      sessions_map.set(year, new Map().set(month, cpt));
     }
   }
 }
 
-const joyrate_by_month = ref([]);
-function setJoyrate() {
-  joyrate_by_month.value = [];
-  let joyrate_number = [];
-  for (let s of sessions_of_the_team.value) {
-    let date = new Date(s.date.seconds * 1000);
-    let month = date.getMonth();
-    if (joyrate_by_month.value[month]) {
-      joyrate_by_month.value[month] += s.was_cool ? 1 : 0;
-      joyrate_number[month] = joyrate_number[month]
-        ? joyrate_number[month] + 1
-        : 1;
-    } else {
-      joyrate_by_month.value[month] = s.was_cool ? 1 : 0;
-      joyrate_number[month] = joyrate_number[month]
-        ? joyrate_number[month] + 1
-        : 1;
+function setArraysForGraph() {
+  for (let [year, monthMap] of map_game_duration) {
+    for (let [month, duration] of monthMap) {
+      labels_year_month.value.push(
+        `${i18n.t("Common.months_names." + month)} ${year}`,
+      );
+      game_duration_by_year_month.value.push(duration);
+      console.log(joyrate_map.get(year).get(month));
+      console.log(sessions_map.get(year).get(month));
+      joyrate_by_year_month.value.push(
+        (joyrate_map.get(year).get(month) / sessions_map.get(year).get(month)) *
+          100,
+      );
     }
-  }
-  for (let i = 0; i < joyrate_by_month.value.length; i++) {
-    joyrate_by_month.value[i] =
-      (joyrate_by_month.value[i] / joyrate_number[i]) * 100;
   }
 }
 
@@ -137,18 +168,10 @@ const chartOptions = ref();
 function init() {
   id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
   setSessionsOfTheTeam();
-  setGameDuration();
-  setJoyrate();
-  set_months_names();
+  calculateDurations();
+  setArraysForGraph();
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
-}
-
-const months_names = ref([]);
-function set_months_names() {
-  for (let i = 0; i < 12; i++) {
-    months_names.value.push(i18n.t("Common.months_names." + i));
-  }
 }
 
 watch(teams, () => {
@@ -161,20 +184,19 @@ watch(sessions, () => {
 
 const setChartData = () => {
   const documentStyle = getComputedStyle(document.documentElement);
-
   return {
-    labels: months_names.value.slice(0, game_duration_by_month.value.length),
+    labels: labels_year_month.value,
     datasets: [
       {
         label: i18n.t("LineChartGameByMonth.total_game_time"),
-        data: game_duration_by_month.value,
+        data: game_duration_by_year_month.value,
         fill: false,
         borderColor: documentStyle.getPropertyValue("--cyan-500"),
         tension: 0.4,
       },
       {
         label: i18n.t("LineChartGameByMonth.fun_to_play"),
-        data: joyrate_by_month.value,
+        data: joyrate_by_year_month.value,
         fill: false,
         borderColor: documentStyle.getPropertyValue("--gray-500"),
         tension: 0.4,
@@ -182,6 +204,7 @@ const setChartData = () => {
     ],
   };
 };
+
 const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
@@ -215,10 +238,10 @@ const setChartOptions = () => {
             return (
               "" +
               convertMinuteToHoursMinute(
-                game_duration_by_month.value[context.dataIndex],
+                game_duration_by_year_month.value[context.dataIndex],
               ) +
               " - " +
-              joyrate_by_month.value[context.dataIndex].toFixed(2) +
+              joyrate_by_year_month.value[context.dataIndex].toFixed(2) +
               "%"
             );
           },
