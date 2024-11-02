@@ -3,6 +3,7 @@ import { onMounted, ref, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { getIdsOfTeam } from "../database/database";
+import zoomPlugin from "chartjs-plugin-zoom";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -33,7 +34,7 @@ watch(
   () => props.sessions,
   () => {
     init();
-  }
+  },
 );
 
 const id_of_team = ref([]);
@@ -42,7 +43,7 @@ const games_names = ref([]);
 const getGamesNames = () => {
   let res = [];
   games.value.map((g) =>
-    res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name)
+    res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name),
   );
   return res;
 };
@@ -164,7 +165,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary"
+    "--text-color-secondary",
   );
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
@@ -172,6 +173,21 @@ const setChartOptions = () => {
     maintainAspectRatio: false,
     aspectRatio: 0.8,
     plugins: {
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: "xy",
+        },
+        pan: {
+          enabled: true,
+          mode: "xy",
+        },
+      },
       tooltip: {
         callbacks: {
           beforeLabel: function (context) {
@@ -239,6 +255,7 @@ const setChartOptions = () => {
           type="bar"
           :data="chartData"
           :options="chartOptions"
+          :plugins="[zoomPlugin]"
           :pt="{
             root: {
               style: 'height: 100%; max-height:300px; width: auto;',
@@ -262,6 +279,7 @@ const setChartOptions = () => {
           type="bar"
           :data="chartData"
           :options="chartOptions"
+          :plugins="[zoomPlugin]"
           :pt="{
             root: {
               style: 'height: 100%; width: auto;',

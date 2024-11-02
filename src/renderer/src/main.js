@@ -6,7 +6,7 @@ import "primevue/resources/themes/lara-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import InputText from "primevue/inputtext";
-import Textarea from 'primevue/textarea';
+import Textarea from "primevue/textarea";
 import InputNumber from "primevue/inputnumber";
 import Button from "primevue/button";
 import Toast from "primevue/toast";
@@ -105,7 +105,11 @@ const routes = [
   { path: "/addteam", component: AddTeam },
   { path: "/settings/games", component: GamesSettings, name: "settings-games" },
   { path: "/settings/general", component: Settings, name: "settings-general" },
-  { path: "/waiting-list-sessions", component: WaitingListSession, name: "waiting-list-sessions" },
+  {
+    path: "/waiting-list-sessions",
+    component: WaitingListSession,
+    name: "waiting-list-sessions",
+  },
   {
     path: "/settings/databases",
     component: DatabaseSettings,
@@ -134,7 +138,7 @@ if (stored_databases.value.length === 0) {
 } else {
   initialiseFirebase(
     stored_databases,
-    getPreferences("selected_database_index")
+    getPreferences("selected_database_index"),
   );
 }
 
@@ -157,20 +161,30 @@ router.beforeEach((to, from) => {
     to.name !== "database-error"
   ) {
     if (from.name === "database-error") {
-      if (to.name !== "settings-general" && to.name !== "settings-databases" && to.name !== "waiting-list-sessions")
+      if (
+        to.name !== "settings-general" &&
+        to.name !== "settings-databases" &&
+        to.name !== "waiting-list-sessions"
+      )
         return false;
     }
 
     if (from.name === "settings-databases") {
-      if (to.name !== "settings-general" && to.name !== "waiting-list-sessions") return false;
+      if (to.name !== "settings-general" && to.name !== "waiting-list-sessions")
+        return false;
     }
 
     if (from.name === "settings-general") {
-      if (to.name !== "settings-databases" && to.name !== "waiting-list-sessions") return false;
+      if (
+        to.name !== "settings-databases" &&
+        to.name !== "waiting-list-sessions"
+      )
+        return false;
     }
 
     if (from.name === "waiting-list-sessions") {
-      if (to.name !== "settings-general" && to.name !== "settings-databases") return false;
+      if (to.name !== "settings-general" && to.name !== "settings-databases")
+        return false;
     }
   }
 });

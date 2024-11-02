@@ -21,6 +21,7 @@
           type="bar"
           :data="chartData"
           :options="chartOptions"
+          :plugins="[zoomPlugin]"
           :pt="{
             canvas: {
               style: 'height: 100%; max-height: 350px; width: auto',
@@ -41,6 +42,7 @@
           type="bar"
           :data="chartData"
           :options="chartOptions"
+          :plugins="[zoomPlugin]"
           :pt="{
             root: { style: 'height: 100%; width: 100%' },
             canvas: {
@@ -58,7 +60,7 @@ import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
 import { getIdsOfTeam } from "../database/database";
-
+import zoomPlugin from "chartjs-plugin-zoom";
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
 
@@ -85,7 +87,7 @@ watch(
   () => props.sessions,
   () => {
     init();
-  }
+  },
 );
 
 const backgroundColor = props.backgroundColor
@@ -96,7 +98,7 @@ const games_names = ref([]);
 const getGamesNames = () => {
   let res = [];
   games.value.map((g) =>
-    res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name)
+    res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name),
   );
   return res;
 };
@@ -217,11 +219,26 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary"
+    "--text-color-secondary",
   );
 
   return {
     plugins: {
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: "xy",
+        },
+        pan: {
+          enabled: true,
+          mode: "xy",
+        },
+      },
       legend: {
         labels: {
           color: textColor,
@@ -238,7 +255,7 @@ const setChartOptions = () => {
                 i18n.t("BarChartAllGames.medium_session_time") +
                 ": " +
                 convertMinuteToHoursMinute(
-                  avg_duration.value[tooltipItem.dataIndex]
+                  avg_duration.value[tooltipItem.dataIndex],
                 )
               );
             }

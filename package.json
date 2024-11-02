@@ -21,6 +21,7 @@
     "@electron-toolkit/utils": "latest",
     "@vueuse/core": "^11.1.0",
     "chart.js": "latest",
+    "chartjs-plugin-zoom": "^2.0.1",
     "firebase": "latest",
     "pinia": "latest",
     "primeicons": "latest",

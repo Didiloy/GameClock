@@ -27,6 +27,7 @@
           type="bar"
           :data="chartData"
           :options="chartOptions"
+          :plugins="[zoomPlugin]"
           :pt="{
             canvas: {
               style: 'height: 100%; max-height:300px;  width: auto;',
@@ -47,6 +48,7 @@
           type="bar"
           :data="chartData"
           :options="chartOptions"
+          :plugins="[zoomPlugin]"
           :pt="{
             root: {
               style: 'height: 100%; width: auto;',
@@ -65,6 +67,7 @@ import { computed, onMounted, ref } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
+import zoomPlugin from "chartjs-plugin-zoom";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
@@ -103,7 +106,7 @@ const teams_name_spliced = ref([]);
 const getTeamNamesSpliced = () => {
   let res = [];
   teams_name.value.map((g) =>
-    res.push(g.length > 10 ? g.slice(0, 6) + "..." : g)
+    res.push(g.length > 10 ? g.slice(0, 6) + "..." : g),
   );
   return res;
 };
@@ -170,7 +173,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary"
+    "--text-color-secondary",
   );
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
@@ -180,6 +183,21 @@ const setChartOptions = () => {
       router.push("/team/" + teams_name.value[team_position]);
     },
     plugins: {
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: "xy",
+        },
+        pan: {
+          enabled: true,
+          mode: "xy",
+        },
+      },
       tooltip: {
         callbacks: {
           beforeLabel: function (context) {
@@ -189,7 +207,7 @@ const setChartOptions = () => {
             return (
               i18n.t("PlayTimeHome.playtime") +
               convertMinuteToHoursMinute(
-                teams_playtime.value[context.dataIndex]
+                teams_playtime.value[context.dataIndex],
               )
             );
           },

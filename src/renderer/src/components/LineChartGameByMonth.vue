@@ -21,6 +21,7 @@
           type="line"
           :data="chartData"
           :options="chartOptions"
+          :plugins="[zoomPlugin]"
           :pt="{
             root: { style: 'height: 100%; width: auto' },
             canvas: {
@@ -42,6 +43,7 @@
           type="line"
           :data="chartData"
           :options="chartOptions"
+          :plugins="[zoomPlugin]"
           :pt="{
             root: { style: 'height: 100%; width: auto' },
             canvas: {
@@ -59,6 +61,7 @@ import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { getIdsOfTeam } from "../database/database.js";
 import { convertMinuteToHoursMinute } from "../common/main";
+import zoomPlugin from "chartjs-plugin-zoom";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -183,7 +186,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary"
+    "--text-color-secondary",
   );
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
@@ -191,13 +194,28 @@ const setChartOptions = () => {
     maintainAspectRatio: false,
     aspectRatio: 0.6,
     plugins: {
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: "xy",
+        },
+        pan: {
+          enabled: true,
+          mode: "xy",
+        },
+      },
       tooltip: {
         callbacks: {
           label: function (context) {
             return (
               "" +
               convertMinuteToHoursMinute(
-                game_duration_by_month.value[context.dataIndex]
+                game_duration_by_month.value[context.dataIndex],
               ) +
               " - " +
               joyrate_by_month.value[context.dataIndex].toFixed(2) +
