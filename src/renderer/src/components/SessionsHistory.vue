@@ -9,9 +9,11 @@
   >
     <template #subtitle
       ><span class="sh-font">{{
-      props.historySize === "-1"
+        props.historySize === "-1"
           ? $t("SessionsHistory.title_last_days")
-          : props.title
+          : props.historySize === "-2"
+            ? $t("SessionsHistory.title_last_week")
+            : props.title
               ? props.title
               : $t("SessionsHistory.title")
       }}</span></template
@@ -44,17 +46,20 @@
                     style="width: 50px; height: auto; border-radius: 5px"
                   />
                   <span>
-                    {{ slotProps.data.name.length > 20 && !slotProps.data.name.includes(" ")
-                      ? slotProps.data.name.substring(0, 20) + "..."
-                      : slotProps.data.name }}
+                    {{
+                      slotProps.data.name.length > 20 &&
+                      !slotProps.data.name.includes(" ")
+                        ? slotProps.data.name.substring(0, 20) + "..."
+                        : slotProps.data.name
+                    }}
                   </span>
                 </div>
               </template>
             </Column>
             <Column
-                field="platform"
-                :header="i18n.t('SessionsHistory.platform')"
-                v-once
+              field="platform"
+              :header="i18n.t('SessionsHistory.platform')"
+              v-once
             >
               <template #body="slotProps">
                 <div class="sh-name">
@@ -76,11 +81,13 @@
                 <RouterLink
                   :to="'/team/' + slotProps.data.team_name"
                   style="color: var(--primary-500)"
-                  >{{ slotProps.data.team_name.length > 20 && !slotProps.data.name.includes(" ")
+                  >{{
+                    slotProps.data.team_name.length > 20 &&
+                    !slotProps.data.name.includes(" ")
                       ? slotProps.data.team_name.substring(0, 20) + "..."
-                      : slotProps.data.team_name }}
-                </RouterLink
-                >
+                      : slotProps.data.team_name
+                  }}
+                </RouterLink>
               </template>
             </Column>
             <Column
@@ -99,24 +106,30 @@
             >
               <template #body="slotProps">
                 <div class="sh-hover-div">
-                  <div v-if="slotProps.data.comment" class="sh-popup">{{ slotProps.data.comment}}</div>
-                <Chip
-                  :label="
-                    slotProps.data.joyrate == null
-                      ? i18n.t('SessionsHistory.neutral')
-                      : slotProps.data.joyrate === true
-                        ? i18n.t('SessionsHistory.good')
-                        : i18n.t('SessionsHistory.bad')
-                  "
-                  :class="
-                    slotProps.data.joyrate == null
-                      ? 'c-neutral'
-                      : slotProps.data.joyrate === true
-                        ? 'c-good'
-                        : 'c-bad'
-                  "
-                />
-                  <i v-if="slotProps.data.comment" class="pi pi-comment" style="margin-left: 5px;"/>
+                  <div v-if="slotProps.data.comment" class="sh-popup">
+                    {{ slotProps.data.comment }}
+                  </div>
+                  <Chip
+                    :label="
+                      slotProps.data.joyrate == null
+                        ? i18n.t('SessionsHistory.neutral')
+                        : slotProps.data.joyrate === true
+                          ? i18n.t('SessionsHistory.good')
+                          : i18n.t('SessionsHistory.bad')
+                    "
+                    :class="
+                      slotProps.data.joyrate == null
+                        ? 'c-neutral'
+                        : slotProps.data.joyrate === true
+                          ? 'c-good'
+                          : 'c-bad'
+                    "
+                  />
+                  <i
+                    v-if="slotProps.data.comment"
+                    class="pi pi-comment"
+                    style="margin-left: 5px"
+                  />
                 </div>
               </template>
             </Column>
@@ -129,7 +142,7 @@
                 <div>
                   {{
                     new Date(
-                      slotProps.data.date.seconds * 1000
+                      slotProps.data.date.seconds * 1000,
                     ).toLocaleDateString()
                   }}
                 </div>
@@ -186,11 +199,20 @@ async function init() {
     return b.date.seconds - a.date.seconds;
   });
 
-  if(props.historySize === "-1"){
+  if (props.historySize === "-1") {
     let today = new Date();
     today.setHours(0, 0, 0, 0);
-    session_copy = session_copy.filter(s => s.date.seconds * 1000 >= today.getTime());
-  }else if (props.historySize) {
+    session_copy = session_copy.filter(
+      (s) => s.date.seconds * 1000 >= today.getTime(),
+    );
+  } else if (props.historySize === "-2") {
+    let last_week = new Date();
+    last_week.setHours(0, 0, 0, 0);
+    last_week.setDate(last_week.getDate() - 7);
+    session_copy = session_copy.filter(
+      (s) => s.date.seconds * 1000 >= last_week.getTime(),
+    );
+  } else if (props.historySize) {
     session_copy = session_copy.slice(0, props.historySize);
   }
 
@@ -215,7 +237,7 @@ async function init() {
 
         let platform_name;
         for (let p of platforms.value) {
-          if(!s.platform){
+          if (!s.platform) {
             platform_name = i18n.t("Platform.Not specified");
             continue;
           }
@@ -232,7 +254,7 @@ async function init() {
           logo: logo,
           joyrate: s.was_cool,
           comment: s.comment,
-          platform: platform_name
+          platform: platform_name,
         });
       }
     }
@@ -252,7 +274,7 @@ async function init() {
 
       let platform_name;
       for (let p of platforms.value) {
-        if(!s.platform){
+        if (!s.platform) {
           platform_name = i18n.t("Platform.Not specified");
           continue;
         }
@@ -269,7 +291,7 @@ async function init() {
         logo: logo,
         joyrate: s.was_cool,
         comment: s.comment,
-        platform: platform_name
+        platform: platform_name,
       });
     }
   }
@@ -279,7 +301,7 @@ async function computeSessionColor() {
   let id = 0;
   for (let [game, data] of uniqueGames.value) {
     const worker = new Worker(
-      new URL("../workers/colorWorker.js", import.meta.url)
+      new URL("../workers/colorWorker.js", import.meta.url),
     );
 
     worker.onmessage = (event) => {
@@ -397,7 +419,7 @@ function getGameNameAndLogoById(id) {
 }
 
 .sh-popup::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;

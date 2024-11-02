@@ -162,6 +162,7 @@
     "SessionsHistory": {
       "title": "Historique des sessions",
       "title_last_days": "Historique des sessions de la journée",
+      "title_last_week": "Historique des sessions de la semaine",
       "sessions": "Sessions",
       "game_name": "Nom du jeu",
       "platform": "Plateforme",
@@ -237,7 +238,8 @@
       "shortcut_reload_data": "Raccourci clavier pour recharger les données:",
       "page_start_application": "Page dans laquelle démarrer l'application:",
       "number_of_last_session": "Nombre de dernières sessions à afficher sur la page d'accueil",
-      "all_sessions_of_the_day": "Toutes les sessions du jour"
+      "all_sessions_of_the_day": "Toutes les sessions du jour",
+      "all_sessions_of_the_week": "Toutes les sessions de la semaine"
     },
     "TeamsPreferences": {
       "sort_order": {
@@ -497,6 +499,7 @@
     "SessionsHistory": {
       "title": "Session History",
       "title_last_days": "Session History of the last day",
+      "title_last_week": "Session History of the last week",
       "sessions": "Sessions",
       "game_name": "Game Name",
       "platform": "Platform",
@@ -572,7 +575,8 @@
       "shortcut_reload_data": "Keyboard shortcut to reload data:",
       "page_start_application": "Page to start the application on:",
       "number_of_last_session": "Number of last sessions to display on the homepage",
-      "all_sessions_of_the_day": "All sessions of the day"
+      "all_sessions_of_the_day": "All sessions of the day",
+      "all_sessions_of_the_week": "All sessions of the week"
     },
     "TeamsPreferences": {
       "sort_order": {
