@@ -310,6 +310,7 @@ const htmlLegendPlugin = {
       boxSpan.style.height = "20px";
       boxSpan.style.marginRight = "10px";
       boxSpan.style.width = "20px";
+      boxSpan.style.border = item.hidden ? "1px dashed black" : "";
 
       // Text
       const textContainer = document.createElement("p");
@@ -353,9 +354,6 @@ const htmlLegendPlugin = {
 
 .p-chart {
   height: 100%;
-}
-
-.legend-container {
 }
 
 .chart-wrapper {

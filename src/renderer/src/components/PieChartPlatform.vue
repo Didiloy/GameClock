@@ -1,7 +1,7 @@
 <template>
   <Card
-      class="card"
-      :pt="{
+    class="card"
+    :pt="{
       root: { style: 'box-shadow: 0px 0px 0px 0px;' },
       content: { style: 'height:100%; ' },
     }"
@@ -15,11 +15,11 @@
     </template>
     <template #content>
       <Checkbox
-          v-model="showLabel"
-          inputId="show_label_platforms"
-          :binary="true"
-          @click="onShowPlatformsLabelClick"
-          style="height: 20px"
+        v-model="showLabel"
+        inputId="show_label_platforms"
+        :binary="true"
+        @click="onShowPlatformsLabelClick"
+        style="height: 20px"
       />
       <label for="show_label_platforms" class="ml-2" style="font-size: 10pt">
         {{ $t("PieChartGamePercentage.show_names") }}
@@ -27,13 +27,13 @@
       <div class="chart-wrapper">
         <div class="center-pie">
           <Chart
-              type="pie"
-              ref="chart"
-              :data="chartData"
-              :options="chartOptions"
-              :plugins="[htmlLegendPlugin]"
-              class="pie"
-              :pt="{
+            type="pie"
+            ref="chart"
+            :data="chartData"
+            :options="chartOptions"
+            :plugins="[htmlLegendPlugin]"
+            class="pie"
+            :pt="{
               canvas: {
                 class: 'p-chart',
                 style: 'height: auto; width: 100%',
@@ -41,7 +41,10 @@
             }"
           />
         </div>
-        <div class="legend-container-platform" id="legend-container-platform"></div>
+        <div
+          class="legend-container-platform"
+          id="legend-container-platform"
+        ></div>
       </div>
     </template>
   </Card>
@@ -79,10 +82,10 @@ watch([platforms, sessions, teams], () => {
 });
 
 watch(
-    () => props.sessions,
-    () => {
-      init();
-    },
+  () => props.sessions,
+  () => {
+    init();
+  },
 );
 
 const chart = ref({});
@@ -102,8 +105,8 @@ function setPlatformsLabels() {
 }
 
 const backgroundColor = props.backgroundColor
-    ? props.backgroundColor
-    : "var(--primary-100)";
+  ? props.backgroundColor
+  : "var(--primary-100)";
 
 const id_of_team = ref([]);
 
@@ -121,9 +124,9 @@ function setGamesNameAndPlaytime() {
       let acc = 0;
       let number_of_sessions = 0;
       for (let s of props.sessions === undefined
-          ? sessions.value
-          : props.sessions) {
-        if(s.platform){
+        ? sessions.value
+        : props.sessions) {
+        if (s.platform) {
           if (id_of_team.value.includes(s.team.id) && s.platform.id === g.id) {
             acc += s.duration;
             total_playtime += s.duration;
@@ -131,16 +134,20 @@ function setGamesNameAndPlaytime() {
           }
         }
       }
-      temp_games.push({ name: g.name, playtime: acc, number_of_sessions: number_of_sessions });
+      temp_games.push({
+        name: g.name,
+        playtime: acc,
+        number_of_sessions: number_of_sessions,
+      });
     }
   } else {
     for (let g of platforms.value) {
       let acc = 0;
       let number_of_sessions = 0;
       for (let s of props.sessions === undefined
-          ? sessions.value
-          : props.sessions) {
-        if(s.platform){
+        ? sessions.value
+        : props.sessions) {
+        if (s.platform) {
           if (s.platform.id === g.id) {
             acc += s.duration;
             total_playtime += s.duration;
@@ -148,17 +155,23 @@ function setGamesNameAndPlaytime() {
           }
         }
       }
-      temp_games.push({ name: g.name, playtime: acc, number_of_sessions: number_of_sessions });
+      temp_games.push({
+        name: g.name,
+        playtime: acc,
+        number_of_sessions: number_of_sessions,
+      });
     }
   }
   temp_games.sort((a, b) => b.playtime - a.playtime);
   temp_games = temp_games.filter((g) => g.playtime > 0);
   games_name.value = temp_games.map((g) => g.name);
   platform_percentage.value = temp_games.map((g) =>
-      ((g.playtime / total_playtime) * 100).toFixed(0),
+    ((g.playtime / total_playtime) * 100).toFixed(0),
   );
   platform_playtime.value = temp_games.map((g) => g.playtime);
-  platform_number_of_sessions.value = temp_games.map((g) => g.number_of_sessions);
+  platform_number_of_sessions.value = temp_games.map(
+    (g) => g.number_of_sessions,
+  );
 }
 
 const colors_of_pie_parts = ref([]);
@@ -207,8 +220,8 @@ const setChartData = () => {
 
   return {
     labels: showLabel.value
-        ? games_name.value
-        : games_name.value.map((g) => ""),
+      ? games_name.value
+      : games_name.value.map((g) => ""),
     datasets: [
       {
         data: platform_playtime.value,
@@ -232,14 +245,15 @@ const setChartOptions = () => {
           },
           label: function (context) {
             return (
-                convertMinuteToHoursMinute(
-                    platform_playtime.value[context.dataIndex],
-                ) +
-                " -> " +
-                platform_percentage.value[context.dataIndex] +
-                "%, " +
-                i18n.t("GamesSettings.sessions_number") + " " +
-                platform_number_of_sessions.value[context.dataIndex]
+              convertMinuteToHoursMinute(
+                platform_playtime.value[context.dataIndex],
+              ) +
+              " -> " +
+              platform_percentage.value[context.dataIndex] +
+              "%, " +
+              i18n.t("GamesSettings.sessions_number") +
+              " " +
+              platform_number_of_sessions.value[context.dataIndex]
             );
           },
         },
@@ -307,8 +321,8 @@ const htmlLegendPlugin = {
           chart.toggleDataVisibility(item.index);
         } else {
           chart.setDatasetVisibility(
-              item.datasetIndex,
-              !chart.isDatasetVisible(item.datasetIndex),
+            item.datasetIndex,
+            !chart.isDatasetVisible(item.datasetIndex),
           );
         }
         chart.update();
@@ -325,6 +339,7 @@ const htmlLegendPlugin = {
       boxSpan.style.height = "20px";
       boxSpan.style.marginRight = "10px";
       boxSpan.style.width = "20px";
+      boxSpan.style.border = item.hidden ? "1px dashed black" : "";
 
       // Text
       const textContainer = document.createElement("p");
@@ -368,9 +383,6 @@ const htmlLegendPlugin = {
 
 .p-chart {
   height: 100%;
-}
-
-.legend-container {
 }
 
 .chart-wrapper {
