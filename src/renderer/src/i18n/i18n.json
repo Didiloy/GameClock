@@ -332,7 +332,8 @@
         "prospector": "Vous avez joué à plus de 15 jeux différents",
         "scholar": "Vous avez joué à plus de 30 jeux différents",
         "depressed": "40% de vos sessions sont nulles",
-        "important_person": "Vous avez 30% ou plus de la totalité du temps de jeu de toutes les équipes"
+        "important_person": "Vous avez 30% ou plus de la totalité du temps de jeu de toutes les équipes",
+        "thousand_hours": "Vous avez joué plus de 1000 heures"
       }
     }
   },
@@ -669,7 +670,8 @@
         "prospector": "You've played more than 15 different games",
         "scholar": "You've played more than 30 different games",
         "depressed": "40% of your sessions are bad",
-        "important_person": "You have 30% or more of the total playtime of all teams"
+        "important_person": "You have 30% or more of the total playtime of all teams",
+        "thousand_hours": "You have played for more than 1000h hours!"
       }
     }
   }

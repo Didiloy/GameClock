@@ -10,25 +10,41 @@
       <div class="t-title">
         <h2 class="team-name">{{ $route.params.name }}</h2>
       </div>
-      <Dropdown
-          v-model="selected_success"
-          :options="unlocked_successes"
-      >
+      <Dropdown v-model="selected_success" :options="unlocked_successes">
         <template #value="slotProps">
-          <div v-if="slotProps.value" :title="slotProps.value.description" style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center">
-            <img :src="slotProps.value.image" style="width: 20px"  />
+          <div
+            v-if="slotProps.value"
+            :title="slotProps.value.description"
+            style="
+              width: 100%;
+              display: flex;
+              flex-direction: row;
+              justify-content: center;
+              align-items: center;
+            "
+          >
+            <img :src="slotProps.value.image" style="width: 20px" />
           </div>
         </template>
         <template #option="slotProps">
-          <div :title="slotProps.option.description" style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center">
-            <img :src="slotProps.option.image" style="width: 30px"  />
+          <div
+            :title="slotProps.option.description"
+            style="
+              width: 100%;
+              display: flex;
+              flex-direction: row;
+              justify-content: center;
+              align-items: center;
+            "
+          >
+            <img :src="slotProps.option.image" style="width: 30px" />
           </div>
         </template>
       </Dropdown>
       <Dropdown
-          v-model="selected_month"
-          :options="labels_dropdown"
-          optionLabel="label"
+        v-model="selected_month"
+        :options="labels_dropdown"
+        optionLabel="label"
       />
     </div>
     <Dialog
@@ -174,7 +190,7 @@ function keyEventAddSession(e) {
   ) {
     if (!add_session_dialog_visible.value) {
       add_session_game_name.value = getPreferences(
-        "add_session_with_name_game_name_1"
+        "add_session_with_name_game_name_1",
       );
       toggleAddSession();
     }
@@ -187,7 +203,7 @@ function keyEventAddSession(e) {
   ) {
     if (!add_session_dialog_visible.value) {
       add_session_game_name.value = getPreferences(
-        "add_session_with_name_game_name_2"
+        "add_session_with_name_game_name_2",
       );
       toggleAddSession();
     }
@@ -210,7 +226,22 @@ onMounted(() => {
     toggleAddSession();
   }
   //successes
-  const { calculateSuccesses, relentless, patient, enduring, inexhaustible, young_gamer, gamer, passionnate, curious, prospector, scholar, depressed,important_person} = useSuccesses();
+  const {
+    calculateSuccesses,
+    relentless,
+    patient,
+    enduring,
+    inexhaustible,
+    young_gamer,
+    gamer,
+    passionnate,
+    curious,
+    prospector,
+    scholar,
+    depressed,
+    important_person,
+    thousand_hours,
+  } = useSuccesses();
   calculateSuccesses(useRoute().params.name, sessions_of_team.value, false);
   let unlocked = [];
   unlocked.push(relentless.value);
@@ -225,6 +256,7 @@ onMounted(() => {
   unlocked.push(scholar.value);
   unlocked.push(depressed.value);
   unlocked.push(important_person.value);
+  unlocked.push(thousand_hours.value);
   unlocked_successes.value = unlocked.filter((s) => s.unlocked);
   selected_success.value = unlocked_successes.value[0];
 });
