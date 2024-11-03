@@ -198,6 +198,7 @@ const setChartData = () => {
         fill: false,
         borderColor: documentStyle.getPropertyValue("--cyan-500"),
         tension: 0.4,
+        yAxisID: 'y',
       },
       {
         label: i18n.t("LineChartGameByMonth.fun_to_play"),
@@ -205,6 +206,7 @@ const setChartData = () => {
         fill: false,
         borderColor: documentStyle.getPropertyValue("--gray-500"),
         tension: 0.4,
+        yAxisID: 'y1',
       },
     ],
   };
@@ -219,6 +221,7 @@ const setChartOptions = () => {
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
   return {
+    stacked: false,
     maintainAspectRatio: false,
     aspectRatio: 0.6,
     plugins: {
@@ -268,6 +271,7 @@ const setChartOptions = () => {
         },
       },
       y: {
+        position: 'left',
         ticks: {
           color: textColorSecondary,
         },
@@ -275,6 +279,17 @@ const setChartOptions = () => {
           color: surfaceBorder,
         },
       },
+      y1: {
+        display: true,
+        position: 'right',
+        ticks: {
+          color: textColorSecondary
+        },
+        grid: {
+          drawOnChartArea: false,
+          color: surfaceBorder
+        }
+      }
     },
   };
 };

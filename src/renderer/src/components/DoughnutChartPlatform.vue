@@ -27,7 +27,7 @@
       <div class="chart-wrapper">
         <div class="center-pie">
           <Chart
-            type="pie"
+            type="doughnut"
             ref="chart"
             :data="chartData"
             :options="chartOptions"

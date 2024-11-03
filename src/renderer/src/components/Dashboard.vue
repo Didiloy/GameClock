@@ -150,7 +150,7 @@ import { computed, onMounted, ref, watch, onActivated } from "vue";
 import GameTimeHome from "./PieChartGamePercentage.vue";
 import BarChartAllGames from "./BarChartAllGames.vue";
 import PlayTimeHome from "./PlayTimeHome.vue";
-import PieChartPlatform from "./PieChartPlatform.vue";
+import PieChartPlatform from "./DoughnutChartPlatform.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import { useDashboard } from "../composables/dashboard";
