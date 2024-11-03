@@ -146,7 +146,7 @@ import LittleCard from "./LittleCard.vue";
 import Loading from "../components/Loading.vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch, onActivated } from "vue";
 import GameTimeHome from "./PieChartGamePercentage.vue";
 import BarChartAllGames from "./BarChartAllGames.vue";
 import PlayTimeHome from "./PlayTimeHome.vue";
@@ -168,9 +168,6 @@ const i18n = useI18n();
 const loaded = ref(false);
 
 const props = defineProps(["teamName"]);
-
-const store = useStore();
-const { sessions } = storeToRefs(store);
 
 const {
   initDashboard,
@@ -194,15 +191,11 @@ const {
 } = useDashboard();
 
 onMounted(() => {
-  setTimeout(() => {
-    init();
+  setTimeout( () => {
+    initDashboard();
     loaded.value = true;
   }, 500);
 });
-
-function init() {
-  initDashboard();
-}
 
 const fun_percentage_computed = computed(() => {
   return fun_percentage.value.toFixed(2) + "%";

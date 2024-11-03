@@ -1,24 +1,24 @@
 <template>
   <div class="loading-container">
-    <h3>{{ $t("Loading." + msg) }}</h3>
+    <h2>{{ $t("Loading." + props.msg) }}</h2>
     <ProgressSpinner />
+    <h4>{{ props.detail }}</h4>
   </div>
 </template>
 <script setup>
-const { msg } = defineProps(["msg"]);
+const props = defineProps(["msg", "detail"]);
 </script>
 <style scoped>
 .loading-container {
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: start;
   align-items: center;
-  height: 50vh;
+  height: 100vh;
   width: 100%;
 }
 
-h3 {
+h2 {
   color: #5a5d9d;
-  font-size: 2rem;
 }
 </style>

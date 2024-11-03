@@ -1,6 +1,6 @@
-import {computed, ref} from 'vue'
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
+import {nextTick, ref} from "vue";
 
 export function useDashboard() {
     const store = useStore();
@@ -24,7 +24,8 @@ export function useDashboard() {
     const not_fun_percentage = ref(0);
 
 
-    function initDashboard() {
+    async function initDashboard() {
+        await nextTick();
         sessions_number.value = sessions.value.length;
         let team_sessions = new Map();
         let first_session = new Date(sessions.value[0].date.seconds * 1000);
@@ -91,7 +92,9 @@ export function useDashboard() {
             else cpt_not_fun++;
         }
 
-        //set team with most sessions and team with greatest session average playtime
+        await nextTick();
+
+        //set team with most sessions and team with the greatest session average playtime
         let max_session = 0;
         let team_session = "";
         let max_average = 0;
@@ -102,7 +105,7 @@ export function useDashboard() {
                 max_session = value.length;
                 team_session = key;
             }
-            //team with greatest session average playtime
+            //team with the greatest session average playtime
             let sum = 0;
             value.forEach((element) => {
                 sum += element;
@@ -175,7 +178,7 @@ export function useDashboard() {
         unhappiest_player.value = teams.value.find(t => t.id === team_id) ? teams.value.find(t => t.id === team_id).name : "";
         unhappiest_player_value.value = min_happiness * 100;
 
-        //set the percentages of good,nutral and bad games
+        //set the percentages of good,neutral and bad games
         neutral_percentage.value = (
             (cpt_neutral / sessions.value.length) *
             100
@@ -205,6 +208,6 @@ export function useDashboard() {
         unhappiest_player_value,
         fun_percentage,
         neutral_percentage,
-        not_fun_percentage
+        not_fun_percentage,
     }
 }
