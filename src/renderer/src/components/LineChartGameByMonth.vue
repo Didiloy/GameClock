@@ -21,7 +21,9 @@
           type="line"
           :data="chartData"
           :options="chartOptions"
-          :plugins="[zoomPlugin]"
+          :plugins="
+            getPreferences('activate_zoom_on_graphs') ? [zoomPlugin] : ''
+          "
           :pt="{
             root: { style: 'height: 100%; width: auto' },
             canvas: {
@@ -43,7 +45,9 @@
           type="line"
           :data="chartData"
           :options="chartOptions"
-          :plugins="[zoomPlugin]"
+          :plugins="
+            getPreferences('activate_zoom_on_graphs') ? [zoomPlugin] : ''
+          "
           :pt="{
             root: { style: 'height: 100%; width: auto' },
             canvas: {
@@ -62,6 +66,7 @@ import { storeToRefs } from "pinia";
 import { getIdsOfTeam } from "../database/database.js";
 import { convertMinuteToHoursMinute } from "../common/main";
 import zoomPlugin from "chartjs-plugin-zoom";
+import { getPreferences } from "../preferences/preferences";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();

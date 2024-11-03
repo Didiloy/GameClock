@@ -30,7 +30,9 @@ const defaults = {
   //language
   language: "en",
   //data loading
-  reload_data_key_shortcut: "r"
+  reload_data_key_shortcut: "r",
+  //graph zoom
+  activate_zoom_on_graphs: false,
 };
 
 const preferences_name = "preferences";

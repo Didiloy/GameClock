@@ -27,7 +27,9 @@
           type="bar"
           :data="chartData"
           :options="chartOptions"
-          :plugins="[zoomPlugin]"
+          :plugins="
+            getPreferences('activate_zoom_on_graphs') ? [zoomPlugin] : ''
+          "
           :pt="{
             canvas: {
               style: 'height: 100%; max-height:300px;  width: auto;',
@@ -48,7 +50,9 @@
           type="bar"
           :data="chartData"
           :options="chartOptions"
-          :plugins="[zoomPlugin]"
+          :plugins="
+            getPreferences('activate_zoom_on_graphs') ? [zoomPlugin] : ''
+          "
           :pt="{
             root: {
               style: 'height: 100%; width: auto;',
@@ -70,6 +74,7 @@ import { convertMinuteToHoursMinute } from "../common/main";
 import zoomPlugin from "chartjs-plugin-zoom";
 import { useRouter } from "vue-router";
 const router = useRouter();
+import { getPreferences } from "../preferences/preferences";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();

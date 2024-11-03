@@ -21,7 +21,9 @@
           type="bar"
           :data="chartData"
           :options="chartOptions"
-          :plugins="[zoomPlugin]"
+          :plugins="
+            getPreferences('activate_zoom_on_graphs') ? [zoomPlugin] : ''
+          "
           :pt="{
             canvas: {
               style: 'height: 100%; max-height: 350px; width: auto',
@@ -42,7 +44,9 @@
           type="bar"
           :data="chartData"
           :options="chartOptions"
-          :plugins="[zoomPlugin]"
+          :plugins="
+            getPreferences('activate_zoom_on_graphs') ? [zoomPlugin] : ''
+          "
           :pt="{
             root: { style: 'height: 100%; width: 100%' },
             canvas: {
@@ -62,6 +66,7 @@ import { convertMinuteToHoursMinute } from "../common/main";
 import { getIdsOfTeam } from "../database/database";
 import zoomPlugin from "chartjs-plugin-zoom";
 import { useI18n } from "vue-i18n";
+import { getPreferences } from "../preferences/preferences";
 const i18n = useI18n();
 
 const props = defineProps([

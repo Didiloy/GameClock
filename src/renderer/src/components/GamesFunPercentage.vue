@@ -4,6 +4,7 @@ import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { getIdsOfTeam } from "../database/database";
 import zoomPlugin from "chartjs-plugin-zoom";
+import { getPreferences } from "../preferences/preferences";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -255,7 +256,9 @@ const setChartOptions = () => {
           type="bar"
           :data="chartData"
           :options="chartOptions"
-          :plugins="[zoomPlugin]"
+          :plugins="
+            getPreferences('activate_zoom_on_graphs') ? [zoomPlugin] : ''
+          "
           :pt="{
             root: {
               style: 'height: 100%; max-height:300px; width: auto;',
@@ -279,7 +282,9 @@ const setChartOptions = () => {
           type="bar"
           :data="chartData"
           :options="chartOptions"
-          :plugins="[zoomPlugin]"
+          :plugins="
+            getPreferences('activate_zoom_on_graphs') ? [zoomPlugin] : ''
+          "
           :pt="{
             root: {
               style: 'height: 100%; width: auto;',

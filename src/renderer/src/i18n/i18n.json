@@ -239,7 +239,8 @@
       "page_start_application": "Page dans laquelle démarrer l'application:",
       "number_of_last_session": "Nombre de dernières sessions à afficher sur la page d'accueil",
       "all_sessions_of_the_day": "Toutes les sessions du jour",
-      "all_sessions_of_the_week": "Toutes les sessions de la semaine"
+      "all_sessions_of_the_week": "Toutes les sessions de la semaine",
+      "activate_zoom_on_graphs": "Activer le zoom en scrollant sur les graphiques"
     },
     "TeamsPreferences": {
       "sort_order": {
@@ -577,7 +578,8 @@
       "page_start_application": "Page to start the application on:",
       "number_of_last_session": "Number of last sessions to display on the homepage",
       "all_sessions_of_the_day": "All sessions of the day",
-      "all_sessions_of_the_week": "All sessions of the week"
+      "all_sessions_of_the_week": "All sessions of the week",
+      "activate_zoom_on_graphs": "Activate zoom by scrolling on graphs"
     },
     "TeamsPreferences": {
       "sort_order": {

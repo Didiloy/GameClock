@@ -160,6 +160,11 @@ function isValidChar(character) {
 watch(i18n.locale, () => {
   setPreferences("language", i18n.locale.value);
 });
+
+const activate_zoom_on_graphs = ref(getPreferences("activate_zoom_on_graphs"));
+watch(activate_zoom_on_graphs, () => {
+  setPreferences("activate_zoom_on_graphs", activate_zoom_on_graphs.value);
+});
 </script>
 
 <template>
@@ -212,6 +217,12 @@ watch(i18n.locale, () => {
         :options="number_of_last_session_possible"
         optionLabel="label"
       />
+    </div>
+    <div class="tp-item" style="margin-top: 10px">
+      <b class="text-color">{{
+        $t("GeneralPreference.activate_zoom_on_graphs")
+      }}</b>
+      <InputSwitch v-model="activate_zoom_on_graphs" />
     </div>
   </div>
 </template>
