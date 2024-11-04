@@ -16,6 +16,8 @@ import scholar_logo from "../assets/images/successes/scholar.svg";
 import depressed_logo from "../assets/images/successes/depressed.svg";
 import important_person_logo from "../assets/images/successes/important_person.svg";
 import thousand_hours_logo from "../assets/images/successes/thousand_hours.svg";
+import stinky_logo from "../assets/images/successes/stinky.svg";
+import why_playing_logo from "../assets/images/successes/why_playing.svg";
 
 export function useSuccesses() {
   const store = useStore();
@@ -35,6 +37,8 @@ export function useSuccesses() {
   const depressed = ref({ unlocked: false, image: "", description: "" });
   const important_person = ref({ unlocked: false, image: "", description: "" });
   const thousand_hours = ref({ unlocked: false, image: "", description: "" });
+  const stinky = ref({ unlocked: false, image: "", description: "" });
+  const why_playing = ref({ unlocked: false, image: "", description: "" });
 
   function calculateSuccesses(
     teamName,
@@ -51,6 +55,8 @@ export function useSuccesses() {
     //important_person
     let duration_total = 0;
     let duration_team = 0;
+    let sessions_of_ten_hours = 0; //stinky
+
     for (const session of sessions) {
       if (session.team.id === id_of_team) {
         //relentless
@@ -96,15 +102,26 @@ export function useSuccesses() {
         duration_team += session.duration;
       }
       duration_total += session.duration; //important_person
+
+      if (session.duration >= 60 * 8) { //stinky
+        sessions_of_ten_hours++;
+      }
     }
 
-    //relentless
+    //relentless and why_playing
     for (let [key, value] of bad_session) {
       if (value >= 10) {
         relentless.value.unlocked = true;
         relentless.value.image = relentless_logo;
         relentless.value.description = i18n.t(
           "Successes.descriptions.relentless",
+        );
+      }
+      if (value >= 50) {
+        why_playing.value.unlocked = true;
+        why_playing.value.image = why_playing_logo;
+        why_playing.value.description = i18n.t(
+            "Successes.descriptions.why_playing",
         );
       }
     }
@@ -186,6 +203,13 @@ export function useSuccesses() {
         "Successes.descriptions.thousand_hours",
       );
     }
+
+    //stinky
+    if (sessions_of_ten_hours >= 50) {
+      stinky.value.unlocked = true;
+      stinky.value.image = stinky_logo;
+      stinky.value.description = i18n.t("Successes.descriptions.stinky");
+    }
   }
 
   return {
@@ -203,5 +227,7 @@ export function useSuccesses() {
     depressed,
     important_person,
     thousand_hours,
+    stinky,
+    why_playing
   };
 }

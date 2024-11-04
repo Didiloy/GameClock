@@ -1,6 +1,6 @@
 {
   "name": "GameClock",
-  "version": "1.6.5",
+  "version": "1.7.0",
   "description": "Track your play time with your friends",
   "main": "./out/main/index.js",
   "author": "github.com/Didiloy",

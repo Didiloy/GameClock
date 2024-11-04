@@ -98,6 +98,12 @@
                 class="success"
               />
               <img
+                  v-if="item.thousand_hours.unlocked"
+                  :src="item.thousand_hours.image"
+                  :title="item.thousand_hours.description + ''"
+                  class="success"
+              />
+              <img
                 v-if="item.depressed.unlocked"
                 :src="item.depressed.image"
                 :title="item.depressed.description + ''"
@@ -110,10 +116,16 @@
                 class="success"
               />
               <img
-                v-if="item.thousand_hours.unlocked"
-                :src="item.thousand_hours.image"
-                :title="item.thousand_hours.description + ''"
-                class="success"
+                  v-if="item.stinky.unlocked"
+                  :src="item.stinky.image"
+                  :title="item.stinky.description + ''"
+                  class="success"
+              />
+              <img
+                  v-if="item.why_playing.unlocked"
+                  :src="item.why_playing.image"
+                  :title="item.why_playing.description + ''"
+                  class="success"
               />
             </div>
           </div>
@@ -263,6 +275,8 @@ async function setTeamItem() {
         depressed,
         important_person,
         thousand_hours,
+        stinky,
+        why_playing
       } = useSuccesses();
       calculateSuccesses(team.name, sessions.value);
       team.relentless = relentless.value;
@@ -278,6 +292,8 @@ async function setTeamItem() {
       team.depressed = depressed.value;
       team.important_person = important_person.value;
       team.thousand_hours = thousand_hours.value;
+      team.stinky = stinky.value;
+      team.why_playing = why_playing.value;
     }
   });
 

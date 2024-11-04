@@ -1,7 +1,7 @@
 <template>
   <div class="loading-container">
     <h2>{{ $t("Loading." + props.msg) }}</h2>
-    <ProgressSpinner />
+    <ProgressSpinner/>
     <h4>{{ props.detail }}</h4>
   </div>
 </template>

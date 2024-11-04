@@ -1,6 +1,6 @@
 import {useStore} from "../store/store";
 import {storeToRefs} from "pinia";
-import {nextTick, ref} from "vue";
+import {ref} from "vue";
 
 export function useDashboard() {
     const store = useStore();
@@ -24,8 +24,7 @@ export function useDashboard() {
     const not_fun_percentage = ref(0);
 
 
-    async function initDashboard() {
-        await nextTick();
+    function initDashboard() {
         sessions_number.value = sessions.value.length;
         let team_sessions = new Map();
         let first_session = new Date(sessions.value[0].date.seconds * 1000);
@@ -91,8 +90,6 @@ export function useDashboard() {
             else if (session.was_cool) cpt_fun++;
             else cpt_not_fun++;
         }
-
-        await nextTick();
 
         //set team with most sessions and team with the greatest session average playtime
         let max_session = 0;
