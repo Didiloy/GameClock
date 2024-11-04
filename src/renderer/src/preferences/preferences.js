@@ -23,7 +23,7 @@ const defaults = {
   //start page
   default_start_page: "",
   default_start_page_route: "/",
-  number_of_last_sessions: 5,
+  number_of_last_sessions: "5",
   //colors
   use_logo_color_in_team_list: false,
   use_logo_color_in_session_history: false,
