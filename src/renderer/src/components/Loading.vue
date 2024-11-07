@@ -1,7 +1,7 @@
 <template>
   <div class="loading-container">
     <h2>{{ $t("Loading." + props.msg) }}</h2>
-    <ProgressSpinner/>
+    <ProgressSpinner />
     <h4>{{ props.detail }}</h4>
   </div>
 </template>
@@ -12,7 +12,7 @@ const props = defineProps(["msg", "detail"]);
 .loading-container {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
   height: 100vh;
   width: 100%;

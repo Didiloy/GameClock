@@ -51,8 +51,14 @@
       v-model:visible="add_session_dialog_visible"
       modal
       dismissableMask
-      :header="i18n.t('Team.add_session')"
-      :style="{ width: '800px', height: '600px' }"
+      closeOnEscape
+      :closable="false"
+      :showHeader="false"
+      :pt="{
+        content: {
+          style: 'height: 600px; width: 800px; border-radius: 15px; margin: 0; padding: 0;',
+        }
+      }"
     >
       <AddSession
         :teamName="$route.params.name"

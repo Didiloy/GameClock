@@ -1,30 +1,26 @@
 <template>
-  <div class="as-background">
-    <div class="as-container">
-      <div class="as-game-image">
-        <img :src="game_grid" alt="game image" class="as-img-game-image"/>
-      </div>
-      <div class="as-input">
+  <div class="as-container">
+    <div class="as-heroe">
+      <img :src="game_grid" alt="game image" class="as-img-game-image" />
+    </div>
+    <div class="as-heroe-revert"></div>
+    <div class="as-on-image">
+      <div class="as-top-background">
         <AutoComplete
-            v-if="props.addToWaitingList"
-            class="mb10"
-            v-model="teamName"
-            :placeholder="i18n.t('AddSession.team_name')"
-            :suggestions="items_suggest_team"
-            @complete="autocompleteTeam"
-        >
-        </AutoComplete>
-        <AutoComplete
-            class="mb10"
-            v-model="game"
-            :placeholder="i18n.t('AddSession.game_name')"
-            :suggestions="items"
-            @complete="autocomplete"
+          v-model="game"
+          :placeholder="i18n.t('AddSession.game_name')"
+          :suggestions="items"
+          @complete="autocomplete"
+          :pt="{
+            root: {
+              style: 'height: 45px; width: 300px',
+            },
+          }"
         >
         </AutoComplete>
         <div class="as-duration-input">
           <span class="as-icon" @click="toggleOverlay"
-          ><i class="pi pi-info"></i
+            ><i class="pi pi-info"></i
           ></span>
           <OverlayPanel ref="op" style="width: 50%">
             <span>
@@ -32,100 +28,132 @@
             </span>
           </OverlayPanel>
           <InputText
-              class="input-number"
-              v-model="duration"
-              :placeholder="i18n.t('AddSession.duration_in_minute')"
+            class="input-number"
+            v-model="duration"
+            :placeholder="i18n.t('AddSession.duration_in_minute')"
+            :pt="{
+              root: {
+                style: 'height: 45px; width: 250px',
+              },
+            }"
           ></InputText>
           <div>
             <Button
-                icon="pi pi-clock"
-                @click="getChronoValue"
-                style="background-color: var(--primary-400)"
-                class="as-chrono-button"
+              icon="pi pi-clock"
+              @click="getChronoValue"
+              style="background-color: var(--primary-400)"
+              class="as-chrono-button"
             />
           </div>
         </div>
-        <div class="as-fun-selector">
-          <ToggleButton
+      </div>
+      <div class="as-bottom-background">
+        <div class=".as-bottom-background-top">
+          <AutoComplete
+            v-if="props.addToWaitingList"
+            v-model="teamName"
+            :placeholder="i18n.t('AddSession.team_name')"
+            :suggestions="items_suggest_team"
+            @complete="autocompleteTeam"
+            class="mb20"
+            :pt="{
+              root: {
+                style: 'width: 100%',
+              },
+              input: {
+                style: 'width: 100%',
+              },
+            }"
+          >
+          </AutoComplete>
+          <div class="as-fun-selector mb20">
+            <ToggleButton
               v-model="toggle_fun"
               :onLabel="i18n.t('AddSession.fun')"
               :offLabel="i18n.t('AddSession.fun')"
               class="toggle-button"
               :pt="{
-              box: {
-                style: toggle_fun
-                  ? 'background-color: var(--green-400);'
-                  : 'background-color: whitesmoke; border: none;',
-              },
-            }"
-          />
-          <ToggleButton
+                box: {
+                  style: toggle_fun
+                    ? 'background-color: var(&#45;&#45;green-400);'
+                    : 'background-color: whitesmoke; border: none;',
+                },
+              }"
+            />
+            <ToggleButton
               v-model="toggle_neutre"
               :onLabel="i18n.t('AddSession.neutral')"
               :offLabel="i18n.t('AddSession.neutral')"
               class="toggle-button"
               :pt="{
-              box: {
-                style: toggle_neutre
-                  ? 'background-color: var(--yellow-400);'
-                  : 'background-color: whitesmoke; border: none;',
-              },
-            }"
-          />
-          <ToggleButton
+                box: {
+                  style: toggle_neutre
+                    ? 'background-color: var(&#45;&#45;yellow-400);'
+                    : 'background-color: whitesmoke; border: none;',
+                },
+              }"
+            />
+            <ToggleButton
               v-model="toggle_nul"
               :onLabel="i18n.t('AddSession.bad')"
               :offLabel="i18n.t('AddSession.bad')"
               class="toggle-button"
               :pt="{
-              box: {
-                style: toggle_nul
-                  ? 'background-color: var(--red-400);'
-                  : 'background-color: whitesmoke; border: none;',
+                box: {
+                  style: toggle_nul
+                    ? 'background-color: var(&#45;&#45;red-400);'
+                    : 'background-color: whitesmoke; border: none;',
+                },
+              }"
+            />
+          </div>
+          <SelectButton
+            v-model="selected_platform"
+            :options="platforms_options"
+            optionLabel="name"
+            dataKey="id"
+            class="mb20"
+            :pt="{
+              root: {
+                style: 'width: 100%; padding-left: 2px;',
+              },
+              button: {
+                style: 'height: 40px; width: 116px;',
               },
             }"
+          >
+          </SelectButton>
+          <TextArea
+            v-model="comment"
+            rows="1"
+            style="width: 100%"
+            class="mb20"
+            :placeholder="i18n.t('AddSession.comments')"
           />
         </div>
-        <div class="as-comments">
-          <TextArea v-model="comment" rows="1" cols="23" :placeholder="i18n.t('AddSession.comments')"/>
-        </div>
-      </div>
-      <div class="as-select-platform">
-        <SelectButton v-model="selected_platform"
-                      :options="platforms_options"
-                      optionLabel="name"
-                      dataKey="id"
-                      :pt="{
-                          button: {
-                            style: 'height: 10px;',
-                          },
-                        }"
-        >
-        </SelectButton>
-      </div>
-      <div class="as-button-add">
+
         <Button
-            :label="i18n.t('AddSession.add')"
-            :icon="icon"
-            class="btn-add"
-            @click="addNewSession"
-            :loading="loading"
+          :label="i18n.t('AddSession.add')"
+          :icon="icon"
+          class="btn-add"
+          @click="addNewSession"
+          :loading="loading"
         ></Button>
       </div>
     </div>
   </div>
-  <Toast/>
+  <Toast />
 </template>
 <script setup>
-import {computed, onMounted, onUnmounted, ref, watch} from "vue";
-import {useToast} from "primevue/usetoast";
-import {useStore, useStoreChrono, useStoreWaitingList} from "../store/store";
-import {storeToRefs} from "pinia";
-import {addSession} from "../database/database";
-import {getPreferences} from "../preferences/preferences";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { useToast } from "primevue/usetoast";
+import { useStore, useStoreChrono, useStoreWaitingList } from "../store/store";
+import { storeToRefs } from "pinia";
+import { addSession } from "../database/database";
+import { getPreferences } from "../preferences/preferences";
 import gameNotFound from "../assets/images/game_not_found.jpg";
 
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 
 const i18n = useI18n();
 
@@ -133,9 +161,9 @@ const storeWaitingList = useStoreWaitingList();
 
 const emit = defineEmits(["toggleChronoListener"]);
 const storeChrono = useStoreChrono();
-const {chrono_value} = storeToRefs(storeChrono);
+const { chrono_value } = storeToRefs(storeChrono);
 const store = useStore();
-const {games, teams, platforms} = storeToRefs(store);
+const { games, teams, platforms } = storeToRefs(store);
 const toast = useToast();
 const props = defineProps(["teamName", "gameName", "addToWaitingList"]);
 const all_games = ref(games);
@@ -148,13 +176,13 @@ const icon = ref("pi pi-plus");
 const game = ref("");
 const game_grid = computed(() => {
   return (
-      all_games.value.find((g) => g.name === game.value)?.grid || gameNotFound
+    all_games.value.find((g) => g.name === game.value)?.grid || gameNotFound
   );
 });
 const heroe_url = computed(() => {
   return all_games.value.find((g) => g.name === game.value)?.heroe !== undefined
-      ? `url(${all_games.value.find((g) => g.name === game.value)?.heroe})`
-      : ``;
+    ? `url(${all_games.value.find((g) => g.name === game.value)?.heroe})`
+    : ``;
 });
 
 const platforms_options = ref([]);
@@ -162,9 +190,9 @@ const platforms_options = ref([]);
 const duration = ref("");
 const was_cool = ref({});
 const options_cool = ref([
-  {name: "Bien", value: true},
-  {name: "Neutre", value: undefined},
-  {name: "Nul", value: false},
+  { name: "Bien", value: true },
+  { name: "Neutre", value: undefined },
+  { name: "Nul", value: false },
 ]);
 const toggle_fun = ref(false);
 const toggle_neutre = ref(false);
@@ -174,7 +202,7 @@ watch(toggle_fun, () => {
   if (toggle_fun.value) {
     toggle_neutre.value = false;
     toggle_nul.value = false;
-    was_cool.value = {value: true};
+    was_cool.value = { value: true };
   }
 });
 
@@ -182,7 +210,7 @@ watch(toggle_neutre, () => {
   if (toggle_neutre.value) {
     toggle_fun.value = false;
     toggle_nul.value = false;
-    was_cool.value = {value: undefined};
+    was_cool.value = { value: undefined };
   }
 });
 
@@ -190,7 +218,7 @@ watch(toggle_nul, () => {
   if (toggle_nul.value) {
     toggle_neutre.value = false;
     toggle_fun.value = false;
-    was_cool.value = {value: false};
+    was_cool.value = { value: false };
   }
 });
 
@@ -204,10 +232,10 @@ onMounted(() => {
     game.value = props.gameName;
   }
   platforms_options.value = platforms.value.map((p) => {
-    return {name: i18n.t("Platform." + p.name), id: p.id};
+    return { name: i18n.t("Platform." + p.name), id: p.id };
   });
   selected_platform.value = platforms.value.filter(
-      (p) => p.name === "Not specified"
+    (p) => p.name === "Not specified"
   )[0];
 });
 
@@ -298,7 +326,7 @@ async function addNewSession() {
       was_cool: was_cool.value.value,
       platform: selected_platform.value.id,
       comment: comment.value,
-      date: new Date()
+      date: new Date(),
     });
     success = true;
   } else {
@@ -306,12 +334,12 @@ async function addNewSession() {
       success = false;
     } else {
       success = await addSession(
-          getTeamId(),
-          game.value,
-          parseInt(duration.value),
-          was_cool.value.value,
-          comment.value,
-          selected_platform.value.id
+        getTeamId(),
+        game.value,
+        parseInt(duration.value),
+        was_cool.value.value,
+        comment.value,
+        selected_platform.value.id
       );
     }
   }
@@ -325,7 +353,10 @@ async function addNewSession() {
       detail: i18n.t("AddSession.all_good"),
       life: 3000,
     });
-    if (getPreferences("reload_data_after_adding_session") && !props.addToWaitingList) {
+    if (
+      getPreferences("reload_data_after_adding_session") &&
+      !props.addToWaitingList
+    ) {
       setTimeout(async () => {
         await store.reloadStore();
       }, 3000);
@@ -339,7 +370,7 @@ async function addNewSession() {
         was_cool: was_cool.value.value,
         platform: selected_platform.value.id,
         comment: comment.value,
-        date: new Date()
+        date: new Date(),
       });
       toast.add({
         severity: "error",
@@ -365,7 +396,6 @@ async function addNewSession() {
   resetForm();
 }
 
-
 function resetForm() {
   game.value = "";
   duration.value = "";
@@ -374,72 +404,131 @@ function resetForm() {
   toggle_neutre.value = false;
   toggle_nul.value = false;
   selected_platform.value = platforms.value.filter(
-      (p) => p.name === "Not specified"
+    (p) => p.name === "Not specified"
   )[0];
 }
 </script>
 <style scoped>
-.as-background {
+.as-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.as-heroe {
+  height: 300px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   background-image: v-bind(heroe_url);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  height: 500px;
-  width: 750px;
-  border-radius: 30px;
+  position: relative;
+  z-index: 0;
+}
+
+.as-img-game-image {
+  position: absolute;
+  left: 35px;
+  top: 13px;
+  z-index: 2;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 160px;
+  width: 120px;
+  border-radius: 15px;
+  border: 1px solid black;
+}
+
+.as-heroe-revert {
+  height: 300px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-image: v-bind(heroe_url);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: scaleY(-1);
+  position: relative;
+  z-index: 0;
+}
+
+.as-on-image {
+  position: absolute;
+  height: 400px;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
+  justify-content: start;
   align-items: center;
-  justify-content: center;
 }
 
-.as-container {
-  width: 90%;
-  height: 90%;
-  border-radius: 30px;
-  background: rgba(0, 0, 0, 0.3);
+.as-top-background {
+  height: 75px;
+  width: 100%;
+  background-color: rgba(209, 224, 253, 0.8);
   backdrop-filter: blur(8px);
-  display: grid;
-  grid-template-columns: 170px 1fr;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 50px;
 }
 
-.as-game-image {
+.as-duration-input {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+
+.as-bottom-background {
+  height: 325px;
   width: 100%;
-  height: 100%;
-}
-
-.as-img-game-image {
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 190px;
-  width: 143px;
-  border-radius: 15px;
-  border: 1px solid white;
-}
-
-.as-button-add {
-  grid-column: 1 / span 2;
+  background-color: rgba(170, 201, 250, 0.8);
+  backdrop-filter: blur(10px);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 50px;
+}
+
+.as-bottom-background-top {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
   align-items: center;
 }
 
-.as-select-platform {
-  grid-column: 1 / span 2;
-  width: 100%;
+.mb20 {
+  margin-bottom: 20px;
+}
+
+.as-fun-selector {
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  width: 100%;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  padding: 0px;
 }
 
 .btn-add {
-  width: 95%;
+  width: 100%;
 }
 
 .as-input {
@@ -451,33 +540,9 @@ function resetForm() {
   width: 100%;
 }
 
-.as-comments {
-  margin-top: 10px;
-}
-
-.as-duration-input {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
 .input-number {
   margin-right: 10px;
   width: 200px;
-}
-
-.as-fun-selector {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 92%;
-  background-color: whitesmoke;
-  border-radius: 10px;
-  padding: 5px;
-  margin-top: 10px;
 }
 
 .toggle-button {
@@ -506,9 +571,5 @@ function resetForm() {
 
 .as-icon:hover {
   cursor: pointer;
-}
-
-.mb10 {
-  margin-bottom: 10px;
 }
 </style>
