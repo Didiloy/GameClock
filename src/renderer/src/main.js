@@ -40,18 +40,19 @@ import ContextMenu from "primevue/contextmenu";
 import OverlayPanel from "primevue/overlaypanel";
 import Message from "primevue/message";
 import { createRouter, createWebHashHistory } from "vue-router";
-import Home from "./views/Home.vue";
-import Teams from "./views/Teams.vue";
-import AddTeam from "./views/AddTeam.vue";
-import Team from "./views/Team.vue";
-import GamesSettings from "./views/GamesSettings.vue";
+// import Home from "./views/Home.vue";
+const Home = () => import("./views/Home.vue");
+const Teams = () => import("./views/Teams.vue");
+const AddTeam = () => import("./views/AddTeam.vue");
+const Team = () => import("./views/Team.vue");
+const GamesSettings = () => import("./views/GamesSettings.vue");
 import { createPinia, storeToRefs } from "pinia";
-import Settings from "./views/Settings.vue";
+const Settings = () => import("./views/Settings.vue");
 import AddDatabaseForFirstTime from "./views/AddDatabaseForFirstTime.vue";
 import { useStoredDatabases, useStore } from "./store/store";
-import DatabaseSettings from "./views/DatabaseSettings.vue";
-import DatabaseError from "./components/DatabaseError.vue";
-import WaitingListSession from "./views/WaitingListSession.vue";
+const DatabaseSettings = () => import("./views/DatabaseSettings.vue");
+const DatabaseError = () => import("./components/DatabaseError.vue");
+const WaitingListSession = () => import("./views/WaitingListSession.vue");
 
 const app = createApp(App);
 
@@ -138,7 +139,7 @@ if (stored_databases.value.length === 0) {
 } else {
   initialiseFirebase(
     stored_databases,
-    getPreferences("selected_database_index"),
+    getPreferences("selected_database_index")
   );
 }
 
