@@ -2,7 +2,6 @@ import { ref } from "vue";
 import { getIdOfTeam } from "../database/database";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import { useI18n } from "vue-i18n";
 import relentless_logo from "../assets/images/successes/relentless.svg";
 import patient_logo from "../assets/images/successes/patient.svg";
 import enduring_logo from "../assets/images/successes/enduring.svg";
@@ -19,9 +18,8 @@ import thousand_hours_logo from "../assets/images/successes/thousand_hours.svg";
 import stinky_logo from "../assets/images/successes/stinky.svg";
 import why_playing_logo from "../assets/images/successes/why_playing.svg";
 
-export function useSuccesses() {
+export function useSuccesses(i18n) {
   const store = useStore();
-  const i18n = useI18n();
   const { teams } = storeToRefs(store);
 
   const relentless = ref({ unlocked: false, image: "", description: "" });
@@ -43,7 +41,7 @@ export function useSuccesses() {
   function calculateSuccesses(
     teamName,
     sessions,
-    compute_important_person = true,
+    compute_important_person = true
   ) {
     const id_of_team = getIdOfTeam(teamName, teams.value);
     if (id_of_team === "") return;
@@ -64,7 +62,7 @@ export function useSuccesses() {
           if (bad_session.has(session.game.id)) {
             bad_session.set(
               session.game.id,
-              bad_session.get(session.game.id) + 1,
+              bad_session.get(session.game.id) + 1
             );
           } else {
             bad_session.set(session.game.id, 0);
@@ -82,14 +80,14 @@ export function useSuccesses() {
           enduring.value.unlocked = true;
           enduring.value.image = enduring_logo;
           enduring.value.description = i18n.t(
-            "Successes.descriptions.enduring",
+            "Successes.descriptions.enduring"
           );
         }
         if (session.duration >= 60 * 12) {
           inexhaustible.value.unlocked = true;
           inexhaustible.value.image = inexhaustible_logo;
           inexhaustible.value.description = i18n.t(
-            "Successes.descriptions.inexhaustible",
+            "Successes.descriptions.inexhaustible"
           );
         }
 
@@ -103,7 +101,8 @@ export function useSuccesses() {
       }
       duration_total += session.duration; //important_person
 
-      if (session.duration >= 60 * 8) { //stinky
+      if (session.duration >= 60 * 8) {
+        //stinky
         sessions_of_ten_hours++;
       }
     }
@@ -114,14 +113,14 @@ export function useSuccesses() {
         relentless.value.unlocked = true;
         relentless.value.image = relentless_logo;
         relentless.value.description = i18n.t(
-          "Successes.descriptions.relentless",
+          "Successes.descriptions.relentless"
         );
       }
       if (value >= 50) {
         why_playing.value.unlocked = true;
         why_playing.value.image = why_playing_logo;
         why_playing.value.description = i18n.t(
-            "Successes.descriptions.why_playing",
+          "Successes.descriptions.why_playing"
         );
       }
     }
@@ -131,7 +130,7 @@ export function useSuccesses() {
       young_gamer.value.unlocked = true;
       young_gamer.value.image = young_gamer_logo;
       young_gamer.value.description = i18n.t(
-        "Successes.descriptions.young_gamer",
+        "Successes.descriptions.young_gamer"
       );
     }
     if (session_number >= 100) {
@@ -143,7 +142,7 @@ export function useSuccesses() {
       passionnate.value.unlocked = true;
       passionnate.value.image = passionnate_logo;
       passionnate.value.description = i18n.t(
-        "Successes.descriptions.passionnate",
+        "Successes.descriptions.passionnate"
       );
     }
 
@@ -157,7 +156,7 @@ export function useSuccesses() {
       prospector.value.unlocked = true;
       prospector.value.image = prospector_logo;
       prospector.value.description = i18n.t(
-        "Successes.descriptions.prospector",
+        "Successes.descriptions.prospector"
       );
     }
     if (different_games.size >= 30) {
@@ -175,7 +174,7 @@ export function useSuccesses() {
         depressed.value.unlocked = true;
         depressed.value.image = depressed_logo;
         depressed.value.description = i18n.t(
-          "Successes.descriptions.depressed",
+          "Successes.descriptions.depressed"
         );
       }
     }
@@ -189,7 +188,7 @@ export function useSuccesses() {
           important_person.value.unlocked = true;
           important_person.value.image = important_person_logo;
           important_person.value.description = i18n.t(
-            "Successes.descriptions.important_person",
+            "Successes.descriptions.important_person"
           );
         }
       }
@@ -200,7 +199,7 @@ export function useSuccesses() {
       thousand_hours.value.unlocked = true;
       thousand_hours.value.image = thousand_hours_logo;
       thousand_hours.value.description = i18n.t(
-        "Successes.descriptions.thousand_hours",
+        "Successes.descriptions.thousand_hours"
       );
     }
 
@@ -228,6 +227,6 @@ export function useSuccesses() {
     important_person,
     thousand_hours,
     stinky,
-    why_playing
+    why_playing,
   };
 }

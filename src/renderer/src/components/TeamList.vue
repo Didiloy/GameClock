@@ -98,10 +98,10 @@
                 class="success"
               />
               <img
-                  v-if="item.thousand_hours.unlocked"
-                  :src="item.thousand_hours.image"
-                  :title="item.thousand_hours.description + ''"
-                  class="success"
+                v-if="item.thousand_hours.unlocked"
+                :src="item.thousand_hours.image"
+                :title="item.thousand_hours.description + ''"
+                class="success"
               />
               <img
                 v-if="item.depressed.unlocked"
@@ -116,16 +116,16 @@
                 class="success"
               />
               <img
-                  v-if="item.stinky.unlocked"
-                  :src="item.stinky.image"
-                  :title="item.stinky.description + ''"
-                  class="success"
+                v-if="item.stinky.unlocked"
+                :src="item.stinky.image"
+                :title="item.stinky.description + ''"
+                class="success"
               />
               <img
-                  v-if="item.why_playing.unlocked"
-                  :src="item.why_playing.image"
-                  :title="item.why_playing.description + ''"
-                  class="success"
+                v-if="item.why_playing.unlocked"
+                :src="item.why_playing.image"
+                :title="item.why_playing.description + ''"
+                class="success"
               />
             </div>
           </div>
@@ -148,7 +148,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, watch, onUpdated } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
@@ -171,29 +171,21 @@ const loading = ref(true);
 
 const toggle_select_team = ref(false);
 const searchTeamStore = useSearchTeamStore();
-onMounted(async () => {
-  loading.value = true;
-  await init();
-  loading.value = false;
-  if (getPreferences("use_logo_color_in_team_list")) {
-    await getTeamColorWithWorker();
-  }
-});
-
-watch(sessions, async () => {
-  loading.value = true;
-  await init();
-  loading.value = false;
-  if (getPreferences("use_logo_color_in_team_list")) {
-    await getTeamColorWithWorker();
-  }
+onMounted(() => {
+  setTimeout(() => {
+    init();
+    loading.value = false;
+    if (getPreferences("use_logo_color_in_team_list")) {
+      getTeamColorWithWorker();
+    }
+  }, 500);
 });
 
 watch(
   () => searchTeamStore.searchTeamValue,
   () => {
     filterTeam();
-  },
+  }
 );
 
 const teamItemFiltered = ref([]);
@@ -204,15 +196,13 @@ function filterTeam() {
     return;
   }
   teamItemFiltered.value = teamItem.value.filter((t) =>
-    t.name
-      .toLowerCase()
-      .includes(searchTeamStore.searchTeamValue.toLowerCase()),
+    t.name.toLowerCase().includes(searchTeamStore.searchTeamValue.toLowerCase())
   );
 }
 
 const teamItem = ref([]);
 
-async function setTeamItem() {
+function setTeamItem() {
   teamItem.value = [];
 
   // calculate gametime and most played game for each team
@@ -276,8 +266,8 @@ async function setTeamItem() {
         important_person,
         thousand_hours,
         stinky,
-        why_playing
-      } = useSuccesses();
+        why_playing,
+      } = useSuccesses(i18n);
       calculateSuccesses(team.name, sessions.value);
       team.relentless = relentless.value;
       team.patient = patient.value;
@@ -316,11 +306,11 @@ function sortTeams() {
   }
 }
 
-async function getTeamColorWithWorker() {
+function getTeamColorWithWorker() {
   let id = 0;
   for (let team of teamItem.value) {
     const worker = new Worker(
-      new URL("../workers/colorWorker.js", import.meta.url),
+      new URL("../workers/colorWorker.js", import.meta.url)
     );
 
     worker.onmessage = (event) => {
@@ -352,8 +342,8 @@ function getGameById(gameId) {
   return { name: game.name, heroe: game.heroe, logo: game.logo };
 }
 
-const init = async () => {
-  await setTeamItem();
+const init = () => {
+  setTeamItem();
   sortTeams();
 };
 
