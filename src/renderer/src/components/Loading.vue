@@ -6,7 +6,7 @@
   </div>
 </template>
 <script setup>
-import { toRef, toRefs } from "vue";
+import { toRefs } from "vue";
 const props = defineProps(["msg", "detail"]);
 const { detail } = toRefs(props);
 </script>

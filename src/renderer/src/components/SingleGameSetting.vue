@@ -54,7 +54,7 @@
               type="text"
               v-model="logo"
               style="width: 400px"
-              @focus="emit('toggleChronoListener')" 
+              @focus="emit('toggleChronoListener')"
               @blur="emit('toggleChronoListener')"
               @contextmenu="onRightClickLogo"
             />
@@ -65,7 +65,7 @@
               type="text"
               v-model="grid"
               style="width: 400px"
-              @focus="emit('toggleChronoListener')" 
+              @focus="emit('toggleChronoListener')"
               @blur="emit('toggleChronoListener')"
               @contextmenu="onRightClickGrid"
             />
@@ -76,7 +76,7 @@
               type="text"
               v-model="heroe"
               style="width: 400px"
-              @focus="emit('toggleChronoListener')" 
+              @focus="emit('toggleChronoListener')"
               @blur="emit('toggleChronoListener')"
               @contextmenu="onRightClickHeroe"
             />
@@ -91,18 +91,20 @@
             style="margin-top: 10px"
           ></Button>
         </div>
+        <GameHistory :sessions="game_sessions" class="sgs-history" />
       </template>
     </Card>
     <Toast />
   </div>
 </template>
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { modifyGame } from "../database/database";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { useToast } from "primevue/usetoast";
 import { convertMinuteToHoursMinute } from "../common/main";
+import GameHistory from "./GameHistory.vue";
 const emit = defineEmits(["toggleChronoListener"]);
 
 import { useI18n } from "vue-i18n";
@@ -258,8 +260,13 @@ function getTeamWhoPlayTheMost() {
   return teams.value.find((t) => t.id === team_id_max).name;
 }
 
+const game_sessions = ref([]);
+
 onMounted(() => {
   game_id.value = getGameId();
+  game_sessions.value = sessions.value.filter(
+    (s) => s.game.id === game_id.value
+  );
   total_sessions.value = getTotalSessions();
   longuest_session.value = getLonguestSession();
   smallest_session.value = getSmallestSession();
@@ -267,19 +274,6 @@ onMounted(() => {
   team_who_play_the_most.value = getTeamWhoPlayTheMost();
   total_playtime.value = getTotalPlaytime();
 });
-
-// watch(name, () => {
-//   game_id.value = getGameId();
-//   total_sessions.value = getTotalSessions();
-//   longuest_session.value = getLonguestSession();
-//   smallest_session.value = getSmallestSession();
-//   average_session.value = getAverageSession();
-//   team_who_play_the_most.value = getTeamWhoPlayTheMost();
-//   total_playtime.value = getTotalPlaytime();
-//   logo.value = props.logo;
-//   heroe.value = props.heroe;
-//   grid.value = props.grid;
-// });
 
 async function useModifyGame() {
   loading.value = true;
@@ -404,6 +398,14 @@ async function useModifyGame() {
   font-size: x-large;
   color: var(--surface-0);
   font-weight: bold;
+}
+
+.sgs-history {
+  margin: 10px auto 0;
+  width: 90%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  height: fit-content;
 }
 
 .sgs-content {
