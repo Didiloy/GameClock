@@ -18,7 +18,7 @@
               : i18n.t('Dashboard.player_of_the_week', [
                   second_player_of_the_week,
                   convertMinuteToHoursMinute(
-                    difference_between_player_of_the_week,
+                    difference_between_player_of_the_week
                   ),
                 ])
         "
@@ -40,7 +40,7 @@
         :iconValue="numberIcon"
         backgroundColor="#f9e09f"
         titleColor="#241a00"
-        :name="average_session_per_day.toFixed(2)"
+        :name="average_session_per_day?.toFixed(2)"
         :value="i18n.t('Dashboard.average_session_per_day')"
       ></LittleCard>
       <LittleCard
@@ -52,7 +52,7 @@
         :value="
           i18n.t('Dashboard.biggest_games_sessions_part_one') +
           convertMinuteToHoursMinute(
-            team_with_greatest_session_average_playtime_value,
+            team_with_greatest_session_average_playtime_value
           ) +
           i18n.t('Dashboard.biggest_games_sessions_part_two')
         "
@@ -145,15 +145,13 @@
 import LittleCard from "./LittleCard.vue";
 import Loading from "../components/Loading.vue";
 import { useStore } from "../store/store";
-import { storeToRefs } from "pinia";
-import { computed, onMounted, ref, watch, onActivated } from "vue";
+import { computed, onMounted, ref } from "vue";
 import GameTimeHome from "./PieChartGamePercentage.vue";
 import BarChartAllGames from "./BarChartAllGames.vue";
 import PlayTimeHome from "./PlayTimeHome.vue";
 import PieChartPlatform from "./DoughnutChartPlatform.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
 import SessionsHistory from "./SessionsHistory.vue";
-import { useDashboard } from "../composables/dashboard";
 import { getPreferences } from "../preferences/preferences";
 import { convertMinuteToHoursMinute } from "../common/main";
 import gameIcon from "../assets/images/icons_games.svg";
@@ -169,41 +167,109 @@ const loaded = ref(false);
 
 const props = defineProps(["teamName"]);
 
-const {
-  initDashboard,
-  sessions_number,
-  team_with_most_sessions,
-  team_with_most_sessions_value,
-  average_session_per_day,
-  team_with_greatest_session_average_playtime,
-  team_with_greatest_session_average_playtime_value,
-  number_of_games,
-  game_of_the_week,
-  game_of_the_week_time,
-  player_of_the_week,
-  second_player_of_the_week,
-  difference_between_player_of_the_week,
-  unhappiest_player,
-  unhappiest_player_value,
-  fun_percentage,
-  neutral_percentage,
-  not_fun_percentage,
-} = useDashboard();
+const store = useStore();
 
 onMounted(() => {
-  setTimeout( () => {
-    initDashboard();
-    loaded.value = true;
-  }, 500);
+  initDashboard();
 });
 
+const sessions_number = ref(0);
+const team_with_most_sessions = ref("");
+const team_with_most_sessions_value = ref(0);
+const average_session_per_day = ref(0);
+const team_with_greatest_session_average_playtime = ref("");
+const team_with_greatest_session_average_playtime_value = ref(0);
+const number_of_games = ref(0);
+const game_of_the_week = ref("");
+const game_of_the_week_time = ref(0);
+const player_of_the_week = ref("");
+const second_player_of_the_week = ref("");
+const difference_between_player_of_the_week = ref(0);
+const unhappiest_player = ref("");
+const unhappiest_player_value = ref(0);
+const fun_percentage = ref(0);
+const neutral_percentage = ref(0);
+const not_fun_percentage = ref(0);
+
+function initDashboard() {
+  const worker = new Worker(
+    new URL("../workers/dashboard.js", import.meta.url)
+  );
+
+  worker.onmessage = (event) => {
+    if (event.data.finished) {
+      const {
+        _sessions_number,
+        _team_with_most_sessions,
+        _team_with_most_sessions_value,
+        _average_session_per_day,
+        _team_with_greatest_session_average_playtime,
+        _team_with_greatest_session_average_playtime_value,
+        _number_of_games,
+        _game_of_the_week,
+        _game_of_the_week_time,
+        _player_of_the_week,
+        _second_player_of_the_week,
+        _difference_between_player_of_the_week,
+        _unhappiest_player,
+        _unhappiest_player_value,
+        _fun_percentage,
+        _neutral_percentage,
+        _not_fun_percentage,
+      } = event.data;
+      sessions_number.value = _sessions_number;
+      team_with_most_sessions.value = _team_with_most_sessions;
+      team_with_most_sessions_value.value = _team_with_most_sessions_value;
+      average_session_per_day.value = _average_session_per_day;
+      team_with_greatest_session_average_playtime.value =
+        _team_with_greatest_session_average_playtime;
+      team_with_greatest_session_average_playtime_value.value =
+        _team_with_greatest_session_average_playtime_value;
+      number_of_games.value = _number_of_games;
+      game_of_the_week.value = _game_of_the_week;
+      game_of_the_week_time.value = _game_of_the_week_time;
+      player_of_the_week.value = _player_of_the_week;
+      second_player_of_the_week.value = _second_player_of_the_week;
+      difference_between_player_of_the_week.value =
+        _difference_between_player_of_the_week;
+      unhappiest_player.value = _unhappiest_player;
+      unhappiest_player_value.value = _unhappiest_player_value;
+      fun_percentage.value = _fun_percentage;
+      neutral_percentage.value = _neutral_percentage;
+      not_fun_percentage.value = _not_fun_percentage;
+      loaded.value = true;
+      worker.terminate();
+    }
+  };
+
+  worker.onerror = (error) => {
+    console.error(`Dashboard worker error: ${error.message}`);
+    worker.terminate();
+  };
+
+  const sessions = store.sessions.map((session) => {
+    return {
+      ...session,
+      game: session.game.id,
+      team: session.team.id,
+      platform: session.platform?.id,
+    };
+  });
+
+  worker.postMessage({
+    sessions: JSON.parse(JSON.stringify(sessions)),
+    games: JSON.parse(JSON.stringify(store.games)),
+    teams: JSON.parse(JSON.stringify(store.teams)),
+  });
+}
+
 const fun_percentage_computed = computed(() => {
-  return fun_percentage.value.toFixed(2) + "%";
+  return fun_percentage.value?.toFixed(2) + "%";
 });
 
 const percentage_card_computed = computed(() => {
   return `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <b>${i18n.t("Dashboard.fun_to_play")}</b><br><h2>${i18n.t("Dashboard.neutral")}:</h2> ${neutral_percentage.value.toFixed(0)}% <br><h2>${i18n.t("Dashboard.bad")}:</h2> ${not_fun_percentage.value.toFixed(0)}%
+            <b>${i18n.t("Dashboard.fun_to_play")}</b><br><h2>${i18n.t("Dashboard.neutral")}:</h2> ${neutral_percentage.value?.toFixed(0)}% <br><h2>${i18n.t("Dashboard.bad")}:</h2> ${not_fun_percentage.value?.toFixed(0)}%
           </div>`;
 });
 </script>

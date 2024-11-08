@@ -318,7 +318,8 @@
         "9": "Octobre",
         "10": "Novembre",
         "11": "Décembre"
-      }
+      },
+      "loading": "Chargement..."
     },
     "Successes": {
       "descriptions": {
@@ -659,7 +660,8 @@
         "9": "October",
         "10": "November",
         "11": "December"
-      }
+      },
+      "loading": "Loading..."
     },
     "Successes": {
       "descriptions": {

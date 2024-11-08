@@ -142,7 +142,7 @@
                 <div>
                   {{
                     new Date(
-                      slotProps.data.date.seconds * 1000,
+                      slotProps.data.date.seconds * 1000
                     ).toLocaleDateString()
                   }}
                 </div>
@@ -181,7 +181,7 @@ const { games, sessions, teams, platforms } = storeToRefs(store);
 const sessions_values = ref([]);
 const id_of_team = ref([]);
 onMounted(async () => {
-  await init();
+  init();
   if (getPreferences("use_logo_color_in_session_history")) {
     await computeSessionColor();
   }
@@ -190,7 +190,7 @@ onMounted(async () => {
 // Using Map to store unique games so that we don't compute color multiple time for the same game
 const uniqueGames = ref(new Map());
 
-async function init() {
+function init() {
   sessions_values.value = [];
   id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
 
@@ -203,14 +203,14 @@ async function init() {
     let today = new Date();
     today.setHours(0, 0, 0, 0);
     session_copy = session_copy.filter(
-      (s) => s.date.seconds * 1000 >= today.getTime(),
+      (s) => s.date.seconds * 1000 >= today.getTime()
     );
   } else if (props.historySize === "-2") {
     let last_week = new Date();
     last_week.setHours(0, 0, 0, 0);
     last_week.setDate(last_week.getDate() - 7);
     session_copy = session_copy.filter(
-      (s) => s.date.seconds * 1000 >= last_week.getTime(),
+      (s) => s.date.seconds * 1000 >= last_week.getTime()
     );
   } else if (props.historySize) {
     session_copy = session_copy.slice(0, props.historySize);
@@ -301,7 +301,7 @@ async function computeSessionColor() {
   let id = 0;
   for (let [game, data] of uniqueGames.value) {
     const worker = new Worker(
-      new URL("../workers/colorWorker.js", import.meta.url),
+      new URL("../workers/colorWorker.js", import.meta.url)
     );
 
     worker.onmessage = (event) => {

@@ -1,5 +1,22 @@
 <template>
+  <div v-if="!loaded">
+    <Card
+      class="card"
+      :pt="{
+        root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+        content: {
+          style:
+            'height:100%; display: flex; flex-direction: column; justify-content: center; align-items: center',
+        },
+      }"
+    >
+      <template #content>
+        <p>{{ $t("Common.loading") }}</p>
+      </template>
+    </Card>
+  </div>
   <Card
+    v-else
     class="card"
     :pt="{
       root: { style: 'box-shadow: 0px 0px 0px 0px;' },
@@ -73,20 +90,14 @@ const props = defineProps([
 const store = useStore();
 const { sessions, teams, platforms } = storeToRefs(store);
 
+const loaded = ref(false);
 onMounted(() => {
-  init();
-});
-
-watch([platforms, sessions, teams], () => {
-  init();
-});
-
-watch(
-  () => props.sessions,
-  () => {
+  setTimeout(() => {
     init();
-  },
-);
+    loaded.value = true;
+  }, 1000);
+  // init();
+});
 
 const chart = ref({});
 
@@ -166,11 +177,11 @@ function setGamesNameAndPlaytime() {
   temp_games = temp_games.filter((g) => g.playtime > 0);
   games_name.value = temp_games.map((g) => g.name);
   platform_percentage.value = temp_games.map((g) =>
-    ((g.playtime / total_playtime) * 100).toFixed(0),
+    ((g.playtime / total_playtime) * 100).toFixed(0)
   );
   platform_playtime.value = temp_games.map((g) => g.playtime);
   platform_number_of_sessions.value = temp_games.map(
-    (g) => g.number_of_sessions,
+    (g) => g.number_of_sessions
   );
 }
 
@@ -246,7 +257,7 @@ const setChartOptions = () => {
           label: function (context) {
             return (
               convertMinuteToHoursMinute(
-                platform_playtime.value[context.dataIndex],
+                platform_playtime.value[context.dataIndex]
               ) +
               " -> " +
               platform_percentage.value[context.dataIndex] +
@@ -322,7 +333,7 @@ const htmlLegendPlugin = {
         } else {
           chart.setDatasetVisibility(
             item.datasetIndex,
-            !chart.isDatasetVisible(item.datasetIndex),
+            !chart.isDatasetVisible(item.datasetIndex)
           );
         }
         chart.update();

@@ -154,14 +154,12 @@ function setArraysForGraph() {
   for (let [year, monthMap] of map_game_duration) {
     for (let [month, duration] of monthMap) {
       labels_year_month.value.push(
-        `${i18n.t("Common.months_names." + month)} ${year}`,
+        `${i18n.t("Common.months_names." + month)} ${year}`
       );
       game_duration_by_year_month.value.push(duration);
-      console.log(joyrate_map.get(year).get(month));
-      console.log(sessions_map.get(year).get(month));
       joyrate_by_year_month.value.push(
         (joyrate_map.get(year).get(month) / sessions_map.get(year).get(month)) *
-          100,
+          100
       );
     }
   }
@@ -198,7 +196,7 @@ const setChartData = () => {
         fill: false,
         borderColor: documentStyle.getPropertyValue("--cyan-500"),
         tension: 0.4,
-        yAxisID: 'y',
+        yAxisID: "y",
       },
       {
         label: i18n.t("LineChartGameByMonth.fun_to_play"),
@@ -206,7 +204,7 @@ const setChartData = () => {
         fill: false,
         borderColor: documentStyle.getPropertyValue("--gray-500"),
         tension: 0.4,
-        yAxisID: 'y1',
+        yAxisID: "y1",
       },
     ],
   };
@@ -216,7 +214,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary",
+    "--text-color-secondary"
   );
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
@@ -246,7 +244,7 @@ const setChartOptions = () => {
             return (
               "" +
               convertMinuteToHoursMinute(
-                game_duration_by_year_month.value[context.dataIndex],
+                game_duration_by_year_month.value[context.dataIndex]
               ) +
               " - " +
               joyrate_by_year_month.value[context.dataIndex].toFixed(2) +
@@ -271,7 +269,7 @@ const setChartOptions = () => {
         },
       },
       y: {
-        position: 'left',
+        position: "left",
         ticks: {
           color: textColorSecondary,
         },
@@ -281,15 +279,15 @@ const setChartOptions = () => {
       },
       y1: {
         display: true,
-        position: 'right',
+        position: "right",
         ticks: {
-          color: textColorSecondary
+          color: textColorSecondary,
         },
         grid: {
           drawOnChartArea: false,
-          color: surfaceBorder
-        }
-      }
+          color: surfaceBorder,
+        },
+      },
     },
   };
 };

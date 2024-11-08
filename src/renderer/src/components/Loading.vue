@@ -2,11 +2,13 @@
   <div class="loading-container">
     <h2>{{ $t("Loading." + props.msg) }}</h2>
     <ProgressSpinner />
-    <h4>{{ props.detail }}</h4>
+    <h4>{{ detail }}</h4>
   </div>
 </template>
 <script setup>
+import { toRef, toRefs } from "vue";
 const props = defineProps(["msg", "detail"]);
+const { detail } = toRefs(props);
 </script>
 <style scoped>
 .loading-container {

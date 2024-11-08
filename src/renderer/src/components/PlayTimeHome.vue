@@ -1,5 +1,21 @@
 <template>
-  <div class="container">
+  <div v-if="!loaded">
+    <Card
+      class="card"
+      :pt="{
+        root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+        content: {
+          style:
+            'height:100%; display: flex; flex-direction: column; justify-content: center; align-items: center',
+        },
+      }"
+    >
+      <template #content>
+        <p>{{ $t("Common.loading") }}</p>
+      </template>
+    </Card>
+  </div>
+  <div v-else class="container">
     <Card
       class="card"
       :pt="{
@@ -81,8 +97,14 @@ const i18n = useI18n();
 
 const fullscreen = ref(false);
 
+const loaded = ref(false);
+
 onMounted(() => {
-  init();
+  setTimeout(() => {
+    init();
+    loaded.value = true;
+  }, 500);
+  // init();
 });
 
 const props = defineProps(["backgroundColor", "titleColor"]);
@@ -111,7 +133,7 @@ const teams_name_spliced = ref([]);
 const getTeamNamesSpliced = () => {
   let res = [];
   teams_name.value.map((g) =>
-    res.push(g.length > 10 ? g.slice(0, 6) + "..." : g),
+    res.push(g.length > 10 ? g.slice(0, 6) + "..." : g)
   );
   return res;
 };
@@ -178,7 +200,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary",
+    "--text-color-secondary"
   );
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
@@ -212,7 +234,7 @@ const setChartOptions = () => {
             return (
               i18n.t("PlayTimeHome.playtime") +
               convertMinuteToHoursMinute(
-                teams_playtime.value[context.dataIndex],
+                teams_playtime.value[context.dataIndex]
               )
             );
           },

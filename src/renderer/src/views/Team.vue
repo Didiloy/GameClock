@@ -56,8 +56,9 @@
       :showHeader="false"
       :pt="{
         content: {
-          style: 'height: 600px; width: 800px; border-radius: 15px; margin: 0; padding: 0;',
-        }
+          style:
+            'height: 600px; width: 800px; border-radius: 15px; margin: 0; padding: 0;',
+        },
       }"
     >
       <AddSession
@@ -196,7 +197,7 @@ function keyEventAddSession(e) {
   ) {
     if (!add_session_dialog_visible.value) {
       add_session_game_name.value = getPreferences(
-        "add_session_with_name_game_name_1",
+        "add_session_with_name_game_name_1"
       );
       toggleAddSession();
     }
@@ -209,7 +210,7 @@ function keyEventAddSession(e) {
   ) {
     if (!add_session_dialog_visible.value) {
       add_session_game_name.value = getPreferences(
-        "add_session_with_name_game_name_2",
+        "add_session_with_name_game_name_2"
       );
       toggleAddSession();
     }
@@ -247,7 +248,7 @@ onMounted(() => {
     depressed,
     important_person,
     thousand_hours,
-  } = useSuccesses();
+  } = useSuccesses(i18n);
   calculateSuccesses(useRoute().params.name, sessions_of_team.value, false);
   let unlocked = [];
   unlocked.push(relentless.value);

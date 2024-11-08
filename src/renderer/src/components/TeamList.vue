@@ -178,7 +178,7 @@ onMounted(() => {
     if (getPreferences("use_logo_color_in_team_list")) {
       getTeamColorWithWorker();
     }
-  }, 500);
+  }, 100);
 });
 
 watch(

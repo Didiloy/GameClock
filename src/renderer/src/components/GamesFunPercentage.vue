@@ -23,8 +23,13 @@ const { games, sessions, teams } = storeToRefs(store);
 
 const fullscreen = ref(false);
 
+const loaded = ref(false);
 onMounted(() => {
-  init();
+  setTimeout(() => {
+    init();
+    loaded.value = true;
+  }, 500);
+  // init();
 });
 
 watch(sessions, () => {
@@ -35,7 +40,7 @@ watch(
   () => props.sessions,
   () => {
     init();
-  },
+  }
 );
 
 const id_of_team = ref([]);
@@ -44,7 +49,7 @@ const games_names = ref([]);
 const getGamesNames = () => {
   let res = [];
   games.value.map((g) =>
-    res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name),
+    res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name)
   );
   return res;
 };
@@ -166,7 +171,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary",
+    "--text-color-secondary"
   );
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
@@ -234,7 +239,23 @@ const setChartOptions = () => {
 </script>
 
 <template>
-  <div class="container">
+  <div v-if="!loaded">
+    <Card
+      class="card"
+      :pt="{
+        root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+        content: {
+          style:
+            'height:100%; display: flex; flex-direction: column; justify-content: center; align-items: center',
+        },
+      }"
+    >
+      <template #content>
+        <p>{{ $t("Common.loading") }}</p>
+      </template>
+    </Card>
+  </div>
+  <div v-else class="container">
     <Card
       class="card"
       :pt="{

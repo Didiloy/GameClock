@@ -1,5 +1,22 @@
 <template>
+  <div v-if="!loaded">
+    <Card
+      class="card"
+      :pt="{
+        root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+        content: {
+          style:
+            'height:100%; display: flex; flex-direction: column; justify-content: center; align-items: center',
+        },
+      }"
+    >
+      <template #content>
+        <p>{{ $t("Common.loading") }}</p>
+      </template>
+    </Card>
+  </div>
   <Card
+    v-else
     class="card"
     :pt="{
       root: { style: 'box-shadow: 0px 0px 0px 0px;' },
@@ -47,7 +64,7 @@
   </Card>
 </template>
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import {
@@ -66,20 +83,14 @@ const props = defineProps([
 const store = useStore();
 const { games, sessions, teams } = storeToRefs(store);
 
+const loaded = ref(false);
 onMounted(() => {
-  init();
-});
-
-watch([games, sessions, teams], () => {
-  init();
-});
-
-watch(
-  () => props.sessions,
-  () => {
+  setTimeout(() => {
     init();
-  },
-);
+    loaded.value = true;
+  }, 100);
+  // init();
+});
 
 const chart = ref({});
 
@@ -143,7 +154,7 @@ function setGamesNameAndPlaytime() {
   temp_games = temp_games.filter((g) => g.playtime > 0);
   games_name.value = temp_games.map((g) => g.name);
   games_percentage.value = temp_games.map((g) =>
-    ((g.playtime / total_playtime) * 100).toFixed(0),
+    ((g.playtime / total_playtime) * 100).toFixed(0)
   );
   games_playtime.value = temp_games.map((g) => g.playtime);
 }
@@ -220,7 +231,7 @@ const setChartOptions = () => {
           label: function (context) {
             return (
               convertMinuteToHoursMinute(
-                games_playtime.value[context.dataIndex],
+                games_playtime.value[context.dataIndex]
               ) +
               " -> " +
               games_percentage.value[context.dataIndex] +
@@ -293,7 +304,7 @@ const htmlLegendPlugin = {
         } else {
           chart.setDatasetVisibility(
             item.datasetIndex,
-            !chart.isDatasetVisible(item.datasetIndex),
+            !chart.isDatasetVisible(item.datasetIndex)
           );
         }
         chart.update();
