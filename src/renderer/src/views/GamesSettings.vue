@@ -12,14 +12,14 @@
         }"
       />
     </div>
-    <i>{{ games_values.length + " " + $t("GamesSettings.games") }} </i>
+    <i>{{ games_values_searched.length + " " + $t("GamesSettings.games") }} </i>
     <div v-if="!loaded">
       <Loading msg="calculating_games_statistics" />
     </div>
     <div v-else class="gs-games">
       <SingleGameSetting
         class="gs-m"
-        v-for="g in games_values"
+        v-for="g in games_values_searched"
         :key="g.id"
         :name="g.name"
         :heroe="g.heroe"
@@ -48,7 +48,7 @@ const emit = defineEmits(["toggleChronoListener"]);
 const store = useStore();
 const { games, sessions } = storeToRefs(store);
 const games_values = ref([]);
-// const value = ref("");
+const games_values_searched = ref([]);
 const gameSessionCount = ref({});
 
 const loaded = ref(false);
@@ -68,32 +68,36 @@ onMounted(() => {
       a.name.localeCompare(b.name)
     );
     addSessionCountToGames();
+    games_values_searched.value = games_values.value;
     loaded.value = true;
   }, 500);
 });
 
-watch(() => searchStore.searchValue, () => {
-  games_values.value = games.value.filter((g) =>
-    g.name.toLowerCase().includes(searchStore.searchValue.toLowerCase())
-  );
-  addSessionCountToGames();
-  games_values.value = games_values.value.sort((a, b) => {
-    if (sort_value.value.value === 1) {
-      return b.sessionCount - a.sessionCount;
-    } else {
-      return a.name.localeCompare(b.name);
+watch(
+  () => searchStore.searchValue,
+  () => {
+    if (searchStore.searchValue.length < 3 && searchStore.searchValue !== "") {
+      return;
     }
-  });
-});
+    loaded.value = false;
+    setTimeout(() => {
+      if (searchStore.searchValue === "") {
+        games_values_searched.value = games_values.value;
+        sortGames();
+        loaded.value = true;
+        return;
+      }
+      games_values_searched.value = games_values.value.filter((g) =>
+        g.name.toLowerCase().includes(searchStore.searchValue.toLowerCase())
+      );
+      sortGames();
+      loaded.value = true;
+    }, 500);
+  }
+);
 
 watch(sort_value, () => {
-  games_values.value = games_values.value.sort((a, b) => {
-    if (sort_value.value.value === 1) {
-      return b.sessionCount - a.sessionCount;
-    } else {
-      return a.name.localeCompare(b.name);
-    }
-  });
+  sortGames();
 });
 
 function addSessionCountToGames() {
@@ -103,15 +107,25 @@ function addSessionCountToGames() {
     return acc;
   }, {});
 
-  sessions.value.forEach((session) => {
+  for (const session of sessions.value) {
     if (gameSessionCount.value[session.game.id]) {
       gameSessionCount.value[session.game.id].sessionCount += 1;
     }
-  });
+  }
 
-  for (let gv of games_values.value) {
+  for (const gv of games_values.value) {
     gv.sessionCount = gameSessionCount.value[gv.id].sessionCount;
   }
+}
+
+function sortGames() {
+  games_values_searched.value.sort((a, b) => {
+    if (sort_value.value.value === 1) {
+      return b.sessionCount - a.sessionCount;
+    } else {
+      return a.name.localeCompare(b.name);
+    }
+  });
 }
 </script>
 <style scoped>
