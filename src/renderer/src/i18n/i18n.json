@@ -183,7 +183,8 @@
       "text_books": "<div style=\"display: flex; flex-direction: column; justify-content: center; align-items: center;\"><span>C'est le nombre de <b>livres</b> d'environ 400 pages que vous auriez pu lire pendant ce temps.</span></div>",
       "fun_to_play": "Plaisir ressenti tous jeux confondus",
       "games_played": "jeux joués",
-      "games_sessions": "sessions de jeu"
+      "games_sessions": "sessions de jeu",
+      "biggest_session": "Session la plus longue"
     },
     "TopGamesLittleGameCard": {
       "title": "Top 3 des jeux les plus joués"
@@ -525,7 +526,8 @@
       "text_books": "<div style=\"display: flex; flex-direction: column; justify-content: center; align-items: center;\"><span>This is the number of <b>books</b> of about 400 pages that you could have read during this time.</span></div>",
       "fun_to_play": "Fun experienced across all games",
       "games_played": "Games played",
-      "games_sessions": "Game sessions"
+      "games_sessions": "Game sessions",
+      "biggest_session": "Biggest session"
     },
     "TopGamesLittleGameCard": {
       "title": "Top 3 Most Played Games"

@@ -43,7 +43,7 @@ export async function addTeam(name) {
 
 export const getIdOfTeam = (teamName, teams) => {
   if (teamName === undefined || teams === undefined) return "";
-  return teams.filter((t) => t.name === teamName)[0].id !== undefined
+  return teams.filter((t) => t.name === teamName)[0] !== undefined
     ? teams.filter((t) => t.name === teamName)[0].id
     : "";
 };
@@ -84,7 +84,15 @@ function getIfGameExist(gameName) {
   return { exist: false };
 }
 
-export async function addSession(teamId, gameName, duration, was_cool, comment, platform, date) {
+export async function addSession(
+  teamId,
+  gameName,
+  duration,
+  was_cool,
+  comment,
+  platform,
+  date
+) {
   try {
     let { exist, id } = getIfGameExist(gameName);
     let gamePath = id ? id : "";
@@ -111,20 +119,20 @@ export async function addSession(teamId, gameName, duration, was_cool, comment, 
       await setDoc(doc(sessionRef), {
         duration: duration,
         was_cool: was_cool,
-        date: date !== undefined ? date: new Date(),
+        date: date !== undefined ? date : new Date(),
         game: doc(collection(db, "games"), gamePath),
         team: doc(collection(db, "teams"), teamId),
         comment: comment,
-        platform:  doc(collection(db, "platforms"), platform)
+        platform: doc(collection(db, "platforms"), platform),
       });
     } else {
       await setDoc(doc(sessionRef), {
         duration: duration,
-        date:  date !== undefined ? date: new Date(),
+        date: date !== undefined ? date : new Date(),
         game: doc(collection(db, "games"), gamePath),
         team: doc(collection(db, "teams"), teamId),
         comment: comment,
-        platform: doc(collection(db, "platforms"), platform)
+        platform: doc(collection(db, "platforms"), platform),
       });
     }
     return true;
@@ -215,10 +223,17 @@ export async function getPlatforms() {
   return platformsList;
 }
 
-export async function addPlatformsToDatabase(){
-  const platforms = [ "PC", "Playstation", "Xbox", "Nintendo", "Not specified", "Mobile"];
+export async function addPlatformsToDatabase() {
+  const platforms = [
+    "PC",
+    "Playstation",
+    "Xbox",
+    "Nintendo",
+    "Not specified",
+    "Mobile",
+  ];
   const platformsRef = collection(db, "platforms");
-  for(let platform of platforms){
+  for (let platform of platforms) {
     await setDoc(doc(platformsRef), {
       name: platform,
     });

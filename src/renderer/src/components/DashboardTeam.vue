@@ -59,6 +59,14 @@
         :name="number_of_books"
         :value="i18n.t('DashboardTeam.text_books')"
       ></LittleCard>
+      <LittleCard
+        class="dt-lc-biggest-session"
+        iconName="pi pi-hourglass"
+        backgroundColor="#a6abfe"
+        titleColor="#0f1f18"
+        :name="convertMinuteToHoursMinute(biggest_session)"
+        :value="i18n.t('DashboardTeam.biggest_session')"
+      ></LittleCard>
       <TopGamesLittleGameCard
         :teamName="props.teamName"
         class="dt-top-card"
@@ -119,8 +127,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import SessionsHistory from "./SessionsHistory.vue";
 import { convertMinuteToHoursMinute } from "../common/main";
 import { getIdsOfTeam } from "../database/database";
-import spinningClock from "../assets/images/spinning_clock.svg"
-
+import spinningClock from "../assets/images/spinning_clock.svg";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -148,6 +155,27 @@ function init() {
   number_of_games.value = getNumberOfGames();
   total_fun_percentage.value = getTotalFunPercentage();
   team_average_session_duration.value = calculateAverageSessionDuration();
+  biggest_session.value = calculateBiggestSession();
+}
+
+const biggest_session = ref(0);
+function calculateBiggestSession() {
+  if (id_of_team.value.length === 0) return 0;
+  let cpt = 0;
+  if (props.sessions === undefined) {
+    sessions.value.forEach((element) => {
+      if (id_of_team.value.includes(element.team.id)) {
+        cpt = cpt < element.duration ? element.duration : cpt;
+      }
+    });
+  } else {
+    props.sessions.forEach((element) => {
+      if (id_of_team.value.includes(element.team.id)) {
+        cpt = cpt < element.duration ? element.duration : cpt;
+      }
+    });
+  }
+  return cpt;
 }
 
 const team_average_session_duration = ref(0);
@@ -409,6 +437,16 @@ function getTotalFunPercentage() {
   grid-column-start: 10;
   grid-column-end: 13;
   grid-row-start: 7;
+  grid-row-end: 9;
+}
+
+.dt-lc-biggest-session {
+  display: inline-grid;
+  width: 100%;
+  height: 100%;
+  grid-column-start: 10;
+  grid-column-end: 13;
+  grid-row-start: 9;
   grid-row-end: 11;
 }
 
