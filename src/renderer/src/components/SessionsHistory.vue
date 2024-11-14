@@ -142,7 +142,7 @@
                 <div>
                   {{
                     new Date(
-                      slotProps.data.date.seconds * 1000
+                      slotProps.data.date.seconds * 1000,
                     ).toLocaleDateString()
                   }}
                 </div>
@@ -199,19 +199,20 @@ function init() {
     return b.date.seconds - a.date.seconds;
   });
 
-  if (props.historySize === "-1") {
+  if (props.historySize === "-1" || props.historySize === -1) {
     let today = new Date();
     today.setHours(0, 0, 0, 0);
     session_copy = session_copy.filter(
-      (s) => s.date.seconds * 1000 >= today.getTime()
+      (s) => s.date.seconds * 1000 >= today.getTime(),
     );
-  } else if (props.historySize === "-2") {
+  } else if (props.historySize === "-2" || props.historySize === -2) {
     let last_week = new Date();
     last_week.setHours(0, 0, 0, 0);
     last_week.setDate(last_week.getDate() - 7);
     session_copy = session_copy.filter(
-      (s) => s.date.seconds * 1000 >= last_week.getTime()
+      (s) => s.date.seconds * 1000 >= last_week.getTime(),
     );
+    console.log(session_copy.value);
   } else if (props.historySize) {
     session_copy = session_copy.slice(0, props.historySize);
   }
@@ -301,7 +302,7 @@ async function computeSessionColor() {
   let id = 0;
   for (let [game, data] of uniqueGames.value) {
     const worker = new Worker(
-      new URL("../workers/colorWorker.js", import.meta.url)
+      new URL("../workers/colorWorker.js", import.meta.url),
     );
 
     worker.onmessage = (event) => {

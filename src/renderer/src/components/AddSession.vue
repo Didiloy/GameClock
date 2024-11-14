@@ -235,7 +235,7 @@ onMounted(() => {
     return { name: i18n.t("Platform." + p.name), id: p.id };
   });
   selected_platform.value = platforms.value.filter(
-    (p) => p.name === "Not specified"
+    (p) => p.name === "Not specified",
   )[0];
 });
 
@@ -339,7 +339,7 @@ async function addNewSession() {
         parseInt(duration.value),
         was_cool.value.value,
         comment.value,
-        selected_platform.value.id
+        selected_platform.value.id,
       );
     }
   }
@@ -404,7 +404,7 @@ function resetForm() {
   toggle_neutre.value = false;
   toggle_nul.value = false;
   selected_platform.value = platforms.value.filter(
-    (p) => p.name === "Not specified"
+    (p) => p.name === "Not specified",
   )[0];
 }
 </script>
@@ -476,7 +476,7 @@ function resetForm() {
 .as-top-background {
   height: 75px;
   width: 100%;
-  background-color: rgba(209, 224, 253, 0.8);
+  background-color: rgba(209, 224, 253, 0.6);
   backdrop-filter: blur(8px);
   display: flex;
   flex-direction: row;
@@ -495,7 +495,7 @@ function resetForm() {
 .as-bottom-background {
   height: 325px;
   width: 100%;
-  background-color: rgba(170, 201, 250, 0.8);
+  background-color: rgba(170, 201, 250, 0.6);
   backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
