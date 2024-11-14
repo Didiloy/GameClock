@@ -18,7 +18,7 @@
               : i18n.t('Dashboard.player_of_the_week', [
                   second_player_of_the_week,
                   convertMinuteToHoursMinute(
-                    difference_between_player_of_the_week
+                    difference_between_player_of_the_week,
                   ),
                 ])
         "
@@ -52,7 +52,7 @@
         :value="
           i18n.t('Dashboard.biggest_games_sessions_part_one') +
           convertMinuteToHoursMinute(
-            team_with_greatest_session_average_playtime_value
+            team_with_greatest_session_average_playtime_value,
           ) +
           i18n.t('Dashboard.biggest_games_sessions_part_two')
         "
@@ -86,7 +86,9 @@
         titleColor="#00201f"
         :name="unhappiest_player"
         :value="
-          i18n.t('Dashboard.unhappiest_player', [unhappiest_player_value])
+          i18n.t('Dashboard.unhappiest_player', [
+            unhappiest_player_value ? unhappiest_player_value.toFixed(0) : 0,
+          ])
         "
       ></LittleCard>
       <LittleCard
@@ -193,7 +195,7 @@ const not_fun_percentage = ref(0);
 
 function initDashboard() {
   const worker = new Worker(
-    new URL("../workers/dashboard.js", import.meta.url)
+    new URL("../workers/dashboard.js", import.meta.url),
   );
 
   worker.onmessage = (event) => {
