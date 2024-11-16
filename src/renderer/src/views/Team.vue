@@ -197,7 +197,7 @@ function keyEventAddSession(e) {
   ) {
     if (!add_session_dialog_visible.value) {
       add_session_game_name.value = getPreferences(
-        "add_session_with_name_game_name_1"
+        "add_session_with_name_game_name_1",
       );
       toggleAddSession();
     }
@@ -210,7 +210,7 @@ function keyEventAddSession(e) {
   ) {
     if (!add_session_dialog_visible.value) {
       add_session_game_name.value = getPreferences(
-        "add_session_with_name_game_name_2"
+        "add_session_with_name_game_name_2",
       );
       toggleAddSession();
     }
@@ -248,6 +248,8 @@ onMounted(() => {
     depressed,
     important_person,
     thousand_hours,
+    stinky,
+    why_playing,
   } = useSuccesses(i18n);
   calculateSuccesses(useRoute().params.name, sessions_of_team.value, false);
   let unlocked = [];
@@ -264,6 +266,8 @@ onMounted(() => {
   unlocked.push(depressed.value);
   unlocked.push(important_person.value);
   unlocked.push(thousand_hours.value);
+  unlocked.push(stinky.value);
+  unlocked.push(why_playing.value);
   unlocked_successes.value = unlocked.filter((s) => s.unlocked);
   selected_success.value = unlocked_successes.value[0];
 });
