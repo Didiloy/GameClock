@@ -33,6 +33,8 @@ const defaults = {
   reload_data_key_shortcut: "r",
   //graph zoom
   activate_zoom_on_graphs: false,
+  //toggle fun selected
+  toggle_fun_selected_by_default: "",
 };
 
 const preferences_name = "preferences";

@@ -265,7 +265,9 @@
       "shortcut_add_session_with_name_2": "Raccourci clavier pour ajouter une session avec un nom de jeu 2:",
       "reload_data_after_adding_a_session": "Recharger les données après l'ajout d'une session:",
       "shortcut_add_session_in_team": "Raccourci clavier pour ajouter une session dans une équipe:",
-      "on_home_page": "Sur la page d'accueil"
+      "on_home_page": "Sur la page d'accueil",
+      "general": "Général",
+      "selected_toggle": "Bouton de fun sélectionné par défaut:"
     },
     "AppearancePreference": {
       "title": "Apparence",
@@ -608,7 +610,9 @@
       "shortcut_add_session_with_name_2": "Keyboard shortcut to add a session with game name 2:",
       "reload_data_after_adding_a_session": "Reload data after adding a session:",
       "shortcut_add_session_in_team": "Keyboard shortcut to add a session in a team:",
-      "on_home_page": "On the homepage"
+      "on_home_page": "On the homepage",
+      "general": "General",
+      "selected_toggle": "Fun toggle selected by default:"
     },
     "AppearancePreference": {
       "title": "Appearance",

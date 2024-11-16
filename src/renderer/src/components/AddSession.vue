@@ -231,12 +231,31 @@ onMounted(() => {
   if (props.gameName) {
     game.value = props.gameName;
   }
+
   platforms_options.value = platforms.value.map((p) => {
     return { name: i18n.t("Platform." + p.name), id: p.id };
   });
+
   selected_platform.value = platforms.value.filter(
     (p) => p.name === "Not specified",
   )[0];
+
+  const selected_toggle_by_default = getPreferences(
+    "toggle_fun_selected_by_default",
+  );
+  switch (selected_toggle_by_default) {
+    case "-1":
+      toggle_nul.value = true;
+      break;
+    case "0":
+      toggle_neutre.value = true;
+      break;
+    case "1":
+      toggle_fun.value = true;
+      break;
+    default:
+      break;
+  }
 });
 
 onUnmounted(() => {
