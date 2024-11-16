@@ -31,7 +31,7 @@ function initDashboard(sessions, games, teams) {
   let team_sessions = new Map();
   let first_session = new Date(sessions[0].date.seconds * 1000);
   let last_session = new Date(
-    sessions[sessions.length - 1].date.seconds * 1000
+    sessions[sessions.length - 1].date.seconds * 1000,
   );
   let timestamp_of_seven_days_ago =
     new Date().getTime() - 7 * 24 * 60 * 60 * 1000;
@@ -49,7 +49,7 @@ function initDashboard(sessions, games, teams) {
     if (team_sessions.has(session.team)) {
       team_sessions.get(session.team).push(session.duration);
     } else {
-      team_sessions.set(session.team, []);
+      team_sessions.set(session.team, [session.duration]);
     }
 
     //============average_session_per_day===============
@@ -69,7 +69,7 @@ function initDashboard(sessions, games, teams) {
       if (games_played_last_week.has(session.game)) {
         games_played_last_week.set(
           session.game,
-          games_played_last_week.get(session.game) + session.duration
+          games_played_last_week.get(session.game) + session.duration,
         );
       } else {
         games_played_last_week.set(session.game, session.duration);
@@ -79,7 +79,7 @@ function initDashboard(sessions, games, teams) {
       if (player_last_week.has(session.team)) {
         player_last_week.set(
           session.team,
-          player_last_week.get(session.team) + session.duration
+          player_last_week.get(session.team) + session.duration,
         );
       } else {
         player_last_week.set(session.team, session.duration);
@@ -129,7 +129,7 @@ function initDashboard(sessions, games, teams) {
   team_with_most_sessions = teams.find((t) => t.id === team_session).name;
   team_with_most_sessions_value = max_session;
   team_with_greatest_session_average_playtime = teams.find(
-    (t) => t.id === team_average
+    (t) => t.id === team_average,
   ).name;
   team_with_greatest_session_average_playtime_value = max_average;
 
@@ -161,7 +161,7 @@ function initDashboard(sessions, games, teams) {
 
   //get the player of the week and the second player of the week
   const player_last_week_sorted = [...player_last_week.entries()].sort(
-    (a, b) => b[1] - a[1]
+    (a, b) => b[1] - a[1],
   );
   let player_id;
   let second_player_id;
@@ -211,33 +211,33 @@ function initDashboard(sessions, games, teams) {
     finished: true,
     _sessions_number: JSON.parse(JSON.stringify(sessions_number)),
     _team_with_most_sessions: JSON.parse(
-      JSON.stringify(team_with_most_sessions)
+      JSON.stringify(team_with_most_sessions),
     ),
     _team_with_most_sessions_value: JSON.parse(
-      JSON.stringify(team_with_most_sessions_value)
+      JSON.stringify(team_with_most_sessions_value),
     ),
     _average_session_per_day: JSON.parse(
-      JSON.stringify(average_session_per_day)
+      JSON.stringify(average_session_per_day),
     ),
     _team_with_greatest_session_average_playtime: JSON.parse(
-      JSON.stringify(team_with_greatest_session_average_playtime)
+      JSON.stringify(team_with_greatest_session_average_playtime),
     ),
     _team_with_greatest_session_average_playtime_value: JSON.parse(
-      JSON.stringify(team_with_greatest_session_average_playtime_value)
+      JSON.stringify(team_with_greatest_session_average_playtime_value),
     ),
     _number_of_games: JSON.parse(JSON.stringify(number_of_games)),
     _game_of_the_week: JSON.parse(JSON.stringify(game_of_the_week)),
     _game_of_the_week_time: JSON.parse(JSON.stringify(game_of_the_week_time)),
     _player_of_the_week: JSON.parse(JSON.stringify(player_of_the_week)),
     _second_player_of_the_week: JSON.parse(
-      JSON.stringify(second_player_of_the_week)
+      JSON.stringify(second_player_of_the_week),
     ),
     _difference_between_player_of_the_week: JSON.parse(
-      JSON.stringify(difference_between_player_of_the_week)
+      JSON.stringify(difference_between_player_of_the_week),
     ),
     _unhappiest_player: JSON.parse(JSON.stringify(unhappiest_player)),
     _unhappiest_player_value: JSON.parse(
-      JSON.stringify(unhappiest_player_value)
+      JSON.stringify(unhappiest_player_value),
     ),
     _fun_percentage: JSON.parse(JSON.stringify(fun_percentage)),
     _neutral_percentage: JSON.parse(JSON.stringify(neutral_percentage)),
