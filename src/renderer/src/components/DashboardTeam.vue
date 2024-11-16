@@ -65,7 +65,9 @@
         backgroundColor="#a6abfe"
         titleColor="#0f1f18"
         :name="convertMinuteToHoursMinute(biggest_session)"
-        :value="i18n.t('DashboardTeam.biggest_session')"
+        :value="
+          i18n.t('DashboardTeam.biggest_session', [game_of_biggest_session])
+        "
       ></LittleCard>
       <TopGamesLittleGameCard
         :teamName="props.teamName"
@@ -155,27 +157,42 @@ function init() {
   number_of_games.value = getNumberOfGames();
   total_fun_percentage.value = getTotalFunPercentage();
   team_average_session_duration.value = calculateAverageSessionDuration();
-  biggest_session.value = calculateBiggestSession();
+  [biggest_session.value, game_of_biggest_session.value] =
+    calculateBiggestSession();
 }
 
 const biggest_session = ref(0);
+const game_of_biggest_session = ref("");
 function calculateBiggestSession() {
-  if (id_of_team.value.length === 0) return 0;
+  if (id_of_team.value.length === 0) return [0, ""];
   let cpt = 0;
+  let game_id = "";
   if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
       if (id_of_team.value.includes(element.team.id)) {
-        cpt = cpt < element.duration ? element.duration : cpt;
+        if (cpt > element.duration) {
+          return;
+        }
+        cpt = element.duration;
+        game_id = element.game.id;
       }
     });
   } else {
     props.sessions.forEach((element) => {
       if (id_of_team.value.includes(element.team.id)) {
-        cpt = cpt < element.duration ? element.duration : cpt;
+        if (cpt > element.duration) {
+          return;
+        }
+        cpt = element.duration;
+        game_id = element.game.id;
       }
     });
   }
-  return cpt;
+  return [cpt, getGameNameById(game_id)];
+}
+
+function getGameNameById(id) {
+  return games.value.find((element) => element.id === id).name;
 }
 
 const team_average_session_duration = ref(0);
