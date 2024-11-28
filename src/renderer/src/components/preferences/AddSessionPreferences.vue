@@ -92,6 +92,14 @@ const update_shortcut_add_session_from_homepage = (update_value) => {
   setPreferences("add_session_from_homepage_key_shortcut", update_value);
 };
 
+const shortcut_show_add_session_dialog = ref(
+  getPreferences("shortcut_show_add_session_dialog"),
+);
+const update_shortcut_show_add_session_dialog = (update_value) => {
+  if (!validateShortCut(update_value)) return;
+  setPreferences("shortcut_show_add_session_dialog", update_value);
+};
+
 const add_session_from_homepage_game_name = ref(
   getPreferences("add_session_from_homepage_game_name"),
 );
@@ -217,6 +225,20 @@ watch(toggle_fun_selected_by_default, () => {
           type="text"
           :modelValue="shortcut_add_session_from_homepage_key_shortcut"
           @update:modelValue="update_shortcut_add_session_from_homepage"
+          style="width: 50px"
+          maxlength="1"
+        />
+      </div>
+    </div>
+    <div class="tp-item">
+      <b class="text-color">{{
+        $t("AddSessionPreferences.shortcut_show_add_session_dialog")
+      }}</b>
+      <div class="tp-item-right-container">
+        <InputText
+          type="text"
+          :modelValue="shortcut_show_add_session_dialog"
+          @update:modelValue="update_shortcut_show_add_session_dialog"
           style="width: 50px"
           maxlength="1"
         />

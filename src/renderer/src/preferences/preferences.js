@@ -12,6 +12,7 @@ const defaults = {
   add_session_from_homepage_key_shortcut: "h",
   add_session_from_homepage_team_name: "",
   add_session_from_homepage_game_name: "",
+  shortcut_show_add_session_dialog: "a",
   //team list
   sort_order_team_list: "playtime",
   display_successes_in_team_list: true,

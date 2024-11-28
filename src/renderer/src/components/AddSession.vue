@@ -50,7 +50,7 @@
       <div class="as-bottom-background">
         <div class=".as-bottom-background-top">
           <AutoComplete
-            v-if="props.addToWaitingList"
+            v-if="props.addToWaitingList || props.teamName === ''"
             v-model="teamName"
             :placeholder="i18n.t('AddSession.team_name')"
             :suggestions="items_suggest_team"
