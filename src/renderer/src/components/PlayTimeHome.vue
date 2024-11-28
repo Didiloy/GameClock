@@ -83,7 +83,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
@@ -99,14 +99,6 @@ const fullscreen = ref(false);
 
 const loaded = ref(false);
 
-onMounted(() => {
-  setTimeout(() => {
-    init();
-    loaded.value = true;
-  }, 500);
-  // init();
-});
-
 const props = defineProps(["backgroundColor", "titleColor"]);
 const backgroundColor = props.backgroundColor
   ? props.backgroundColor
@@ -114,26 +106,26 @@ const backgroundColor = props.backgroundColor
 
 const store = useStore();
 const { teams, sessions } = storeToRefs(store);
-const teams_from_db = ref([]);
 const teams_name = ref([]);
 
-function getTeamsName() {
+function getTeamsName(teams) {
   let arr = [];
-  teams_from_db.value.map((team) => arr.push(team.name));
+  teams.map((team) => arr.push(team.name));
   return arr;
 }
 
-const teams_playtime = computed(() => {
+const teams_playtime = ref([]);
+const getTeamsPlaytime = (teams) => {
   let arr = [];
-  teams_from_db.value.map((team) => arr.push(team.playtime));
+  teams.map((team) => arr.push(team.playtime));
   return arr;
-});
+};
 
 const teams_name_spliced = ref([]);
 const getTeamNamesSpliced = () => {
   let res = [];
   teams_name.value.map((g) =>
-    res.push(g.length > 10 ? g.slice(0, 6) + "..." : g)
+    res.push(g.length > 10 ? g.slice(0, 6) + "..." : g),
   );
   return res;
 };
@@ -141,33 +133,33 @@ const getTeamNamesSpliced = () => {
 const chartData = ref({});
 const chartOptions = ref();
 
-function getFirstTeamsByPlaytime(length) {
-  let teams_to_return = [];
-  for (const team of teams.value) {
-    teams_to_return.push({
-      name: team.name,
-      playtime: sessions.value.reduce((acc, s) => {
-        if (s.team.id === team.id) {
-          return acc + s.duration;
-        }
-        return acc;
-      }, 0),
-    });
-  }
-  return teams_to_return
-    .sort((a, b) => {
-      return b.playtime - a.playtime;
-    })
-    .slice(0, length !== undefined ? length : -1);
-}
+onMounted(() => {
+  const _sessions = sessions.value.map((item) => ({
+    duration: item.duration,
+    date: item.date.seconds,
+    id: item.id,
+    team: { id: item.team.id },
+  }));
 
-function init() {
-  teams_from_db.value = getFirstTeamsByPlaytime(teams.value.length);
-  teams_name.value = getTeamsName();
+  const _teams = teams.value.map((item) => ({
+    name: item.name,
+    id: item.id,
+  }));
+
+  window.electron.ipcRenderer.send("playtimehome", {
+    sessions: _sessions,
+    teams: _teams,
+  });
+});
+
+window.electron.ipcRenderer.on("result_playtimehome", (event, data) => {
+  teams_name.value = getTeamsName(data);
   teams_name_spliced.value = getTeamNamesSpliced();
+  teams_playtime.value = getTeamsPlaytime(data);
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
-}
+  loaded.value = true;
+});
 
 const setChartData = () => {
   const documentStyle = getComputedStyle(document.body);
@@ -200,7 +192,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary"
+    "--text-color-secondary",
   );
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
@@ -234,7 +226,7 @@ const setChartOptions = () => {
             return (
               i18n.t("PlayTimeHome.playtime") +
               convertMinuteToHoursMinute(
-                teams_playtime.value[context.dataIndex]
+                teams_playtime.value[context.dataIndex],
               )
             );
           },

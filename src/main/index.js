@@ -2,6 +2,7 @@ import { app, BrowserWindow, shell, ipcMain } from "electron";
 import { join } from "path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
+import { playtimeHome } from "./graphs";
 
 const { Tray, Menu } = require("electron/main");
 let tray;
@@ -49,6 +50,15 @@ function createWindow() {
 
   ipcMain.on("minimize", () => {
     mainWindow.minimize();
+  });
+
+  //Graphs
+  ipcMain.on("playtimehome", (event, data) => {
+    const result = playtimeHome(data);
+    BrowserWindow.getAllWindows()[0].webContents.send(
+      "result_playtimehome",
+      result,
+    );
   });
 
   // Menu.setApplicationMenu(null);
