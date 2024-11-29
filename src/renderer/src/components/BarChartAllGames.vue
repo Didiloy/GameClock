@@ -75,7 +75,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
@@ -98,94 +98,16 @@ const fullscreen = ref(false);
 
 const loaded = ref(false);
 onMounted(() => {
-  setTimeout(() => {
-    init();
-    loaded.value = true;
-  }, 500);
-  // init();
-});
-
-watch([games, sessions, teams], () => {
   init();
 });
-
-watch(
-  () => props.sessions,
-  () => {
-    init();
-  }
-);
 
 const backgroundColor = props.backgroundColor
   ? props.backgroundColor
   : "var(--primary-100)";
 
 const games_names = ref([]);
-const getGamesNames = () => {
-  let res = [];
-  games.value.map((g) =>
-    res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name)
-  );
-  return res;
-};
 const sessions_number = ref([]);
-const getSessionNumber = () => {
-  let res = [];
-  for (let g of games.value) {
-    let acc = 0;
-    if (props.teamName) {
-      for (let s of props.sessions === undefined
-        ? sessions.value
-        : props.sessions) {
-        if (s.game.id === g.id && id_of_team.value.includes(s.team.id)) {
-          acc += 1;
-        }
-      }
-    } else {
-      for (let s of props.sessions === undefined
-        ? sessions.value
-        : props.sessions) {
-        if (s.game.id === g.id) {
-          acc += 1;
-        }
-      }
-    }
-    res.push(acc);
-  }
-  return res;
-};
-
-const id_of_team = ref([]);
-
 const avg_duration = ref([]);
-const getAverageDuration = () => {
-  let res = [];
-  for (let g of games.value) {
-    let acc = 0;
-    let ss_num = 0;
-    if (props.teamName) {
-      for (let s of props.sessions === undefined
-        ? sessions.value
-        : props.sessions) {
-        if (s.game.id === g.id && id_of_team.value.includes(s.team.id)) {
-          acc += s.duration;
-          ss_num++;
-        }
-      }
-    } else {
-      for (let s of props.sessions === undefined
-        ? sessions.value
-        : props.sessions) {
-        if (s.game.id === g.id) {
-          acc += s.duration;
-          ss_num++;
-        }
-      }
-    }
-    res.push(acc / ss_num);
-  }
-  return res;
-};
 
 const chartData = ref({});
 const chartOptions = ref();
@@ -193,11 +115,36 @@ const chartOptions = ref();
 const games_copy = ref([]);
 
 function init() {
-  id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
-  games_names.value = getGamesNames();
-  sessions_number.value = getSessionNumber();
-  avg_duration.value = getAverageDuration();
+  const _games = games.value.map((item) => ({
+    id: item.id,
+    name: item.name,
+  }));
+
+  const _sessions = sessions.value.map((item) => ({
+    duration: item.duration,
+    date: item.date.seconds,
+    id: item.id,
+    team: { id: item.team.id },
+    game: { id: item.game.id },
+  }));
+
+  const id_of_team = getIdsOfTeam(props.teamName, teams.value);
+
+  window.electron.ipcRenderer.send("barchartallgames", {
+    ids_of_team: id_of_team,
+    team_name: props.teamName,
+    games: _games,
+    sessions: _sessions,
+  });
+}
+
+window.electron.ipcRenderer.on("result_barchartallgames", (event, data) => {
+  games_names.value = data.games_names;
+  sessions_number.value = data.sessions_number;
+  avg_duration.value = data.averages_duration;
   games_copy.value = games.value.slice();
+
+  //remove games that have no sessions
   for (let i = games_names.value.length; i >= 0; i--) {
     if (sessions_number.value[i] === 0) {
       games_names.value.splice(i, 1);
@@ -208,7 +155,8 @@ function init() {
   }
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
-}
+  loaded.value = true;
+});
 
 const setChartData = () => {
   const documentStyle = getComputedStyle(document.documentElement);
@@ -245,7 +193,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary"
+    "--text-color-secondary",
   );
 
   return {
@@ -281,7 +229,7 @@ const setChartOptions = () => {
                 i18n.t("BarChartAllGames.medium_session_time") +
                 ": " +
                 convertMinuteToHoursMinute(
-                  avg_duration.value[tooltipItem.dataIndex]
+                  avg_duration.value[tooltipItem.dataIndex],
                 )
               );
             }

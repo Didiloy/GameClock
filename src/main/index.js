@@ -2,7 +2,7 @@ import { app, BrowserWindow, shell, ipcMain } from "electron";
 import { join } from "path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
-import { playtimeHome } from "./graphs";
+import { barChartAllGames, playtimeHome } from "./graphs";
 
 const { Tray, Menu } = require("electron/main");
 let tray;
@@ -58,6 +58,20 @@ function createWindow() {
     BrowserWindow.getAllWindows()[0].webContents.send(
       "result_playtimehome",
       result,
+    );
+  });
+
+  ipcMain.on("barchartallgames", (event, data) => {
+    const { games_names, sessions_number, averages_duration } =
+      barChartAllGames(
+        data.ids_of_team,
+        data.team_name,
+        data.games,
+        data.sessions,
+      );
+    BrowserWindow.getAllWindows()[0].webContents.send(
+      "result_barchartallgames",
+      { games_names, sessions_number, averages_duration },
     );
   });
 
