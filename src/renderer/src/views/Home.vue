@@ -39,6 +39,10 @@ import { getPreferences } from "../preferences/preferences";
 import { onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
+const emit = defineEmits(["toggleChronoListener"]);
+function toggleChronoListener() {
+  emit("toggleChronoListener");
+}
 
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
