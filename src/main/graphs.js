@@ -207,3 +207,107 @@ export function doughnutChartPlatform(ids_of_teams, platforms, sessions) {
     platform_number_of_sessions,
   };
 }
+
+export function lineChartByMonth(ids_of_teams, sessions) {
+  const months_names = [
+    "Janvier",
+    "Février",
+    "Mars",
+    "Avril",
+    "Mai",
+    "Juin",
+    "Juillet",
+    "Août",
+    "Septembre",
+    "Octobre",
+    "Novembre",
+    "Décembre",
+  ];
+  //Set the sessions of the teams
+  let sessions_of_the_team = [];
+  for (let s of sessions) {
+    if (ids_of_teams.includes(s.team.id)) {
+      sessions_of_the_team.push(s);
+    }
+  }
+
+  sessions_of_the_team.sort((a, b) => {
+    return a.date.seconds - b.date.seconds;
+  });
+
+  let map_game_duration = new Map();
+  let joyrate_map = new Map();
+  let sessions_map = new Map();
+
+  let cpt = 0;
+  let date = new Date(sessions_of_the_team[0].date * 1000);
+  let year = date.getFullYear();
+  let month = date.getMonth();
+  let last_year = year;
+  let last_month = month;
+  for (const s of sessions_of_the_team) {
+    date = new Date(s.date * 1000);
+    year = date.getFullYear();
+    month = date.getMonth();
+    if (year === last_year && month === last_month) {
+      cpt++;
+    } else {
+      cpt = 1;
+      last_year = year;
+      last_month = month;
+    }
+    //add duration and joyrate to the month
+    if (map_game_duration.has(year)) {
+      if (map_game_duration.get(year).has(month)) {
+        map_game_duration
+          .get(year)
+          .set(month, map_game_duration.get(year).get(month) + s.duration);
+        let joyrate = joyrate_map.get(year).get(month) + (s.was_cool ? 1 : 0);
+        joyrate_map.get(year).set(month, joyrate);
+        sessions_map.get(year).set(month, cpt);
+      } else {
+        //create month
+        map_game_duration.get(year).set(month, s.duration);
+        joyrate_map.get(year).set(month, s.was_cool ? 1 : 0);
+        sessions_map.get(year).set(month, cpt);
+      }
+    } else {
+      //create year
+      map_game_duration.set(year, new Map().set(month, s.duration));
+      joyrate_map.set(year, new Map().set(month, s.was_cool ? 1 : 0));
+      sessions_map.set(year, new Map().set(month, cpt));
+    }
+  }
+
+  let labels_year_month = [];
+  let game_duration_by_year_month = [];
+  let joyrate_by_year_month = [];
+
+  //sort the map
+  map_game_duration = new Map(
+    [...map_game_duration.entries()].sort((a, b) => a[0] - b[0]),
+  );
+  for (let [year, monthMap] of map_game_duration) {
+    map_game_duration.set(
+      year,
+      new Map([...monthMap.entries()].sort((a, b) => a[0] - b[0])),
+    );
+  }
+
+  for (let [year, monthMap] of map_game_duration) {
+    for (let [month, duration] of monthMap) {
+      labels_year_month.push(`${months_names[month]} ${year}`);
+      game_duration_by_year_month.push(duration);
+      joyrate_by_year_month.push(
+        (joyrate_map.get(year).get(month) / sessions_map.get(year).get(month)) *
+          100,
+      );
+    }
+  }
+
+  return {
+    labels_year_month,
+    game_duration_by_year_month,
+    joyrate_by_year_month,
+  };
+}

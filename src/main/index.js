@@ -8,6 +8,7 @@ import {
   playtimeHome,
   pieChartGamePercentage,
   doughnutChartPlatform,
+  lineChartByMonth,
 } from "./graphs";
 
 const { Tray, Menu } = require("electron/main");
@@ -116,7 +117,22 @@ function createWindow() {
       },
     );
   });
-  // Menu.setApplicationMenu(null);
+
+  ipcMain.on("linechartgamebymonth", (event, data) => {
+    const {
+      labels_year_month,
+      game_duration_by_year_month,
+      joyrate_by_year_month,
+    } = lineChartByMonth(data.ids_of_team, data.sessions);
+    BrowserWindow.getAllWindows()[0].webContents.send(
+      "result_linechartgamebymonth",
+      {
+        labels_year_month,
+        game_duration_by_year_month,
+        joyrate_by_year_month,
+      },
+    );
+  });
 }
 
 // This method will be called when Electron has finished

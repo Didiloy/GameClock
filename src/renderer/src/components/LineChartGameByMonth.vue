@@ -1,5 +1,21 @@
 <template>
-  <div class="container">
+  <div v-if="!loaded">
+    <Card
+      class="card"
+      :pt="{
+        root: { style: 'box-shadow: 0px 0px 0px 0px;' },
+        content: {
+          style:
+            'height:100%; display: flex; flex-direction: column; justify-content: center; align-items: center',
+        },
+      }"
+    >
+      <template #content>
+        <p>{{ $t("Common.loading") }}</p>
+      </template>
+    </Card>
+  </div>
+  <div class="container" v-else>
     <Card
       class="card"
       :pt="{
@@ -75,6 +91,7 @@ const props = defineProps(["teamName", "backgroundColor", "titleColor"]);
 
 const fullscreen = ref(false);
 
+const loaded = ref(false);
 onMounted(() => {
   init();
 });
@@ -86,103 +103,38 @@ const backgroundColor = props.backgroundColor
   ? props.backgroundColor
   : "var(--primary-100)";
 
-const sessions_of_the_team = ref([]);
-function setSessionsOfTheTeam() {
-  for (let s of sessions.value) {
-    if (id_of_team.value.includes(s.team.id)) {
-      sessions_of_the_team.value.push(s);
-    }
-  }
-}
-
-const id_of_team = ref([]);
-
 const labels_year_month = ref([]);
 const game_duration_by_year_month = ref([]);
 const joyrate_by_year_month = ref([]);
-
-let map_game_duration = new Map();
-let joyrate_map = new Map();
-let sessions_map = new Map();
-function calculateDurations() {
-  let tmp_games = sessions_of_the_team.value.sort((a, b) => {
-    return a.date.seconds - b.date.seconds;
-  });
-
-  let cpt = 0;
-  let date = new Date(tmp_games[0].date.seconds * 1000);
-  let year = date.getFullYear();
-  let month = date.getMonth();
-  let last_year = year;
-  let last_month = month;
-  for (const s of tmp_games) {
-    date = new Date(s.date.seconds * 1000);
-    year = date.getFullYear();
-    month = date.getMonth();
-    if (year === last_year && month === last_month) {
-      cpt++;
-    } else {
-      cpt = 1;
-      last_year = year;
-      last_month = month;
-    }
-    //add duration and joyrate to the month
-    if (map_game_duration.has(year)) {
-      if (map_game_duration.get(year).has(month)) {
-        map_game_duration
-          .get(year)
-          .set(month, map_game_duration.get(year).get(month) + s.duration);
-        let joyrate = joyrate_map.get(year).get(month) + (s.was_cool ? 1 : 0);
-        joyrate_map.get(year).set(month, joyrate);
-        sessions_map.get(year).set(month, cpt);
-      } else {
-        //create month
-        map_game_duration.get(year).set(month, s.duration);
-        joyrate_map.get(year).set(month, s.was_cool ? 1 : 0);
-        sessions_map.get(year).set(month, cpt);
-      }
-    } else {
-      //create year
-      map_game_duration.set(year, new Map().set(month, s.duration));
-      joyrate_map.set(year, new Map().set(month, s.was_cool ? 1 : 0));
-      sessions_map.set(year, new Map().set(month, cpt));
-    }
-  }
-}
-
-function setArraysForGraph() {
-  for (let [year, monthMap] of map_game_duration) {
-    for (let [month, duration] of monthMap) {
-      labels_year_month.value.push(
-        `${i18n.t("Common.months_names." + month)} ${year}`
-      );
-      game_duration_by_year_month.value.push(duration);
-      joyrate_by_year_month.value.push(
-        (joyrate_map.get(year).get(month) / sessions_map.get(year).get(month)) *
-          100
-      );
-    }
-  }
-}
 
 const chartData = ref({});
 const chartOptions = ref();
 
 function init() {
-  id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
-  setSessionsOfTheTeam();
-  calculateDurations();
-  setArraysForGraph();
-  chartOptions.value = setChartOptions();
-  chartData.value = setChartData();
+  const _sessions = sessions.value.map((item) => ({
+    duration: item.duration,
+    date: item.date.seconds,
+    id: item.id,
+    was_cool: item.was_cool,
+    team: { id: item.team.id },
+    game: { id: item.game.id },
+  }));
+
+  const id_of_team = getIdsOfTeam(props.teamName, teams.value);
+
+  window.electron.ipcRenderer.send("linechartgamebymonth", {
+    ids_of_team: id_of_team,
+    sessions: _sessions,
+  });
 }
 
-watch(teams, () => {
-  init();
-});
-
-watch(sessions, () => {
-  init();
+window.electron.ipcRenderer.on("result_linechartgamebymonth", (event, data) => {
+  labels_year_month.value = data.labels_year_month;
+  game_duration_by_year_month.value = data.game_duration_by_year_month;
+  joyrate_by_year_month.value = data.joyrate_by_year_month;
+  chartOptions.value = setChartOptions();
+  chartData.value = setChartData();
+  loaded.value = true;
 });
 
 const setChartData = () => {
@@ -214,7 +166,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary"
+    "--text-color-secondary",
   );
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
@@ -244,7 +196,7 @@ const setChartOptions = () => {
             return (
               "" +
               convertMinuteToHoursMinute(
-                game_duration_by_year_month.value[context.dataIndex]
+                game_duration_by_year_month.value[context.dataIndex],
               ) +
               " - " +
               joyrate_by_year_month.value[context.dataIndex].toFixed(2) +
