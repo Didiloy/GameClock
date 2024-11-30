@@ -85,11 +85,7 @@ const { games, sessions, teams } = storeToRefs(store);
 
 const loaded = ref(false);
 onMounted(() => {
-  setTimeout(() => {
-    init();
-    loaded.value = true;
-  }, 100);
-  // init();
+  init();
 });
 
 const chart = ref({});
@@ -112,52 +108,9 @@ const backgroundColor = props.backgroundColor
   ? props.backgroundColor
   : "var(--primary-100)";
 
-const id_of_team = ref([]);
-
 const games_name = ref([]);
-
 const games_playtime = ref([]);
-
 const games_percentage = ref([]);
-
-function setGamesNameAndPlaytime() {
-  let temp_games = [];
-  let total_playtime = 0;
-  if (id_of_team.value.length > 0) {
-    for (let g of games.value) {
-      let acc = 0;
-      for (let s of props.sessions === undefined
-        ? sessions.value
-        : props.sessions) {
-        if (id_of_team.value.includes(s.team.id) && s.game.id === g.id) {
-          acc += s.duration;
-          total_playtime += s.duration;
-        }
-      }
-      temp_games.push({ name: g.name, playtime: acc });
-    }
-  } else {
-    for (let g of games.value) {
-      let acc = 0;
-      for (let s of props.sessions === undefined
-        ? sessions.value
-        : props.sessions) {
-        if (s.game.id === g.id) {
-          acc += s.duration;
-          total_playtime += s.duration;
-        }
-      }
-      temp_games.push({ name: g.name, playtime: acc });
-    }
-  }
-  temp_games.sort((a, b) => b.playtime - a.playtime);
-  temp_games = temp_games.filter((g) => g.playtime > 0);
-  games_name.value = temp_games.map((g) => g.name);
-  games_percentage.value = temp_games.map((g) =>
-    ((g.playtime / total_playtime) * 100).toFixed(0)
-  );
-  games_playtime.value = temp_games.map((g) => g.playtime);
-}
 
 const colors_of_pie_parts = ref([]);
 
@@ -192,13 +145,42 @@ const chartData = ref({});
 const chartOptions = ref();
 
 function init() {
-  id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
-  setGamesNameAndPlaytime();
-  showLabel.value = getPreferences("pie_chart_labels_shown");
-  setColorsOfPieParts();
-  chartOptions.value = setChartOptions();
-  chartData.value = setChartData();
+  const _games = games.value.map((item) => ({
+    id: item.id,
+    name: item.name,
+  }));
+
+  const _sessions = sessions.value.map((item) => ({
+    duration: item.duration,
+    date: item.date.seconds,
+    id: item.id,
+    was_cool: item.was_cool,
+    team: { id: item.team.id },
+    game: { id: item.game.id },
+  }));
+
+  const id_of_team = getIdsOfTeam(props.teamName, teams.value);
+
+  window.electron.ipcRenderer.send("piechartgamepercentage", {
+    ids_of_team: id_of_team,
+    games: _games,
+    sessions: _sessions,
+  });
 }
+
+window.electron.ipcRenderer.on(
+  "result_piechartgamepercentage",
+  (event, data) => {
+    games_name.value = data.games_name;
+    games_playtime.value = data.games_playtime;
+    games_percentage.value = data.games_percentage;
+    showLabel.value = getPreferences("pie_chart_labels_shown");
+    setColorsOfPieParts();
+    chartOptions.value = setChartOptions();
+    chartData.value = setChartData();
+    loaded.value = true;
+  },
+);
 
 const setChartData = () => {
   const documentStyle = getComputedStyle(document.body);
@@ -231,7 +213,7 @@ const setChartOptions = () => {
           label: function (context) {
             return (
               convertMinuteToHoursMinute(
-                games_playtime.value[context.dataIndex]
+                games_playtime.value[context.dataIndex],
               ) +
               " -> " +
               games_percentage.value[context.dataIndex] +
@@ -304,7 +286,7 @@ const htmlLegendPlugin = {
         } else {
           chart.setDatasetVisibility(
             item.datasetIndex,
-            !chart.isDatasetVisible(item.datasetIndex)
+            !chart.isDatasetVisible(item.datasetIndex),
           );
         }
         chart.update();

@@ -109,3 +109,39 @@ export function gamesFunPercentage(ids_of_teams, games, sessions) {
     bad_percentage,
   };
 }
+
+export function pieChartGamePercentage(ids_of_teams, games, sessions) {
+  let temp_games = [];
+  let total_playtime = 0;
+  if (ids_of_teams.length > 0) {
+    for (let g of games) {
+      let acc = 0;
+      for (let s of sessions) {
+        if (ids_of_teams.includes(s.team.id) && s.game.id === g.id) {
+          acc += s.duration;
+          total_playtime += s.duration;
+        }
+      }
+      temp_games.push({ name: g.name, playtime: acc });
+    }
+  } else {
+    for (let g of games) {
+      let acc = 0;
+      for (let s of sessions) {
+        if (s.game.id === g.id) {
+          acc += s.duration;
+          total_playtime += s.duration;
+        }
+      }
+      temp_games.push({ name: g.name, playtime: acc });
+    }
+  }
+  temp_games.sort((a, b) => b.playtime - a.playtime);
+  temp_games = temp_games.filter((g) => g.playtime > 0);
+  let games_name = temp_games.map((g) => g.name);
+  let games_percentage = temp_games.map((g) =>
+    ((g.playtime / total_playtime) * 100).toFixed(0),
+  );
+  let games_playtime = temp_games.map((g) => g.playtime);
+  return { games_name, games_percentage, games_playtime };
+}
