@@ -2,7 +2,7 @@ import { app, BrowserWindow, shell, ipcMain } from "electron";
 import { join } from "path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
-import { barChartAllGames, playtimeHome } from "./graphs";
+import { barChartAllGames, gamesFunPercentage, playtimeHome } from "./graphs";
 
 const { Tray, Menu } = require("electron/main");
 let tray;
@@ -75,6 +75,14 @@ function createWindow() {
     );
   });
 
+  ipcMain.on("gamesfunpercentage", (event, data) => {
+    const { games_names, fun_percentage, neutral_percentage, bad_percentage } =
+      gamesFunPercentage(data.ids_of_team, data.games, data.sessions);
+    BrowserWindow.getAllWindows()[0].webContents.send(
+      "result_gamesfunpercentage",
+      { games_names, fun_percentage, neutral_percentage, bad_percentage },
+    );
+  });
   // Menu.setApplicationMenu(null);
 }
 

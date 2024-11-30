@@ -55,3 +55,57 @@ export function barChartAllGames(ids_of_teams, team_name, games, sessions) {
     averages_duration,
   };
 }
+
+export function gamesFunPercentage(ids_of_teams, games, sessions) {
+  //games_names
+  let games_names = [];
+  games.map((g) =>
+    games_names.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name),
+  );
+
+  let fun_percentage = [];
+  let neutral_percentage = [];
+  let bad_percentage = [];
+
+  for (let g of games) {
+    let fun = 0;
+    let neutral = 0;
+    let bad = 0;
+    let cpt = 0;
+    for (let s of sessions) {
+      if (ids_of_teams.length === 0) {
+        if (s.game.id === g.id) {
+          cpt++;
+          if (s.was_cool) {
+            fun++;
+          } else if (s.was_cool === undefined) {
+            neutral++;
+          } else {
+            bad++;
+          }
+        }
+      } else {
+        if (s.game.id === g.id && ids_of_teams.includes(s.team.id)) {
+          cpt++;
+          if (s.was_cool) {
+            fun++;
+          } else if (s.was_cool === undefined) {
+            neutral++;
+          } else {
+            bad++;
+          }
+        }
+      }
+    }
+    fun_percentage.push(((fun / cpt) * 100).toFixed(2));
+    neutral_percentage.push(((neutral / cpt) * 100).toFixed(2));
+    bad_percentage.push(((bad / cpt) * 100).toFixed(2));
+  }
+
+  return {
+    games_names,
+    fun_percentage,
+    neutral_percentage,
+    bad_percentage,
+  };
+}

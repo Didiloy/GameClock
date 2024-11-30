@@ -25,86 +25,49 @@ const fullscreen = ref(false);
 
 const loaded = ref(false);
 onMounted(() => {
-  setTimeout(() => {
-    init();
-    loaded.value = true;
-  }, 500);
-  // init();
-});
-
-watch(sessions, () => {
   init();
 });
 
-watch(
-  () => props.sessions,
-  () => {
-    init();
-  }
-);
-
-const id_of_team = ref([]);
-
 const games_names = ref([]);
-const getGamesNames = () => {
-  let res = [];
-  games.value.map((g) =>
-    res.push(g.name.length > 10 ? g.name.slice(0, 6) + "..." : g.name)
-  );
-  return res;
-};
 
 const fun_percentage = ref([]);
 const neutral_percentage = ref([]);
 const bad_percentage = ref([]);
 
-function setPercentages() {
-  for (let g of games.value) {
-    let fun = 0;
-    let neutral = 0;
-    let bad = 0;
-    let cpt = 0;
-    for (let s of props.sessions === undefined
-      ? sessions.value
-      : props.sessions) {
-      if (id_of_team.value.length === 0) {
-        if (s.game.id === g.id) {
-          cpt++;
-          if (s.was_cool) {
-            fun++;
-          } else if (s.was_cool === undefined) {
-            neutral++;
-          } else {
-            bad++;
-          }
-        }
-      } else {
-        if (s.game.id === g.id && id_of_team.value.includes(s.team.id)) {
-          cpt++;
-          if (s.was_cool) {
-            fun++;
-          } else if (s.was_cool === undefined) {
-            neutral++;
-          } else {
-            bad++;
-          }
-        }
-      }
-    }
-    fun_percentage.value.push(((fun / cpt) * 100).toFixed(2));
-    neutral_percentage.value.push(((neutral / cpt) * 100).toFixed(2));
-    bad_percentage.value.push(((bad / cpt) * 100).toFixed(2));
-  }
-}
-
 function init() {
   fun_percentage.value = [];
   neutral_percentage.value = [];
   bad_percentage.value = [];
-  id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
+
+  const _games = games.value.map((item) => ({
+    id: item.id,
+    name: item.name,
+  }));
+
+  const _sessions = sessions.value.map((item) => ({
+    duration: item.duration,
+    date: item.date.seconds,
+    id: item.id,
+    was_cool: item.was_cool,
+    team: { id: item.team.id },
+    game: { id: item.game.id },
+  }));
+
+  const id_of_team = getIdsOfTeam(props.teamName, teams.value);
+
+  window.electron.ipcRenderer.send("gamesfunpercentage", {
+    ids_of_team: id_of_team,
+    games: _games,
+    sessions: _sessions,
+  });
+}
+
+window.electron.ipcRenderer.on("result_gamesfunpercentage", (event, data) => {
+  games_names.value = data.games_names;
+  fun_percentage.value = data.fun_percentage;
+  neutral_percentage.value = data.neutral_percentage;
+  bad_percentage.value = data.bad_percentage;
   games_copy.value = games.value.slice();
-  games_names.value = getGamesNames();
-  setPercentages();
   for (let i = games_names.value.length; i >= 0; i--) {
     if (
       isNaN(fun_percentage.value[i]) &&
@@ -120,7 +83,8 @@ function init() {
   }
   chartOptions.value = setChartOptions();
   chartData.value = setChartData();
-}
+  loaded.value = true;
+});
 
 const games_copy = ref([]);
 
@@ -171,7 +135,7 @@ const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue("--text-color");
   const textColorSecondary = documentStyle.getPropertyValue(
-    "--text-color-secondary"
+    "--text-color-secondary",
   );
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 

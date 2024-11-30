@@ -67,7 +67,7 @@ function keyEventAddSession(e) {
   } else if (
     e.key ===
       getPreferences("shortcut_show_add_session_dialog").toLowerCase() ||
-    e.key === getPreferences("shortcut_add_session_from_homepage").toUpperCase()
+    e.key === getPreferences("shortcut_show_add_session_dialog").toUpperCase()
   ) {
     add_session_dialog_visible.value = true;
   }
