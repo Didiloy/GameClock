@@ -145,3 +145,65 @@ export function pieChartGamePercentage(ids_of_teams, games, sessions) {
   let games_playtime = temp_games.map((g) => g.playtime);
   return { games_name, games_percentage, games_playtime };
 }
+
+export function doughnutChartPlatform(ids_of_teams, platforms, sessions) {
+  let temp_games = [];
+  let total_playtime = 0;
+  if (ids_of_teams.length > 0) {
+    for (let g of platforms) {
+      let acc = 0;
+      let number_of_sessions = 0;
+      for (let s of sessions) {
+        if (s.platform) {
+          if (
+            ids_of_teams.value.includes(s.team.id) &&
+            s.platform.id === g.id
+          ) {
+            acc += s.duration;
+            total_playtime += s.duration;
+            number_of_sessions++;
+          }
+        }
+      }
+      temp_games.push({
+        name: g.name,
+        playtime: acc,
+        number_of_sessions: number_of_sessions,
+      });
+    }
+  } else {
+    for (let g of platforms) {
+      let acc = 0;
+      let number_of_sessions = 0;
+      for (let s of sessions) {
+        if (s.platform) {
+          if (s.platform.id === g.id) {
+            acc += s.duration;
+            total_playtime += s.duration;
+            number_of_sessions++;
+          }
+        }
+      }
+      temp_games.push({
+        name: g.name,
+        playtime: acc,
+        number_of_sessions: number_of_sessions,
+      });
+    }
+  }
+  temp_games.sort((a, b) => b.playtime - a.playtime);
+  temp_games = temp_games.filter((g) => g.playtime > 0);
+  let platforms_name = temp_games.map((g) => g.name);
+  let platform_percentage = temp_games.map((g) =>
+    ((g.playtime / total_playtime) * 100).toFixed(0),
+  );
+  let platform_playtime = temp_games.map((g) => g.playtime);
+  let platform_number_of_sessions = temp_games.map((g) => g.number_of_sessions);
+
+  return {
+    platforms_name,
+    platform_percentage,
+    platform_playtime,
+    platform_number_of_sessions,
+  };
+}

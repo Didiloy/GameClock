@@ -7,6 +7,7 @@ import {
   gamesFunPercentage,
   playtimeHome,
   pieChartGamePercentage,
+  doughnutChartPlatform,
 } from "./graphs";
 
 const { Tray, Menu } = require("electron/main");
@@ -95,6 +96,24 @@ function createWindow() {
     BrowserWindow.getAllWindows()[0].webContents.send(
       "result_piechartgamepercentage",
       { games_name, games_percentage, games_playtime },
+    );
+  });
+
+  ipcMain.on("doughnutchartplatform", (event, data) => {
+    const {
+      platforms_name,
+      platform_percentage,
+      platform_playtime,
+      platform_number_of_sessions,
+    } = doughnutChartPlatform(data.ids_of_team, data.platforms, data.sessions);
+    BrowserWindow.getAllWindows()[0].webContents.send(
+      "result_doughnutchartplatform",
+      {
+        platforms_name,
+        platform_percentage,
+        platform_playtime,
+        platform_number_of_sessions,
+      },
     );
   });
   // Menu.setApplicationMenu(null);

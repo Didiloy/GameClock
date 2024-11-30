@@ -92,11 +92,7 @@ const { sessions, teams, platforms } = storeToRefs(store);
 
 const loaded = ref(false);
 onMounted(() => {
-  setTimeout(() => {
-    init();
-    loaded.value = true;
-  }, 1000);
-  // init();
+  init();
 });
 
 const chart = ref({});
@@ -109,9 +105,9 @@ function onShowPlatformsLabelClick() {
 
 function setPlatformsLabels() {
   if (!showLabel.value) {
-    chart.value.data.labels = games_name.value;
+    chart.value.data.labels = platforms_name.value;
   } else {
-    chart.value.data.labels = games_name.value.map((g) => "");
+    chart.value.data.labels = platforms_name.value.map((g) => "");
   }
 }
 
@@ -121,69 +117,11 @@ const backgroundColor = props.backgroundColor
 
 const id_of_team = ref([]);
 
-const games_name = ref([]);
+const platforms_name = ref([]);
 
 const platform_playtime = ref([]);
 const platform_percentage = ref([]);
 const platform_number_of_sessions = ref([]);
-
-function setGamesNameAndPlaytime() {
-  let temp_games = [];
-  let total_playtime = 0;
-  if (id_of_team.value.length > 0) {
-    for (let g of platforms.value) {
-      let acc = 0;
-      let number_of_sessions = 0;
-      for (let s of props.sessions === undefined
-        ? sessions.value
-        : props.sessions) {
-        if (s.platform) {
-          if (id_of_team.value.includes(s.team.id) && s.platform.id === g.id) {
-            acc += s.duration;
-            total_playtime += s.duration;
-            number_of_sessions++;
-          }
-        }
-      }
-      temp_games.push({
-        name: g.name,
-        playtime: acc,
-        number_of_sessions: number_of_sessions,
-      });
-    }
-  } else {
-    for (let g of platforms.value) {
-      let acc = 0;
-      let number_of_sessions = 0;
-      for (let s of props.sessions === undefined
-        ? sessions.value
-        : props.sessions) {
-        if (s.platform) {
-          if (s.platform.id === g.id) {
-            acc += s.duration;
-            total_playtime += s.duration;
-            number_of_sessions++;
-          }
-        }
-      }
-      temp_games.push({
-        name: g.name,
-        playtime: acc,
-        number_of_sessions: number_of_sessions,
-      });
-    }
-  }
-  temp_games.sort((a, b) => b.playtime - a.playtime);
-  temp_games = temp_games.filter((g) => g.playtime > 0);
-  games_name.value = temp_games.map((g) => g.name);
-  platform_percentage.value = temp_games.map((g) =>
-    ((g.playtime / total_playtime) * 100).toFixed(0)
-  );
-  platform_playtime.value = temp_games.map((g) => g.playtime);
-  platform_number_of_sessions.value = temp_games.map(
-    (g) => g.number_of_sessions
-  );
-}
 
 const colors_of_pie_parts = ref([]);
 
@@ -208,7 +146,7 @@ function setColorsOfPieParts() {
       colors_of_pie_parts.value.push(colors[i]);
     }
   } else {
-    for (let i = 0; i < games_name.value.length; i++) {
+    for (let i = 0; i < platforms_name.value.length; i++) {
       colors_of_pie_parts.value.push(generateRandomColor());
     }
   }
@@ -218,21 +156,50 @@ const chartData = ref({});
 const chartOptions = ref();
 
 function init() {
-  id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
-  setGamesNameAndPlaytime();
-  showLabel.value = getPreferences("pie_chart_labels_shown");
-  setColorsOfPieParts();
-  chartOptions.value = setChartOptions();
-  chartData.value = setChartData();
+  const _platforms = platforms.value.map((item) => ({
+    id: item.id,
+    name: item.name,
+  }));
+
+  const _sessions = sessions.value.map((item) => ({
+    duration: item.duration,
+    date: item.date.seconds,
+    id: item.id,
+    platform: item.platform ? { id: item.platform.id } : undefined,
+    team: { id: item.team.id },
+  }));
+
+  const id_of_team = getIdsOfTeam(props.teamName, teams.value);
+
+  window.electron.ipcRenderer.send("doughnutchartplatform", {
+    ids_of_team: id_of_team,
+    sessions: _sessions,
+    platforms: _platforms,
+  });
 }
+
+window.electron.ipcRenderer.on(
+  "result_doughnutchartplatform",
+  (event, data) => {
+    platforms_name.value = data.platforms_name;
+    platform_playtime.value = data.platform_playtime;
+    platform_percentage.value = data.platform_percentage;
+    platform_number_of_sessions.value = data.platform_number_of_sessions;
+    showLabel.value = getPreferences("pie_chart_labels_shown");
+    setColorsOfPieParts();
+    chartOptions.value = setChartOptions();
+    chartData.value = setChartData();
+    loaded.value = true;
+  },
+);
 
 const setChartData = () => {
   const documentStyle = getComputedStyle(document.body);
 
   return {
     labels: showLabel.value
-      ? games_name.value
-      : games_name.value.map((g) => ""),
+      ? platforms_name.value
+      : platforms_name.value.map((g) => ""),
     datasets: [
       {
         data: platform_playtime.value,
@@ -252,12 +219,12 @@ const setChartOptions = () => {
       tooltip: {
         callbacks: {
           beforeLabel: function (context) {
-            return games_name.value[context.dataIndex];
+            return platforms_name.value[context.dataIndex];
           },
           label: function (context) {
             return (
               convertMinuteToHoursMinute(
-                platform_playtime.value[context.dataIndex]
+                platform_playtime.value[context.dataIndex],
               ) +
               " -> " +
               platform_percentage.value[context.dataIndex] +
@@ -333,7 +300,7 @@ const htmlLegendPlugin = {
         } else {
           chart.setDatasetVisibility(
             item.datasetIndex,
-            !chart.isDatasetVisible(item.datasetIndex)
+            !chart.isDatasetVisible(item.datasetIndex),
           );
         }
         chart.update();
