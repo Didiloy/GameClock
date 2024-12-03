@@ -301,6 +301,9 @@
       "total_game_time": "Temps de jeu total",
       "fun_to_play": "Plaisir à jouer (%)"
     },
+    "LineChartPlayerOfTheWeek": {
+      "title": "Temps de jeu sur les 7 derniers jours"
+    },
     "GamesSettings": {
       "title": "Modifiez vos jeux",
       "search_game": "Chercher un jeu...",
@@ -646,6 +649,9 @@
       "title": "Playtime and Happiness by Month",
       "total_game_time": "Total playtime",
       "fun_to_play": "Fun to play (%)"
+    },
+    "LineChartPlayerOfTheWeek": {
+      "title": "Play time for the last 7 days"
     },
     "GamesSettings": {
       "title": "Modify your games",

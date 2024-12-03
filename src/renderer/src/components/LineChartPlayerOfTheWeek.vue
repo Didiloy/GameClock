@@ -26,7 +26,7 @@
     >
       <template #subtitle>
         <span class="lcgm-font"
-          >{{ $t("LineChartGameByMonth.title") }}
+          >{{ $t("LineChartPlayerOfTheWeek.title") }}
           <i
             class="pi pi-window-maximize"
             @click="fullscreen = !fullscreen"
@@ -53,7 +53,7 @@
       v-model:visible="fullscreen"
       modal
       dismissableMask
-      :header="i18n.t('LineChartGameByMonth.title')"
+      :header="i18n.t('LineChartPlayerOfTheWeek.title')"
       :style="{ width: '90%', height: '90%' }"
     >
       <div style="height: 80vh; width: 100%">
