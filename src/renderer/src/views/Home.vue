@@ -36,7 +36,7 @@
 import Dashboard from "../components/Dashboard.vue";
 import AddSession from "../components/AddSession.vue";
 import { getPreferences } from "../preferences/preferences";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const emit = defineEmits(["toggleChronoListener"]);
@@ -49,6 +49,13 @@ import { storeToRefs } from "pinia";
 const store = useStore();
 const { teams } = storeToRefs(store);
 const add_session_dialog_visible = ref(false);
+watch(add_session_dialog_visible, () => {
+  if (add_session_dialog_visible.value) {
+    document.removeEventListener("keyup", keyEventAddSession);
+  } else {
+    document.addEventListener("keyup", keyEventAddSession);
+  }
+});
 
 function keyEventAddSession(e) {
   if (
