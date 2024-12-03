@@ -79,7 +79,6 @@
 import { ref, onMounted } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
-import { getIdsOfTeam } from "../database/database.js";
 import { convertMinuteToHoursMinute } from "../common/main";
 import zoomPlugin from "chartjs-plugin-zoom";
 import { getPreferences } from "../preferences/preferences";
@@ -103,62 +102,76 @@ const backgroundColor = props.backgroundColor
   ? props.backgroundColor
   : "var(--primary-100)";
 
-const labels_year_month = ref([]);
-const game_duration_by_year_month = ref([]);
-const joyrate_by_year_month = ref([]);
-
 const chartData = ref({});
 const chartOptions = ref();
+const labels_date = ref([]);
+const map_player_time_played = ref(null);
+const datasets = ref([]);
 
 function init() {
   const _sessions = sessions.value.map((item) => ({
     duration: item.duration,
     date: item.date.seconds,
     id: item.id,
-    was_cool: item.was_cool,
     team: { id: item.team.id },
-    game: { id: item.game.id },
   }));
 
-  const id_of_team = getIdsOfTeam(props.teamName, teams.value);
+  const _teams = teams.value.map((item) => ({
+    id: item.id,
+    name: item.name,
+  }));
 
-  window.electron.ipcRenderer.send("linechartgamebymonth", {
-    ids_of_team: id_of_team,
+  window.electron.ipcRenderer.send("linechartplayeroftheweek", {
     sessions: _sessions,
+    teams: _teams,
   });
 }
 
-window.electron.ipcRenderer.on("result_linechartgamebymonth", (event, data) => {
-  labels_year_month.value = data.labels_year_month;
-  game_duration_by_year_month.value = data.game_duration_by_year_month;
-  joyrate_by_year_month.value = data.joyrate_by_year_month;
-  chartOptions.value = setChartOptions();
-  chartData.value = setChartData();
-  loaded.value = true;
-});
+window.electron.ipcRenderer.on(
+  "result_linechartplayeroftheweek",
+  (event, data) => {
+    labels_date.value = data.labels_dates;
+    map_player_time_played.value = data.map_player_time_played;
+    //remove key where it's only 0 in the value
+    const isAllZeros = (arr) => arr.every((value) => value === 0);
 
-const setChartData = () => {
-  const documentStyle = getComputedStyle(document.documentElement);
-  return {
-    labels: labels_year_month.value,
-    datasets: [
-      {
-        label: i18n.t("LineChartGameByMonth.total_game_time"),
-        data: game_duration_by_year_month.value,
+    for (const [key, value] of map_player_time_played.value) {
+      if (isAllZeros(value)) {
+        map_player_time_played.value.delete(key);
+      }
+    }
+    const colors = [
+      "--cyan-500",
+      "--blue-500",
+      "--green-500",
+      "--orange-500",
+      "--purple-500",
+      "--red-500",
+      "--yellow-500",
+    ];
+    const documentStyle = getComputedStyle(document.documentElement);
+    datasets.value = Array.from(map_player_time_played.value.entries()).map(
+      ([player, data], index) => ({
+        label: player,
+        data: data,
         fill: false,
-        borderColor: documentStyle.getPropertyValue("--cyan-500"),
+        borderColor: documentStyle.getPropertyValue(
+          colors[index % colors.length],
+        ),
         tension: 0.4,
         yAxisID: "y",
-      },
-      {
-        label: i18n.t("LineChartGameByMonth.fun_to_play"),
-        data: joyrate_by_year_month.value,
-        fill: false,
-        borderColor: documentStyle.getPropertyValue("--gray-500"),
-        tension: 0.4,
-        yAxisID: "y1",
-      },
-    ],
+      }),
+    );
+    chartOptions.value = setChartOptions();
+    chartData.value = setChartData();
+    loaded.value = true;
+  },
+);
+
+const setChartData = () => {
+  return {
+    labels: labels_date.value,
+    datasets: datasets.value,
   };
 };
 
@@ -193,15 +206,7 @@ const setChartOptions = () => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            return (
-              "" +
-              convertMinuteToHoursMinute(
-                game_duration_by_year_month.value[context.dataIndex],
-              ) +
-              " - " +
-              joyrate_by_year_month.value[context.dataIndex].toFixed(2) +
-              "%"
-            );
+            return "" + convertMinuteToHoursMinute(context.formattedValue);
           },
         },
       },
@@ -226,17 +231,6 @@ const setChartOptions = () => {
           color: textColorSecondary,
         },
         grid: {
-          color: surfaceBorder,
-        },
-      },
-      y1: {
-        display: true,
-        position: "right",
-        ticks: {
-          color: textColorSecondary,
-        },
-        grid: {
-          drawOnChartArea: false,
           color: surfaceBorder,
         },
       },

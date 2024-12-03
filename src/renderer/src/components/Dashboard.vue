@@ -117,6 +117,11 @@
         :name="fun_percentage_computed"
         :value="percentage_card_computed"
       ></LittleCard>
+      <LineChartPlayerOfTheWeek
+        class="dv-line-chart-player-week"
+        backgroundColor="#ffdbd0"
+        titleColor="#390b00"
+      ></LineChartPlayerOfTheWeek>
       <BarChartAllGames
         class="dv-bar-all-game"
         backgroundColor="#dae1ff"
@@ -154,6 +159,7 @@ import PlayTimeHome from "./PlayTimeHome.vue";
 import PieChartPlatform from "./DoughnutChartPlatform.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
 import SessionsHistory from "./SessionsHistory.vue";
+import LineChartPlayerOfTheWeek from "./LineChartPlayerOfTheWeek.vue";
 import { getPreferences } from "../preferences/preferences";
 import { convertMinuteToHoursMinute } from "../common/main";
 import gameIcon from "../assets/images/icons_games.svg";
@@ -405,7 +411,7 @@ const percentage_card_computed = computed(() => {
   grid-row-end: 13;
 }
 
-.dv-bar-all-game {
+.dv-line-chart-player-week {
   width: 100%;
   height: 100%;
   grid-column-start: 4;
@@ -414,13 +420,22 @@ const percentage_card_computed = computed(() => {
   grid-row-end: 13;
 }
 
+.dv-bar-all-game {
+  width: 100%;
+  height: 100%;
+  grid-column-start: 1;
+  grid-column-end: 13;
+  grid-row-start: 13;
+  grid-row-end: 17;
+}
+
 .dv-pie-chart-platform {
   width: 100%;
   height: 100%;
   grid-column-start: 1;
   grid-column-end: 7;
-  grid-row-start: 13;
-  grid-row-end: 17;
+  grid-row-start: 17;
+  grid-row-end: 21;
 }
 
 .dv-fun-percentage {
@@ -428,7 +443,7 @@ const percentage_card_computed = computed(() => {
   height: 100%;
   grid-column-start: 7;
   grid-column-end: 13;
-  grid-row-start: 13;
-  grid-row-end: 17;
+  grid-row-start: 17;
+  grid-row-end: 21;
 }
 </style>

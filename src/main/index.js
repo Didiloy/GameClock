@@ -9,6 +9,7 @@ import {
   pieChartGamePercentage,
   doughnutChartPlatform,
   lineChartByMonth,
+  lineChartPlayerOfTheWeek,
 } from "./graphs";
 
 const { Tray, Menu } = require("electron/main");
@@ -130,6 +131,20 @@ function createWindow() {
         labels_year_month,
         game_duration_by_year_month,
         joyrate_by_year_month,
+      },
+    );
+  });
+
+  ipcMain.on("linechartplayeroftheweek", (event, data) => {
+    const { labels_dates, map_player_time_played } = lineChartPlayerOfTheWeek(
+      data.sessions,
+      data.teams,
+    );
+    BrowserWindow.getAllWindows()[0].webContents.send(
+      "result_linechartplayeroftheweek",
+      {
+        labels_dates,
+        map_player_time_played,
       },
     );
   });

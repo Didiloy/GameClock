@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="ad-container">
     <h2 class="s-title">{{ $t("AddDatabaseForFirstTime.add_database") }}</h2>
     <Message
       v-if="stored_databases.length === 0"
@@ -283,14 +283,14 @@ function addNewDatabase() {
 }
 </script>
 <style scoped>
-.container {
+.ad-container {
   /* display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: start; */
   height: 100%;
   width: 95%;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 }
 
 @font-face {
@@ -320,6 +320,7 @@ function addNewDatabase() {
 
 .import-db-elem-container {
   margin-top: 20px;
+  margin-bottom: 50px;
 }
 
 .add-db-elem-container {

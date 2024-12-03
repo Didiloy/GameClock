@@ -311,3 +311,61 @@ export function lineChartByMonth(ids_of_teams, sessions) {
     joyrate_by_year_month,
   };
 }
+
+export function lineChartPlayerOfTheWeek(sessions, teams) {
+  // Get the array of dates
+  const labels_dates = getLast7Days();
+
+  // Map team IDs to team names
+  const teamIdToNameMap = new Map(teams.map((team) => [team.id, team.name]));
+
+  // Get the last 7 days
+  const last7Days = getLast7Days();
+
+  const map_player_time_played = new Map();
+
+  for (const team of teams) {
+    map_player_time_played.set(team.name, Array(7).fill(0));
+  }
+
+  for (const session of sessions) {
+    const sessionDate = formatTimestampToDDMMYYYY(session.date);
+    const teamName = teamIdToNameMap.get(session.team.id);
+
+    if (teamName && last7Days.includes(sessionDate)) {
+      const dayIndex = last7Days.indexOf(sessionDate); // Get the day index
+      const playtimeArray = map_player_time_played.get(teamName);
+      playtimeArray[dayIndex] += session.duration;
+    }
+  }
+
+  console.log(map_player_time_played);
+  return { labels_dates, map_player_time_played };
+}
+
+function formatDateToDDMMYYYY(date) {
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+}
+
+function formatTimestampToDDMMYYYY(timestamp) {
+  const date = new Date(timestamp * 1000);
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+}
+
+const getLast7Days = () => {
+  const last7Days = [];
+  const today = new Date();
+
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(today.getTime() - i * 24 * 60 * 60 * 1000);
+    last7Days.push(formatDateToDDMMYYYY(date));
+  }
+
+  return last7Days;
+};
