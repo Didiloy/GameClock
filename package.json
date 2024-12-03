@@ -26,6 +26,7 @@
     "pinia": "latest",
     "primeicons": "latest",
     "primevue": "v3-stable",
+    "quantize": "^1.0.2",
     "steamgriddb": "latest",
     "vue-i18n": "^9.13.1",
     "vue-router": "latest"

@@ -303,6 +303,7 @@ async function computeSessionColor() {
   for (let [game, data] of uniqueGames.value) {
     const worker = new Worker(
       new URL("../workers/colorWorker.js", import.meta.url),
+      { type: "module" },
     );
 
     worker.onmessage = (event) => {
@@ -325,7 +326,7 @@ async function computeSessionColor() {
     };
 
     if (data.logo !== undefined && data.logo !== "")
-      worker.postMessage({ logo: data.logo, transparency: 0.4, id: id });
+      worker.postMessage({ logo: data.logo, id: id });
     else worker.terminate();
     id++;
   }

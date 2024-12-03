@@ -185,7 +185,7 @@ watch(
   () => searchTeamStore.searchTeamValue,
   () => {
     filterTeam();
-  }
+  },
 );
 
 const teamItemFiltered = ref([]);
@@ -196,7 +196,9 @@ function filterTeam() {
     return;
   }
   teamItemFiltered.value = teamItem.value.filter((t) =>
-    t.name.toLowerCase().includes(searchTeamStore.searchTeamValue.toLowerCase())
+    t.name
+      .toLowerCase()
+      .includes(searchTeamStore.searchTeamValue.toLowerCase()),
   );
 }
 
@@ -310,7 +312,8 @@ function getTeamColorWithWorker() {
   let id = 0;
   for (let team of teamItem.value) {
     const worker = new Worker(
-      new URL("../workers/colorWorker.js", import.meta.url)
+      new URL("../workers/colorWorker.js", import.meta.url),
+      { type: "module" },
     );
 
     worker.onmessage = (event) => {
@@ -331,7 +334,7 @@ function getTeamColorWithWorker() {
       worker.terminate();
     };
 
-    worker.postMessage({ logo: team.logo, transparency: 0.4, id: id });
+    worker.postMessage({ logo: team.logo, id: id });
     id++;
   }
 }

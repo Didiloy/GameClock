@@ -132,7 +132,7 @@
                 <div>
                   {{
                     new Date(
-                      slotProps.data.date.seconds * 1000
+                      slotProps.data.date.seconds * 1000,
                     ).toLocaleDateString()
                   }}
                 </div>
@@ -170,7 +170,7 @@ watch(
   () => props.sessions,
   () => {
     init();
-  }
+  },
 );
 
 // Using Map to store unique games so that we don't compute color multiple time for the same game
@@ -225,7 +225,8 @@ function computeSessionColor() {
   let id = 0;
   for (let [game, data] of uniqueGames.value) {
     const worker = new Worker(
-      new URL("../workers/colorWorker.js", import.meta.url)
+      new URL("../workers/colorWorker.js", import.meta.url),
+      { type: "module" },
     );
 
     worker.onmessage = (event) => {
@@ -248,7 +249,7 @@ function computeSessionColor() {
     };
 
     if (data.logo !== undefined && data.logo !== "")
-      worker.postMessage({ logo: data.logo, transparency: 0.4, id: id });
+      worker.postMessage({ logo: data.logo, id: id });
     else worker.terminate();
     id++;
   }

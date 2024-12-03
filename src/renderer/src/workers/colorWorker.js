@@ -1,34 +1,43 @@
-async function getMostDominantColor(image, transparency = 0.5) {
+import quantize from "quantize";
+
+async function getMostDominantColor(image) {
   let colors;
   try {
-    colors = await getDominantColors(image, transparency);
+    colors = await getDominantColors(image);
   } catch (error) {
     console.log("error getting dominants colors. returning rgb(255, 255, 255)");
     return "rgb(255,255,255)";
   }
-  if (colors.length === 0) {
+
+  if (colors === null) {
     return "rgb(255,255,255)";
-  }
-  let color_to_return;
-  if (
-    colors[2] !== undefined &&
-    colors[2] !== "rgb(255,255,255)" &&
-    colors[2] !== "rgb(0,0,0)"
-  ) {
-    color_to_return = colors[2];
-  } else if (
-    colors[1] !== undefined &&
-    colors[1] !== "rgb(255,255,255)" &&
-    colors[1] !== "rgb(0,0,0)"
-  ) {
-    color_to_return = colors[1];
   } else {
-    color_to_return = colors[0];
+    return colors[1];
   }
-  return color_to_return;
 }
 
-async function getDominantColors(imageUrl, transparency) {
+function createPixelArray(pixels, pixelCount, quality) {
+  const pixelArray = [];
+
+  for (let i = 0, offset, r, g, b, a; i < pixelCount; i += quality) {
+    offset = i * 4;
+    r = pixels[offset];
+    g = pixels[offset + 1];
+    b = pixels[offset + 2];
+    a = pixels[offset + 3];
+
+    // If pixel is mostly opaque and not white
+    if (
+      (typeof a === "undefined" || a >= 125) &&
+      !(r > 250 && g > 250 && b > 250)
+    )
+      pixelArray.push([r, g, b]);
+  }
+
+  return pixelArray;
+}
+
+async function getDominantColors(imageUrl) {
   try {
     // Fetch the image as a Blob
     const response = await fetch(imageUrl);
@@ -47,44 +56,29 @@ async function getDominantColors(imageUrl, transparency) {
       0,
       0,
       imageBitmap.width,
-      imageBitmap.height
+      imageBitmap.height,
     );
     const data = imageData.data;
-
-    const colorCounts = {};
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i];
-      const g = data[i + 1];
-      const b = data[i + 2];
-      const a = data[i + 3];
-
-      if (a === 0) continue; // skip transparent pixels
-
-      const colorKey = `${r},${g},${b},${transparency}`;
-      if (colorCounts[colorKey]) {
-        colorCounts[colorKey]++;
-      } else {
-        colorCounts[colorKey] = 1;
-      }
-    }
-
-    const sortedColors = Object.entries(colorCounts).sort(
-      (a, b) => b[1] - a[1]
-    );
-    const dominantColors = sortedColors
-      .slice(0, 3)
-      .map((entry) => `rgb(${entry[0]})`);
-    return dominantColors;
+    const pixelCount = imageData.width * imageData.height;
+    const pixelArray = createPixelArray(data, pixelCount, 10);
+    const colormap = quantize(pixelArray, 3);
+    const palette = colormap ? colormap.palette() : null;
+    return palette !== null
+      ? [
+          `rgb(${palette[0][0]}, ${palette[0][1]}, ${palette[0][2]})`,
+          `rgba(${palette[1][0]}, ${palette[1][1]}, ${palette[1][2]}, 0.6)`,
+        ]
+      : null;
   } catch (error) {
-    console.error("Error fetching or processing the image:", error);
+    console.log("Error fetching or processing the image:", error);
     throw new Error("Failed to process image.");
   }
 }
 
 self.onmessage = async (event) => {
-  const { logo, transparency, id } = event.data;
+  const { logo, id } = event.data;
   try {
-    const color = await getMostDominantColor(logo, transparency);
+    const color = await getMostDominantColor(logo);
     self.postMessage({ logo, color, idw: id });
   } catch (error) {
     self.postMessage({ error: error.message, logo: logo, idw: id });
