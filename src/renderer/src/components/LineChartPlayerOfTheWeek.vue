@@ -206,7 +206,11 @@ const setChartOptions = () => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            return "" + convertMinuteToHoursMinute(context.formattedValue);
+            return (
+              context.dataset.label +
+              " -> " +
+              convertMinuteToHoursMinute(context.formattedValue)
+            );
           },
         },
       },
