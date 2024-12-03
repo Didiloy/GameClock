@@ -212,7 +212,6 @@ function init() {
     session_copy = session_copy.filter(
       (s) => s.date.seconds * 1000 >= last_week.getTime(),
     );
-    console.log(session_copy.value);
   } else if (props.historySize) {
     session_copy = session_copy.slice(0, props.historySize);
   }

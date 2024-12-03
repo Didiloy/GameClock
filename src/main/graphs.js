@@ -339,7 +339,6 @@ export function lineChartPlayerOfTheWeek(sessions, teams) {
     }
   }
 
-  console.log(map_player_time_played);
   return { labels_dates, map_player_time_played };
 }
 
