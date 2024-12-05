@@ -36,6 +36,10 @@ const defaults = {
   activate_zoom_on_graphs: false,
   //toggle fun selected
   toggle_fun_selected_by_default: "",
+  //Associate games with platform
+  associate_to_platform: [
+    // { name: "League of Legends", platform: "SOoQoOTmK1ZAygHIZV8H" },
+  ],
 };
 
 const preferences_name = "preferences";

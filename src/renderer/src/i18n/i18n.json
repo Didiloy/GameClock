@@ -196,6 +196,7 @@
     },
     "AddSession": {
       "game_name": "Nom du jeu",
+      "associate_to_platform": "Associer à la plateforme",
       "team_name": "Nom de l'équipe",
       "informative_text_formulas": " Vous pouvez entrer une durée en minutes ou utiliser une formule pour additionner plusieurs durées. Par exemple, pour ajouter 10 minutes et 20 minutes, entrez \"=10+20\".",
       "duration_in_minute": "Durée en minutes",
@@ -545,6 +546,7 @@
     },
     "AddSession": {
       "game_name": "Game's name",
+      "associate_to_platform": "Associate to the platform",
       "team_name": "Team's name",
       "informative_text_formulas": "You can enter a duration in minutes or use a formula to sum multiple durations. For example, to add 10 minutes and 20 minutes, enter \"=10+20.\"",
       "duration_in_minute": "Duration in minutes",

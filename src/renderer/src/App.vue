@@ -94,7 +94,11 @@ function toggleChrono() {
 
 <template>
   <div class="container">
-    <TitleBar :toggleChrono="chrono" @toggleChronoListener="toggleChronoListener" :data_loaded="loaded"/>
+    <TitleBar
+      :toggleChrono="chrono"
+      @toggleChronoListener="toggleChronoListener"
+      :data_loaded="loaded"
+    />
     <div class="app-container main-background">
       <div class="sidebar">
         <Sidebar></Sidebar>
@@ -127,7 +131,7 @@ function toggleChrono() {
 }
 
 :global(.main-background) {
-  background-color: var(--primary-50);
+  background-color: var(--surface-100);
 }
 
 .sidebar {
@@ -138,7 +142,7 @@ function toggleChrono() {
   justify-content: center;
   align-items: center;
   padding: 10px 10px 3px;
-  border-right: 1px solid var(--primary-100);
+  border-right: 1px solid var(--surface-100);
 }
 
 .a-center {

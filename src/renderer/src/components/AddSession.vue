@@ -18,6 +18,19 @@
           }"
         >
         </AutoComplete>
+        <Checkbox
+          v-model="associate_to_platform"
+          inputId="associate_to_platform"
+          name="associate_to_platform"
+          :binary="true"
+          @change="saveAssociation"
+        />
+        <label
+          for="associate_to_platform"
+          style="font-size: 12px; margin-left: 3px"
+        >
+          {{ $t("AddSession.associate_to_platform") }}
+        </label>
         <div class="as-duration-input">
           <span class="as-icon" @click="toggleOverlay"
             ><i class="pi pi-info"></i
@@ -150,7 +163,7 @@ import { useToast } from "primevue/usetoast";
 import { useStore, useStoreChrono, useStoreWaitingList } from "../store/store";
 import { storeToRefs } from "pinia";
 import { addSession } from "../database/database";
-import { getPreferences } from "../preferences/preferences";
+import { getPreferences, setPreferences } from "../preferences/preferences";
 import gameNotFound from "../assets/images/game_not_found.jpg";
 
 import { useI18n } from "vue-i18n";
@@ -185,6 +198,7 @@ const heroe_url = computed(() => {
     : ``;
 });
 
+const associate_to_platform = ref(false);
 const platforms_options = ref([]);
 
 const duration = ref("");
@@ -197,6 +211,39 @@ const options_cool = ref([
 const toggle_fun = ref(false);
 const toggle_neutre = ref(false);
 const toggle_nul = ref(false);
+
+function saveAssociation() {
+  let games_associations = getPreferences("associate_to_platform");
+  if (associate_to_platform.value) {
+    games_associations.push({
+      name: game.value,
+      platform: selected_platform.value.id,
+    });
+    setPreferences("assiociate_to_platform", games_associations);
+  } else {
+    games_associations = games_associations.filter(
+      (obj) => obj.name !== game.value,
+    );
+    setPreferences("assiociate_to_platform", games_associations);
+  }
+}
+
+watch(game, () => {
+  const games_associations = getPreferences("associate_to_platform");
+  console.log(games_associations);
+  if (games_associations.length == 0) return;
+  function findPlatformByName(name) {
+    const item = games_associations.find((obj) => obj.name === name);
+    return item ? item.platform : null;
+  }
+  const platform = findPlatformByName(game.value);
+  if (platform === null) {
+    associate_to_platform.value = false;
+    return;
+  }
+  selected_platform.value = platforms.value.filter((p) => p.id === platform)[0];
+  associate_to_platform.value = true;
+});
 
 watch(toggle_fun, () => {
   if (toggle_fun.value) {

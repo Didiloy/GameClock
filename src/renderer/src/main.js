@@ -3,6 +3,7 @@ import { createI18n } from "vue-i18n";
 import PrimeVue from "primevue/config";
 import App from "./App.vue";
 import "primevue/resources/themes/lara-light-blue/theme.css";
+// import "primevue/resources/themes/lara-dark-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import InputText from "primevue/inputtext";
@@ -40,7 +41,6 @@ import ContextMenu from "primevue/contextmenu";
 import OverlayPanel from "primevue/overlaypanel";
 import Message from "primevue/message";
 import { createRouter, createWebHashHistory } from "vue-router";
-// import Home from "./views/Home.vue";
 const Home = () => import("./views/Home.vue");
 const Teams = () => import("./views/Teams.vue");
 const AddTeam = () => import("./views/AddTeam.vue");
@@ -139,7 +139,7 @@ if (stored_databases.value.length === 0) {
 } else {
   initialiseFirebase(
     stored_databases,
-    getPreferences("selected_database_index")
+    getPreferences("selected_database_index"),
   );
 }
 
