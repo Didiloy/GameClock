@@ -23,6 +23,7 @@
           inputId="associate_to_platform"
           name="associate_to_platform"
           :binary="true"
+          style="font-size: 12px; margin-left: 3px"
           @change="saveAssociation"
         />
         <label
@@ -32,24 +33,18 @@
           {{ $t("AddSession.associate_to_platform") }}
         </label>
         <div class="as-duration-input">
-          <span class="as-icon" @click="toggleOverlay"
-            ><i class="pi pi-info"></i
-          ></span>
-          <OverlayPanel ref="op" style="width: 50%">
-            <span>
-              {{ $t("AddSession.informative_text_formulas") }}
-            </span>
-          </OverlayPanel>
           <InputText
             class="input-number"
             v-model="duration"
             :placeholder="i18n.t('AddSession.duration_in_minute')"
+            :title="i18n.t('AddSession.informative_text_formulas')"
             :pt="{
               root: {
                 style: 'height: 45px; width: 250px',
               },
             }"
-          ></InputText>
+          >
+          </InputText>
           <div>
             <Button
               icon="pi pi-clock"
@@ -219,18 +214,17 @@ function saveAssociation() {
       name: game.value,
       platform: selected_platform.value.id,
     });
-    setPreferences("assiociate_to_platform", games_associations);
+    setPreferences("associate_to_platform", games_associations);
   } else {
     games_associations = games_associations.filter(
       (obj) => obj.name !== game.value,
     );
-    setPreferences("assiociate_to_platform", games_associations);
+    setPreferences("associate_to_platform", games_associations);
   }
 }
 
 watch(game, () => {
   const games_associations = getPreferences("associate_to_platform");
-  console.log(games_associations);
   if (games_associations.length == 0) return;
   function findPlatformByName(name) {
     const item = games_associations.find((obj) => obj.name === name);
