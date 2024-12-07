@@ -209,26 +209,39 @@ export function doughnutChartPlatform(ids_of_teams, platforms, sessions) {
 }
 
 export function lineChartByMonth(ids_of_teams, sessions) {
+  let labels_year_month = [];
+  let game_duration_by_year_month = [];
+  let joyrate_by_year_month = [];
+
   const months_names = [
-    "Janvier",
-    "Février",
-    "Mars",
-    "Avril",
-    "Mai",
-    "Juin",
-    "Juillet",
-    "Août",
-    "Septembre",
-    "Octobre",
-    "Novembre",
-    "Décembre",
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
   ];
+
   //Set the sessions of the teams
   let sessions_of_the_team = [];
   for (let s of sessions) {
     if (ids_of_teams.includes(s.team.id)) {
       sessions_of_the_team.push(s);
     }
+  }
+
+  if (sessions_of_the_team.length === 0 || sessions_of_the_team === undefined) {
+    return {
+      labels_year_month,
+      game_duration_by_year_month,
+      joyrate_by_year_month,
+    };
   }
 
   sessions_of_the_team.sort((a, b) => {
@@ -279,10 +292,6 @@ export function lineChartByMonth(ids_of_teams, sessions) {
     }
   }
 
-  let labels_year_month = [];
-  let game_duration_by_year_month = [];
-  let joyrate_by_year_month = [];
-
   //sort the map
   map_game_duration = new Map(
     [...map_game_duration.entries()].sort((a, b) => a[0] - b[0]),
@@ -296,7 +305,7 @@ export function lineChartByMonth(ids_of_teams, sessions) {
 
   for (let [year, monthMap] of map_game_duration) {
     for (let [month, duration] of monthMap) {
-      labels_year_month.push(`${months_names[month]} ${year}`);
+      labels_year_month.push(`${months_names[month]}/${year}`);
       game_duration_by_year_month.push(duration);
       joyrate_by_year_month.push(
         (joyrate_map.get(year).get(month) / sessions_map.get(year).get(month)) *

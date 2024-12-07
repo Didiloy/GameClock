@@ -192,6 +192,7 @@ function calculateBiggestSession() {
 }
 
 function getGameNameById(id) {
+  if (id === "") return;
   return games.value.find((element) => element.id === id).name;
 }
 
