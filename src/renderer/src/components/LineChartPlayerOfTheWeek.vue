@@ -209,7 +209,7 @@ const setChartOptions = () => {
             return (
               context.dataset.label +
               " -> " +
-              convertMinuteToHoursMinute(context.formattedValue)
+              convertMinuteToHoursMinute(context.raw)
             );
           },
         },
