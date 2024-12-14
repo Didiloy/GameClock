@@ -2,26 +2,55 @@
   <div id="header">
     <div id="drag-region">
       <div id="window-title">
-        <img :src="icon" draggable="false" style="height: 23px; width: auto" alt="logo" />
-      </div class="container-center">
-      <div>
-        <div v-if="currentRouteName === 'settings-games'" class="centered-search">
-          <InputText type="text" v-model="searchStore.searchValue" :placeholder="$t('GamesSettings.search_game')"
-            @focus="emit('toggleChronoListener')" @blur="emit('toggleChronoListener')" />
+        <img
+          :src="icon"
+          draggable="false"
+          style="height: 23px; width: auto"
+          alt="logo"
+        />
+      </div>
+      <div class="container-center">
+        <div
+          v-if="currentRouteName === 'settings-games'"
+          class="centered-search"
+        >
+          <InputText
+            type="text"
+            v-model="searchStore.searchValue"
+            :placeholder="$t('GamesSettings.search_game')"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
+          />
         </div>
         <div v-if="currentRouteName === 'teams'" class="centered-search">
-          <InputText type="text" v-model="searchTeamStore.searchTeamValue" :placeholder="$t('Teams.search_team')"
-            @focus="emit('toggleChronoListener')" @blur="emit('toggleChronoListener')" />
+          <InputText
+            type="text"
+            v-model="searchTeamStore.searchTeamValue"
+            :placeholder="$t('Teams.search_team')"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
+          />
         </div>
         <div v-if="currentRouteName === 'home'" class="centered-title">
           <span class="h-span">{{ total_time_hours.toUpperCase() }}</span>
-          <span class="h-subtitle">{{ $t("Dashboard.spent_playing").toUpperCase() }}</span>
+          <span class="h-subtitle">{{
+            $t("Dashboard.spent_playing").toUpperCase()
+          }}</span>
         </div>
       </div>
-      <div id="chronometer" @click="startStopWatch" :style="'background-color:' + background_color + ';'"
-        class="hover-div">
-        <div class="popup">{{ $t("TitleBar.last_chronometer_value") +
-          convertSecondsToHourMinutesSeconds(last_chrono_value) }}</div>
+      <div
+        id="chronometer"
+        @contextmenu="pauseChrono"
+        @click="startStopWatch"
+        :style="'background-color:' + background_color + ';'"
+        class="hover-div"
+      >
+        <div class="popup">
+          {{
+            $t("TitleBar.last_chronometer_value") +
+            convertSecondsToHourMinutesSeconds(last_chrono_value)
+          }}
+        </div>
         <span v-if="duration_seconds !== 0">
           {{ convertSecondsToHourMinutesSeconds(duration_seconds) }}
         </span>
@@ -30,15 +59,30 @@
       </div>
       <div id="window-controls">
         <div class="button" id="min-button">
-          <img class="icon" src="../assets/images/minimize_icon.svg" draggable="false" alt="minimize" />
+          <img
+            class="icon"
+            src="../assets/images/minimize_icon.svg"
+            draggable="false"
+            alt="minimize"
+          />
         </div>
 
         <div class="button" id="max-button">
-          <img class="icon-max" src="../assets/images/maximize_icon.svg" draggable="false" alt="maximize" />
+          <img
+            class="icon-max"
+            src="../assets/images/maximize_icon.svg"
+            draggable="false"
+            alt="maximize"
+          />
         </div>
 
         <div class="button" id="close-button">
-          <img class="icon" src="../assets/images/close_icon.svg" draggable="false" alt="close" />
+          <img
+            class="icon"
+            src="../assets/images/close_icon.svg"
+            draggable="false"
+            alt="close"
+          />
         </div>
       </div>
     </div>
@@ -49,11 +93,11 @@ import { onMounted, ref, watch } from "vue";
 import { useStoreChrono } from "../store/store";
 import { getPreferences, setPreferences } from "../preferences/preferences";
 import { isChristmas, isHalloween } from "../common/date";
-import ChristmasIcon from "../assets/images/icons/christmas_icon.svg"
-import HalloweenIcon from "../assets/images/icons/halloween_icon.svg"
-import BaseIcon from "../assets/images/icons/base_icon.png"
-import { useRoute } from 'vue-router';
-import InputText from 'primevue/inputtext';
+import ChristmasIcon from "../assets/images/icons/christmas_icon.svg";
+import HalloweenIcon from "../assets/images/icons/halloween_icon.svg";
+import BaseIcon from "../assets/images/icons/base_icon.png";
+import { useRoute } from "vue-router";
+import InputText from "primevue/inputtext";
 import { useSearchStore, useSearchTeamStore } from "../store/store";
 import { useTotalTime } from "../composables/total_time";
 const { total_time_hours, calculateTotalTime } = useTotalTime();
@@ -63,7 +107,7 @@ const icon = ref(BaseIcon);
 const props = defineProps(["toggleChrono", "data_loaded"]);
 const store = useStoreChrono();
 const route = useRoute();
-const currentRouteName = ref('');
+const currentRouteName = ref("");
 const searchStore = useSearchStore();
 const searchTeamStore = useSearchTeamStore();
 const emit = defineEmits(["toggleChronoListener"]);
@@ -105,7 +149,9 @@ const last_chrono_value = ref(getPreferences("last_chronometer_value"));
 
 setInterval(() => {
   if (is_chrono_running.value) {
-    duration_seconds.value = (Date.now() - timestamp_start_chrono.value) / 1000;
+    duration_seconds.value =
+      (Date.now() - timestamp_start_chrono.value) / 1000 +
+      chrono_before_pause.value;
   }
 }, 1000);
 
@@ -118,21 +164,54 @@ watch(
   () => props.toggleChrono,
   () => {
     startStopWatch();
-  }
+  },
 );
 
 function startStopWatch() {
   if (!is_chrono_running.value) {
-    timestamp_start_chrono.value = Date.now();
-    duration.value = 0;
-    is_chrono_running.value = !is_chrono_running.value;
-    background_color.value = "var(--red-500)";
+    startChrono();
   } else {
-    is_chrono_running.value = !is_chrono_running.value;
-    background_color.value = "var(--primary-500)";
-    last_chrono_value.value = duration_seconds.value;
-    setPreferences("last_chronometer_value", last_chrono_value.value);
+    stopChrono();
   }
+}
+
+function startChrono() {
+  timestamp_start_chrono.value = Date.now();
+  duration.value = 0;
+  duration_seconds.value = 0;
+  resetPause();
+  is_chrono_running.value = true;
+  background_color.value = "var(--red-500)";
+}
+
+function stopChrono() {
+  is_chrono_running.value = false;
+  background_color.value = "var(--primary-500)";
+  last_chrono_value.value = duration_seconds.value;
+  setPreferences("last_chronometer_value", last_chrono_value.value);
+}
+
+const is_chrono_paused = ref(false);
+const chrono_before_pause = ref(0);
+
+function pauseChrono() {
+  if (is_chrono_paused.value) {
+    timestamp_start_chrono.value = Date.now();
+    duration_seconds.value = 0;
+    is_chrono_running.value = true;
+    background_color.value = "var(--red-500)";
+    is_chrono_paused.value = false;
+  } else {
+    is_chrono_running.value = false;
+    chrono_before_pause.value = duration_seconds.value;
+    background_color.value = "var(--primary-500)";
+    is_chrono_paused.value = true;
+  }
+}
+
+function resetPause() {
+  is_chrono_paused.value = false;
+  chrono_before_pause.value = 0;
 }
 
 function convertSecondsToHourMinutesSeconds(seconds) {
@@ -158,19 +237,25 @@ function convertSecondsToHourMinutesSeconds(seconds) {
   return result;
 }
 
-watch(() => props.data_loaded, (newDataLoaded) => {
-  if (newDataLoaded) {
-    calculateTotalTime();
-  }
-});
+watch(
+  () => props.data_loaded,
+  (newDataLoaded) => {
+    if (newDataLoaded) {
+      calculateTotalTime();
+    }
+  },
+);
 
-watch(() => route.name, (newName) => {
-  currentRouteName.value = newName;
-  if (newName === 'home') {
-    calculateTotalTime();
-  }
-}, { immediate: true });
-
+watch(
+  () => route.name,
+  (newName) => {
+    currentRouteName.value = newName;
+    if (newName === "home") {
+      calculateTotalTime();
+    }
+  },
+  { immediate: true },
+);
 </script>
 <style scoped>
 #header {
@@ -315,10 +400,13 @@ watch(() => route.name, (newName) => {
 .hover-div:hover .popup {
   visibility: visible;
   opacity: 1;
+  position: absolute;
+  top: 30px;
+  height: fit-content;
 }
 
 .popup::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;
