@@ -374,7 +374,7 @@ watch(
   background: #f1707a !important;
 }
 
-#close-button:active .icon {
+#close-button:hover .icon {
   filter: invert(1);
 }
 
