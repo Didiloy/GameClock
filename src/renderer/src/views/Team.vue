@@ -8,7 +8,12 @@
         v-if="id_of_team.length === 1"
       ></Button>
       <div class="t-title">
-        <h2 class="team-name">{{ $route.params.name }}</h2>
+        <h2 v-if="id_of_team.length === 1" class="team-name">
+          {{ $route.params.name }}
+        </h2>
+        <h2 v-else class="team-name" :title="$route.params.name">
+          {{ id_of_team.length + " " + i18n.t("Sidebar.teams.label") }}
+        </h2>
       </div>
       <Dropdown v-model="selected_success" :options="unlocked_successes">
         <template #value="slotProps">
