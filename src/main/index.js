@@ -11,6 +11,7 @@ import {
   lineChartByMonth,
   lineChartPlayerOfTheWeek,
 } from "./graphs";
+import { teamList } from "./team_list";
 
 const { Tray, Menu } = require("electron/main");
 let tray;
@@ -147,6 +148,13 @@ function createWindow() {
         map_player_time_played,
       },
     );
+  });
+
+  ipcMain.on("teamlist", (event, data) => {
+    const teams = teamList(data.teams, data.sessions, data.games);
+    BrowserWindow.getAllWindows()[0].webContents.send("result_teamlist", {
+      teams,
+    });
   });
 }
 

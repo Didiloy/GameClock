@@ -38,91 +38,91 @@
             <h3>{{ item.name }}</h3>
             <div v-if="getPreferences('display_successes_in_team_list')">
               <img
-                v-if="item.relentless.unlocked"
+                v-if="item.computed_successes && item.relentless.unlocked"
                 :src="item.relentless.image"
                 :title="item.relentless.description + ''"
                 class="success"
               />
               <img
-                v-if="item.patient.unlocked"
+                v-if="item.computed_successes && item.patient.unlocked"
                 :src="item.patient.image"
                 :title="item.patient.description + ''"
                 class="success"
               />
               <img
-                v-if="item.enduring.unlocked"
+                v-if="item.computed_successes && item.enduring.unlocked"
                 :src="item.enduring.image"
                 :title="item.enduring.description + ''"
                 class="success"
               />
               <img
-                v-if="item.inexhaustible.unlocked"
+                v-if="item.computed_successes && item.inexhaustible.unlocked"
                 :src="item.inexhaustible.image"
                 :title="item.inexhaustible.description + ''"
                 class="success"
               />
               <img
-                v-if="item.young_gamer.unlocked"
+                v-if="item.computed_successes && item.young_gamer.unlocked"
                 :src="item.young_gamer.image"
                 :title="item.young_gamer.description + ''"
                 class="success"
               />
               <img
-                v-if="item.gamer.unlocked"
+                v-if="item.computed_successes && item.gamer.unlocked"
                 :src="item.gamer.image"
                 :title="item.gamer.description + ''"
                 class="success"
               />
               <img
-                v-if="item.passionnate.unlocked"
+                v-if="item.computed_successes && item.passionnate.unlocked"
                 :src="item.passionnate.image"
                 :title="item.passionnate.description + ''"
                 class="success"
               />
               <img
-                v-if="item.curious.unlocked"
+                v-if="item.computed_successes && item.curious.unlocked"
                 :src="item.curious.image"
                 :title="item.curious.description + ''"
                 class="success"
               />
               <img
-                v-if="item.prospector.unlocked"
+                v-if="item.computed_successes && item.prospector.unlocked"
                 :src="item.prospector.image"
                 :title="item.prospector.description + ''"
                 class="success"
               />
               <img
-                v-if="item.scholar.unlocked"
+                v-if="item.computed_successes && item.scholar.unlocked"
                 :src="item.scholar.image"
                 :title="item.scholar.description + ''"
                 class="success"
               />
               <img
-                v-if="item.thousand_hours.unlocked"
+                v-if="item.computed_successes && item.thousand_hours.unlocked"
                 :src="item.thousand_hours.image"
                 :title="item.thousand_hours.description + ''"
                 class="success"
               />
               <img
-                v-if="item.depressed.unlocked"
+                v-if="item.computed_successes && item.depressed.unlocked"
                 :src="item.depressed.image"
                 :title="item.depressed.description + ''"
                 class="success"
               />
               <img
-                v-if="item.important_person.unlocked"
+                v-if="item.computed_successes && item.important_person.unlocked"
                 :src="item.important_person.image"
                 :title="item.important_person.description + ''"
                 class="success"
               />
               <img
-                v-if="item.stinky.unlocked"
+                v-if="item.computed_successes && item.stinky.unlocked"
                 :src="item.stinky.image"
                 :title="item.stinky.description + ''"
                 class="success"
               />
               <img
-                v-if="item.why_playing.unlocked"
+                v-if="item.computed_successes && item.why_playing.unlocked"
                 :src="item.why_playing.image"
                 :title="item.why_playing.description + ''"
                 class="success"
@@ -171,14 +171,34 @@ const loading = ref(true);
 
 const toggle_select_team = ref(false);
 const searchTeamStore = useSearchTeamStore();
+
+const teamItem = ref([]);
+
 onMounted(() => {
-  setTimeout(() => {
-    init();
-    loading.value = false;
-    if (getPreferences("use_logo_color_in_team_list")) {
-      getTeamColorWithWorker();
-    }
-  }, 100);
+  const _sessions = sessions.value.map((item) => ({
+    duration: item.duration,
+    id: item.id,
+    team: { id: item.team.id },
+    game: { id: item.game.id },
+  }));
+
+  const _teams = teams.value.map((item) => ({
+    id: item.id,
+    name: item.name,
+  }));
+
+  const _games = games.value.map((item) => ({
+    id: item.id,
+    name: item.name,
+    logo: item.logo,
+    heroe: item.heroe,
+  }));
+
+  window.electron.ipcRenderer.send("teamlist", {
+    teams: _teams,
+    sessions: _sessions,
+    games: _games,
+  });
 });
 
 watch(
@@ -225,97 +245,57 @@ function filterTeam() {
   );
 }
 
-const teamItem = ref([]);
+window.electron.ipcRenderer.on("result_teamlist", (event, data) => {
+  teamItem.value = data.teams;
+  teamItemFiltered.value = data.teams;
+  loading.value = false;
+  sortTeams();
+  if (getPreferences("use_logo_color_in_team_list")) {
+    setTimeout(() => getTeamColorWithWorker(), 0);
+  }
+  if (getPreferences("display_successes_in_team_list")) {
+    setTimeout(() => getSuccesses(), 0);
+  }
+});
 
-function setTeamItem() {
-  teamItem.value = [];
-
-  // calculate gametime and most played game for each team
-  const teamData = teams.value.reduce((acc, team) => {
-    acc[team.id] = {
-      id: team.id,
-      name: team.name,
-      playtime: 0,
-      gameDurations: {}, // To track duration per game
-      logo: "",
-      selected: ref(false),
-    };
-    return acc;
-  }, {});
-
-  sessions.value.forEach((session) => {
-    const team = teamData[session.team.id];
-    if (team === undefined) return;
-    team.playtime += session.duration;
-
-    //if the game entry doesn't exist, create it
-    if (!team.gameDurations[session.game.id]) {
-      team.gameDurations[session.game.id] = {
-        duration: 0,
-        logo: getGameById(session.game.id).logo,
-      };
-    }
-
-    team.gameDurations[session.game.id].duration += session.duration;
+function getSuccesses() {
+  teamItem.value.forEach((team) => {
+    const {
+      calculateSuccesses,
+      relentless,
+      patient,
+      enduring,
+      inexhaustible,
+      young_gamer,
+      gamer,
+      passionnate,
+      curious,
+      prospector,
+      scholar,
+      depressed,
+      important_person,
+      thousand_hours,
+      stinky,
+      why_playing,
+    } = useSuccesses(i18n);
+    calculateSuccesses(team.name, sessions.value);
+    team.relentless = relentless.value;
+    team.patient = patient.value;
+    team.enduring = enduring.value;
+    team.inexhaustible = inexhaustible.value;
+    team.young_gamer = young_gamer.value;
+    team.gamer = gamer.value;
+    team.passionnate = passionnate.value;
+    team.curious = curious.value;
+    team.prospector = prospector.value;
+    team.scholar = scholar.value;
+    team.depressed = depressed.value;
+    team.important_person = important_person.value;
+    team.thousand_hours = thousand_hours.value;
+    team.stinky = stinky.value;
+    team.why_playing = why_playing.value;
+    team.computed_successes = true;
   });
-
-  // // Determine the most played game for each team and calculate their successes
-  Object.values(teamData).forEach((team) => {
-    //most played game
-    let maxDuration = 0;
-    Object.keys(team.gameDurations).forEach((gameName) => {
-      const gameData = team.gameDurations[gameName];
-      if (gameData.duration > maxDuration) {
-        maxDuration = gameData.duration;
-        team.logo = gameData.logo;
-        team.game_name = gameName;
-      }
-    });
-
-    delete team.gameDurations;
-
-    //successes
-    if (getPreferences("display_successes_in_team_list")) {
-      const {
-        calculateSuccesses,
-        relentless,
-        patient,
-        enduring,
-        inexhaustible,
-        young_gamer,
-        gamer,
-        passionnate,
-        curious,
-        prospector,
-        scholar,
-        depressed,
-        important_person,
-        thousand_hours,
-        stinky,
-        why_playing,
-      } = useSuccesses(i18n);
-      calculateSuccesses(team.name, sessions.value);
-      team.relentless = relentless.value;
-      team.patient = patient.value;
-      team.enduring = enduring.value;
-      team.inexhaustible = inexhaustible.value;
-      team.young_gamer = young_gamer.value;
-      team.gamer = gamer.value;
-      team.passionnate = passionnate.value;
-      team.curious = curious.value;
-      team.prospector = prospector.value;
-      team.scholar = scholar.value;
-      team.depressed = depressed.value;
-      team.important_person = important_person.value;
-      team.thousand_hours = thousand_hours.value;
-      team.stinky = stinky.value;
-      team.why_playing = why_playing.value;
-    }
-  });
-
-  const result = Object.values(teamData);
-  teamItem.value = result;
-  teamItemFiltered.value = result;
 }
 
 function sortTeams() {
@@ -368,11 +348,6 @@ function getGameById(gameId) {
   if (game === undefined) return { name: "", heroe: "", logo: "" };
   return { name: game.name, heroe: game.heroe, logo: game.logo };
 }
-
-const init = () => {
-  setTeamItem();
-  sortTeams();
-};
 
 function getClassNameFromIndex(index) {
   if (index === 0) {
