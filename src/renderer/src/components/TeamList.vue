@@ -20,7 +20,7 @@
       <template #list="slotProps">
         <div
           v-for="(item, index) in slotProps.items"
-          :key="index"
+          :key="item.id"
           :class="getClassNameFromIndex(index)"
           :style="
             item.gradient_color &&
@@ -192,7 +192,30 @@ const teamItemFiltered = ref([]);
 
 function filterTeam() {
   if (searchTeamStore.searchTeamValue === "") {
-    teamItemFiltered.value = teamItem.value;
+    teamItemFiltered.value = teamItem.value.map((team) => ({
+      id: team.id,
+      name: team.name,
+      playtime: team.playtime,
+      logo: team.logo,
+      selected: team.selected,
+      game_name: team.game_name,
+      gradient_color: team.gradient_color,
+      relentless: team.relentless,
+      patient: team.patient,
+      enduring: team.enduring,
+      inexhaustible: team.inexhaustible,
+      young_gamer: team.young_gamer,
+      gamer: team.gamer,
+      passionnate: team.passionnate,
+      curious: team.curious,
+      prospector: team.prospector,
+      scholar: team.scholar,
+      depressed: team.depressed,
+      important_person: team.important_person,
+      thousand_hours: team.thousand_hours,
+      stinky: team.stinky,
+      why_playing: team.why_playing,
+    }));
     return;
   }
   teamItemFiltered.value = teamItem.value.filter((t) =>
@@ -210,6 +233,7 @@ function setTeamItem() {
   // calculate gametime and most played game for each team
   const teamData = teams.value.reduce((acc, team) => {
     acc[team.id] = {
+      id: team.id,
       name: team.name,
       playtime: 0,
       gameDurations: {}, // To track duration per game
@@ -368,7 +392,8 @@ function onClickMultipleTeam() {
 
 function onClickHandler(teamName, index) {
   if (toggle_select_team.value) {
-    teamItem.value[index].selected = !teamItem.value[index].selected;
+    teamItemFiltered.value[index].selected =
+      !teamItemFiltered.value[index].selected;
   } else {
     navigateToTeam(teamName);
   }
