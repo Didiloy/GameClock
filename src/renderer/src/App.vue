@@ -142,7 +142,7 @@ function toggleChrono() {
   justify-content: center;
   align-items: center;
   padding: 10px 10px 3px;
-  border-right: 1px solid var(--surface-100);
+  border-right: 1px solid var(--surface-200);
 }
 
 .a-center {
