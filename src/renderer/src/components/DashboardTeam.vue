@@ -84,7 +84,7 @@
       <LittleCard
         class="dt-lc-joy-all-game"
         iconName="pi pi-thumbs-up"
-        :name="total_fun_percentage + '%'"
+        :name="isNaN(total_fun_percentage) ? '0%' : total_fun_percentage + '%'"
         backgroundColor="#90a1b9"
         titleColor="#303a48"
         :value="i18n.t('DashboardTeam.fun_to_play')"
@@ -244,7 +244,9 @@ const team_time_hours = computed(() => {
   return convertMinuteToHoursMinute(team_time.value);
 });
 const percentage_total_time = computed(() => {
-  return ((team_time.value / total_time.value) * 100).toFixed(2) + "%";
+  return isNaN((team_time.value / total_time.value) * 100)
+    ? "0%"
+    : ((team_time.value / total_time.value) * 100).toFixed(2) + "%";
 });
 
 const average_book_reading_time = ref(178);

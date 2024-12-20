@@ -227,7 +227,9 @@ function initDashboard() {
       } = event.data;
       sessions_number.value = _sessions_number;
       team_with_most_sessions.value = _team_with_most_sessions;
-      team_with_most_sessions_value.value = _team_with_most_sessions_value;
+      team_with_most_sessions_value.value = _team_with_most_sessions_value
+        ? _team_with_most_sessions_value
+        : 0;
       average_session_per_day.value = _average_session_per_day;
       team_with_greatest_session_average_playtime.value =
         _team_with_greatest_session_average_playtime;
@@ -272,12 +274,12 @@ function initDashboard() {
 }
 
 const fun_percentage_computed = computed(() => {
-  return fun_percentage.value?.toFixed(2) + "%";
+  return fun_percentage.value ? fun_percentage.value.toFixed(2) + "%" : "0%";
 });
 
 const percentage_card_computed = computed(() => {
   return `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <b>${i18n.t("Dashboard.fun_to_play")}</b><br><h2>${i18n.t("Dashboard.neutral")}:</h2> ${neutral_percentage.value?.toFixed(0)}% <br><h2>${i18n.t("Dashboard.bad")}:</h2> ${not_fun_percentage.value?.toFixed(0)}%
+            <b>${i18n.t("Dashboard.fun_to_play")}</b><br><h2>${i18n.t("Dashboard.neutral")}:</h2> ${neutral_percentage.value ? neutral_percentage.value.toFixed(2) : "0"}% <br><h2>${i18n.t("Dashboard.bad")}:</h2> ${not_fun_percentage.value ? not_fun_percentage.value.toFixed(2) : "0"}%
           </div>`;
 });
 </script>

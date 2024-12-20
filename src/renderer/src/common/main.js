@@ -1,5 +1,6 @@
 export function convertMinuteToHoursMinute(min) {
   let minute = parseInt(min);
+  if (isNaN(minute)) return "0m";
   return (
     ((minute - (minute % 60)) / 60 > 0
       ? ((minute - (minute % 60)) / 60).toFixed(0) + "h "

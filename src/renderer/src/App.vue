@@ -158,6 +158,7 @@ h2 {
 }
 
 .content {
+  margin-top: 10px;
   padding: 5px;
   width: 100%;
   overflow-y: auto;
