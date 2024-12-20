@@ -46,10 +46,12 @@ function initDashboard(sessions, games, teams) {
   for (let session of sessions) {
     //=================team_with_most_sessions=============
     //get the team with the most sessions and the average duration of number
-    if (team_sessions.has(session.team)) {
-      team_sessions.get(session.team).push(session.duration);
-    } else {
-      team_sessions.set(session.team, [session.duration]);
+    for (const team of session.teams) {
+      if (team_sessions.has(team)) {
+        team_sessions.get(team).push(session.duration);
+      } else {
+        team_sessions.set(team, [session.duration]);
+      }
     }
 
     //============average_session_per_day===============
@@ -76,26 +78,30 @@ function initDashboard(sessions, games, teams) {
       }
 
       //player of the week
-      if (player_last_week.has(session.team)) {
-        player_last_week.set(
-          session.team,
-          player_last_week.get(session.team) + session.duration,
-        );
-      } else {
-        player_last_week.set(session.team, session.duration);
+      for (const team of session.teams) {
+        if (player_last_week.has(team)) {
+          player_last_week.set(
+            team,
+            player_last_week.get(team) + session.duration,
+          );
+        } else {
+          player_last_week.set(team, session.duration);
+        }
       }
 
       //unhappiest player
-      if (player_happiness.has(session.team)) {
-        player_happiness.get(session.team)[1]++;
-        if (session.was_cool) {
-          player_happiness.get(session.team)[0]++;
+      for (const team of session.teams) {
+        if (player_happiness.has(team)) {
+          player_happiness.get(team)[1]++;
+          if (session.was_cool) {
+            player_happiness.get(team)[0]++;
+          }
+        } else {
+          player_happiness.set(team, [
+            session.was_cool !== undefined ? session.was_cool : 0,
+            1,
+          ]);
         }
-      } else {
-        player_happiness.set(session.team, [
-          session.was_cool !== undefined ? session.was_cool : 0,
-          1,
-        ]);
       }
     }
     //==================fun_percentage, neutral_percentage, not_fun_percentage================

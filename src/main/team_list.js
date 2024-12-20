@@ -13,19 +13,21 @@ export function teamList(teams, sessions, games) {
   }, {});
 
   sessions.forEach((session) => {
-    const team = teamData[session.team.id];
-    if (team === undefined) return;
-    team.playtime += session.duration;
+    for (const t of session.teams) {
+      const team = teamData[t];
+      if (team === undefined) return;
+      team.playtime += session.duration;
 
-    //if the game entry doesn't exist, create it
-    if (!team.gameDurations[session.game.id]) {
-      team.gameDurations[session.game.id] = {
-        duration: 0,
-        logo: getGameById(session.game.id, games).logo,
-      };
+      //if the game entry doesn't exist, create it
+      if (!team.gameDurations[session.game.id]) {
+        team.gameDurations[session.game.id] = {
+          duration: 0,
+          logo: getGameById(session.game.id, games).logo,
+        };
+      }
+
+      team.gameDurations[session.game.id].duration += session.duration;
     }
-
-    team.gameDurations[session.game.id].duration += session.duration;
   });
 
   // // Determine the most played game for each team and calculate their successes

@@ -85,13 +85,13 @@ function getIfGameExist(gameName) {
 }
 
 export async function addSession(
-  teamId,
+  teamsId,
   gameName,
   duration,
   was_cool,
   comment,
   platform,
-  date
+  date,
 ) {
   try {
     let { exist, id } = getIfGameExist(gameName);
@@ -121,7 +121,7 @@ export async function addSession(
         was_cool: was_cool,
         date: date !== undefined ? date : new Date(),
         game: doc(collection(db, "games"), gamePath),
-        team: doc(collection(db, "teams"), teamId),
+        teams: teamsId,
         comment: comment,
         platform: doc(collection(db, "platforms"), platform),
       });
@@ -130,7 +130,7 @@ export async function addSession(
         duration: duration,
         date: date !== undefined ? date : new Date(),
         game: doc(collection(db, "games"), gamePath),
-        team: doc(collection(db, "teams"), teamId),
+        teams: teamsId,
         comment: comment,
         platform: doc(collection(db, "platforms"), platform),
       });

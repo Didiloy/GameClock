@@ -41,7 +41,7 @@ export function useSuccesses(i18n) {
   function calculateSuccesses(
     teamName,
     sessions,
-    compute_important_person = true
+    compute_important_person = true,
   ) {
     const id_of_team = getIdOfTeam(teamName, teams.value);
     if (id_of_team === "") return;
@@ -56,13 +56,13 @@ export function useSuccesses(i18n) {
     let sessions_of_ten_hours = 0; //stinky
 
     for (const session of sessions) {
-      if (session.team.id === id_of_team) {
+      if (session.teams.includes(id_of_team)) {
         //relentless
         if (session.was_cool !== undefined && session.was_cool === false) {
           if (bad_session.has(session.game.id)) {
             bad_session.set(
               session.game.id,
-              bad_session.get(session.game.id) + 1
+              bad_session.get(session.game.id) + 1,
             );
           } else {
             bad_session.set(session.game.id, 0);
@@ -80,14 +80,14 @@ export function useSuccesses(i18n) {
           enduring.value.unlocked = true;
           enduring.value.image = enduring_logo;
           enduring.value.description = i18n.t(
-            "Successes.descriptions.enduring"
+            "Successes.descriptions.enduring",
           );
         }
         if (session.duration >= 60 * 12) {
           inexhaustible.value.unlocked = true;
           inexhaustible.value.image = inexhaustible_logo;
           inexhaustible.value.description = i18n.t(
-            "Successes.descriptions.inexhaustible"
+            "Successes.descriptions.inexhaustible",
           );
         }
 
@@ -113,14 +113,14 @@ export function useSuccesses(i18n) {
         relentless.value.unlocked = true;
         relentless.value.image = relentless_logo;
         relentless.value.description = i18n.t(
-          "Successes.descriptions.relentless"
+          "Successes.descriptions.relentless",
         );
       }
       if (value >= 50) {
         why_playing.value.unlocked = true;
         why_playing.value.image = why_playing_logo;
         why_playing.value.description = i18n.t(
-          "Successes.descriptions.why_playing"
+          "Successes.descriptions.why_playing",
         );
       }
     }
@@ -130,7 +130,7 @@ export function useSuccesses(i18n) {
       young_gamer.value.unlocked = true;
       young_gamer.value.image = young_gamer_logo;
       young_gamer.value.description = i18n.t(
-        "Successes.descriptions.young_gamer"
+        "Successes.descriptions.young_gamer",
       );
     }
     if (session_number >= 100) {
@@ -142,7 +142,7 @@ export function useSuccesses(i18n) {
       passionnate.value.unlocked = true;
       passionnate.value.image = passionnate_logo;
       passionnate.value.description = i18n.t(
-        "Successes.descriptions.passionnate"
+        "Successes.descriptions.passionnate",
       );
     }
 
@@ -156,7 +156,7 @@ export function useSuccesses(i18n) {
       prospector.value.unlocked = true;
       prospector.value.image = prospector_logo;
       prospector.value.description = i18n.t(
-        "Successes.descriptions.prospector"
+        "Successes.descriptions.prospector",
       );
     }
     if (different_games.size >= 30) {
@@ -174,7 +174,7 @@ export function useSuccesses(i18n) {
         depressed.value.unlocked = true;
         depressed.value.image = depressed_logo;
         depressed.value.description = i18n.t(
-          "Successes.descriptions.depressed"
+          "Successes.descriptions.depressed",
         );
       }
     }
@@ -188,7 +188,7 @@ export function useSuccesses(i18n) {
           important_person.value.unlocked = true;
           important_person.value.image = important_person_logo;
           important_person.value.description = i18n.t(
-            "Successes.descriptions.important_person"
+            "Successes.descriptions.important_person",
           );
         }
       }
@@ -199,7 +199,7 @@ export function useSuccesses(i18n) {
       thousand_hours.value.unlocked = true;
       thousand_hours.value.image = thousand_hours_logo;
       thousand_hours.value.description = i18n.t(
-        "Successes.descriptions.thousand_hours"
+        "Successes.descriptions.thousand_hours",
       );
     }
 

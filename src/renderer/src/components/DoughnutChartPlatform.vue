@@ -166,7 +166,7 @@ function init() {
     date: item.date.seconds,
     id: item.id,
     platform: item.platform ? { id: item.platform.id } : undefined,
-    team: { id: item.team.id },
+    teams: item.teams.map((team) => team),
   }));
 
   const id_of_team = getIdsOfTeam(props.teamName, teams.value);

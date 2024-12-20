@@ -56,24 +56,21 @@
         </div>
       </div>
       <div class="as-bottom-background">
-        <div class=".as-bottom-background-top">
-          <AutoComplete
-            v-if="props.addToWaitingList || props.teamName === ''"
+        <div class="as-bottom-background-top">
+          <MultiSelect
             v-model="teamName"
-            :placeholder="i18n.t('AddSession.team_name')"
-            :suggestions="items_suggest_team"
-            @complete="autocompleteTeam"
+            :options="teams"
+            filter
+            display="chip"
+            optionLabel="name"
+            :placeholder="i18n.t('AddSession.select_team')"
             class="mb20"
             :pt="{
               root: {
                 style: 'width: 100%',
               },
-              input: {
-                style: 'width: 100%',
-              },
             }"
-          >
-          </AutoComplete>
+          />
           <div class="as-fun-selector mb20">
             <ToggleButton
               v-model="toggle_fun"
@@ -317,24 +314,12 @@ const autocomplete = (event) => {
   });
 };
 
-const teamName = ref("");
-if (props.teamName) {
-  teamName.value = props.teamName;
-}
-
-const autocompleteTeam = (event) => {
-  let tmpArray = teams.value.filter((item) => {
-    return item.name.toLowerCase().includes(event.query.toLowerCase());
-  });
-  items_suggest_team.value = tmpArray.map((item) => {
-    return item.name;
-  });
-};
+const teamName = ref([]);
 
 const regex = new RegExp("^[1-9]\\d*$"); //vérifie si le nombre entré ne commence pas par un 0
 
-function getTeamId() {
-  return teams.value.find((g) => g.name === teamName.value).id;
+function getTeamsId() {
+  return teamName.value.map((item) => item.id);
 }
 
 async function addNewSession() {
@@ -380,7 +365,7 @@ async function addNewSession() {
   let success = false;
   if (props.addToWaitingList) {
     storeWaitingList.addSession({
-      teamId: getTeamId(),
+      teamsId: getTeamsId(),
       gameName: game.value,
       duration: parseInt(duration.value),
       was_cool: was_cool.value.value,
@@ -394,7 +379,7 @@ async function addNewSession() {
       success = false;
     } else {
       success = await addSession(
-        getTeamId(),
+        getTeamsId(),
         game.value,
         parseInt(duration.value),
         was_cool.value.value,
@@ -424,7 +409,7 @@ async function addNewSession() {
   } else {
     if (!props.addToWaitingList) {
       storeWaitingList.addSession({
-        teamId: getTeamId(),
+        teamId: getTeamsId(),
         gameName: game.value,
         duration: parseInt(duration.value),
         was_cool: was_cool.value.value,

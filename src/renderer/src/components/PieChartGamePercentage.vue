@@ -150,14 +150,23 @@ function init() {
     name: item.name,
   }));
 
-  const _sessions = sessions.value.map((item) => ({
-    duration: item.duration,
-    date: item.date.seconds,
-    id: item.id,
-    was_cool: item.was_cool,
-    team: { id: item.team.id },
-    game: { id: item.game.id },
-  }));
+  const _sessions = props.sessions
+    ? props.sessions.map((item) => ({
+        duration: item.duration,
+        date: item.date.seconds,
+        id: item.id,
+        was_cool: item.was_cool,
+        teams: item.teams.map((team) => team),
+        game: { id: item.game.id },
+      }))
+    : sessions.value.map((item) => ({
+        duration: item.duration,
+        date: item.date.seconds,
+        id: item.id,
+        was_cool: item.was_cool,
+        teams: item.teams.map((team) => team),
+        game: { id: item.game.id },
+      }));
 
   const id_of_team = getIdsOfTeam(props.teamName, teams.value);
 
@@ -183,8 +192,6 @@ window.electron.ipcRenderer.on(
 );
 
 const setChartData = () => {
-  const documentStyle = getComputedStyle(document.body);
-
   return {
     labels: showLabel.value
       ? games_name.value

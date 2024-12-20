@@ -178,7 +178,7 @@ onMounted(() => {
   const _sessions = sessions.value.map((item) => ({
     duration: item.duration,
     id: item.id,
-    team: { id: item.team.id },
+    teams: item.teams.map((team) => team),
     game: { id: item.game.id },
   }));
 

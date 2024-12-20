@@ -1,4 +1,5 @@
 export function convertMinuteToHoursMinute(min) {
+  if (min === 0 || min === "0") return "0m";
   let minute = parseInt(min);
   if (isNaN(minute)) return "0m";
   return (

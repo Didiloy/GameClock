@@ -4,7 +4,7 @@ export function playtimeHome(values) {
     teams_to_return.push({
       name: team.name,
       playtime: values.sessions.reduce((acc, s) => {
-        if (s.team.id === team.id) {
+        if (s.teams.includes(team.id)) {
           return acc + s.duration;
         }
         return acc;
@@ -32,7 +32,10 @@ export function barChartAllGames(ids_of_teams, team_name, games, sessions) {
     let duration_acc = 0;
     for (let s of sessions) {
       if (team_name) {
-        if (s.game.id === g.id && ids_of_teams.includes(s.team.id)) {
+        if (
+          s.game.id === g.id &&
+          s.teams.some((team) => ids_of_teams.includes(team))
+        ) {
           acc += 1;
           duration_acc += s.duration;
           ss_num++;
@@ -85,7 +88,10 @@ export function gamesFunPercentage(ids_of_teams, games, sessions) {
           }
         }
       } else {
-        if (s.game.id === g.id && ids_of_teams.includes(s.team.id)) {
+        if (
+          s.game.id === g.id &&
+          s.teams.some((team) => ids_of_teams.includes(team))
+        ) {
           cpt++;
           if (s.was_cool) {
             fun++;
@@ -117,7 +123,10 @@ export function pieChartGamePercentage(ids_of_teams, games, sessions) {
     for (let g of games) {
       let acc = 0;
       for (let s of sessions) {
-        if (ids_of_teams.includes(s.team.id) && s.game.id === g.id) {
+        if (
+          s.teams.some((team) => ids_of_teams.includes(team)) &&
+          s.game.id === g.id
+        ) {
           acc += s.duration;
           total_playtime += s.duration;
         }
@@ -156,7 +165,7 @@ export function doughnutChartPlatform(ids_of_teams, platforms, sessions) {
       for (let s of sessions) {
         if (s.platform) {
           if (
-            ids_of_teams.value.includes(s.team.id) &&
+            s.teams.some((team) => ids_of_teams.includes(team)) &&
             s.platform.id === g.id
           ) {
             acc += s.duration;
@@ -231,7 +240,7 @@ export function lineChartByMonth(ids_of_teams, sessions) {
   //Set the sessions of the teams
   let sessions_of_the_team = [];
   for (let s of sessions) {
-    if (ids_of_teams.includes(s.team.id)) {
+    if (s.teams.some((team) => ids_of_teams.includes(team))) {
       sessions_of_the_team.push(s);
     }
   }
@@ -338,13 +347,15 @@ export function lineChartPlayerOfTheWeek(sessions, teams) {
   }
 
   for (const session of sessions) {
-    const sessionDate = formatTimestampToDDMMYYYY(session.date);
-    const teamName = teamIdToNameMap.get(session.team.id);
+    for (const team of session.teams) {
+      const sessionDate = formatTimestampToDDMMYYYY(session.date);
+      const teamName = teamIdToNameMap.get(team);
 
-    if (teamName && last7Days.includes(sessionDate)) {
-      const dayIndex = last7Days.indexOf(sessionDate); // Get the day index
-      const playtimeArray = map_player_time_played.get(teamName);
-      playtimeArray[dayIndex] += session.duration;
+      if (teamName && last7Days.includes(sessionDate)) {
+        const dayIndex = last7Days.indexOf(sessionDate); // Get the day index
+        const playtimeArray = map_player_time_played.get(teamName);
+        playtimeArray[dayIndex] += session.duration;
+      }
     }
   }
 

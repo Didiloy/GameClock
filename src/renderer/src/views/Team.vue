@@ -108,12 +108,12 @@ const sessions_of_team = ref([]);
 function getSessionsOfTeam() {
   let sessions_of_team = [];
   for (let sess of sessions.value) {
-    if (id_of_team.value.includes(sess.team.id)) {
+    if (sess.teams.some((team) => id_of_team.value.includes(team))) {
       sessions_of_team.push(sess);
     }
   }
+
   return sessions_of_team;
-  // return sessions.value.filter((s) => s.team.id === id_of_team.value);
 }
 
 const month_year = ref([]);

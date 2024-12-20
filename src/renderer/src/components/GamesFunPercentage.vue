@@ -49,7 +49,7 @@ function init() {
     date: item.date.seconds,
     id: item.id,
     was_cool: item.was_cool,
-    team: { id: item.team.id },
+    teams: item.teams.map((team) => team),
     game: { id: item.game.id },
   }));
 

@@ -35,6 +35,8 @@ import Dropdown from "primevue/dropdown";
 import Chart from "primevue/chart";
 import Dialog from "primevue/dialog";
 import InputSwitch from "primevue/inputswitch";
+import MultiSelect from "primevue/multiselect";
+import Chips from "primevue/chips";
 import ToggleButton from "primevue/togglebutton";
 import ProgressSpinner from "primevue/progressspinner";
 import ContextMenu from "primevue/contextmenu";
@@ -92,6 +94,8 @@ app.component("InputSwitch", InputSwitch);
 app.component("Message", Message);
 app.component("ContextMenu", ContextMenu);
 app.component("TextArea", Textarea);
+app.component("Chips", Chips);
+app.component("MultiSelect", MultiSelect);
 
 //Pinia
 const pinia = createPinia();

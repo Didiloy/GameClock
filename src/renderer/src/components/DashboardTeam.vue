@@ -112,7 +112,7 @@
         :value="i18n.t('DashboardTeam.games_sessions')"
       ></LittleCard>
     </div>
-    <SessionsHistory :teamName="props.teamName" />
+    <!-- <SessionsHistory :teamName="props.teamName" /> -->
   </div>
 </template>
 <script setup>
@@ -169,7 +169,7 @@ function calculateBiggestSession() {
   let game_id = "";
   if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
-      if (id_of_team.value.includes(element.team.id)) {
+      if (element.teams.some((team) => id_of_team.value.includes(team))) {
         if (cpt > element.duration) {
           return;
         }
@@ -179,7 +179,7 @@ function calculateBiggestSession() {
     });
   } else {
     props.sessions.forEach((element) => {
-      if (id_of_team.value.includes(element.team.id)) {
+      if (element.teams.some((team) => id_of_team.value.includes(team))) {
         if (cpt > element.duration) {
           return;
         }
@@ -202,13 +202,13 @@ function calculateAverageSessionDuration() {
   let cpt = 0;
   if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
-      if (id_of_team.value.includes(element.team.id)) {
+      if (element.teams.some((team) => id_of_team.value.includes(team))) {
         cpt += element.duration;
       }
     });
   } else {
     props.sessions.forEach((element) => {
-      if (id_of_team.value.includes(element.team.id)) {
+      if (element.teams.some((team) => id_of_team.value.includes(team))) {
         cpt += element.duration;
       }
     });
@@ -224,13 +224,13 @@ function getNumberOfSessions() {
   let cpt = 0;
   if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
-      if (id_of_team.value.includes(element.team.id)) {
+      if (element.teams.some((team) => id_of_team.value.includes(team))) {
         cpt++;
       }
     });
   } else {
     props.sessions.forEach((element) => {
-      if (id_of_team.value.includes(element.team.id)) {
+      if (element.teams.some((team) => id_of_team.value.includes(team))) {
         cpt++;
       }
     });
@@ -272,13 +272,13 @@ function calculateTeamTime() {
   let cpt = 0;
   if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
-      if (id_of_team.value.includes(element.team.id)) {
+      if (element.teams.some((team) => id_of_team.value.includes(team))) {
         cpt += element.duration;
       }
     });
   } else {
     props.sessions.forEach((element) => {
-      if (id_of_team.value.includes(element.team.id)) {
+      if (element.teams.some((team) => id_of_team.value.includes(team))) {
         cpt += element.duration;
       }
     });
@@ -294,7 +294,7 @@ function getNumberOfGames() {
   let played_games = [];
   if (props.sessions === undefined) {
     sessions.value.forEach((element) => {
-      if (id_of_team.value.includes(element.team.id)) {
+      if (element.teams.some((team) => id_of_team.value.includes(team))) {
         if (!played_games.includes(element.game.id)) {
           played_games.push(element.game.id);
           cpt++;
@@ -303,7 +303,7 @@ function getNumberOfGames() {
     });
   } else {
     props.sessions.forEach((element) => {
-      if (id_of_team.value.includes(element.team.id)) {
+      if (element.teams.some((team) => id_of_team.value.includes(team))) {
         if (!played_games.includes(element.game.id)) {
           played_games.push(element.game.id);
           cpt++;
@@ -336,7 +336,7 @@ function calculateRanking(teamName) {
   for (let t of teams.value) {
     let cpt = 0;
     sessions.value.forEach((element) => {
-      if (element.team.id === t.id) {
+      if (element.teams.some((team) => t.id === team)) {
         cpt += element.duration;
       }
     });
@@ -362,9 +362,13 @@ const total_fun_percentage = ref(0);
 function getTotalFunPercentage() {
   let tmp;
   if (props.sessions === undefined) {
-    tmp = sessions.value.filter((s) => id_of_team.value.includes(s.team.id));
+    tmp = sessions.value.filter((s) =>
+      s.teams.some((team) => id_of_team.value.includes(team)),
+    );
   } else {
-    tmp = props.sessions.filter((s) => id_of_team.value.includes(s.team.id));
+    tmp = props.sessions.filter((s) =>
+      s.teams.some((team) => id_of_team.value.includes(team)),
+    );
   }
   let cpt = 0;
   tmp.map((s) => (cpt += s.was_cool ? 1 : 0));

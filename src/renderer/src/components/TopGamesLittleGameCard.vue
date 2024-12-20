@@ -80,7 +80,7 @@ function setSessionsOfTeam() {
   sessions_of_team.value = [];
   if (id_of_team.value) {
     for (let s of sessions.value) {
-      if (id_of_team.value.includes(s.team.id)) {
+      if (s.teams.some((team) => id_of_team.value.includes(team))) {
         sessions_of_team.value.push(s);
       }
     }

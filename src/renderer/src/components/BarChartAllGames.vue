@@ -124,7 +124,7 @@ function init() {
     duration: item.duration,
     date: item.date.seconds,
     id: item.id,
-    team: { id: item.team.id },
+    teams: item.teams.map((team) => team),
     game: { id: item.game.id },
   }));
 
