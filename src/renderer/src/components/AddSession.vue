@@ -300,11 +300,6 @@ onUnmounted(() => {
   emit("toggleChronoListener");
 });
 
-const op = ref();
-const toggleOverlay = () => {
-  op.value.toggle(event);
-};
-
 const autocomplete = (event) => {
   let tmpArray = all_games.value.filter((item) => {
     return item.name.toLowerCase().includes(event.query.toLowerCase());
@@ -315,6 +310,9 @@ const autocomplete = (event) => {
 };
 
 const teamName = ref([]);
+if (props.teamName) {
+  teamName.value = teams.value.filter((t) => t.name === props.teamName);
+}
 
 const regex = new RegExp("^[1-9]\\d*$"); //vérifie si le nombre entré ne commence pas par un 0
 

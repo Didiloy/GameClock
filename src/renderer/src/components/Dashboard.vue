@@ -138,14 +138,14 @@
         titleColor="#390b00"
       ></GamesFunPercentage>
     </div>
-    <!-- <SessionsHistory
+    <SessionsHistory
       :historySize="getPreferences('number_of_last_sessions')"
       :title="
         getPreferences('number_of_last_sessions') +
         ' ' +
         i18n.t('Dashboard.last_sessions')
       "
-    /> -->
+    />
   </div>
 </template>
 <script setup>

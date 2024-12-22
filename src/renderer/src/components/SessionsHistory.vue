@@ -70,24 +70,26 @@
               </template>
             </Column>
             <Column
-              v-if="
-                props.teamName === undefined || props.teamName.includes(',')
-              "
               field="team_name"
               :header="i18n.t('SessionsHistory.team')"
               v-once
             >
               <template #body="slotProps">
-                <RouterLink
-                  :to="'/team/' + slotProps.data.team_name"
-                  style="color: var(--primary-500)"
-                  >{{
-                    slotProps.data.team_name.length > 20 &&
-                    !slotProps.data.name.includes(" ")
-                      ? slotProps.data.team_name.substring(0, 20) + "..."
-                      : slotProps.data.team_name
-                  }}
-                </RouterLink>
+                <div class="sh-chips-team">
+                  <Chip
+                    v-for="(item, index) in slotProps.data.team_names"
+                    :key="index"
+                    :label="item"
+                    class="sh-chips-team-item"
+                    @click="$router.push('/team/' + item)"
+                    :pt="{
+                      root: {
+                        style:
+                          'margin-right: 5px; margin-top: 5px; height: 24px; font-size: 14px;',
+                      },
+                    }"
+                  />
+                </div>
               </template>
             </Column>
             <Column
@@ -155,7 +157,7 @@
   </Card>
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
@@ -180,12 +182,22 @@ const { games, sessions, teams, platforms } = storeToRefs(store);
 
 const sessions_values = ref([]);
 const id_of_team = ref([]);
-onMounted(async () => {
+onMounted(() => {
   init();
   if (getPreferences("use_logo_color_in_session_history")) {
-    await computeSessionColor();
+    computeSessionColor();
   }
 });
+
+watch(
+  () => props.teamName,
+  () => {
+    init();
+    if (getPreferences("use_logo_color_in_session_history")) {
+      computeSessionColor();
+    }
+  },
+);
 
 // Using Map to store unique games so that we don't compute color multiple time for the same game
 const uniqueGames = ref(new Map());
@@ -219,14 +231,12 @@ function init() {
   if (props.teamName !== undefined) {
     //if we are in a team page
     for (let s of session_copy) {
-      if (id_of_team.value.includes(s.team.id)) {
-        let team_name;
-        if (props.teamName.includes(",")) {
-          // if we are in a multi team page
-          for (let t of teams.value) {
-            if (s.team.id === t.id) {
-              team_name = t.name;
-            }
+      if (s.teams.some((team) => id_of_team.value.includes(team))) {
+        let team_names = [];
+        // if we are in a multi team page
+        for (let t of teams.value) {
+          if (s.teams.some((team) => t.id === team)) {
+            team_names.push(t.name);
           }
         }
         let [game_name, logo] = getGameNameAndLogoById(s.game.id);
@@ -247,7 +257,7 @@ function init() {
         }
 
         sessions_values.value.push({
-          team_name: team_name,
+          team_names: team_names,
           name: game_name,
           playtime: s.duration,
           date: s.date,
@@ -265,10 +275,10 @@ function init() {
       if (!uniqueGames.value.has(game_name)) {
         uniqueGames.value.set(game_name, { logo: logo });
       }
-      let team_name;
+      let team_names = [];
       for (let t of teams.value) {
-        if (s.team.id === t.id) {
-          team_name = t.name;
+        if (s.teams.some((team) => t.id === team)) {
+          team_names.push(t.name);
         }
       }
 
@@ -284,7 +294,7 @@ function init() {
       }
 
       sessions_values.value.push({
-        team_name: team_name,
+        team_names: team_names,
         name: game_name,
         playtime: s.duration,
         date: s.date,
@@ -297,7 +307,7 @@ function init() {
   }
 }
 
-async function computeSessionColor() {
+function computeSessionColor() {
   let id = 0;
   for (let [game, data] of uniqueGames.value) {
     const worker = new Worker(
@@ -368,6 +378,20 @@ function getGameNameAndLogoById(id) {
 @font-face {
   font-family: sephir;
   src: url("../assets/fonts/sephir/sephir.otf");
+}
+
+.sh-chips-team {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  flex-wrap: wrap;
+}
+
+.sh-chips-team-item:hover {
+  cursor: pointer;
+  background-color: var(--primary-300);
+  color: black;
 }
 
 .sh-font {

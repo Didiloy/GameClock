@@ -112,7 +112,7 @@
         :value="i18n.t('DashboardTeam.games_sessions')"
       ></LittleCard>
     </div>
-    <!-- <SessionsHistory :teamName="props.teamName" /> -->
+    <SessionsHistory :teamName="props.teamName" />
   </div>
 </template>
 <script setup>
@@ -147,6 +147,16 @@ onMounted(() => {
     loaded.value = true;
   }, 500);
 });
+
+watch(
+  () => props.teamName,
+  () => {
+    setTimeout(() => {
+      init();
+      loaded.value = true;
+    }, 500);
+  },
+);
 
 function init() {
   id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
