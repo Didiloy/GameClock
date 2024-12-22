@@ -119,7 +119,7 @@ export async function addSession(
       await setDoc(doc(sessionRef), {
         duration: duration,
         was_cool: was_cool,
-        date: date !== undefined ? date : new Date(),
+        date: date !== undefined ? new Date(date) : new Date(),
         game: doc(collection(db, "games"), gamePath),
         teams: teamsId,
         comment: comment,
@@ -128,7 +128,7 @@ export async function addSession(
     } else {
       await setDoc(doc(sessionRef), {
         duration: duration,
-        date: date !== undefined ? date : new Date(),
+        date: date !== undefined ? new Date(date) : new Date(),
         game: doc(collection(db, "games"), gamePath),
         teams: teamsId,
         comment: comment,

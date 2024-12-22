@@ -43,13 +43,13 @@ async function synchronizeWithDatabase() {
   loading.value = true;
   for (const session of waiting_list.value) {
     let success = await addSession(
-      session.teamId,
+      session.teamsId,
       session.gameName,
       parseInt(session.duration),
       session.was_cool,
       session.comment,
       session.platform,
-      session.date
+      session.date,
     );
     if (success) {
       store.deleteSession(session);
