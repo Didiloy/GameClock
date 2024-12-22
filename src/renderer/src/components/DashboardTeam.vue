@@ -380,9 +380,17 @@ function getTotalFunPercentage() {
       s.teams.some((team) => id_of_team.value.includes(team)),
     );
   }
-  let cpt = 0;
-  tmp.map((s) => (cpt += s.was_cool ? 1 : 0));
-  return ((cpt / tmp.length) * 100).toFixed(0);
+  let fun = 0;
+  let neutral = 0;
+  let bad = 0;
+  tmp.map((s) => {
+    if (s.was_cool) fun++;
+    else if (s.was_cool === undefined) neutral++;
+    else bad++;
+  });
+
+  let happiness = (fun * 1 + neutral * 0.5 + bad * 0) / tmp.length;
+  return (happiness * 100).toFixed(0);
 }
 </script>
 <style scoped>
