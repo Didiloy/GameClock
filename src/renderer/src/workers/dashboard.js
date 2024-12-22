@@ -92,15 +92,17 @@ function initDashboard(sessions, games, teams) {
       //unhappiest player
       for (const team of session.teams) {
         if (player_happiness.has(team)) {
-          player_happiness.get(team)[1]++;
-          if (session.was_cool) {
-            player_happiness.get(team)[0]++;
-          }
+          player_happiness.get(team)[3]++;
+          if (session.was_cool) player_happiness.get(team)[0]++;
+          else if (session.was_cool === undefined)
+            player_happiness.get(team)[1]++;
+          else player_happiness.get(team)[2]++;
         } else {
-          player_happiness.set(team, [
-            session.was_cool !== undefined ? session.was_cool : 0,
-            1,
-          ]);
+          player_happiness.set(team, [0, 0, 0, 1]); //[fun, neutral, bad, total]
+          if (session.was_cool) player_happiness.get(team)[0]++;
+          else if (session.was_cool === undefined)
+            player_happiness.get(team)[1]++;
+          else player_happiness.get(team)[2]++;
         }
       }
     }
@@ -197,7 +199,8 @@ function initDashboard(sessions, games, teams) {
   let min_happiness = 1;
   let team_id = "";
   for (let [key, value] of player_happiness) {
-    let happiness = value[0] / value[1];
+    let acc = value[0] * 1 + value[1] * 0.5 + value[2] * 0;
+    let happiness = acc / value[3];
     if (happiness < min_happiness) {
       min_happiness = happiness;
       team_id = key;
