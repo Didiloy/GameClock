@@ -1,5 +1,5 @@
 <template>
-  <div class="main-background container">
+  <div class="sidebar-container">
     <div class="s-content">
       <div style="width: 100%">
         <div v-for="(item, i) in items" :key="i" class="menu">
@@ -117,6 +117,13 @@ h3 {
   margin: 10px;
 }
 
+.sidebar-container {
+  height: 100%;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-app-region: drag;
+}
+
 .s-content {
   display: flex;
   flex-direction: column;
@@ -133,6 +140,7 @@ h3 {
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
+  -webkit-app-region: no-drag;
 }
 
 .reload-button {
@@ -142,6 +150,7 @@ h3 {
 .menu {
   width: 100%;
   border: none;
+  -webkit-app-region: no-drag;
 }
 
 .link {
@@ -152,6 +161,7 @@ h3 {
   justify-content: start;
   align-items: center;
   padding-left: 10px;
+  -webkit-app-region: no-drag;
 }
 
 .link:hover {

@@ -128,6 +128,7 @@ function toggleChrono() {
   width: 100%;
   overflow-y: hidden;
   margin-top: 32px;
+  background-color: var(--primary-100);
 }
 
 :global(.main-background) {
@@ -142,7 +143,8 @@ function toggleChrono() {
   justify-content: center;
   align-items: center;
   padding: 10px 10px 3px;
-  border-right: 1px solid var(--surface-200);
+  /* border-right: 1px solid var(--surface-200); */
+  background-color: var(--primary-100);
 }
 
 .a-center {
@@ -158,10 +160,12 @@ h2 {
 }
 
 .content {
-  margin-top: 10px;
+  /* margin-top: 10px; */
   padding: 5px;
   width: 100%;
   overflow-y: auto;
   padding-bottom: 25px;
+  border-radius: 10px 0 0 0;
+  background-color: var(--surface-100);
 }
 </style>

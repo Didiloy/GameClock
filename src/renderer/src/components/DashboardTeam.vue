@@ -370,26 +370,26 @@ function calculateRanking(teamName) {
 const total_fun_percentage = ref(0);
 
 function getTotalFunPercentage() {
-  let tmp;
+  let team_sessions;
   if (props.sessions === undefined) {
-    tmp = sessions.value.filter((s) =>
+    team_sessions = sessions.value.filter((s) =>
       s.teams.some((team) => id_of_team.value.includes(team)),
     );
   } else {
-    tmp = props.sessions.filter((s) =>
+    team_sessions = props.sessions.filter((s) =>
       s.teams.some((team) => id_of_team.value.includes(team)),
     );
   }
   let fun = 0;
   let neutral = 0;
   let bad = 0;
-  tmp.map((s) => {
+  team_sessions.map((s) => {
     if (s.was_cool) fun++;
     else if (s.was_cool === undefined) neutral++;
     else bad++;
   });
 
-  let happiness = (fun * 1 + neutral * 0.5 + bad * 0) / tmp.length;
+  let happiness = (fun * 1 + neutral * 0.5 + bad * 0) / team_sessions.length;
   return (happiness * 100).toFixed(0);
 }
 </script>
