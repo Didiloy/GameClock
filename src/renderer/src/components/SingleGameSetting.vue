@@ -231,7 +231,7 @@ function getSmallestSession() {
   if (s.length === 0) return 0;
   return s.reduce(
     (acc, s) => (s.duration < acc ? s.duration : acc),
-    longuest_session.value
+    longuest_session.value,
   );
 }
 
@@ -246,18 +246,24 @@ function getAverageSession() {
 const team_who_play_the_most = ref("");
 
 function getTeamWhoPlayTheMost() {
-  const team_id = sessions.value
-    .filter((s) => s.game.id === game_id.value)
-    .map((s) => s.team.id)
+  const teamSessionCounts = sessions.value
+    .map((s) => s.teams.map((team) => team))
+    .flat()
     .reduce((acc, id) => {
       acc[id] = (acc[id] || 0) + 1;
       return acc;
     }, {});
-  if (Object.keys(team_id).length === 0) return ""; //check if the object if empty
-  const team_id_max = Object.keys(team_id).reduce((a, b) =>
-    team_id[a] > team_id[b] ? a : b
+
+  // Check if no teams participated in any sessions
+  if (Object.keys(teamSessionCounts).length === 0) return "";
+
+  // Find the team ID with the maximum session count
+  const teamIdMax = Object.keys(teamSessionCounts).reduce((a, b) =>
+    teamSessionCounts[a] > teamSessionCounts[b] ? a : b,
   );
-  return teams.value.find((t) => t.id === team_id_max).name;
+
+  const team = teams.value.find((t) => t.id === teamIdMax);
+  return team ? team.name : "";
 }
 
 const game_sessions = ref([]);
@@ -265,7 +271,7 @@ const game_sessions = ref([]);
 onMounted(() => {
   game_id.value = getGameId();
   game_sessions.value = sessions.value.filter(
-    (s) => s.game.id === game_id.value
+    (s) => s.game.id === game_id.value,
   );
   total_sessions.value = getTotalSessions();
   longuest_session.value = getLonguestSession();
@@ -281,7 +287,7 @@ async function useModifyGame() {
     name.value,
     logo.value,
     heroe.value,
-    grid.value
+    grid.value,
   );
   loading.value = false;
   if (success) {

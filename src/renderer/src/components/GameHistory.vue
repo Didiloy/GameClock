@@ -67,17 +67,21 @@
               v-once
             >
               <template #body="slotProps">
-                <RouterLink
-                  v-if="slotProps.data.team_name"
-                  :to="'/team/' + slotProps.data.team_name"
-                  style="color: var(--primary-500)"
-                  >{{
-                    slotProps.data.team_name.length > 20 &&
-                    !slotProps.data.name.includes(" ")
-                      ? slotProps.data.team_name.substring(0, 20) + "..."
-                      : slotProps.data.team_name
-                  }}
-                </RouterLink>
+                <div class="sh-chips-team">
+                  <Chip
+                    v-for="(item, index) in slotProps.data.team_names"
+                    :key="index"
+                    :label="item"
+                    class="sh-chips-team-item"
+                    @click="$router.push('/team/' + item)"
+                    :pt="{
+                      root: {
+                        style:
+                          'margin-right: 5px; margin-top: 5px; height: 24px; font-size: 14px;',
+                      },
+                    }"
+                  />
+                </div>
               </template>
             </Column>
             <Column
@@ -190,10 +194,10 @@ function init() {
     if (!uniqueGames.value.has(game_name)) {
       uniqueGames.value.set(game_name, { logo: logo });
     }
-    let team_name;
+    let team_names = [];
     for (let t of teams.value) {
-      if (s.team.id === t.id) {
-        team_name = t.name;
+      if (s.teams.some((team) => t.id === team)) {
+        team_names.push(t.name);
       }
     }
 
@@ -209,7 +213,7 @@ function init() {
     }
 
     sessions_values.value.push({
-      team_name: team_name,
+      team_names: team_names,
       name: game_name,
       playtime: s.duration,
       date: s.date,
@@ -292,6 +296,20 @@ function getGameNameAndLogoById(id) {
 @font-face {
   font-family: sephir;
   src: url("../assets/fonts/sephir/sephir.otf");
+}
+
+.sh-chips-team {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  flex-wrap: wrap;
+}
+
+.sh-chips-team-item:hover {
+  cursor: pointer;
+  background-color: var(--primary-300);
+  color: black;
 }
 
 .sh-font {

@@ -12,6 +12,7 @@ import {
   lineChartPlayerOfTheWeek,
 } from "./graphs";
 import { teamList } from "./team_list";
+import { addSessionCountToGames } from "./games_settings";
 
 const { Tray, Menu } = require("electron/main");
 let tray;
@@ -158,6 +159,16 @@ function createWindow() {
     BrowserWindow.getAllWindows()[0].webContents.send("result_teamlist", {
       teams,
     });
+  });
+
+  ipcMain.on("gamesessionscount", (event, data) => {
+    const games_values = addSessionCountToGames(data.games, data.sessions);
+    BrowserWindow.getAllWindows()[0].webContents.send(
+      "result_gamesessionscount",
+      {
+        games_values,
+      },
+    );
   });
 }
 

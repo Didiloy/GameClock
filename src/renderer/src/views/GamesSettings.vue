@@ -49,7 +49,6 @@ const store = useStore();
 const { games, sessions } = storeToRefs(store);
 const games_values = ref([]);
 const games_values_searched = ref([]);
-const gameSessionCount = ref({});
 
 const loaded = ref(false);
 
@@ -63,60 +62,58 @@ const options = ref([
 ]);
 
 onMounted(() => {
-  setTimeout(() => {
-    games_values.value = games.value.toSorted((a, b) =>
-      a.name.localeCompare(b.name)
-    );
-    addSessionCountToGames();
-    games_values_searched.value = games_values.value;
-    loaded.value = true;
-  }, 500);
+  const _sessions = sessions.value.map((item) => ({
+    duration: item.duration,
+    id: item.id,
+    game: { id: item.game.id },
+  }));
+
+  const _games = games.value.map((item) => ({
+    id: item.id,
+    name: item.name,
+    heroe: item.heroe,
+    logo: item.logo,
+    grid: item.grid,
+  }));
+
+  window.electron.ipcRenderer.send("gamesessionscount", {
+    sessions: _sessions,
+    games: _games,
+  });
 });
 
-watch(
-  () => searchStore.searchValue,
-  () => {
-    if (searchStore.searchValue.length < 3 && searchStore.searchValue !== "") {
-      return;
-    }
-    loaded.value = false;
-    setTimeout(() => {
-      if (searchStore.searchValue === "") {
-        games_values_searched.value = games_values.value;
-        sortGames();
-        loaded.value = true;
-        return;
-      }
-      games_values_searched.value = games_values.value.filter((g) =>
-        g.name.toLowerCase().includes(searchStore.searchValue.toLowerCase())
-      );
-      sortGames();
-      loaded.value = true;
-    }, 500);
-  }
-);
+window.electron.ipcRenderer.on("result_gamesessionscount", (event, data) => {
+  games_values.value = data.games_values;
+  games_values_searched.value = games_values.value;
+  loaded.value = true;
+});
+
+// watch(
+//   () => searchStore.searchValue,
+//   () => {
+//     if (searchStore.searchValue.length < 3 && searchStore.searchValue !== "") {
+//       return;
+//     }
+//     loaded.value = false;
+//     setTimeout(() => {
+//       if (searchStore.searchValue === "") {
+//         games_values_searched.value = games_values.value;
+//         sortGames();
+//         loaded.value = true;
+//         return;
+//       }
+//       games_values_searched.value = games_values.value.filter((g) =>
+//         g.name.toLowerCase().includes(searchStore.searchValue.toLowerCase()),
+//       );
+//       sortGames();
+//       loaded.value = true;
+//     }, 500);
+//   },
+// );
 
 watch(sort_value, () => {
   sortGames();
 });
-
-function addSessionCountToGames() {
-  // calculate the number of sessions for each game
-  gameSessionCount.value = games.value.reduce((acc, game) => {
-    acc[game.id] = { name: game.name, sessionCount: 0 };
-    return acc;
-  }, {});
-
-  for (const session of sessions.value) {
-    if (gameSessionCount.value[session.game.id]) {
-      gameSessionCount.value[session.game.id].sessionCount += 1;
-    }
-  }
-
-  for (const gv of games_values.value) {
-    gv.sessionCount = gameSessionCount.value[gv.id].sessionCount;
-  }
-}
 
 function sortGames() {
   games_values_searched.value.sort((a, b) => {
