@@ -288,9 +288,8 @@ function addNewDatabase() {
   flex-direction: column;
   align-items: center;
   justify-content: start; */
-  height: 100%;
+  height: fit-content;
   width: 95%;
-  margin-bottom: 50px;
 }
 
 @font-face {
