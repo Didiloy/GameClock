@@ -12,7 +12,7 @@ import {
   lineChartPlayerOfTheWeek,
 } from "./graphs";
 import { teamList } from "./team_list";
-import { addSessionCountToGames } from "./games_settings";
+import { addSessionCountToGames, singleGameStats } from "./games_settings";
 
 const { Tray, Menu } = require("electron/main");
 let tray;
@@ -167,6 +167,30 @@ function createWindow() {
       "result_gamesessionscount",
       {
         games_values,
+      },
+    );
+  });
+
+  ipcMain.on("singlegamestats", (event, data) => {
+    let {
+      gameId,
+      _total_sessions,
+      _longuest_session,
+      _smallest_session,
+      _average_session,
+      _team_who_play_the_most,
+      _total_playtime,
+    } = singleGameStats(data.game_id, data.sessions, data.teams);
+    BrowserWindow.getAllWindows()[0].webContents.send(
+      "result_singlegamestats",
+      {
+        gameId,
+        _total_sessions,
+        _longuest_session,
+        _smallest_session,
+        _average_session,
+        _team_who_play_the_most,
+        _total_playtime,
       },
     );
   });

@@ -210,61 +210,7 @@ const smallest_session = ref(0);
 const average_session = ref(0);
 const total_playtime = ref(0);
 
-function getTotalPlaytime() {
-  let s = sessions.value.filter((s) => s.game.id === game_id.value);
-  if (s.length === 0) return 0;
-  return s.reduce((acc, s) => acc + s.duration, 0);
-}
-
-function getTotalSessions() {
-  return sessions.value.filter((s) => s.game.id === game_id.value).length;
-}
-
-function getLonguestSession() {
-  let s = sessions.value.filter((s) => s.game.id === game_id.value);
-  if (s.length === 0) return 0;
-  return s.reduce((acc, s) => (s.duration > acc ? s.duration : acc), 0);
-}
-
-function getSmallestSession() {
-  let s = sessions.value.filter((s) => s.game.id === game_id.value);
-  if (s.length === 0) return 0;
-  return s.reduce(
-    (acc, s) => (s.duration < acc ? s.duration : acc),
-    longuest_session.value,
-  );
-}
-
-function getAverageSession() {
-  let s = sessions.value.filter((s) => s.game.id === game_id.value);
-  if (s.length === 0) return 0;
-  return (
-    s.reduce((acc, s) => acc + s.duration, 0) / total_sessions.value
-  ).toFixed(0);
-}
-
 const team_who_play_the_most = ref("");
-
-function getTeamWhoPlayTheMost() {
-  const teamSessionCounts = sessions.value
-    .map((s) => s.teams.map((team) => team))
-    .flat()
-    .reduce((acc, id) => {
-      acc[id] = (acc[id] || 0) + 1;
-      return acc;
-    }, {});
-
-  // Check if no teams participated in any sessions
-  if (Object.keys(teamSessionCounts).length === 0) return "";
-
-  // Find the team ID with the maximum session count
-  const teamIdMax = Object.keys(teamSessionCounts).reduce((a, b) =>
-    teamSessionCounts[a] > teamSessionCounts[b] ? a : b,
-  );
-
-  const team = teams.value.find((t) => t.id === teamIdMax);
-  return team ? team.name : "";
-}
 
 const game_sessions = ref([]);
 
@@ -273,12 +219,44 @@ onMounted(() => {
   game_sessions.value = sessions.value.filter(
     (s) => s.game.id === game_id.value,
   );
-  total_sessions.value = getTotalSessions();
-  longuest_session.value = getLonguestSession();
-  smallest_session.value = getSmallestSession();
-  average_session.value = getAverageSession();
-  team_who_play_the_most.value = getTeamWhoPlayTheMost();
-  total_playtime.value = getTotalPlaytime();
+
+  const _sessions = sessions.value.map((item) => ({
+    duration: item.duration,
+    id: item.id,
+    game: { id: item.game.id },
+    teams: item.teams.map((t) => t),
+  }));
+
+  const _teams = teams.value.map((item) => ({
+    id: item.id,
+    name: item.name,
+  }));
+
+  window.electron.ipcRenderer.send("singlegamestats", {
+    game_id: game_id.value,
+    sessions: _sessions,
+    teams: _teams,
+  });
+});
+
+window.electron.ipcRenderer.on("result_singlegamestats", (event, data) => {
+  let {
+    gameId,
+    _total_sessions,
+    _longuest_session,
+    _smallest_session,
+    _average_session,
+    _team_who_play_the_most,
+    _total_playtime,
+  } = data;
+  if (gameId === game_id.value) {
+    total_sessions.value = _total_sessions;
+    longuest_session.value = _longuest_session;
+    smallest_session.value = _smallest_session;
+    average_session.value = _average_session;
+    team_who_play_the_most.value = _team_who_play_the_most;
+    total_playtime.value = _total_playtime;
+  }
 });
 
 async function useModifyGame() {

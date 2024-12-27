@@ -88,28 +88,26 @@ window.electron.ipcRenderer.on("result_gamesessionscount", (event, data) => {
   loaded.value = true;
 });
 
-// watch(
-//   () => searchStore.searchValue,
-//   () => {
-//     if (searchStore.searchValue.length < 3 && searchStore.searchValue !== "") {
-//       return;
-//     }
-//     loaded.value = false;
-//     setTimeout(() => {
-//       if (searchStore.searchValue === "") {
-//         games_values_searched.value = games_values.value;
-//         sortGames();
-//         loaded.value = true;
-//         return;
-//       }
-//       games_values_searched.value = games_values.value.filter((g) =>
-//         g.name.toLowerCase().includes(searchStore.searchValue.toLowerCase()),
-//       );
-//       sortGames();
-//       loaded.value = true;
-//     }, 500);
-//   },
-// );
+watch(
+  () => searchStore.searchValue,
+  () => {
+    if (searchStore.searchValue.length < 3 && searchStore.searchValue !== "") {
+      return;
+    }
+    loaded.value = false;
+    if (searchStore.searchValue === "") {
+      games_values_searched.value = games_values.value;
+      sortGames();
+      loaded.value = true;
+      return;
+    }
+    games_values_searched.value = games_values.value.filter((g) =>
+      g.name.toLowerCase().includes(searchStore.searchValue.toLowerCase()),
+    );
+    sortGames();
+    loaded.value = true;
+  },
+);
 
 watch(sort_value, () => {
   sortGames();
