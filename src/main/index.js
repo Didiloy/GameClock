@@ -13,6 +13,7 @@ import {
 } from "./graphs";
 import { teamList } from "./team_list";
 import { addSessionCountToGames, singleGameStats } from "./games_settings";
+import { dashboardteam } from "./dashboardteam";
 
 const { Tray, Menu } = require("electron/main");
 let tray;
@@ -193,6 +194,29 @@ function createWindow() {
         _total_playtime,
       },
     );
+  });
+
+  ipcMain.on("dashboardteam", (event, data) => {
+    const {
+      team_time,
+      sessions_number,
+      ranking,
+      number_of_games,
+      total_fun_percentage,
+      team_average_session_duration,
+      biggest_session,
+      game_of_biggest_session,
+    } = dashboardteam(data.ids_of_team, data.games, data.sessions, data.teams);
+    BrowserWindow.getAllWindows()[0].webContents.send("result_dashboardteam", {
+      team_time,
+      sessions_number,
+      ranking,
+      number_of_games,
+      total_fun_percentage,
+      team_average_session_duration,
+      biggest_session,
+      game_of_biggest_session,
+    });
   });
 }
 

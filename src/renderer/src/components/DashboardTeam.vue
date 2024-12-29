@@ -142,112 +142,81 @@ const id_of_team = ref([]);
 const loaded = ref(false);
 
 onMounted(() => {
-  setTimeout(() => {
-    init();
-    loaded.value = true;
-  }, 500);
+  init();
 });
 
 watch(
   () => props.teamName,
   () => {
-    setTimeout(() => {
-      init();
-      loaded.value = true;
-    }, 500);
+    init();
+  },
+);
+
+watch(
+  () => props.sessions,
+  () => {
+    init();
   },
 );
 
 function init() {
   id_of_team.value = getIdsOfTeam(props.teamName, teams.value);
+  let ids_of_team = getIdsOfTeam(props.teamName, teams.value);
   total_time.value = calculateTotalTime();
-  team_time.value = calculateTeamTime();
-  sessions_number.value = getNumberOfSessions();
-  ranking.value = calculateRanking(props.teamName);
-  number_of_games.value = getNumberOfGames();
-  total_fun_percentage.value = getTotalFunPercentage();
-  team_average_session_duration.value = calculateAverageSessionDuration();
-  [biggest_session.value, game_of_biggest_session.value] =
-    calculateBiggestSession();
+
+  const _games = games.value.map((item) => ({
+    id: item.id,
+    name: item.name,
+  }));
+
+  const _sessions =
+    props.sessions !== undefined
+      ? props.sessions.map((item) => ({
+          duration: item.duration,
+          date: item.date.seconds,
+          was_cool: item.was_cool,
+          id: item.id,
+          teams: item.teams.map((team) => team),
+          game: { id: item.game.id },
+        }))
+      : sessions.value.map((item) => ({
+          duration: item.duration,
+          date: item.date.seconds,
+          was_cool: item.was_cool,
+          id: item.id,
+          teams: item.teams.map((team) => team),
+          game: { id: item.game.id },
+        }));
+
+  const _teams = teams.value.map((item) => ({
+    id: item.id,
+    name: item.name,
+  }));
+
+  window.electron.ipcRenderer.send("dashboardteam", {
+    ids_of_team: ids_of_team,
+    games: _games,
+    sessions: _sessions,
+    teams: _teams,
+  });
 }
+
+window.electron.ipcRenderer.on("result_dashboardteam", (event, data) => {
+  team_time.value = data.team_time;
+  sessions_number.value = data.sessions_number;
+  ranking.value = data.ranking;
+  number_of_games.value = data.number_of_games;
+  total_fun_percentage.value = data.total_fun_percentage;
+  team_average_session_duration.value = data.team_average_session_duration;
+  biggest_session.value = data.biggest_session;
+  game_of_biggest_session.value = data.game_of_biggest_session;
+  loaded.value = true;
+});
 
 const biggest_session = ref(0);
 const game_of_biggest_session = ref("");
-function calculateBiggestSession() {
-  if (id_of_team.value.length === 0) return [0, ""];
-  let cpt = 0;
-  let game_id = "";
-  if (props.sessions === undefined) {
-    sessions.value.forEach((element) => {
-      if (element.teams.some((team) => id_of_team.value.includes(team))) {
-        if (cpt > element.duration) {
-          return;
-        }
-        cpt = element.duration;
-        game_id = element.game.id;
-      }
-    });
-  } else {
-    props.sessions.forEach((element) => {
-      if (element.teams.some((team) => id_of_team.value.includes(team))) {
-        if (cpt > element.duration) {
-          return;
-        }
-        cpt = element.duration;
-        game_id = element.game.id;
-      }
-    });
-  }
-  return [cpt, getGameNameById(game_id)];
-}
-
-function getGameNameById(id) {
-  if (id === "") return;
-  return games.value.find((element) => element.id === id).name;
-}
-
 const team_average_session_duration = ref(0);
-function calculateAverageSessionDuration() {
-  if (id_of_team.value.length === 0) return 0;
-  let cpt = 0;
-  if (props.sessions === undefined) {
-    sessions.value.forEach((element) => {
-      if (element.teams.some((team) => id_of_team.value.includes(team))) {
-        cpt += element.duration;
-      }
-    });
-  } else {
-    props.sessions.forEach((element) => {
-      if (element.teams.some((team) => id_of_team.value.includes(team))) {
-        cpt += element.duration;
-      }
-    });
-  }
-  cpt = (cpt / sessions_number.value).toFixed(2);
-  return cpt;
-}
-
 const sessions_number = ref(0);
-
-function getNumberOfSessions() {
-  if (id_of_team.value.length === 0) return 0;
-  let cpt = 0;
-  if (props.sessions === undefined) {
-    sessions.value.forEach((element) => {
-      if (element.teams.some((team) => id_of_team.value.includes(team))) {
-        cpt++;
-      }
-    });
-  } else {
-    props.sessions.forEach((element) => {
-      if (element.teams.some((team) => id_of_team.value.includes(team))) {
-        cpt++;
-      }
-    });
-  }
-  return cpt;
-}
-
 const total_time = ref(0);
 const team_time = ref(0);
 const team_time_hours = computed(() => {
@@ -277,121 +246,13 @@ function calculateTotalTime() {
   return cpt;
 }
 
-function calculateTeamTime() {
-  if (id_of_team.value.length === 0) return 0;
-  let cpt = 0;
-  if (props.sessions === undefined) {
-    sessions.value.forEach((element) => {
-      if (element.teams.some((team) => id_of_team.value.includes(team))) {
-        cpt += element.duration;
-      }
-    });
-  } else {
-    props.sessions.forEach((element) => {
-      if (element.teams.some((team) => id_of_team.value.includes(team))) {
-        cpt += element.duration;
-      }
-    });
-  }
-  return cpt;
-}
-
 const number_of_games = ref(0);
-
-function getNumberOfGames() {
-  if (id_of_team.value.length === 0) return 0;
-  let cpt = 0;
-  let played_games = [];
-  if (props.sessions === undefined) {
-    sessions.value.forEach((element) => {
-      if (element.teams.some((team) => id_of_team.value.includes(team))) {
-        if (!played_games.includes(element.game.id)) {
-          played_games.push(element.game.id);
-          cpt++;
-        }
-      }
-    });
-  } else {
-    props.sessions.forEach((element) => {
-      if (element.teams.some((team) => id_of_team.value.includes(team))) {
-        if (!played_games.includes(element.game.id)) {
-          played_games.push(element.game.id);
-          cpt++;
-        }
-      }
-    });
-  }
-  //for deleted games the game is not in the games list even if we have the id
-  //so we need to check if the game is in the games list
-  for (let g of played_games) {
-    if (games.value.filter((game) => game.id === g).length === 0) {
-      cpt--;
-    }
-  }
-  return cpt;
-}
-
 const ranking = ref(0);
 const ranking_computed = computed(() => {
   return ranking.value;
 });
 
-function calculateRanking(teamName) {
-  //if its a mix of multiple teams we don't calculate it
-  if (teamName.split(",").length > 1) {
-    return "N/A";
-  }
-  //calculate the playtime of all teams
-  let playtime = [];
-  for (let t of teams.value) {
-    let cpt = 0;
-    sessions.value.forEach((element) => {
-      if (element.teams.some((team) => t.id === team)) {
-        cpt += element.duration;
-      }
-    });
-    playtime.push({ team: t.name, time: cpt });
-  }
-
-  playtime.sort((a, b) => {
-    return b.time - a.time;
-  });
-
-  let cpt = 1;
-  for (let p of playtime) {
-    if (p.team === teamName) {
-      return cpt;
-    }
-    cpt++;
-  }
-  return cpt;
-}
-
 const total_fun_percentage = ref(0);
-
-function getTotalFunPercentage() {
-  let team_sessions;
-  if (props.sessions === undefined) {
-    team_sessions = sessions.value.filter((s) =>
-      s.teams.some((team) => id_of_team.value.includes(team)),
-    );
-  } else {
-    team_sessions = props.sessions.filter((s) =>
-      s.teams.some((team) => id_of_team.value.includes(team)),
-    );
-  }
-  let fun = 0;
-  let neutral = 0;
-  let bad = 0;
-  team_sessions.map((s) => {
-    if (s.was_cool) fun++;
-    else if (s.was_cool === undefined) neutral++;
-    else bad++;
-  });
-
-  let happiness = (fun * 1 + neutral * 0.5 + bad * 0) / team_sessions.length;
-  return (happiness * 100).toFixed(0);
-}
 </script>
 <style scoped>
 .dt-container {
