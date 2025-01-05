@@ -199,12 +199,13 @@ function init() {
     sessions: _sessions,
     teams: _teams,
   });
+
+  calculateRanking(ids_of_team, sessions.value, teams.value);
 }
 
 window.electron.ipcRenderer.on("result_dashboardteam", (event, data) => {
   team_time.value = data.team_time;
   sessions_number.value = data.sessions_number;
-  ranking.value = data.ranking;
   number_of_games.value = data.number_of_games;
   total_fun_percentage.value = data.total_fun_percentage;
   team_average_session_duration.value = data.team_average_session_duration;
@@ -244,6 +245,40 @@ function calculateTotalTime() {
     cpt += element.duration;
   });
   return cpt;
+}
+
+function calculateRanking(ids_of_team, sessions, teams) {
+  //if its a mix of multiple teams we don't calculate it
+  if (ids_of_team.length > 1) {
+    ranking.value = "N/A";
+  }
+
+  //calculate the playtime of all teams
+  let playtime = [];
+  for (let t of teams) {
+    let cpt = 0;
+    sessions.forEach((element) => {
+      if (element.teams.some((team) => t.id === team)) {
+        cpt += element.duration;
+      }
+    });
+    playtime.push({ team: t.id, time: cpt });
+  }
+
+  playtime.sort((a, b) => {
+    return b.time - a.time;
+  });
+
+  let cpt = 1;
+  for (let p of playtime) {
+    if (p.team === ids_of_team[0]) {
+      ranking.value = cpt;
+      return;
+    }
+    cpt++;
+  }
+
+  ranking.value = cpt;
 }
 
 const number_of_games = ref(0);

@@ -1,6 +1,5 @@
 export function dashboardteam(ids_of_team, games, sessions, teams) {
   let [team_time, sessions_number] = calculateTeamTime(ids_of_team, sessions);
-  let ranking = calculateRanking(ids_of_team, sessions, teams);
   let number_of_games = getNumberOfGames(ids_of_team, games, sessions);
   let total_fun_percentage = getTotalFunPercentage(sessions);
   let team_average_session_duration = calculateAverageSessionDuration(
@@ -16,7 +15,6 @@ export function dashboardteam(ids_of_team, games, sessions, teams) {
   return {
     team_time,
     sessions_number,
-    ranking,
     number_of_games,
     total_fun_percentage,
     team_average_session_duration,
@@ -34,38 +32,6 @@ function calculateTeamTime(ids_of_team, sessions) {
     sessions_number++;
   });
   return [cpt, sessions_number];
-}
-
-function calculateRanking(ids_of_team, sessions, teams) {
-  //if its a mix of multiple teams we don't calculate it
-  if (ids_of_team.length > 1) {
-    return "N/A";
-  }
-
-  //calculate the playtime of all teams
-  let playtime = [];
-  for (let t of teams) {
-    let cpt = 0;
-    sessions.forEach((element) => {
-      if (element.teams.some((team) => t.id === team)) {
-        cpt += element.duration;
-      }
-    });
-    playtime.push({ team: t.id, time: cpt });
-  }
-
-  playtime.sort((a, b) => {
-    return b.time - a.time;
-  });
-
-  let cpt = 1;
-  for (let p of playtime) {
-    if (p.team === ids_of_team[0]) {
-      return cpt;
-    }
-    cpt++;
-  }
-  return cpt;
 }
 
 function getNumberOfGames(ids_of_team, games, sessions) {

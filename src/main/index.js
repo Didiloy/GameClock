@@ -200,7 +200,6 @@ function createWindow() {
     const {
       team_time,
       sessions_number,
-      ranking,
       number_of_games,
       total_fun_percentage,
       team_average_session_duration,
@@ -210,7 +209,6 @@ function createWindow() {
     BrowserWindow.getAllWindows()[0].webContents.send("result_dashboardteam", {
       team_time,
       sessions_number,
-      ranking,
       number_of_games,
       total_fun_percentage,
       team_average_session_duration,
