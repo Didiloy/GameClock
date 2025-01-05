@@ -142,12 +142,18 @@ window.electron.ipcRenderer.on(
     }
     const colors = [
       "--cyan-500",
+      "--orange-500",
       "--blue-500",
       "--green-500",
-      "--orange-500",
       "--purple-500",
-      "--red-500",
       "--yellow-500",
+      "--red-500",
+      "--pink-500",
+      "--indigo-500",
+      "--bluegray-500",
+      "--red-800",
+      "--blue-800",
+      "--purple-700",
     ];
     const documentStyle = getComputedStyle(document.documentElement);
     datasets.value = Array.from(map_player_time_played.value.entries()).map(
