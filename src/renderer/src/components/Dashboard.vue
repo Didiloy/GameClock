@@ -138,14 +138,16 @@
         titleColor="#390b00"
       ></GamesFunPercentage>
     </div>
-    <SessionsHistory
-      :historySize="getPreferences('number_of_last_sessions')"
-      :title="
-        getPreferences('number_of_last_sessions') +
-        ' ' +
-        i18n.t('Dashboard.last_sessions')
-      "
-    />
+    <div class="session-history">
+      <SessionsHistory
+        :historySize="getPreferences('number_of_last_sessions')"
+        :title="
+          getPreferences('number_of_last_sessions') +
+          ' ' +
+          i18n.t('Dashboard.last_sessions')
+        "
+      />
+    </div>
   </div>
 </template>
 <script setup>
@@ -291,7 +293,13 @@ const percentage_card_computed = computed(() => {
   align-items: center;
   height: 100%;
   width: 100%;
-  padding-bottom: 40px;
+}
+
+.session-history {
+  width: 100%;
+  height: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 .dv-dashboard {

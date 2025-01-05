@@ -15,7 +15,7 @@
             type="text"
             v-model="name"
             :placeholder="$t('AddTeam.team_name')"
-            @focus="emit('toggleChronoListener')" 
+            @focus="emit('toggleChronoListener')"
             @blur="emit('toggleChronoListener')"
           />
           <Button
@@ -37,7 +37,6 @@ import { addTeam } from "../database/database";
 import { useToast } from "primevue/usetoast";
 import { useStore } from "../store/store";
 const emit = defineEmits(["toggleChronoListener"]);
-
 
 const store = useStore();
 const toast = useToast();
@@ -99,6 +98,7 @@ async function onAddTeam() {
   align-items: center;
   justify-content: start;
   height: 100%;
+  background-color: var(--surface-100);
 }
 
 .card {

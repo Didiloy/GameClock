@@ -138,6 +138,7 @@ async function synchronizeWithDatabase() {
   justify-content: space-between;
   align-items: center;
   width: 95%;
+  margin-top: 5px;
 }
 
 .wls-content {

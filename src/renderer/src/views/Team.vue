@@ -287,7 +287,7 @@ onUnmounted(() => {
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 5px;
 }
 
 .t-top-row {
@@ -295,7 +295,8 @@ onUnmounted(() => {
   flex-direction: row;
   justify-content: start;
   align-items: start;
-  width: 100%;
+  width: 98%;
+  margin-top: 5px;
 }
 
 .t-title {

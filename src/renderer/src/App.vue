@@ -99,7 +99,7 @@ function toggleChrono() {
       @toggleChronoListener="toggleChronoListener"
       :data_loaded="loaded"
     />
-    <div class="app-container main-background">
+    <div class="app-container">
       <div class="sidebar">
         <Sidebar></Sidebar>
       </div>
@@ -107,7 +107,9 @@ function toggleChrono() {
         <Loading msg="loading_data" />
       </div>
       <div v-else class="content">
-        <router-view @toggleChronoListener="toggleChronoListener" />
+        <div class="inner-content">
+          <router-view @toggleChronoListener="toggleChronoListener" />
+        </div>
       </div>
     </div>
   </div>
@@ -119,16 +121,18 @@ function toggleChrono() {
   padding: 0;
   height: 100%;
   width: 100%;
+  background-color: var(--primary-100);
 }
 
 .app-container {
   display: grid;
-  grid-template-columns: 185px auto;
-  height: 100%;
+  grid-template-columns: 185px 1fr;
+  position: fixed;
+  top: 32px;
+  left: 0;
+  bottom: 0;
+  height: calc(100% - 32px);
   width: 100%;
-  overflow-y: hidden;
-  margin-top: 32px;
-  background-color: var(--primary-100);
 }
 
 :global(.main-background) {
@@ -136,14 +140,13 @@ function toggleChrono() {
 }
 
 .sidebar {
-  height: calc(100vh - 32px);
-  width: 100%;
+  height: 100%;
+  width: 185px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 10px 10px 3px;
-  /* border-right: 1px solid var(--surface-200); */
   background-color: var(--primary-100);
 }
 
@@ -160,12 +163,16 @@ h2 {
 }
 
 .content {
-  /* margin-top: 10px; */
-  padding: 5px;
-  width: 100%;
-  overflow-y: auto;
-  padding-bottom: 25px;
-  border-radius: 10px 0 0 0;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  border-radius: 10px;
+  overflow-y: hidden;
   background-color: var(--surface-100);
+}
+
+.inner-content {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
 }
 </style>
