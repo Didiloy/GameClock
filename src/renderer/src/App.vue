@@ -2,9 +2,11 @@
 import TitleBar from "./components/TitleBar.vue";
 import Sidebar from "./components/Sidebar.vue";
 import Loading from "./components/Loading.vue";
+import NewVersionDialog from "./components/NewVersionDialog.vue";
 import { useRouter } from "vue-router";
 import { getPreferences } from "./preferences/preferences";
 import { onMounted, onUnmounted, ref, watch } from "vue";
+import { isThereNewVersion } from "./common/new_version";
 const router = useRouter();
 const storeDatabases = useStoredDatabases();
 const { stored_databases } = storeToRefs(storeDatabases);
@@ -36,14 +38,17 @@ const prefered_page = ref({
   route: getPreferences("default_start_page_route"),
 });
 
+const new_version_available = ref(false);
+
 watch(teams, () => {
   if (verifyIfTeamExist()) {
     if (first_load.value) router.push(prefered_page.value.route);
   }
 });
 
-onMounted(() => {
+onMounted(async () => {
   addChronoListener();
+  new_version_available.value = await isThereNewVersion();
 });
 
 watch(store_error, () => {
@@ -112,6 +117,21 @@ function toggleChrono() {
         </div>
       </div>
     </div>
+    <Dialog
+      v-model:visible="new_version_available"
+      modal
+      dismissableMask
+      closeOnEscape
+      :showHeader="false"
+      :pt="{
+        content: {
+          style:
+            'height: 600px; width: 800px; border-radius: 15px; margin: 0; padding: 0;',
+        },
+      }"
+    >
+      <NewVersionDialog />
+    </Dialog>
   </div>
 </template>
 
