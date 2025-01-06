@@ -15,8 +15,6 @@ export async function isThereNewVersion() {
       return false;
     }
 
-    console.log(response);
-
     // Extract the version tag from the "location" header of the response
     const latestVersionTag = response.url.split("/").pop().slice(1);
 
