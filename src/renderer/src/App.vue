@@ -163,8 +163,8 @@ h2 {
 }
 
 .content {
-  width: calc(100% - 8px);
-  height: calc(100% - 8px);
+  width: calc(100% - 6px);
+  height: calc(100% - 6px);
   border-radius: 10px;
   overflow-y: hidden;
   background-color: var(--surface-100);
