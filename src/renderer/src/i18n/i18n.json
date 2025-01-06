@@ -1,5 +1,9 @@
 {
   "fr": {
+    "NewVersionDialog": {
+      "title": "Nouvelle version disponible !",
+      "download": "Télécharger"
+    },
     "Loading": {
       "loading_data": "Chargement des données",
       "calculating_statistics": "Calcul des statistiques",
@@ -351,6 +355,10 @@
     }
   },
   "en": {
+    "NewVersionDialog": {
+      "title": "New version available !",
+      "download": "Download"
+    },
     "Loading": {
       "loading_data": "Loading data",
       "calculating_statistics": "Calculating statistics",

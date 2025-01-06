@@ -155,6 +155,7 @@ function createWindow() {
     );
   });
 
+  //teams
   ipcMain.on("teamlist", (event, data) => {
     const teams = teamList(data.teams, data.sessions, data.games);
     BrowserWindow.getAllWindows()[0].webContents.send("result_teamlist", {
