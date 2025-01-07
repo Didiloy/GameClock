@@ -48,7 +48,9 @@ watch(teams, () => {
 
 onMounted(async () => {
   addChronoListener();
-  new_version_available.value = await isThereNewVersion();
+  if (getPreferences("check_for_update_at_startup")) {
+    new_version_available.value = await isThereNewVersion();
+  }
 });
 
 watch(store_error, () => {

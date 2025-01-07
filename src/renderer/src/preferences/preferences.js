@@ -36,9 +36,10 @@ const defaults = {
   activate_zoom_on_graphs: false,
   //toggle fun selected
   toggle_fun_selected_by_default: "",
+  //check for update
+  check_for_update_at_startup: true,
   //Associate games with platform
-  associate_to_platform: [
-  ],
+  associate_to_platform: [],
 };
 
 const preferences_name = "preferences";

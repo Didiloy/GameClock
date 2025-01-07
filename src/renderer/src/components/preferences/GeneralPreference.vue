@@ -165,6 +165,11 @@ const activate_zoom_on_graphs = ref(getPreferences("activate_zoom_on_graphs"));
 watch(activate_zoom_on_graphs, () => {
   setPreferences("activate_zoom_on_graphs", activate_zoom_on_graphs.value);
 });
+
+const check_for_update = ref(getPreferences("check_for_update_at_startup"));
+watch(check_for_update, () => {
+  setPreferences("check_for_update_at_startup", check_for_update.value);
+});
 </script>
 
 <template>
@@ -223,6 +228,12 @@ watch(activate_zoom_on_graphs, () => {
         $t("GeneralPreference.activate_zoom_on_graphs")
       }}</b>
       <InputSwitch v-model="activate_zoom_on_graphs" />
+    </div>
+    <div class="tp-item" style="margin-top: 10px">
+      <b class="text-color">{{
+        $t("GeneralPreference.check_new_version_at_startup")
+      }}</b>
+      <InputSwitch v-model="check_for_update" />
     </div>
   </div>
 </template>
