@@ -132,6 +132,27 @@
                     class="pi pi-comment"
                     style="margin-left: 5px"
                   />
+                </div>
+              </template>
+            </Column>
+            <Column
+              field="date"
+              :header="i18n.t('SessionsHistory.date')"
+              v-once
+            >
+              <template #body="slotProps">
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                  "
+                >
+                  {{
+                    new Date(
+                      slotProps.data.date.seconds * 1000,
+                    ).toLocaleDateString()
+                  }}
                   <Button
                     icon="pi pi-heart"
                     severity="danger"
@@ -145,21 +166,6 @@
                     badgeSeverity="danger"
                     @click="addLike(slotProps.data)"
                   />
-                </div>
-              </template>
-            </Column>
-            <Column
-              field="date"
-              :header="i18n.t('SessionsHistory.date')"
-              v-once
-            >
-              <template #body="slotProps">
-                <div>
-                  {{
-                    new Date(
-                      slotProps.data.date.seconds * 1000,
-                    ).toLocaleDateString()
-                  }}
                 </div>
               </template>
             </Column>
