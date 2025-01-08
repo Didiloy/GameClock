@@ -19,7 +19,13 @@
           {{ $t("AddDatabaseForFirstTime.ask_your_friends") }}
         </p>
         <div class="elem-item">
-          <InputText type="text" v-model="import_string" style="width: 70%" />
+          <InputText
+            type="text"
+            v-model="import_string"
+            style="width: 70%"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
+          />
           <Button
             :label="$t('AddDatabaseForFirstTime.import')"
             icon="pi pi-check"
@@ -112,6 +118,8 @@
             id="database_name"
             v-model="database_name"
             style="width: 70%"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
           />
         </div>
         <div class="text-input">
@@ -122,6 +130,8 @@
             id="database_api_key"
             v-model="database_api_key"
             style="width: 70%"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
           />
         </div>
         <div class="text-input">
@@ -132,6 +142,8 @@
             id="database_auth_domain"
             v-model="database_auth_domain"
             style="width: 70%"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
           />
         </div>
         <div class="text-input">
@@ -142,6 +154,8 @@
             id="database_url"
             v-model="database_url"
             style="width: 70%"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
           />
         </div>
         <div class="text-input">
@@ -152,6 +166,8 @@
             id="database_id"
             v-model="database_id"
             style="width: 70%"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
           />
         </div>
         <div class="text-input">
@@ -162,6 +178,8 @@
             id="database_storage_bucket"
             v-model="database_storage_bucket"
             style="width: 70%"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
           />
         </div>
         <div class="text-input">
@@ -172,6 +190,8 @@
             id="database_messaging_sender_id"
             v-model="database_messaging_sender_id"
             style="width: 70%"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
           />
         </div>
 
@@ -184,6 +204,8 @@
               id="database_app_id"
               v-model="database_app_id"
               style="width: 79%"
+              @focus="emit('toggleChronoListener')"
+              @blur="emit('toggleChronoListener')"
             />
           </div>
           <Button
@@ -211,6 +233,7 @@ import { storeToRefs } from "pinia";
 import { useStoredDatabases } from "../store/store";
 const store = useStoredDatabases();
 const { stored_databases } = storeToRefs(store);
+const emit = defineEmits(["toggleChronoListener"]);
 
 const import_string = ref("");
 
