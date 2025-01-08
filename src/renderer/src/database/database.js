@@ -2,6 +2,7 @@ import { db } from "./firebaseConfig";
 import {
   collection,
   getDocs,
+  getDoc,
   setDoc,
   doc,
   query,
@@ -82,6 +83,30 @@ function getIfGameExist(gameName) {
     return { exist: true, id: games.filter((g) => g.name === gameName)[0].id };
   }
   return { exist: false };
+}
+
+export async function addLikeToSession(id) {
+  const docRef = doc(db, "sessions", id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    try {
+      await setDoc(
+        doc(db, "sessions", id),
+        {
+          likes:
+            docSnap.data().likes !== undefined ? docSnap.data().likes + 1 : 1,
+        },
+        { merge: true },
+      );
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  } else {
+    return false;
+  }
 }
 
 export async function addSession(

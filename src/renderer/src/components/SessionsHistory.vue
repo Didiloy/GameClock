@@ -132,6 +132,19 @@
                     class="pi pi-comment"
                     style="margin-left: 5px"
                   />
+                  <Button
+                    icon="pi pi-heart"
+                    severity="danger"
+                    text
+                    rounded
+                    :badge="
+                      slotProps.data.likes !== undefined
+                        ? slotProps.data.likes.toString()
+                        : '0'
+                    "
+                    badgeSeverity="danger"
+                    @click="addLike(slotProps.data)"
+                  />
                 </div>
               </template>
             </Column>
@@ -155,18 +168,21 @@
       </Accordion>
     </template>
   </Card>
+  <Toast />
 </template>
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
-import { getIdsOfTeam } from "../database/database";
+import { getIdsOfTeam, addLikeToSession } from "../database/database";
 import { getPreferences } from "../preferences/preferences";
+import { useToast } from "primevue/usetoast";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
 
+const toast = useToast();
 const props = defineProps([
   "teamName",
   "backgroundColor",
@@ -257,6 +273,7 @@ function init() {
         }
 
         sessions_values.value.push({
+          id: s.id,
           team_names: team_names,
           name: game_name,
           playtime: s.duration,
@@ -264,6 +281,7 @@ function init() {
           logo: logo,
           joyrate: s.was_cool,
           comment: s.comment,
+          likes: s.likes,
           platform: platform_name,
         });
       }
@@ -294,6 +312,7 @@ function init() {
       }
 
       sessions_values.value.push({
+        id: s.id,
         team_names: team_names,
         name: game_name,
         playtime: s.duration,
@@ -301,6 +320,7 @@ function init() {
         logo: logo,
         joyrate: s.was_cool,
         comment: s.comment,
+        likes: s.likes,
         platform: platform_name,
       });
     }
@@ -354,6 +374,21 @@ function getGameNameAndLogoById(id) {
     if (id === g.id) return [g.name, g.logo];
   }
   return ["[" + i18n.t("SessionsHistory.deleted_game") + "]", ""];
+}
+
+async function addLike(session) {
+  let added_like = await addLikeToSession(session.id);
+  if (added_like) {
+    if (session.likes !== undefined) session.likes++;
+    else session.likes = 1;
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "",
+      detail: i18n.t("SessionsHistory.error_like"),
+      life: 3000,
+    });
+  }
 }
 </script>
 <style scoped>
