@@ -352,7 +352,8 @@
         "important_person": "Vous avez 30% ou plus de la totalité du temps de jeu de toutes les équipes",
         "thousand_hours": "Vous avez joué plus de 1000 heures",
         "stinky": "Il faut penser a se doucher... Plus de 50 sessions de plus de 10 heures",
-        "why_playing": "Pourquoi encore jouer à ce jeu ? Vous avez plus de 50 sessions nulles sur un même jeu"
+        "why_playing": "Pourquoi encore jouer à ce jeu ? Vous avez plus de 50 sessions nulles sur un même jeu",
+        "team_player": "Plus de 50% de vos sessions ont été faites en groupe"
       }
     }
   },
@@ -709,7 +710,8 @@
         "important_person": "You have 30% or more of the total playtime of all teams",
         "thousand_hours": "You have played for more than 1000h hours!",
         "stinky": "You should think about a shower... More than 50 sessions lasting more than 10 hours",
-        "why_playing": "Why are you still playing this game ? You have more than 50 bad sessions on it"
+        "why_playing": "Why are you still playing this game ? You have more than 50 bad sessions on it",
+        "team_player": "More than 50% of your sessions have been in a team"
       }
     }
   }

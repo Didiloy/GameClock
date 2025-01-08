@@ -37,6 +37,7 @@ export function useSuccesses(i18n) {
   const thousand_hours = ref({ unlocked: false, image: "", description: "" });
   const stinky = ref({ unlocked: false, image: "", description: "" });
   const why_playing = ref({ unlocked: false, image: "", description: "" });
+  const team_player = ref({ unlocked: false, image: "", description: "" });
 
   function calculateSuccesses(
     teamName,
