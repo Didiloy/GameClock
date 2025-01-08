@@ -17,6 +17,7 @@ import important_person_logo from "../assets/images/successes/important_person.s
 import thousand_hours_logo from "../assets/images/successes/thousand_hours.svg";
 import stinky_logo from "../assets/images/successes/stinky.svg";
 import why_playing_logo from "../assets/images/successes/why_playing.svg";
+import team_player_logo from "../assets/images/successes/team_player.svg";
 
 export function useSuccesses(i18n) {
   const store = useStore();
@@ -49,6 +50,7 @@ export function useSuccesses(i18n) {
 
     let bad_session = new Map(); //relentless
     let session_number = 0; //young_gamer, gamer, passionnate
+    let sessions_in_team = 0; //team_player
     let different_games = new Set(); //curious
     let bad_session_acc = 0; //depressed
     //important_person
@@ -105,6 +107,11 @@ export function useSuccesses(i18n) {
       if (session.duration >= 60 * 8) {
         //stinky
         sessions_of_ten_hours++;
+      }
+
+      //team_player
+      if (session.teams.length > 1) {
+        sessions_in_team++;
       }
     }
 
@@ -210,6 +217,15 @@ export function useSuccesses(i18n) {
       stinky.value.image = stinky_logo;
       stinky.value.description = i18n.t("Successes.descriptions.stinky");
     }
+
+    //team_player
+    if (sessions_in_team > session_number / 2) {
+      team_player.value.unlocked = true;
+      team_player.value.image = team_player_logo;
+      team_player.value.description = i18n.t(
+        "Successes.descriptions.team_player",
+      );
+    }
   }
 
   return {
@@ -229,5 +245,6 @@ export function useSuccesses(i18n) {
     thousand_hours,
     stinky,
     why_playing,
+    team_player,
   };
 }

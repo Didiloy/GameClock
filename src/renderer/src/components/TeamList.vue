@@ -127,6 +127,12 @@
                 :title="item.why_playing.description + ''"
                 class="success"
               />
+              <img
+                v-if="item.computed_successes && item.team_player.unlocked"
+                :src="item.team_player.image"
+                :title="item.team_player.description + ''"
+                class="success"
+              />
             </div>
           </div>
           <div class="team-playtime">
@@ -235,6 +241,7 @@ function filterTeam() {
       thousand_hours: team.thousand_hours,
       stinky: team.stinky,
       why_playing: team.why_playing,
+      team_player: team.team_player,
     }));
     return;
   }
@@ -277,6 +284,7 @@ function getSuccesses() {
       thousand_hours,
       stinky,
       why_playing,
+      team_player,
     } = useSuccesses(i18n);
     calculateSuccesses(team.name, sessions.value);
     team.relentless = relentless.value;
@@ -294,6 +302,7 @@ function getSuccesses() {
     team.thousand_hours = thousand_hours.value;
     team.stinky = stinky.value;
     team.why_playing = why_playing.value;
+    team.team_player = team_player.value;
     team.computed_successes = true;
   });
 }
