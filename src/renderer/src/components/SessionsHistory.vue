@@ -255,7 +255,10 @@ function init() {
     for (let s of session_copy) {
       if (s.teams.some((team) => id_of_team.value.includes(team))) {
         let team_names = [];
-        // if we are in a multi team page
+        // if we are in a multi team page we keep only the session where all the members played
+        if (!id_of_team.value.every((team) => s.teams.includes(team))) {
+          continue;
+        }
         for (let t of teams.value) {
           if (s.teams.some((team) => t.id === team)) {
             team_names.push(t.name);

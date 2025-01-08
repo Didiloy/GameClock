@@ -108,8 +108,15 @@ const sessions_of_team = ref([]);
 function getSessionsOfTeam() {
   let sessions_of_team = [];
   for (let sess of sessions.value) {
-    if (sess.teams.some((team) => id_of_team.value.includes(team))) {
-      sessions_of_team.push(sess);
+    //if we are seeing multiple teams we include ONLY the session with all the selected teams
+    if (id_of_team.value.length > 1) {
+      if (id_of_team.value.every((team) => sess.teams.includes(team))) {
+        sessions_of_team.push(sess);
+      }
+    } else {
+      if (sess.teams.some((team) => id_of_team.value.includes(team))) {
+        sessions_of_team.push(sess);
+      }
     }
   }
 

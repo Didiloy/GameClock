@@ -251,6 +251,7 @@ function calculateRanking(ids_of_team, sessions, teams) {
   //if its a mix of multiple teams we don't calculate it
   if (ids_of_team.length > 1) {
     ranking.value = "N/A";
+    return;
   }
 
   //calculate the playtime of all teams

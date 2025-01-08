@@ -343,12 +343,6 @@ function getTeamColorWithWorker() {
   }
 }
 
-function getGameById(gameId) {
-  let game = games.value.find((g) => g.id === gameId);
-  if (game === undefined) return { name: "", heroe: "", logo: "" };
-  return { name: game.name, heroe: game.heroe, logo: game.logo };
-}
-
 function getClassNameFromIndex(index) {
   if (index === 0) {
     return "team-item rounded-top";
