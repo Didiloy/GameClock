@@ -101,6 +101,11 @@ export function useSuccesses(i18n) {
 
         //important_person
         duration_team += session.duration;
+
+        //team_player
+        if (session.teams.length > 1) {
+          sessions_in_team++;
+        }
       }
       duration_total += session.duration; //important_person
 
@@ -109,10 +114,6 @@ export function useSuccesses(i18n) {
         sessions_of_ten_hours++;
       }
 
-      //team_player
-      if (session.teams.length > 1) {
-        sessions_in_team++;
-      }
     }
 
     //relentless and why_playing
