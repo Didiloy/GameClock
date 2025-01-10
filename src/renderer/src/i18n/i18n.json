@@ -5,7 +5,9 @@
       "download": "Télécharger"
     },
     "Heatmap": {
-      "title": "Jours d'activité"
+      "title": "Jours d'activité",
+      "no_data": "Vous n'avez pas joué ce jour",
+      "tooltip_unit": "minutes jouées"
     },
     "Loading": {
       "loading_data": "Chargement des données",
@@ -366,7 +368,9 @@
       "download": "Download"
     },
     "Heatmap": {
-      "title": "Actives days"
+      "title": "Actives days",
+      "no_data": "You didn't play this day",
+      "tooltip_unit": "minutes played"
     },
     "Loading": {
       "loading_data": "Loading data",

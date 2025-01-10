@@ -3,7 +3,6 @@ import { onMounted, ref, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { CalendarHeatmap } from "vue3-calendar-heatmap";
-import { getIdsOfTeam } from "../database/database";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -22,6 +21,7 @@ const { games, sessions, teams } = storeToRefs(store);
 
 const loaded = ref(false);
 const team_session_transformed = ref([]);
+const last_session_date = ref(new Date());
 onMounted(() => {
   init();
 });
@@ -35,7 +35,6 @@ watch(
 
 function init() {
   if (props.sessions) {
-    console.log(transformSessions(props.sessions));
     team_session_transformed.value = transformSessions(props.sessions);
     loaded.value = true;
   }
@@ -43,9 +42,8 @@ function init() {
 
 function transformSessions(sessions) {
   const result = sessions.reduce((acc, session) => {
-    // Keep only the sessions of the current year
     const date = new Date(session.date.seconds * 1000);
-    if (date.getFullYear() < new Date().getFullYear()) return acc;
+    if (date > last_session_date.value) last_session_date.value = date;
 
     // Normalize the date to exclude hours, minutes, and seconds
     const normalizedDate = new Date(
@@ -80,7 +78,7 @@ function transformSessions(sessions) {
         root: { style: 'box-shadow: 0px 0px 0px 0px;' },
         content: {
           style:
-            'height:100%; display: flex; flex-direction: column; justify-content: center; align-items: center',
+            'height:100%; display: flex; flex-direction: column; justify-content: center; align-items: center;',
         },
       }"
     >
@@ -95,7 +93,9 @@ function transformSessions(sessions) {
       :pt="{
         root: { style: 'box-shadow: 0px 0px 0px 0px;' },
         body: { style: 'height:100%; ' },
-        content: { style: 'height:100%; ' },
+        content: {
+          style: 'padding: 0px;height:100%;',
+        },
       }"
     >
       <template #subtitle>
@@ -106,7 +106,9 @@ function transformSessions(sessions) {
       <template #content>
         <calendar-heatmap
           :values="team_session_transformed"
-          :end-date="new Date(new Date().getFullYear(), 11, 31)"
+          :end-date="last_session_date"
+          :no-data-text="i18n.t('Heatmap.no_data')"
+          :tooltip-unit="i18n.t('Heatmap.tooltip_unit')"
           :max="300"
           class="dt-heatmap"
         />
