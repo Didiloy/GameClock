@@ -111,6 +111,8 @@
         titleColor="#001849"
         :value="i18n.t('DashboardTeam.games_sessions')"
       ></LittleCard>
+      <Heatmap class="dt-heatmap" />
+      <Heatmap :sessions="props.sessions" class="dt-line-last-days" />
     </div>
     <SessionsHistory :teamName="props.teamName" />
   </div>
@@ -122,6 +124,7 @@ import LittleCard from "./LittleCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
 import TopGamesLittleGameCard from "./TopGamesLittleGameCard.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
+import Heatmap from "./heatmap.vue";
 import Loading from "./Loading.vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
@@ -445,5 +448,26 @@ const total_fun_percentage = ref(0);
   grid-column-end: 13;
   grid-row-start: 18;
   grid-row-end: 20;
+}
+
+.dt-heatmap {
+  display: inline-grid;
+  width: 100%;
+  height: 100%;
+  grid-column-start: 1;
+  grid-column-end: 7;
+  grid-row-start: 20;
+  grid-row-end: 22;
+  font-size: 10px;
+}
+
+.dt-line-last-days {
+  display: inline-grid;
+  width: 100%;
+  height: 100%;
+  grid-column-start: 7;
+  grid-column-end: 13;
+  grid-row-start: 20;
+  grid-row-end: 22;
 }
 </style>

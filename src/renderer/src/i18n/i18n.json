@@ -4,6 +4,9 @@
       "title": "Nouvelle version disponible !",
       "download": "Télécharger"
     },
+    "Heatmap": {
+      "title": "Jours d'activité"
+    },
     "Loading": {
       "loading_data": "Chargement des données",
       "calculating_statistics": "Calcul des statistiques",
@@ -361,6 +364,9 @@
     "NewVersionDialog": {
       "title": "New version available !",
       "download": "Download"
+    },
+    "Heatmap": {
+      "title": "Actives days"
     },
     "Loading": {
       "loading_data": "Loading data",
