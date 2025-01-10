@@ -39,18 +39,18 @@
         backgroundColor="#f9e09f"
         titleColor="#241a00"
       ></GameTimeHome>
+      <LineChartLastMonth
+        class="dt-line-last-days"
+        :teamName="props.teamName"
+        :sessions="props.sessions"
+        backgroundColor="#c5eae7"
+        titleColor="#00201f"
+      />
       <GamesFunPercentage
         class="dt-fun-percentage"
         :teamName="props.teamName"
         :sessions="props.sessions"
       ></GamesFunPercentage>
-      <BarChartAllGames
-        class="dt-bar-chart"
-        :teamName="props.teamName"
-        :sessions="props.sessions"
-        backgroundColor="#ffdbcb"
-        titleColor="#341100"
-      ></BarChartAllGames>
       <LittleCard
         class="dt-lc-book-read"
         iconName="pi pi-book"
@@ -111,8 +111,14 @@
         titleColor="#001849"
         :value="i18n.t('DashboardTeam.games_sessions')"
       ></LittleCard>
-      <Heatmap class="dt-heatmap" />
-      <Heatmap :sessions="props.sessions" class="dt-line-last-days" />
+      <BarChartAllGames
+        class="dt-bar-chart"
+        :teamName="props.teamName"
+        :sessions="props.sessions"
+        backgroundColor="#ffdbcb"
+        titleColor="#341100"
+      ></BarChartAllGames>
+      <Heatmap :sessions="props.sessions" class="dt-heatmap" />
     </div>
     <SessionsHistory :teamName="props.teamName" />
   </div>
@@ -124,7 +130,8 @@ import LittleCard from "./LittleCard.vue";
 import BarChartAllGames from "../components/BarChartAllGames.vue";
 import TopGamesLittleGameCard from "./TopGamesLittleGameCard.vue";
 import GamesFunPercentage from "./GamesFunPercentage.vue";
-import Heatmap from "./heatmap.vue";
+import Heatmap from "./Heatmap.vue";
+import LineChartLastMonth from "./LineChartLastMonth.vue";
 import Loading from "./Loading.vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
@@ -354,22 +361,13 @@ const total_fun_percentage = ref(0);
   grid-row-end: 7;
 }
 
-.dt-fun-percentage {
+.dt-line-last-days {
   width: 100%;
   height: 100%;
   grid-column-start: 7;
   grid-column-end: 13;
   grid-row-start: 3;
   grid-row-end: 7;
-}
-
-.dt-bar-chart {
-  width: 100%;
-  height: 100%;
-  grid-column-start: 1;
-  grid-column-end: 10;
-  grid-row-start: 7;
-  grid-row-end: 11;
 }
 
 .dt-lc-book-read {
@@ -450,24 +448,31 @@ const total_fun_percentage = ref(0);
   grid-row-end: 20;
 }
 
+.dt-fun-percentage {
+  width: 100%;
+  height: 100%;
+  grid-column-start: 1;
+  grid-column-end: 10;
+  grid-row-start: 7;
+  grid-row-end: 11;
+}
+
+.dt-bar-chart {
+  width: 100%;
+  height: 100%;
+  grid-column-start: 1;
+  grid-column-end: 13;
+  grid-row-start: 20;
+  grid-row-end: 24;
+}
+
 .dt-heatmap {
   display: inline-grid;
   width: 100%;
   height: 100%;
   grid-column-start: 1;
-  grid-column-end: 7;
-  grid-row-start: 20;
-  grid-row-end: 22;
-  font-size: 10px;
-}
-
-.dt-line-last-days {
-  display: inline-grid;
-  width: 100%;
-  height: 100%;
-  grid-column-start: 7;
   grid-column-end: 13;
-  grid-row-start: 20;
-  grid-row-end: 22;
+  grid-row-start: 24;
+  grid-row-end: 27;
 }
 </style>

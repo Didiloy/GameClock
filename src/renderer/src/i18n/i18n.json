@@ -1,5 +1,8 @@
 {
   "fr": {
+    "LineChartLastMonth": {
+      "title": "Temps de jeux sur le dernier mois"
+    },
     "NewVersionDialog": {
       "title": "Nouvelle version disponible !",
       "download": "Télécharger"
@@ -363,6 +366,9 @@
     }
   },
   "en": {
+    "LineChartLastMonth": {
+      "title": "Play time the last month"
+    },
     "NewVersionDialog": {
       "title": "New version available !",
       "download": "Download"

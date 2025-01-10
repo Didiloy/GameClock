@@ -388,3 +388,47 @@ const getLast7Days = () => {
 
   return last7Days;
 };
+
+export function lineChartLastMonth(sessions, teams) {
+  // Get the array of dates
+  const labels_dates = getLastMonth();
+
+  // Map team IDs to team names
+  const teamIdToNameMap = new Map(teams.map((team) => [team.id, team.name]));
+
+  // Get the last 7 days
+  const lastMonth = getLastMonth();
+
+  const map_player_time_played = new Map();
+
+  for (const team of teams) {
+    map_player_time_played.set(team.name, Array(31).fill(0));
+  }
+
+  for (const session of sessions) {
+    for (const team of session.teams) {
+      const sessionDate = formatTimestampToDDMMYYYY(session.date);
+      const teamName = teamIdToNameMap.get(team);
+
+      if (teamName && lastMonth.includes(sessionDate)) {
+        const dayIndex = lastMonth.indexOf(sessionDate); // Get the day index
+        const playtimeArray = map_player_time_played.get(teamName);
+        playtimeArray[dayIndex] += session.duration;
+      }
+    }
+  }
+
+  return { labels_dates, map_player_time_played };
+}
+
+const getLastMonth = () => {
+  const lastMonth = [];
+  const today = new Date();
+
+  for (let i = 31; i >= 0; i--) {
+    const date = new Date(today.getTime() - i * 24 * 60 * 60 * 1000);
+    lastMonth.push(formatDateToDDMMYYYY(date));
+  }
+
+  return lastMonth;
+};

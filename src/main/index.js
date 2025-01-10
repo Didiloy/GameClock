@@ -10,6 +10,7 @@ import {
   doughnutChartPlatform,
   lineChartByMonth,
   lineChartPlayerOfTheWeek,
+  lineChartLastMonth,
 } from "./graphs";
 import { teamList } from "./team_list";
 import { addSessionCountToGames, singleGameStats } from "./games_settings";
@@ -216,6 +217,20 @@ function createWindow() {
       biggest_session,
       game_of_biggest_session,
     });
+  });
+
+  ipcMain.on("linechartlastmonth", (event, data) => {
+    const { labels_dates, map_player_time_played } = lineChartLastMonth(
+      data.sessions,
+      data.teams,
+    );
+    BrowserWindow.getAllWindows()[0].webContents.send(
+      "result_linechartlastmonth",
+      {
+        labels_dates,
+        map_player_time_played,
+      },
+    );
   });
 }
 
