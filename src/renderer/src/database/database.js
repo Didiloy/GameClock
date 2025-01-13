@@ -109,6 +109,30 @@ export async function addLikeToSession(id) {
   }
 }
 
+export async function removeLikeToSession(id) {
+  const docRef = doc(db, "sessions", id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    try {
+      await setDoc(
+        doc(db, "sessions", id),
+        {
+          likes:
+            docSnap.data().likes !== undefined ? docSnap.data().likes - 1 : 0,
+        },
+        { merge: true },
+      );
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
 export async function addSession(
   teamsId,
   gameName,

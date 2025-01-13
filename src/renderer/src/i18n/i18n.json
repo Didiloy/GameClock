@@ -186,7 +186,8 @@
       "bad": "Nul",
       "date": "Date",
       "deleted_game": "Jeu supprimé ou introuvable",
-      "error_like": "Impossible de mettre un like sur cette session"
+      "error_like": "Impossible de mettre un like sur cette session",
+      "error_remove_like": "Impossible de retirer un like sur cette session"
     },
     "DashboardTeam": {
       "team_time": "passées à jouer. Soit <b> {percentage_total_time} </b> du temps total de jeu",
@@ -552,7 +553,8 @@
       "bad": "Bad",
       "date": "Date",
       "deleted_game": "Deleted or unavailable game",
-      "error_like": "Impossible to add a like to this session"
+      "error_like": "Impossible to add a like to this session",
+      "error_remove_like": "Impossible to remove a like of this session"
     },
     "DashboardTeam": {
       "team_time": "spent playing. This is <b>{percentage_total_time}</b> of the total playtime",

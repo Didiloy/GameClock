@@ -154,7 +154,11 @@
                     ).toLocaleDateString()
                   }}
                   <Button
-                    icon="pi pi-heart"
+                    :icon="
+                      isLiked(slotProps.data.id)
+                        ? 'pi pi-heart-fill'
+                        : 'pi pi-heart'
+                    "
                     severity="danger"
                     text
                     rounded
@@ -181,9 +185,14 @@ import { onMounted, ref, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
-import { getIdsOfTeam, addLikeToSession } from "../database/database";
+import {
+  getIdsOfTeam,
+  addLikeToSession,
+  removeLikeToSession,
+} from "../database/database";
 import { getPreferences } from "../preferences/preferences";
 import { useToast } from "primevue/usetoast";
+import { isLiked, addSession, removeSession } from "../common/likes";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -386,17 +395,33 @@ function getGameNameAndLogoById(id) {
 }
 
 async function addLike(session) {
-  let added_like = await addLikeToSession(session.id);
-  if (added_like) {
-    if (session.likes !== undefined) session.likes++;
-    else session.likes = 1;
+  if (!isLiked(session.id)) {
+    let added_like = await addLikeToSession(session.id);
+    if (added_like) {
+      if (session.likes !== undefined) session.likes++;
+      else session.likes = 1;
+      addSession(session.id);
+    } else {
+      toast.add({
+        severity: "error",
+        summary: "",
+        detail: i18n.t("SessionsHistory.error_like"),
+        life: 3000,
+      });
+    }
   } else {
-    toast.add({
-      severity: "error",
-      summary: "",
-      detail: i18n.t("SessionsHistory.error_like"),
-      life: 3000,
-    });
+    let removed_like = removeLikeToSession(session.id);
+    if (removed_like) {
+      removeSession(session.id);
+      session.likes--;
+    } else {
+      toast.add({
+        severity: "error",
+        summary: "",
+        detail: i18n.t("SessionsHistory.error_remove_like"),
+        life: 3000,
+      });
+    }
   }
 }
 </script>
