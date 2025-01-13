@@ -22,7 +22,8 @@
       "error_loading_data": "Erreur lors du chargement des données: "
     },
     "TitleBar": {
-      "last_chronometer_value": "Clic gauche pour démarrer/stopper et clic droit pour mettre en pause. Dernière valeur du chronomètre: "
+      "last_chronometer_value": "Clic gauche pour démarrer/stopper et clic droit pour mettre en pause. Dernière valeur du chronomètre: ",
+      "take_a_break": "Cela fait longtemps depuis le début de la session. Tu devrais penser a faire une pause"
     },
     "Sidebar": {
       "version": "Version",
@@ -389,7 +390,8 @@
       "error_loading_data": "Error loading data: "
     },
     "TitleBar": {
-      "last_chronometer_value": "Left click to start/stop and right click to pause. Last value of the chronometer: "
+      "last_chronometer_value": "Left click to start/stop and right click to pause. Last value of the chronometer: ",
+      "take_a_break": "It's been long since you started. You should consider taking a break"
     },
     "Sidebar": {
       "version": "Version",

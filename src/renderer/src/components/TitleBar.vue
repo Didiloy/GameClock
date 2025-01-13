@@ -86,6 +86,7 @@
         </div>
       </div>
     </div>
+    <Toast />
   </div>
 </template>
 <script setup>
@@ -101,6 +102,10 @@ import InputText from "primevue/inputtext";
 import { useSearchStore, useSearchTeamStore } from "../store/store";
 import { useTotalTime } from "../composables/total_time";
 const { total_time_hours, calculateTotalTime } = useTotalTime();
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const icon = ref(BaseIcon);
 
@@ -146,12 +151,25 @@ const duration_seconds = ref(0);
 const is_chrono_running = ref(false);
 const background_color = ref("var(--primary-500)");
 const last_chrono_value = ref(getPreferences("last_chronometer_value"));
+const twelve_hours_in_second = 12 * 60 * 60;
+let take_a_break_not_shown = true;
 
 setInterval(() => {
   if (is_chrono_running.value) {
     duration_seconds.value =
       (Date.now() - timestamp_start_chrono.value) / 1000 +
       chrono_before_pause.value;
+    if (
+      duration_seconds.value > twelve_hours_in_second &&
+      take_a_break_not_shown
+    ) {
+      toast.add({
+        severity: "info",
+        summary: "",
+        detail: i18n.t("TitleBar.take_a_break"),
+      });
+      take_a_break_not_shown = false;
+    }
   }
 }, 1000);
 
