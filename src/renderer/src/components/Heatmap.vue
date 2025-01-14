@@ -3,6 +3,7 @@ import { onMounted, ref, watch } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { CalendarHeatmap } from "vue3-calendar-heatmap";
+import { convertMinuteToHoursMinute } from "../common/main";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -109,6 +110,12 @@ function transformSessions(sessions) {
           :end-date="last_session_date"
           :no-data-text="i18n.t('Heatmap.no_data')"
           :tooltip-unit="i18n.t('Heatmap.tooltip_unit')"
+          :tooltip-formatter="
+            (v) =>
+              convertMinuteToHoursMinute(v.count) +
+              ' - ' +
+              v.date.toLocaleDateString()
+          "
           :max="300"
           class="dt-heatmap"
         />
