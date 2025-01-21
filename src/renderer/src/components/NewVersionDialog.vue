@@ -17,6 +17,7 @@ import { getLatestReleaseChangelog } from "../common/new_version";
 import { useI18n } from "vue-i18n";
 import markdownit from "markdown-it";
 import { computed } from "vue";
+import { getPreferences } from "../preferences/preferences";
 const md = markdownit();
 const i18n = useI18n();
 const LATEST_VERSION_URL =
@@ -31,6 +32,11 @@ onMounted(async () => {
 
 function openInBrowser() {
   window.open(LATEST_VERSION_URL);
+  if (getPreferences("close_app_when_clicking_on_update")) {
+    setTimeout(() => {
+      window.electron.ipcRenderer.send("close", {});
+    }, 1500);
+  }
 }
 </script>
 <style scoped>

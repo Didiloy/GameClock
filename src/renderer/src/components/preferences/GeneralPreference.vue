@@ -170,6 +170,16 @@ const check_for_update = ref(getPreferences("check_for_update_at_startup"));
 watch(check_for_update, () => {
   setPreferences("check_for_update_at_startup", check_for_update.value);
 });
+
+const close_app_when_clicking_on_update = ref(
+  getPreferences("close_app_when_clicking_on_update"),
+);
+watch(close_app_when_clicking_on_update, () => {
+  setPreferences(
+    "close_app_when_clicking_on_update",
+    close_app_when_clicking_on_update.value,
+  );
+});
 </script>
 
 <template>
@@ -234,6 +244,12 @@ watch(check_for_update, () => {
         $t("GeneralPreference.check_new_version_at_startup")
       }}</b>
       <InputSwitch v-model="check_for_update" />
+    </div>
+    <div class="tp-item" style="margin-top: 10px">
+      <b class="text-color">{{
+        $t("GeneralPreference.close_app_when_clicking_on_update")
+      }}</b>
+      <InputSwitch v-model="close_app_when_clicking_on_update" />
     </div>
   </div>
 </template>

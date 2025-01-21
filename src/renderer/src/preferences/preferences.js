@@ -38,6 +38,7 @@ const defaults = {
   toggle_fun_selected_by_default: "",
   //check for update
   check_for_update_at_startup: true,
+  close_app_when_clicking_on_update: false,
   //Associate games with platform
   associate_to_platform: [],
 };
