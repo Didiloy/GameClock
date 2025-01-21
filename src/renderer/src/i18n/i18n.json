@@ -199,7 +199,8 @@
       "fun_to_play": "Plaisir ressenti tous jeux confondus",
       "games_played": "jeux joués",
       "games_sessions": "sessions de jeu",
-      "biggest_session": "Session la plus longue ({0})"
+      "biggest_session": "Session la plus longue ({0})",
+      "max_day": "est le jour où vous avez le plus jouer ({0})"
     },
     "TopGamesLittleGameCard": {
       "title": "Top 3 des jeux les plus joués"
@@ -569,7 +570,8 @@
       "fun_to_play": "Fun experienced across all games",
       "games_played": "Games played",
       "games_sessions": "Game sessions",
-      "biggest_session": "Biggest session ({0})"
+      "biggest_session": "Biggest session ({0})",
+      "max_day": "is the day where you played the most ({0})"
     },
     "TopGamesLittleGameCard": {
       "title": "Top 3 Most Played Games"

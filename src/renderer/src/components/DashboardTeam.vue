@@ -26,6 +26,18 @@
       ></LittleCard>
       <LittleCard
         iconName="pi pi-hashtag"
+        class="dt-lc-max-day"
+        :name="new Date(max_day).toLocaleDateString()"
+        backgroundColor="#ffdbcb"
+        titleColor="#341100"
+        :value="
+          i18n.t('DashboardTeam.max_day', [
+            convertMinuteToHoursMinute(max_duration),
+          ])
+        "
+      ></LittleCard>
+      <LittleCard
+        iconName="pi pi-crown"
         class="dt-lc-position"
         :name="ranking_computed"
         backgroundColor="#f7d8fe"
@@ -221,10 +233,14 @@ window.electron.ipcRenderer.on("result_dashboardteam", (event, data) => {
   team_average_session_duration.value = data.team_average_session_duration;
   biggest_session.value = data.biggest_session;
   game_of_biggest_session.value = data.game_of_biggest_session;
+  max_day.value = data.max_day;
+  max_duration.value = data.max_duration;
   loaded.value = true;
 });
 
 const biggest_session = ref(0);
+const max_day = ref("");
+const max_duration = ref(0);
 const game_of_biggest_session = ref("");
 const team_average_session_duration = ref(0);
 const sessions_number = ref(0);
@@ -342,11 +358,21 @@ const total_fun_percentage = ref(0);
   grid-row-end: 3;
 }
 
-.dt-lc-position {
+.dt-lc-max-day {
   display: inline-grid;
   width: 100%;
   height: 100%;
   grid-column-start: 7;
+  grid-column-end: 10;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+.dt-lc-position {
+  display: inline-grid;
+  width: 100%;
+  height: 100%;
+  grid-column-start: 10;
   grid-column-end: 13;
   grid-row-start: 1;
   grid-row-end: 3;

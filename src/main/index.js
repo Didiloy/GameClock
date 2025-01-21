@@ -207,6 +207,8 @@ function createWindow() {
       team_average_session_duration,
       biggest_session,
       game_of_biggest_session,
+      max_day,
+      max_duration,
     } = dashboardteam(data.ids_of_team, data.games, data.sessions, data.teams);
     BrowserWindow.getAllWindows()[0].webContents.send("result_dashboardteam", {
       team_time,
@@ -216,6 +218,8 @@ function createWindow() {
       team_average_session_duration,
       biggest_session,
       game_of_biggest_session,
+      max_day,
+      max_duration,
     });
   });
 

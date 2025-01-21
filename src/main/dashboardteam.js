@@ -2,16 +2,20 @@ export function dashboardteam(ids_of_team, games, sessions, teams) {
   let [team_time, sessions_number] = calculateTeamTime(ids_of_team, sessions);
   let number_of_games = getNumberOfGames(ids_of_team, games, sessions);
   let total_fun_percentage = getTotalFunPercentage(sessions);
+
   let team_average_session_duration = calculateAverageSessionDuration(
     ids_of_team,
     sessions,
     sessions_number,
   );
+
   let [biggest_session, game_of_biggest_session] = calculateBiggestSession(
     ids_of_team,
     sessions,
     games,
   );
+
+  let [max_day, max_duration] = getDayMostPlayed(ids_of_team, sessions);
   return {
     team_time,
     sessions_number,
@@ -20,7 +24,37 @@ export function dashboardteam(ids_of_team, games, sessions, teams) {
     team_average_session_duration,
     biggest_session,
     game_of_biggest_session,
+    max_day,
+    max_duration,
   };
+}
+
+function getDayMostPlayed(ids_of_team, sessions) {
+  let duration_per_day = new Map(); //shower
+  for (const session of sessions) {
+    const sessionDate = new Date(session.date * 1000);
+    const dayKey = sessionDate.toISOString().split("T")[0]; // Extract YYYY-MM-DD
+    if (session.teams.some((team) => ids_of_team.includes(team))) {
+      if (duration_per_day.has(dayKey)) {
+        duration_per_day.set(
+          dayKey,
+          duration_per_day.get(dayKey) + session.duration,
+        );
+      } else {
+        duration_per_day.set(dayKey, session.duration);
+      }
+    }
+  }
+
+  let max_duration = 0;
+  let max_day = "";
+  for (const [day, totalDuration] of duration_per_day) {
+    if (totalDuration > max_duration) {
+      max_duration = totalDuration;
+      max_day = day;
+    }
+  }
+  return [max_day, max_duration];
 }
 
 function calculateTeamTime(ids_of_team, sessions) {
