@@ -133,6 +133,12 @@
                 :title="item.team_player.description + ''"
                 class="success"
               />
+              <img
+                v-if="item.computed_successes && item.shower.unlocked"
+                :src="item.shower.image"
+                :title="item.shower.description + ''"
+                class="success"
+              />
             </div>
           </div>
           <div class="team-playtime">
@@ -242,6 +248,7 @@ function filterTeam() {
       stinky: team.stinky,
       why_playing: team.why_playing,
       team_player: team.team_player,
+      shower: team.shower,
     }));
     return;
   }
@@ -285,6 +292,7 @@ function getSuccesses() {
       stinky,
       why_playing,
       team_player,
+      shower,
     } = useSuccesses(i18n);
     calculateSuccesses(team.name, sessions.value);
     team.relentless = relentless.value;
@@ -303,6 +311,7 @@ function getSuccesses() {
     team.stinky = stinky.value;
     team.why_playing = why_playing.value;
     team.team_player = team_player.value;
+    team.shower = shower.value;
     team.computed_successes = true;
   });
 }
@@ -416,6 +425,8 @@ function navigateToTeam(teamName) {
 .success {
   max-width: 25px;
   max-height: 25px;
+  width: 25px;
+  height: 25px;
   margin-left: 10px;
 }
 

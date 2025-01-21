@@ -263,6 +263,7 @@ onMounted(() => {
     stinky,
     why_playing,
     team_player,
+    shower,
   } = useSuccesses(i18n);
   calculateSuccesses(useRoute().params.name, sessions_of_team.value, false);
   let unlocked = [];
@@ -282,6 +283,7 @@ onMounted(() => {
   unlocked.push(stinky.value);
   unlocked.push(why_playing.value);
   unlocked.push(team_player.value);
+  unlocked.push(shower.value);
   unlocked_successes.value = unlocked.filter((s) => s.unlocked);
   selected_success.value = unlocked_successes.value[0];
 });

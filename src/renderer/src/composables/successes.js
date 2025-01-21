@@ -18,6 +18,7 @@ import thousand_hours_logo from "../assets/images/successes/thousand_hours.svg";
 import stinky_logo from "../assets/images/successes/stinky.svg";
 import why_playing_logo from "../assets/images/successes/why_playing.svg";
 import team_player_logo from "../assets/images/successes/team_player.svg";
+import shower_logo from "../assets/images/successes/shower.svg";
 
 export function useSuccesses(i18n) {
   const store = useStore();
@@ -39,6 +40,7 @@ export function useSuccesses(i18n) {
   const stinky = ref({ unlocked: false, image: "", description: "" });
   const why_playing = ref({ unlocked: false, image: "", description: "" });
   const team_player = ref({ unlocked: false, image: "", description: "" });
+  const shower = ref({ unlocked: false, image: "", description: "" });
 
   function calculateSuccesses(
     teamName,
@@ -57,6 +59,7 @@ export function useSuccesses(i18n) {
     let duration_total = 0;
     let duration_team = 0;
     let sessions_of_ten_hours = 0; //stinky
+    let duration_per_day = new Map(); //shower
 
     for (const session of sessions) {
       if (session.teams.includes(id_of_team)) {
@@ -106,6 +109,18 @@ export function useSuccesses(i18n) {
         if (session.teams.length > 1) {
           sessions_in_team++;
         }
+
+        //shower
+        const sessionDate = new Date(session.date.seconds * 1000);
+        const dayKey = sessionDate.toISOString().split("T")[0]; // Extract YYYY-MM-DD
+        if (duration_per_day.has(dayKey)) {
+          duration_per_day.set(
+            dayKey,
+            duration_per_day.get(dayKey) + session.duration,
+          );
+        } else {
+          duration_per_day.set(dayKey, session.duration);
+        }
       }
       duration_total += session.duration; //important_person
 
@@ -113,7 +128,17 @@ export function useSuccesses(i18n) {
         //stinky
         sessions_of_ten_hours++;
       }
+    }
 
+    // Compute shower success
+    for (const [day, totalDuration] of duration_per_day) {
+      if (totalDuration > 23 * 60) {
+        // More than 23 hours in a day
+        shower.value.unlocked = true;
+        shower.value.image = shower_logo;
+        shower.value.description = i18n.t("Successes.descriptions.shower");
+        break;
+      }
     }
 
     //relentless and why_playing
@@ -247,5 +272,6 @@ export function useSuccesses(i18n) {
     stinky,
     why_playing,
     team_player,
+    shower,
   };
 }
