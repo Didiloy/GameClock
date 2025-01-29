@@ -16,6 +16,7 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
+[![latest-release][repo-release-shield]][repo-release-url]
 [![repo-size][repo-size-shield]][repo-size-url]
 [![License][license-shield]][license-url]
 
@@ -102,7 +103,9 @@ Distributed under the GPLv3 License.
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
+[repo-release-shield]: https://img.shields.io/github/release/didiloy/gameclock
 [repo-size-shield]: https://img.shields.io/github/repo-size/didiloy/gameclock
+[repo-release-url]: https://github.com/Didiloy/GameClock/releases/latest
 [repo-size-url]: https://github.com/Didiloy/gameclock/graphs/contributors
 [license-shield]: https://img.shields.io/badge/Licence-GPLv3-brightgreen
 [license-url]: https://www.gnu.org/licenses/gpl-3.0.html
