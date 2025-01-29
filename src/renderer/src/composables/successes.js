@@ -19,6 +19,7 @@ import stinky_logo from "../assets/images/successes/stinky.svg";
 import why_playing_logo from "../assets/images/successes/why_playing.svg";
 import team_player_logo from "../assets/images/successes/team_player.svg";
 import shower_logo from "../assets/images/successes/shower.svg";
+import first_session_logo from "../assets/images/successes/shower.svg"; //TO-DO
 
 export function useSuccesses(i18n) {
   const store = useStore();
@@ -41,6 +42,7 @@ export function useSuccesses(i18n) {
   const why_playing = ref({ unlocked: false, image: "", description: "" });
   const team_player = ref({ unlocked: false, image: "", description: "" });
   const shower = ref({ unlocked: false, image: "", description: "" });
+  const first_session = ref({ unlocked: false, image: "", description: "" });
 
   function calculateSuccesses(
     teamName,
@@ -252,6 +254,13 @@ export function useSuccesses(i18n) {
         "Successes.descriptions.team_player",
       );
     }
+
+    // first_session
+    if(session_number === 1){
+      first_session.value.unlocked = true;
+      first_session.value.image = first_session_logo;
+      first_session.value.description = i18n.t("Successes.descriptions.first_session");
+    }
   }
 
   return {
@@ -273,5 +282,6 @@ export function useSuccesses(i18n) {
     why_playing,
     team_player,
     shower,
+    first_session
   };
 }
