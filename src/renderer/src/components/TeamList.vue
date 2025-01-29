@@ -293,7 +293,8 @@ function getSuccesses() {
       why_playing,
       team_player,
       shower,
-    } = useSuccesses(i18n);
+      first_session
+  } = useSuccesses(i18n);
     calculateSuccesses(team.name, sessions.value);
     team.relentless = relentless.value;
     team.patient = patient.value;
@@ -313,6 +314,7 @@ function getSuccesses() {
     team.team_player = team_player.value;
     team.shower = shower.value;
     team.computed_successes = true;
+    team.first_session = first_session.value;
   });
 }
 
