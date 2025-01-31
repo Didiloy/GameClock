@@ -86,14 +86,17 @@ Create a [SteamGridDB](https://www.steamgriddb.com/api/v2) API Key – To use th
    npm install
    ```
 4. Configure Environment Variables
+
    Create a `.env` file in the root of your project and add the following :
+
+   You can also copy the `.env.example` file.
 
    ```env
    # .env example for VITE_STEAMGRIDDB_API_KEY
    VITE_STEAMGRIDDB_API_KEY=your_api_key_here
    ```
 
-   Make sure to replace `your_api_key_here` with the actual API key you received from SteamGridDB.
+   Make sure to replace `your_api_key_here` with the actual API key you received from [SteamGridDB](https://www.steamgriddb.com/api/v2).
 
 5. Launch the developpement server
    ```sh
