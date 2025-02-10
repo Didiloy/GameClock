@@ -67,6 +67,10 @@ To get a local copy up and running follow these simple steps.
 
 Have `node` installed.
 
+Create a [SteamGridDB](https://www.steamgriddb.com/api/v2) API Key – To use the SteamGridDB API, you’ll need an API key. You can get it by signing up at [SteamGridDB](https://www.steamgriddb.com).
+
+
+
 ### Installation
 
 1. Clone the repo
@@ -81,7 +85,19 @@ Have `node` installed.
    ```sh
    npm install
    ```
-4. Launch the developpement server
+4. Configure Environment Variables
+
+   Create a `.env` file in the root of your project and add the following :
+
+   You can also copy the `.env.example` file.
+
+   ```env
+   VITE_STEAMGRIDDB_API_KEY=YOUR_KEY
+   ```
+
+   Make sure to replace `YOUR_KEY` with the actual API key you received from [SteamGridDB](https://www.steamgriddb.com/api/v2).
+
+5. Launch the developpement server
    ```sh
    npm run dev
    ```
