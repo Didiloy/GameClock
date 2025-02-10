@@ -4,6 +4,7 @@ import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { CalendarHeatmap } from "vue3-calendar-heatmap";
 import { convertMinuteToHoursMinute } from "../common/main";
+import SessionsHistory from "./SessionsHistory.vue";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -69,6 +70,24 @@ function transformSessions(sessions) {
 
   return result;
 }
+
+const show_sessions_of_day = ref(false);
+const selected_day = ref("");
+const sessions_of_day = ref([]);
+function getSessionOfDay(day) {
+  const sessions = [];
+  for (const session of props.sessions) {
+    let date = new Date(session.date.seconds * 1000);
+    let year = date.getFullYear();
+    let month = date.getMonth();
+    let d = date.getDate();
+    let day_string = `${d < 9 ? "0" + d : d}/${month < 9 ? "0" + (month + 1) : month + 1}/${year}`;
+    if (day_string === day) {
+      sessions.push(session);
+    }
+  }
+  return sessions;
+}
 </script>
 
 <template>
@@ -99,11 +118,18 @@ function transformSessions(sessions) {
         },
       }"
     >
-      <template #subtitle>
+      <template #title>
         <span class="gfp-font">
           {{ $t("Heatmap.title") }}
         </span></template
       >
+      <template #subtitle>
+        <Chip
+          :label="i18n.t('LineChartLastMonth.click_to_see_details')"
+          icon="pi pi-info-circle"
+          style="background-color: var(--primary-300)"
+        />
+      </template>
       <template #content>
         <calendar-heatmap
           :values="team_session_transformed"
@@ -118,9 +144,37 @@ function transformSessions(sessions) {
           "
           :max="300"
           class="dt-heatmap"
+          :onDayClick="
+            (args) => {
+              const date = args.date;
+              let year = date.getFullYear();
+              let month = date.getMonth();
+              let d = date.getDate();
+              let day_string = `${d < 9 ? '0' + d : d}/${month < 9 ? '0' + (month + 1) : month + 1}/${year}`;
+              selected_day = day_string;
+              sessions_of_day = getSessionOfDay(selected_day);
+              show_sessions_of_day = true;
+            }
+          "
         />
       </template>
     </Card>
+    <Dialog
+      v-model:visible="show_sessions_of_day"
+      modal
+      dismissableMask
+      :style="{ width: '90%', height: 'fit-content' }"
+    >
+      <div style="height: 100%; width: 100%">
+        <SessionsHistory
+          :title="
+            i18n.t('LineChartLastMonth.title_session_of_day', [selected_day])
+          "
+          :teamName="props.teamName"
+          :sessions="sessions_of_day"
+        />
+      </div>
+    </Dialog>
   </div>
 </template>
 

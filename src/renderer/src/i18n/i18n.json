@@ -1,7 +1,9 @@
 {
   "fr": {
     "LineChartLastMonth": {
-      "title": "Temps de jeux sur le dernier mois"
+      "title": "Temps de jeux sur le dernier mois",
+      "title_session_of_day": "Sessions du {0}",
+      "click_to_see_details": "Clique sur un jour pour voir le détail"
     },
     "NewVersionDialog": {
       "title": "Nouvelle version disponible !",
@@ -372,7 +374,9 @@
   },
   "en": {
     "LineChartLastMonth": {
-      "title": "Play time the last month"
+      "title": "Play time the last month",
+      "title_session_of_day": "Sessions of {0}",
+      "click_to_see_details": "Click on a day to see details"
     },
     "NewVersionDialog": {
       "title": "New version available !",

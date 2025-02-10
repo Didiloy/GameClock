@@ -19,7 +19,7 @@
       }}</span></template
     >
     <template #content>
-      <Accordion>
+      <Accordion :activeIndex="props.sessions ? 0 : null">
         <AccordionTab :header="i18n.t('SessionsHistory.sessions')">
           <DataTable
             :value="sessions_values"
@@ -204,6 +204,7 @@ const props = defineProps([
   "titleColor",
   "historySize",
   "title",
+  "sessions",
 ]);
 const backgroundColor = props.backgroundColor
   ? props.backgroundColor
@@ -222,6 +223,16 @@ onMounted(() => {
 
 watch(
   () => props.teamName,
+  () => {
+    init();
+    if (getPreferences("use_logo_color_in_session_history")) {
+      computeSessionColor();
+    }
+  },
+);
+
+watch(
+  () => props.sessions,
   () => {
     init();
     if (getPreferences("use_logo_color_in_session_history")) {
@@ -257,6 +268,14 @@ function init() {
     );
   } else if (props.historySize) {
     session_copy = session_copy.slice(0, props.historySize);
+  }
+
+  if (props.sessions) {
+    //utilisé pour afficher les sessions d'un jour particulier
+    session_copy = props.sessions;
+    session_copy.sort((a, b) => {
+      return b.date.seconds - a.date.seconds;
+    });
   }
 
   if (props.teamName !== undefined) {
