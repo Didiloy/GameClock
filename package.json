@@ -15,7 +15,8 @@
     "build:win": "npm run build && electron-builder --win --config",
     "build:mac": "npm run build && electron-builder --mac --config",
     "build:linux": "npm run build && electron-builder --linux --config",
-    "check-env-vars": "node scripts/check-env.js"
+    "check-env-vars": "node scripts/check-env.js",
+    "build-both-platform": "npm run build:win && npm run build:linux"
   },
   "dependencies": {
     "@electron-toolkit/preload": "latest",
