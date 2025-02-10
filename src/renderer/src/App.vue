@@ -190,6 +190,7 @@ h2 {
   border-radius: 10px;
   overflow-y: hidden;
   background-color: var(--surface-100);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .inner-content {
