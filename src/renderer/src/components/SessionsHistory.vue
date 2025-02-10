@@ -394,7 +394,10 @@ function getGameNameAndLogoById(id) {
   return ["[" + i18n.t("SessionsHistory.deleted_game") + "]", ""];
 }
 
+const liking_function_running = ref(false);
 async function addLike(session) {
+  if (liking_function_running.value) return;
+  liking_function_running.value = true;
   if (!isLiked(session.id)) {
     let added_like = await addLikeToSession(session.id);
     if (added_like) {
@@ -423,6 +426,7 @@ async function addLike(session) {
       });
     }
   }
+  liking_function_running.value = false;
 }
 </script>
 <style scoped>
