@@ -112,7 +112,12 @@ export function useSuccesses(i18n) {
 
         //shower
         const sessionDate = new Date(session.date.seconds * 1000);
-        const dayKey = sessionDate.toISOString().split("T")[0]; // Extract YYYY-MM-DD
+        const normalizedDate = new Date(
+          sessionDate.getFullYear(),
+          sessionDate.getMonth(),
+          sessionDate.getDate(),
+        );
+        const dayKey = normalizedDate.toISOString().split("T")[0]; // Extract YYYY-MM-DD
         if (duration_per_day.has(dayKey)) {
           duration_per_day.set(
             dayKey,
