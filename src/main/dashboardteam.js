@@ -30,7 +30,7 @@ export function dashboardteam(ids_of_team, games, sessions, teams) {
 }
 
 function getDayMostPlayed(ids_of_team, sessions) {
-  let duration_per_day = new Map(); //shower
+  let duration_per_day = new Map();
   for (const session of sessions) {
     const sessionDate = new Date(session.date * 1000);
     const normalizedDate = new Date(

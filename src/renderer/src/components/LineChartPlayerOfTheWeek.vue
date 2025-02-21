@@ -24,7 +24,7 @@
         content: { style: 'height:100%; width: auto;' },
       }"
     >
-      <template #subtitle>
+      <template #title>
         <span class="lcgm-font"
           >{{ $t("LineChartPlayerOfTheWeek.title") }}
           <i
@@ -32,6 +32,13 @@
             @click="fullscreen = !fullscreen"
           ></i> </span
       ></template>
+      <template #subtitle>
+        <Chip
+          :label="i18n.t('LineChartLastMonth.click_to_see_details')"
+          icon="pi pi-info-circle"
+          style="background-color: var(--primary-300)"
+        />
+      </template>
       <template #content>
         <Chart
           type="line"
@@ -41,9 +48,9 @@
             getPreferences('activate_zoom_on_graphs') ? [zoomPlugin] : ''
           "
           :pt="{
-            root: { style: 'height: 100%; width: auto' },
+            root: { style: 'height: 100%;  width: auto' },
             canvas: {
-              style: 'height: 100%; width: auto',
+              style: 'height: 100%; max-height:300px; width: auto',
             },
           }"
         />
@@ -73,6 +80,22 @@
         />
       </div>
     </Dialog>
+    <Dialog
+      v-model:visible="show_sessions_of_day"
+      modal
+      dismissableMask
+      :style="{ width: '90%', height: 'fit-content' }"
+    >
+      <div style="height: 100%; width: 100%">
+        <SessionsHistory
+          :title="
+            i18n.t('LineChartLastMonth.title_session_of_day', [selected_day])
+          "
+          :teamName="props.teamName"
+          :sessions="sessions_of_day"
+        />
+      </div>
+    </Dialog>
   </div>
 </template>
 <script setup>
@@ -82,6 +105,7 @@ import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
 import zoomPlugin from "chartjs-plugin-zoom";
 import { getPreferences } from "../preferences/preferences";
+import SessionsHistory from "./SessionsHistory.vue";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -174,6 +198,31 @@ window.electron.ipcRenderer.on(
   },
 );
 
+const show_sessions_of_day = ref(false);
+const selected_day = ref("");
+const sessions_of_day = ref([]);
+const selected_team = ref("");
+function getSessionOfDay(day) {
+  const sess = [];
+  for (const session of sessions.value) {
+    let date = new Date(session.date.seconds * 1000);
+    let year = date.getFullYear();
+    let month = date.getMonth();
+    let d = date.getDate();
+    let day_string = `${d < 9 ? "0" + d : d}/${month < 9 ? "0" + (month + 1) : month + 1}/${year}`;
+    if (day_string === day && isTeamInSession(session, selected_team.value)) {
+      sess.push(session);
+    }
+  }
+  return sess;
+}
+
+function isTeamInSession(session, team) {
+  //we have a team name and want a team id
+  let team_id = teams.value.filter((t) => t.name === team)[0].id;
+  return session.teams.includes(team_id);
+}
+
 const setChartData = () => {
   return {
     labels: labels_date.value,
@@ -190,6 +239,17 @@ const setChartOptions = () => {
   const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
   return {
+    onClick: (event, elements) => {
+      try {
+        selected_day.value = labels_date.value[elements[0].index];
+        selected_team.value = datasets.value[elements[0].datasetIndex].label;
+        sessions_of_day.value = getSessionOfDay(selected_day.value);
+        show_sessions_of_day.value = true;
+      } catch (error) {
+        //the user clicked outside the graph, don't do anything
+        // console.log("Clicked outside the graph");
+      }
+    },
     stacked: false,
     maintainAspectRatio: false,
     aspectRatio: 0.6,
