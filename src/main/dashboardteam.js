@@ -33,7 +33,12 @@ function getDayMostPlayed(ids_of_team, sessions) {
   let duration_per_day = new Map(); //shower
   for (const session of sessions) {
     const sessionDate = new Date(session.date * 1000);
-    const dayKey = sessionDate.toISOString().split("T")[0]; // Extract YYYY-MM-DD
+    const normalizedDate = new Date(
+      sessionDate.getFullYear(),
+      sessionDate.getMonth(),
+      sessionDate.getDate(),
+    );
+    const dayKey = normalizedDate.toISOString().split("T")[0]; // Extract YYYY-MM-DD
     if (session.teams.some((team) => ids_of_team.includes(team))) {
       if (duration_per_day.has(dayKey)) {
         duration_per_day.set(
