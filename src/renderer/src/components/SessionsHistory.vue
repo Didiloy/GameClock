@@ -200,10 +200,10 @@ import { useI18n } from "vue-i18n";
 const i18n = useI18n();
 
 import markdownit from "markdown-it";
-import { spoilerPlugin, resizeImages } from "../common/markdown_plugin";
+import { spoilerPlugin, resizeImagesPlugin } from "../common/markdown_plugin";
 const md = markdownit();
 md.use(spoilerPlugin);
-md.use(resizeImages);
+md.use(resizeImagesPlugin);
 
 const toast = useToast();
 const props = defineProps([

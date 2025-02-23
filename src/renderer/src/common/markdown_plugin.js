@@ -35,7 +35,7 @@ export function spoilerPlugin(md) {
   };
 }
 
-export function resizeImages(md) {
+export function resizeImagesPlugin(md) {
   md.renderer.rules.image = function (tokens, idx, options, env, self) {
     const token = tokens[idx];
 
