@@ -108,9 +108,11 @@
             >
               <template #body="slotProps">
                 <div class="sh-hover-div">
-                  <div v-if="slotProps.data.comment" class="sh-popup">
-                    {{ slotProps.data.comment }}
-                  </div>
+                  <div
+                    v-if="slotProps.data.comment"
+                    class="sh-popup"
+                    v-html="md.render(slotProps.data.comment)"
+                  ></div>
                   <Chip
                     :label="
                       slotProps.data.joyrate == null
@@ -196,6 +198,19 @@ import { isLiked, addSession, removeSession } from "../common/likes";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
+
+import markdownit from "markdown-it";
+const md = markdownit();
+// Override default image rendering to enforce width/height
+md.renderer.rules.image = function (tokens, idx, options, env, self) {
+  const token = tokens[idx];
+
+  // Add width and height attributes
+  token.attrSet("width", "256");
+  token.attrSet("height", "256");
+
+  return self.renderToken(tokens, idx, options);
+};
 
 const toast = useToast();
 const props = defineProps([

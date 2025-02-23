@@ -324,6 +324,7 @@ const total_fun_percentage = ref(0);
   align-items: center;
   height: 100%;
   width: 98%;
+  gap: 5px;
 }
 
 .dt-dashboard {
