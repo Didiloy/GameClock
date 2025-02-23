@@ -322,7 +322,11 @@ function getTeamsId() {
 
 async function addNewSession() {
   loading.value = true;
-  if (duration.value === "" || game.value === "") {
+  if (
+    duration.value === "" ||
+    game.value === "" ||
+    teamName.value.length === 0
+  ) {
     toast.add({
       severity: "error",
       summary: "",
