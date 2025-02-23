@@ -131,8 +131,8 @@
           <TextArea
             v-model="comment"
             rows="1"
-            style="width: 100%"
-            class="mb20"
+            autoResize
+            class="mb5 as-comment"
             :placeholder="i18n.t('AddSession.comments')"
           />
         </div>
@@ -563,6 +563,10 @@ function resetForm() {
   margin-bottom: 20px;
 }
 
+.mb5 {
+  margin-bottom: 5px;
+}
+
 .as-fun-selector {
   display: flex;
   flex-direction: row;
@@ -618,5 +622,9 @@ function resetForm() {
 
 .as-icon:hover {
   cursor: pointer;
+}
+
+.as-comment {
+  width: 100%;
 }
 </style>
