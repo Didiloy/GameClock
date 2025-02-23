@@ -200,17 +200,10 @@ import { useI18n } from "vue-i18n";
 const i18n = useI18n();
 
 import markdownit from "markdown-it";
+import { spoilerPlugin, resizeImages } from "../common/markdown_plugin";
 const md = markdownit();
-// Override default image rendering to enforce width/height
-md.renderer.rules.image = function (tokens, idx, options, env, self) {
-  const token = tokens[idx];
-
-  // Add width and height attributes
-  token.attrSet("width", "256");
-  token.attrSet("height", "256");
-
-  return self.renderToken(tokens, idx, options);
-};
+md.use(spoilerPlugin);
+md.use(resizeImages);
 
 const toast = useToast();
 const props = defineProps([

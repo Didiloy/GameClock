@@ -130,6 +130,7 @@
           </SelectButton>
           <TextArea
             v-model="comment"
+            :title="i18n.t('AddSession.comments_support_markdown')"
             rows="1"
             autoResize
             class="mb5 as-comment"

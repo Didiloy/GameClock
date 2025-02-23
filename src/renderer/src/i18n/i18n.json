@@ -224,6 +224,7 @@
       "bad": "Nul",
       "add": "Ajouter",
       "comments": "Commentaires (optionnels)",
+      "comments_support_markdown": "Les commentaires supportent Markdown, pour ajouter une image, utilisez la syntaxe suivante : ![alt text](url), pour ajouter un spoiler, utilisez la syntaxe suivante : [](#spoiler \"texte du spoiler\")",
       "errors": {
         "fill_all_fields": "Veuillez remplir tous les champs correctement.",
         "formulas_error": "Les opérandes d'une formule doivent être des nombres entiers et vous ne pouvez utiliser que l'addition.",
@@ -597,6 +598,7 @@
       "bad": "Bad",
       "add": "Add",
       "comments": "Comments (optionnals)",
+      "comments_support_markdown": "Markdown format is supported. To add an image, use the syntax ![alt text](url). To add a spoiler, use the syntax [](#spoiler \"spoiler text\")",
       "errors": {
         "fill_all_fields": "Please fill in all fields correctly.",
         "formulas_error": "The operands of a formula must be whole numbers and you can only use addition.",
