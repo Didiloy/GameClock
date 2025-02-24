@@ -297,7 +297,17 @@
       "title": "Apparence",
       "use_color_of_most_played_game_in_team_list": "Utiliser la couleur du logo du jeu le plus joué dans la liste des équipes:",
       "use_color_of_game_in_history": "Utiliser la couleur du logo du jeu dans l'historique des sessions:",
-      "accent_color": "Couleur d'accentuation:"
+      "accent_color": "Couleur d'accentuation:",
+      "colors_name": {
+        "amber": "Orange",
+        "blue": "Bleu",
+        "cyan": "Cyan",
+        "green": "Vert",
+        "indigo": "Indigo",
+        "pink": "Rose",
+        "purple": "Violet",
+        "teal": "Vert clair"
+      }
     },
     "PieChartPreferences": {
       "title": "Graphique camembert",
@@ -672,7 +682,17 @@
       "title": "Appearance",
       "use_color_of_most_played_game_in_team_list": "Use the logo color of the most played game in the team list:",
       "use_color_of_game_in_history": "Use the logo color of the game in the session history:",
-      "accent_color": "Accent color:"
+      "accent_color": "Accent color:",
+      "colors_name": {
+        "amber": "Amber",
+        "blue": "Bleu",
+        "cyan": "Cyan",
+        "green": "Green",
+        "indigo": "Indigo",
+        "pink": "Pink",
+        "purple": "Purple",
+        "teal": "Teal"
+      }
     },
     "PieChartPreferences": {
       "title": "Pie Chart",

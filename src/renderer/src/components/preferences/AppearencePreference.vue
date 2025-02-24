@@ -1,6 +1,8 @@
 <script setup>
 import { ref, watch } from "vue";
 import { getPreferences, setPreferences } from "../../preferences/preferences";
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const use_logo_color_in_team_list = ref(
   getPreferences("use_logo_color_in_team_list"),
@@ -22,17 +24,31 @@ watch(use_logo_color_in_session_history, () => {
   );
 });
 
-const selected_accent_color = ref(getPreferences("accent_color"));
+const selected_accent_color = ref({
+  name: i18n.t(
+    `AppearancePreference.colors_name.${getPreferences("accent_color")}`,
+  ),
+  code: getPreferences("accent_color"),
+});
 watch(selected_accent_color, () => {
-  setPreferences("accent_color", selected_accent_color.value);
+  setPreferences("accent_color", selected_accent_color.value.code);
   changeTheme();
 });
 
-const possible_colors = {};
+const possible_colors = ref([
+  { name: i18n.t("AppearancePreference.colors_name.blue"), code: "blue" },
+  { name: i18n.t("AppearancePreference.colors_name.amber"), code: "amber" },
+  { name: i18n.t("AppearancePreference.colors_name.cyan"), code: "cyan" },
+  { name: i18n.t("AppearancePreference.colors_name.green"), code: "green" },
+  { name: i18n.t("AppearancePreference.colors_name.indigo"), code: "indigo" },
+  { name: i18n.t("AppearancePreference.colors_name.purple"), code: "purple" },
+  { name: i18n.t("AppearancePreference.colors_name.teal"), code: "teal" },
+  { name: i18n.t("AppearancePreference.colors_name.pink"), code: "pink" },
+]);
 
 function changeTheme() {
   const themeLink = document.getElementById("theme-link");
-  themeLink.href = `./public/lara-light-${selected_accent_color.value}/theme.css`;
+  themeLink.href = `/lara-light-${selected_accent_color.value.code}/theme.css`;
 }
 </script>
 
@@ -56,7 +72,7 @@ function changeTheme() {
       <Dropdown
         v-model="selected_accent_color"
         :options="possible_colors"
-        optionLabel="label"
+        optionLabel="name"
       />
     </div>
   </div>

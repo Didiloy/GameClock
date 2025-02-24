@@ -47,6 +47,7 @@ watch(teams, () => {
 });
 
 onMounted(async () => {
+  changeTheme();
   addChronoListener();
   if (getPreferences("check_for_update_at_startup")) {
     new_version_available.value = await isThereNewVersion();
@@ -96,6 +97,12 @@ function verifyIfTeamExist() {
 
 function toggleChrono() {
   chrono.value = !chrono.value;
+}
+
+const selected_accent_color = ref(getPreferences("accent_color"));
+function changeTheme() {
+  const themeLink = document.getElementById("theme-link");
+  themeLink.href = `/lara-light-${selected_accent_color.value}/theme.css`;
 }
 </script>
 

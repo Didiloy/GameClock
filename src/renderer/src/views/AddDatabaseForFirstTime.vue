@@ -1,6 +1,5 @@
 <template>
   <div class="ad-container">
-    <h2 class="s-title">{{ $t("AddDatabaseForFirstTime.add_database") }}</h2>
     <Message
       v-if="stored_databases.length === 0"
       :closable="false"
