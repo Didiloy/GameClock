@@ -41,6 +41,7 @@ const defaults = {
   close_app_when_clicking_on_update: false,
   //Associate games with platform
   associate_to_platform: [],
+  accent_color: "blue",
 };
 
 const preferences_name = "preferences";
