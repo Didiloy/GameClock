@@ -298,6 +298,11 @@
       "use_color_of_most_played_game_in_team_list": "Utiliser la couleur du logo du jeu le plus joué dans la liste des équipes:",
       "use_color_of_game_in_history": "Utiliser la couleur du logo du jeu dans l'historique des sessions:",
       "accent_color": "Couleur d'accentuation:",
+      "application_style": "Style de l'application:",
+      "styles_name": {
+        "lara": "Lara",
+        "aura": "Aura"
+      },
       "colors_name": {
         "amber": "Orange",
         "blue": "Bleu",
@@ -683,6 +688,11 @@
       "use_color_of_most_played_game_in_team_list": "Use the logo color of the most played game in the team list:",
       "use_color_of_game_in_history": "Use the logo color of the game in the session history:",
       "accent_color": "Accent color:",
+      "application_style": "Application style:",
+      "styles_name": {
+        "lara": "Lara",
+        "aura": "Aura"
+      },
       "colors_name": {
         "amber": "Amber",
         "blue": "Bleu",

@@ -100,9 +100,10 @@ function toggleChrono() {
 }
 
 const selected_accent_color = ref(getPreferences("accent_color"));
+const selected_style = ref(getPreferences("application_style"));
 function changeTheme() {
   const themeLink = document.getElementById("theme-link");
-  themeLink.href = `/lara-light-${selected_accent_color.value}/theme.css`;
+  themeLink.href = `/${selected_style.value}-light-${selected_accent_color.value}/theme.css`;
 }
 </script>
 

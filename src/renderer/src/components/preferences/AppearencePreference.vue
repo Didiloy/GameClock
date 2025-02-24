@@ -24,6 +24,22 @@ watch(use_logo_color_in_session_history, () => {
   );
 });
 
+const selected_style = ref({
+  name: i18n.t(
+    `AppearancePreference.styles_name.${getPreferences("application_style")}`,
+  ),
+  code: getPreferences("application_style"),
+});
+watch(selected_style, () => {
+  setPreferences("application_style", selected_style.value.code);
+  changeTheme();
+});
+
+const possible_styles = ref([
+  { name: "Lara", code: "lara" },
+  { name: "Aura", code: "aura" },
+]);
+
 const selected_accent_color = ref({
   name: i18n.t(
     `AppearancePreference.colors_name.${getPreferences("accent_color")}`,
@@ -48,7 +64,7 @@ const possible_colors = ref([
 
 function changeTheme() {
   const themeLink = document.getElementById("theme-link");
-  themeLink.href = `/lara-light-${selected_accent_color.value.code}/theme.css`;
+  themeLink.href = `/${selected_style.value.code}-light-${selected_accent_color.value.code}/theme.css`;
 }
 </script>
 
@@ -66,6 +82,16 @@ function changeTheme() {
         $t("AppearancePreference.use_color_of_game_in_history")
       }}</b>
       <InputSwitch v-model="use_logo_color_in_session_history" />
+    </div>
+    <div class="tp-item">
+      <b class="text-color">{{
+        $t("AppearancePreference.application_style")
+      }}</b>
+      <Dropdown
+        v-model="selected_style"
+        :options="possible_styles"
+        optionLabel="name"
+      />
     </div>
     <div class="tp-item">
       <b class="text-color">{{ $t("AppearancePreference.accent_color") }}</b>

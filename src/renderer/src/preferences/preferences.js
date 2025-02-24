@@ -42,6 +42,7 @@ const defaults = {
   //Associate games with platform
   associate_to_platform: [],
   accent_color: "blue",
+  application_style: "lara",
 };
 
 const preferences_name = "preferences";
