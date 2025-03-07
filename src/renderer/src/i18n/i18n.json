@@ -161,7 +161,8 @@
     "BarChartAllGames": {
       "title": "Informations des jeux",
       "number_of_sessions": "Nombre de sessions",
-      "medium_session_time": "Temps moyen d'une session"
+      "medium_session_time": "Temps moyen d'une session",
+      "sessions_history": "Historique des sessions de {0}"
     },
     "PlayTimeHome": {
       "title": "Classement des équipes par temps de jeu",
@@ -551,7 +552,8 @@
     "BarChartAllGames": {
       "title": "Game information",
       "number_of_sessions": "Number of sessions",
-      "medium_session_time": "Average session time"
+      "medium_session_time": "Average session time",
+      "sessions_history": "Sessions history of {0}"
     },
     "PlayTimeHome": {
       "title": "Team ranking by playtime",

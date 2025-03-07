@@ -72,6 +72,22 @@
         />
       </div>
     </Dialog>
+    <Dialog
+      v-model:visible="show_sessions_of_game"
+      modal
+      dismissableMask
+      :style="{ width: '90%', height: 'fit-content' }"
+    >
+      <div style="height: 100%; width: 100%">
+        <SessionsHistory
+          :title="
+            i18n.t('BarChartAllGames.sessions_history', [selected_game_name])
+          "
+          :teamName="props.teamName"
+          :sessions="sessions_of_game"
+        />
+      </div>
+    </Dialog>
   </div>
 </template>
 <script setup>
@@ -83,6 +99,7 @@ import { getIdsOfTeam } from "../database/database";
 import zoomPlugin from "chartjs-plugin-zoom";
 import { useI18n } from "vue-i18n";
 import { getPreferences } from "../preferences/preferences";
+import SessionsHistory from "./SessionsHistory.vue";
 const i18n = useI18n();
 
 const props = defineProps([
@@ -100,6 +117,16 @@ const loaded = ref(false);
 onMounted(() => {
   init();
 });
+
+const selected_game_name = ref("");
+const sessions_of_game = ref([]);
+const show_sessions_of_game = ref(false);
+function getSessionsOfGame(game_id) {
+  const _sessions = [];
+  for (const session of props.sessions ?? sessions.value)
+    if (session.game.id === game_id) _sessions.push(session);
+  return _sessions;
+}
 
 const backgroundColor = props.backgroundColor
   ? props.backgroundColor
@@ -197,6 +224,16 @@ const setChartOptions = () => {
   );
 
   return {
+    onClick: (event, elements) => {
+      try {
+        const selected_game = games_copy.value[elements[0].index];
+        selected_game_name.value = selected_game.name;
+        sessions_of_game.value = getSessionsOfGame(selected_game.id);
+        show_sessions_of_game.value = true;
+      } catch (error) {
+        console.log("probably clicked outside. error: ", error);
+      }
+    },
     plugins: {
       zoom: {
         zoom: {
