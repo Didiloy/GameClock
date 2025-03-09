@@ -23,7 +23,7 @@
         content: { style: 'height:100%; width: auto;' },
       }"
     >
-      <template #subtitle>
+      <template #title>
         <span class="bcag-font">
           {{ $t("BarChartAllGames.title") }}
           <i
@@ -31,6 +31,13 @@
             @click="fullscreen = !fullscreen"
           ></i>
         </span>
+      </template>
+      <template #subtitle>
+        <Chip
+          :label="i18n.t('BarChartAllGames.click_to_see_details')"
+          icon="pi pi-info-circle"
+          style="background-color: var(--primary-300)"
+        />
       </template>
       <template #content>
         <Chart
@@ -42,7 +49,7 @@
           "
           :pt="{
             canvas: {
-              style: 'height: 100%; max-height: 350px; width: auto',
+              style: 'height: 100%; max-height: 300px; width: auto',
             },
           }"
         />
@@ -231,7 +238,7 @@ const setChartOptions = () => {
         sessions_of_game.value = getSessionsOfGame(selected_game.id);
         show_sessions_of_game.value = true;
       } catch (error) {
-        console.log("probably clicked outside. error: ", error);
+        console.log("Probably clicked outside.\nerror: ", error);
       }
     },
     plugins: {

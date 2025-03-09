@@ -246,9 +246,13 @@ const setChartOptions = () => {
 
   return {
     onClick: (event, elements) => {
-      selected_day.value = labels_date.value[elements[0].index];
-      sessions_of_day.value = getSessionOfDay(selected_day.value);
-      show_sessions_of_day.value = true;
+      try {
+        selected_day.value = labels_date.value[elements[0].index];
+        sessions_of_day.value = getSessionOfDay(selected_day.value);
+        show_sessions_of_day.value = true;
+      } catch (error) {
+        console.log("Probably clicked outside.\nerror: ", error);
+      }
     },
     stacked: false,
     maintainAspectRatio: false,

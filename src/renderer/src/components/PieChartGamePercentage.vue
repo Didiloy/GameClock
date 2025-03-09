@@ -23,12 +23,19 @@
       content: { style: 'height:100%; ' },
     }"
   >
-    <template #subtitle>
+    <template #title>
       <span class="gth-font">
         <span class="gth-subtitle">
           {{ $t("PieChartGamePercentage.title") }}
         </span>
       </span>
+    </template>
+    <template #subtitle>
+      <Chip
+        :label="i18n.t('BarChartAllGames.click_to_see_details')"
+        icon="pi pi-info-circle"
+        style="background-color: var(--primary-300)"
+      />
     </template>
     <template #content>
       <Checkbox
@@ -53,13 +60,29 @@
             :pt="{
               canvas: {
                 class: 'p-chart',
-                style: 'height: auto; width: 100%',
+                style: 'height: auto; max-height: 290px; width: 100%',
               },
             }"
           />
         </div>
         <div class="legend-container" id="legend-container"></div>
       </div>
+      <Dialog
+        v-model:visible="show_sessions_of_game"
+        modal
+        dismissableMask
+        :style="{ width: '90%', height: 'fit-content' }"
+      >
+        <div style="height: 100%; width: 100%">
+          <SessionsHistory
+            :title="
+              i18n.t('BarChartAllGames.sessions_history', [selected_game_name])
+            "
+            :teamName="props.teamName"
+            :sessions="sessions_of_game"
+          />
+        </div>
+      </Dialog>
     </template>
   </Card>
 </template>
@@ -67,12 +90,15 @@
 import { onMounted, ref } from "vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
+import SessionsHistory from "./SessionsHistory.vue";
 import {
   convertMinuteToHoursMinute,
   generateRandomColor,
 } from "../common/main";
 import { getPreferences } from "../preferences/preferences";
 import { getIdsOfTeam } from "../database/database";
+import { useI18n } from "vue-i18n";
+const i18n = useI18n();
 
 const props = defineProps([
   "teamName",
@@ -191,6 +217,20 @@ window.electron.ipcRenderer.on(
   },
 );
 
+const selected_game_name = ref("");
+const sessions_of_game = ref([]);
+const show_sessions_of_game = ref(false);
+function getSessionsOfGame(game_id) {
+  const _sessions = [];
+  for (const session of props.sessions ?? sessions.value)
+    if (session.game.id === game_id) _sessions.push(session);
+  return _sessions;
+}
+
+function getIdOfGame(game_name) {
+  return games.value.find((game) => game.name === game_name).id;
+}
+
 const setChartData = () => {
   return {
     labels: showLabel.value
@@ -211,6 +251,16 @@ const setChartOptions = () => {
   const textColor = documentStyle.getPropertyValue("--text-color");
 
   return {
+    onClick: (event, elements) => {
+      try {
+        const selected_game = games_name.value[elements[0].index];
+        selected_game_name.value = selected_game;
+        sessions_of_game.value = getSessionsOfGame(getIdOfGame(selected_game));
+        show_sessions_of_game.value = true;
+      } catch (error) {
+        console.log("Probably clicked outside.\nerror: ", error);
+      }
+    },
     plugins: {
       tooltip: {
         callbacks: {

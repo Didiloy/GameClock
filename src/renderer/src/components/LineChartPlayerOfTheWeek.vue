@@ -246,8 +246,7 @@ const setChartOptions = () => {
         sessions_of_day.value = getSessionOfDay(selected_day.value);
         show_sessions_of_day.value = true;
       } catch (error) {
-        //the user clicked outside the graph, don't do anything
-        // console.log("Clicked outside the graph");
+        console.log("Probably clicked outside.\nerror: ", error);
       }
     },
     stacked: false,
