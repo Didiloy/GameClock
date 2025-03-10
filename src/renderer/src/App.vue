@@ -115,7 +115,7 @@ function changeTheme() {
       :data_loaded="loaded"
     />
     <div class="app-container">
-      <div class="sidebar">
+      <div v-if="loaded && stored_databases.length > 0" class="sidebar">
         <Sidebar></Sidebar>
       </div>
       <div v-if="!loaded && stored_databases.length > 0" class="content">
@@ -155,14 +155,11 @@ function changeTheme() {
 }
 
 .app-container {
-  display: grid;
-  grid-template-columns: 185px 1fr;
-  position: fixed;
-  top: 32px;
-  left: 0;
-  bottom: 0;
+  margin-top: 32px;
   height: calc(100% - 32px);
   width: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
 :global(.main-background) {
@@ -172,8 +169,6 @@ function changeTheme() {
 .sidebar {
   height: 100%;
   width: 185px;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 10px 10px 3px;

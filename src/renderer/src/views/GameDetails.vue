@@ -8,9 +8,10 @@
     :style="`--bg-url: url('${selected_hero}')`"
   >
     <div class="background-container">
-      <div class="content-container-left"></div>
-      <div class="content-container-right"></div>
+   
     </div>
+    <div class="content-container-left"></div>
+    <div class="content-container-right"></div>
   </div>
 </template>
 <script setup>
@@ -60,20 +61,26 @@ function getGameById(id) {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  /* filter: blur(10px); */
+  filter: blur(10px);
 }
 
 .content-container-left {
   background-color: red;
-  width: 50%;
+  width: 40%;
   height: 100%;
   margin: 20px;
+  z-index: 99999;
+  position: absolute;
+  top: 0;
 }
 
 .content-container-right {
   background-color: blue;
-  width: 50%;
+  width: 40%;
   height: 100%;
   margin: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 </style>
