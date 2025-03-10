@@ -2,16 +2,46 @@
   <div v-if="loading">
     <Loading msg="calculating_statistics" />
   </div>
-  <div
-    v-else
-    class="game-details-container"
-    :style="`--bg-url: url('${selected_hero}')`"
-  >
+  <div v-else class="game-details-container" :style="`--bg-url: url('${selected_hero}')`">
     <div class="background-container">
-   
+
     </div>
-    <div class="content-container-left"></div>
-    <div class="content-container-right"></div>
+
+    <div class="overlay-container">
+      <div class="content-container-left">
+        <div class="div-img">
+          <img :src="selected_game.heroe" class="img-heroe" />
+          <input type="text" />
+        </div>
+
+        <div class="div-img">
+          <img :src="selected_game.heroe" class="img-heroe" />
+          <input type="text" />
+        </div>
+
+        <div class="div-img">
+          <img :src="selected_game.heroe" class="img-heroe" />
+          <input type="text" />
+        </div>
+      </div>
+
+      <div class="content-container-right">
+        <div class="div-img">
+          <img :src="selected_game.heroe" class="img-heroe" />
+          <input type="text" />
+        </div>
+
+        <div class="div-img">
+          <img :src="selected_game.heroe" class="img-heroe" />
+          <input type="text" />
+        </div>
+
+        <div class="div-img">
+          <img :src="selected_game.heroe" class="img-heroe" />
+          <input type="text" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
@@ -33,7 +63,7 @@ const selected_hero = computed(() => {
 onMounted(() => {
   selected_game.value = getGameById(props.id);
   console.log(selected_game.value);
-  
+
   setTimeout(() => {
     loading.value = false;
   }, 1000);
@@ -58,31 +88,65 @@ function getGameById(id) {
   background-size: cover;
   background-position: center;
   /* Position relative so child components can be positioned absolutely if needed */
-  position: relative;
+  filter: blur(10px);
+}
+
+
+.overlay-container {
+  --container-size: calc(100% - 186px);
+  background-color: rgba(0, 0, 0, 0.3);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  width: var(--container-size);
+  height: calc(100vh - 32px - 6px);
+  /* 32px: topbar et 6px bottom */
+  margin-top: 32px;
+  z-index: 99999;
+  position: absolute;
+  top: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  filter: blur(10px);
 }
 
 .content-container-left {
-  background-color: red;
-  width: 40%;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   height: 100%;
-  margin: 20px;
-  z-index: 99999;
-  position: absolute;
-  top: 0;
 }
 
 .content-container-right {
-  background-color: blue;
-  width: 40%;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   height: 100%;
-  margin: 20px;
-  position: absolute;
-  top: 0;
-  right: 0;
+}
+
+.div-img {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  max-width: 100%;
+}
+
+.div-img>input {
+  margin-top: 6px;
+}
+
+.img-heroe {
+  max-width: 90%;
+  max-height: 200px;
 }
 </style>
