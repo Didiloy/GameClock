@@ -47,6 +47,7 @@ const Teams = () => import("./views/Teams.vue");
 const AddTeam = () => import("./views/AddTeam.vue");
 const Team = () => import("./views/Team.vue");
 const GamesSettings = () => import("./views/GamesSettings.vue");
+const GameDetails = () => import("./views/GameDetails.vue");
 import { createPinia, storeToRefs } from "pinia";
 const Settings = () => import("./views/Settings.vue");
 import AddDatabaseForFirstTime from "./views/AddDatabaseForFirstTime.vue";
@@ -108,6 +109,12 @@ const routes = [
   { path: "/team/:name/:game", component: Team },
   { path: "/addteam", component: AddTeam },
   { path: "/settings/games", component: GamesSettings, name: "settings-games" },
+  {
+    path: "/settings/games/:id",
+    component: GameDetails,
+    name: "settings-games-details",
+    props: true,
+  },
   { path: "/settings/general", component: Settings, name: "settings-general" },
   {
     path: "/waiting-list-sessions",
@@ -198,6 +205,7 @@ app.use(router);
 //Translations
 import translations from "./i18n/i18n.json";
 import { getPreferences } from "./preferences/preferences";
+import { getGames } from "./database/database";
 const i18n = createI18n({
   legacy: false,
   locale: getPreferences("language"),

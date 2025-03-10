@@ -396,6 +396,7 @@ function navigateToTeam(teamName) {
   flex-direction: column;
   justify-content: start;
   align-items: center;
+  width: 100%;
 }
 
 .tl-container-buttons {
@@ -403,16 +404,16 @@ function navigateToTeam(teamName) {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  width: 750px;
+  width: max(750px, 90%);
 }
 
 .dataview {
-  width: 750px;
+  width: max(750px, 90%);
   background-color: var(--primary-100);
 }
 
 .team-item {
-  width: 750px;
+  width: 100%;
   height: 75px;
   display: flex;
   justify-content: space-between;

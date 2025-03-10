@@ -17,16 +17,44 @@
       <Loading msg="calculating_games_statistics" />
     </div>
     <div v-else class="gs-games">
-      <SingleGameSetting
-        class="gs-m"
-        v-for="g in games_values_searched"
-        :key="g.id"
-        :name="g.name"
-        :heroe="g.heroe"
-        :logo="g.logo"
-        :grid="g.grid"
-        @toggleChronoListener="emit('toggleChronoListener')"
-      />
+      <DataView :value="games_values_searched" class="dataview">
+        <template #list="slotProps">
+          <div
+            v-for="(item, index) in slotProps.items"
+            :key="item.id"
+            :class="getClassNameFromIndex(index)"
+            :style="
+              item.gradient_color &&
+              'background: linear-gradient(to left, ' +
+                item.gradient_color +
+                ', var(--primary-100) 70%);'
+            "
+            @click="onClickHandler(item.id, index)"
+          >
+            <div class="team-name">
+              <img
+                :src="item.logo"
+                style="max-width: 60px; max-height: 60px; margin-right: 10px"
+              />
+              <h3>{{ item.name }}</h3>
+            </div>
+            <div class="team-playtime">
+              <h4>
+                {{
+                  item.sessionCount +
+                  " " +
+                  i18n.t("GamesSettings.sessions_count")
+                }}
+                -
+                {{ convertMinuteToHoursMinute(item.duration) }}
+              </h4>
+            </div>
+            <div class="icon-action">
+              <i class="pi pi-arrow-right"></i>
+            </div>
+          </div>
+        </template>
+      </DataView>
     </div>
   </div>
 </template>
@@ -37,6 +65,8 @@ import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 import { useSearchStore } from "../store/store";
+import { convertMinuteToHoursMinute } from "../common/main";
+import { getPreferences } from "../preferences/preferences";
 
 const searchStore = useSearchStore();
 
@@ -85,6 +115,9 @@ onMounted(() => {
 window.electron.ipcRenderer.on("result_gamesessionscount", (event, data) => {
   games_values.value = data.games_values;
   games_values_searched.value = games_values.value;
+  if (getPreferences("use_logo_color_in_team_list")) {
+    setTimeout(() => getTeamColorWithWorker(), 0);
+  }
   loaded.value = true;
 });
 
@@ -121,6 +154,53 @@ function sortGames() {
       return a.name.localeCompare(b.name);
     }
   });
+}
+
+function getClassNameFromIndex(index) {
+  if (index === 0) {
+    return "team-item rounded-top";
+  } else if (index === games_values_searched.value.length - 1) {
+    return "team-item rounded-bottom";
+  } else {
+    return "team-item";
+  }
+}
+
+import { useRouter } from "vue-router";
+const router = useRouter();
+function onClickHandler(game_id, index) {
+  router.push({ name: "settings-games-details", params: { id: game_id } });
+}
+
+function getTeamColorWithWorker() {
+  let id = 0;
+  for (let team of games_values_searched.value) {
+    const worker = new Worker(
+      new URL("../workers/colorWorker.js", import.meta.url),
+      { type: "module" },
+    );
+
+    worker.onmessage = (event) => {
+      const { logo, color, error } = event.data;
+
+      if (error) {
+        console.error(`Error processing logo ${logo}: ${error}`);
+        worker.terminate();
+        return;
+      }
+
+      team.gradient_color = color;
+      worker.terminate();
+    };
+
+    worker.onerror = (error) => {
+      console.error(`Worker error: ${error.message}`);
+      worker.terminate();
+    };
+
+    worker.postMessage({ logo: team.logo, id: id });
+    id++;
+  }
 }
 </script>
 <style scoped>
@@ -163,5 +243,65 @@ function sortGames() {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.dataview {
+  width: max(750px, 90%);
+  background-color: var(--primary-100);
+}
+
+.team-item {
+  width: 100%;
+  height: 75px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary-100);
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.success {
+  max-width: 25px;
+  max-height: 25px;
+  width: 25px;
+  height: 25px;
+  margin-left: 10px;
+}
+
+.team-item:hover {
+  cursor: pointer;
+  font-size: 15pt;
+  color: black;
+}
+
+.rounded-top {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.rounded-bottom {
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.team-name {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+h4 {
+  width: max-content;
+}
+
+.icon-action {
+  width: 50px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

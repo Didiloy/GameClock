@@ -297,7 +297,7 @@
     },
     "AppearancePreference": {
       "title": "Apparence",
-      "use_color_of_most_played_game_in_team_list": "Utiliser la couleur du logo du jeu le plus joué dans la liste des équipes:",
+      "use_color_of_most_played_game_in_team_list": "Utiliser la couleur du logo du jeu le plus joué dans les listes des équipes et des jeux:",
       "use_color_of_game_in_history": "Utiliser la couleur du logo du jeu dans l'historique des sessions:",
       "accent_color": "Couleur d'accentuation:",
       "application_style": "Style de l'application:",
@@ -350,7 +350,8 @@
       "search_game": "Chercher un jeu...",
       "games": "Jeux",
       "alphabetical_order": "Ordre Alphabétique",
-      "sessions_number": "Nombre de sessions"
+      "sessions_number": "Nombre de sessions",
+      "sessions_count": "sessions"
     },
     "Common": {
       "months_names": {
@@ -689,7 +690,7 @@
     },
     "AppearancePreference": {
       "title": "Appearance",
-      "use_color_of_most_played_game_in_team_list": "Use the logo color of the most played game in the team list:",
+      "use_color_of_most_played_game_in_team_list": "Use the logo color of the most played game in the team list and in the game list:",
       "use_color_of_game_in_history": "Use the logo color of the game in the session history:",
       "accent_color": "Accent color:",
       "application_style": "Application style:",
@@ -742,7 +743,8 @@
       "search_game": "Search for a game...",
       "games": "games",
       "alphabetical_order": "Alphabetical order",
-      "sessions_number": "session number"
+      "sessions_number": "session number",
+      "sessions_count": "sessions"
     },
     "Common": {
       "months_names": {
