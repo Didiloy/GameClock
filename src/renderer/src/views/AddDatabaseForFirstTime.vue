@@ -312,6 +312,7 @@ function addNewDatabase() {
   justify-content: start; */
   height: fit-content;
   width: 95%;
+  margin-left: 16px;
 }
 
 @font-face {

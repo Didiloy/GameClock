@@ -171,7 +171,10 @@ function changeTheme() {
   width: 185px;
   justify-content: center;
   align-items: center;
-  padding: 10px 10px 3px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 12px;
+  padding-right: 6px;
   background-color: var(--primary-100);
 }
 
@@ -188,12 +191,13 @@ h2 {
 }
 
 .content {
-  width: calc(100% - 6px);
+  width: 100%;
   height: calc(100% - 6px);
   border-radius: 10px;
   overflow-y: hidden;
   background-color: var(--surface-100);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin: 0 6px;
 }
 
 .inner-content {

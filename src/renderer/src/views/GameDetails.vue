@@ -32,6 +32,8 @@ const selected_hero = computed(() => {
 
 onMounted(() => {
   selected_game.value = getGameById(props.id);
+  console.log(selected_game.value);
+  
   setTimeout(() => {
     loading.value = false;
   }, 1000);
