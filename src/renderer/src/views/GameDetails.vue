@@ -2,10 +2,12 @@
   <div v-if="loading">
     <Loading msg="calculating_statistics" />
   </div>
-  <div v-else class="game-details-container" :style="`--bg-url: url('${selected_hero}')`">
-    <div class="background-container">
-
-    </div>
+  <div
+    v-else
+    class="game-details-container"
+    :style="`--bg-url: url('${selected_hero}')`"
+  >
+    <div class="background-container"></div>
 
     <div class="overlay-container">
       <div class="content-container-left">
@@ -19,10 +21,10 @@
           <input type="text" />
         </div>
 
-        <div class="div-img">
+        <!-- <div class="div-img">
           <img :src="selected_game.heroe" class="img-heroe" />
           <input type="text" />
-        </div>
+        </div> -->
       </div>
 
       <div class="content-container-right">
@@ -36,10 +38,10 @@
           <input type="text" />
         </div>
 
-        <div class="div-img">
+        <!-- <div class="div-img">
           <img :src="selected_game.heroe" class="img-heroe" />
           <input type="text" />
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -77,33 +79,27 @@ function getGameById(id) {
 .game-details-container {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
 .background-container {
-  /* Set the container to fill its parent */
   width: 100%;
   height: 100%;
-  /* Add the background image */
   background-image: var(--bg-url);
   background-size: cover;
   background-position: center;
-  /* Position relative so child components can be positioned absolutely if needed */
   filter: blur(10px);
 }
 
-
 .overlay-container {
-  --container-size: calc(100% - 186px);
   background-color: rgba(0, 0, 0, 0.3);
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-  width: var(--container-size);
-  height: calc(100vh - 32px - 6px);
-  /* 32px: topbar et 6px bottom */
-  margin-top: 32px;
-  z-index: 99999;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
   position: absolute;
   top: 0;
+  left: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -111,8 +107,6 @@ function getGameById(id) {
 }
 
 .content-container-left {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -122,8 +116,6 @@ function getGameById(id) {
 }
 
 .content-container-right {
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -141,7 +133,7 @@ function getGameById(id) {
   max-width: 100%;
 }
 
-.div-img>input {
+.div-img > input {
   margin-top: 6px;
 }
 
