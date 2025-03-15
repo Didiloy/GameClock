@@ -88,6 +88,7 @@ const sort_value = ref({
 const options = ref([
   { name: i18n.t("GamesSettings.alphabetical_order"), value: 0 },
   { name: i18n.t("GamesSettings.sessions_number"), value: 1 },
+  { name: i18n.t("GamesSettings.game_time"), value: 2 },
 ]);
 
 onMounted(() => {
@@ -149,6 +150,8 @@ function sortGames() {
   games_values_searched.value.sort((a, b) => {
     if (sort_value.value.value === 1) {
       return b.sessionCount - a.sessionCount;
+    } else if (sort_value.value.value === 2) {
+      return b.duration - a.duration;
     } else {
       return a.name.localeCompare(b.name);
     }

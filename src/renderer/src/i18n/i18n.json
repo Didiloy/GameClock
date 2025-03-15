@@ -355,6 +355,7 @@
       "games": "Jeux",
       "alphabetical_order": "Ordre Alphabétique",
       "sessions_number": "Nombre de sessions",
+      "game_time": "Temps de jeu",
       "sessions_count": "sessions"
     },
     "Common": {
@@ -752,6 +753,7 @@
       "games": "games",
       "alphabetical_order": "Alphabetical order",
       "sessions_number": "session number",
+      "game_time": "Play time",
       "sessions_count": "sessions"
     },
     "Common": {
