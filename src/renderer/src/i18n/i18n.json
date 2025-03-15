@@ -322,7 +322,7 @@
       "use_random_colors": "Utiliser des couleurs générées aléatoirement:"
     },
     "SingleGameSetting": {
-      "sessions": "sessions",
+      "sessions": "Nombre de sessions",
       "longest_session": "Session la plus longue",
       "shortest_session": "Session la plus courte",
       "mean_duration": "Durée moyenne des sessions",
@@ -332,9 +332,13 @@
       "game_grid": "Grille du jeu",
       "game_heroe": "Heroe du jeu",
       "modify": "Modifier",
+      "validate": "Valider",
+      "cancel": "Annuler",
       "copy": "Copier",
       "paste": "Coller",
       "all_good": "C'est tout bon !",
+      "show_all_sessions": "Afficher toutes les sessions",
+      "sessions_of": "Sessions de {0}",
       "error_when_modifying": "Une erreur est survenue lors de la modification du jeu."
     },
     "LineChartGameByMonth": {
@@ -715,7 +719,7 @@
       "use_random_colors": "Use randomly generated colors:"
     },
     "SingleGameSetting": {
-      "sessions": "sessions",
+      "sessions": "Number of sessions",
       "longest_session": "Longest session",
       "shortest_session": "Shortest session",
       "mean_duration": "Average session duration",
@@ -725,9 +729,13 @@
       "game_grid": "Game grid",
       "game_heroe": "Game hero",
       "modify": "Modify",
+      "validate": "Validate",
+      "cancel": "Cancel",
       "copy": "Copy",
       "paste": "Paste",
       "all_good": "It's all good!",
+      "show_all_sessions": "Show all sessions",
+      "sessions_of": "{0}'s sessions",
       "error_when_modifying": "An error occurred while modifying the game."
     },
     "LineChartGameByMonth": {

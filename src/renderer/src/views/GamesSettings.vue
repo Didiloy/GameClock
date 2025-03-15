@@ -59,7 +59,6 @@
   </div>
 </template>
 <script setup>
-import SingleGameSetting from "../components/SingleGameSetting.vue";
 import Loading from "../components/Loading.vue";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
