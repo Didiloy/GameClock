@@ -81,6 +81,12 @@ const items = ref([
         icon: "pi pi-hourglass",
         route: "/waiting-list-sessions",
       },
+      {
+        label: i18n.t("Sidebar.sessions.search"),
+        icon: "pi pi-search",
+        //TODO
+        route: "TODO",
+      },
     ],
   },
   {

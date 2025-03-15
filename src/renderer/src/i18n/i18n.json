@@ -37,7 +37,8 @@
       },
       "sessions": {
         "label": "Sessions",
-        "retry_list": "Liste d'attente"
+        "retry_list": "Liste d'attente",
+        "search": "Rechercher"
       },
       "settings": {
         "label": "Paramètres",
@@ -441,7 +442,8 @@
       },
       "sessions": {
         "label": "Sessions",
-        "retry_list": "Waiting list"
+        "retry_list": "Waiting list",
+        "search": "Search"
       },
       "reload_data": "Reload data"
     },
