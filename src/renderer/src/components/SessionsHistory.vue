@@ -488,6 +488,17 @@ async function addLike(session) {
   flex-wrap: wrap;
 }
 
+.sh-chips-team-item {
+  max-width: 120px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
 .sh-chips-team-item:hover {
   cursor: pointer;
   background-color: var(--primary-300);
