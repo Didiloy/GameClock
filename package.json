@@ -24,7 +24,9 @@
     "@vueuse/core": "^11.1.0",
     "chart.js": "latest",
     "chartjs-plugin-zoom": "^2.0.1",
+    "dotenv": "16.4.7",
     "firebase": "latest",
+    "lodash": "^4.17.21",
     "markdown-it": "^14.1.0",
     "pinia": "latest",
     "primeicons": "latest",
@@ -32,8 +34,7 @@
     "quantize": "^1.0.2",
     "steamgriddb": "latest",
     "vue-i18n": "^9.13.1",
-    "vue-router": "latest",
-    "dotenv": "16.4.7"
+    "vue-router": "latest"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.1",

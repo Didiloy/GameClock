@@ -1,5 +1,15 @@
 {
   "fr": {
+    "SearchSessions": {
+      "title": "Recherche de sessions",
+      "no_data": "Aucune session trouvée",
+      "session_history_title": "Sessions",
+      "search_filter": {
+        "game": "Nom de jeu",
+        "comment": "Commentaire",
+        "team": "Équipe"
+      }
+    },
     "LineChartLastMonth": {
       "title": "Temps de jeux sur le dernier mois",
       "title_session_of_day": "Sessions du {0}",
@@ -399,6 +409,16 @@
     }
   },
   "en": {
+    "SearchSessions": {
+      "title": "Search sessions",
+      "no_data": "No session found",
+      "session_history_title": "Sessions",
+      "search_filter": {
+        "game": "Game name",
+        "comment": "Comment",
+        "team": "Team"
+      }
+    },
     "LineChartLastMonth": {
       "title": "Play time the last month",
       "title_session_of_day": "Sessions of {0}",

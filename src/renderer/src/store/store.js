@@ -1,13 +1,18 @@
 // stores/counter.js
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import {getTeams, getGames, getSessions, getPlatforms, addPlatformsToDatabase} from "../database/database.js";
+import {
+  getTeams,
+  getGames,
+  getSessions,
+  getPlatforms,
+  addPlatformsToDatabase,
+} from "../database/database.js";
 import {
   getStoredDatabases,
   deleteDatabase,
 } from "../database/stored_databases.js";
-import { useStorage } from '@vueuse/core'
-
+import { useStorage } from "@vueuse/core";
 
 export const useStore = defineStore("store", () => {
   const teams = ref([]);
@@ -40,9 +45,15 @@ export const useStore = defineStore("store", () => {
       sessions.value = await getSessions();
       platforms.value = await getPlatforms();
       //if teams, or games, or sessions is empty and platform too we add the defaults platforms
-      if(platforms.value.length === 0){
-        if(!(teams.value.length === 0 && games.value.length === 0 && sessions.value.length === 0)){
-        //if the platforms list is empty we add the default platforms
+      if (platforms.value.length === 0) {
+        if (
+          !(
+            teams.value.length === 0 &&
+            games.value.length === 0 &&
+            sessions.value.length === 0
+          )
+        ) {
+          //if the platforms list is empty we add the default platforms
           await addPlatformsToDatabase();
           platforms.value = await getPlatforms();
         }
@@ -105,14 +116,14 @@ export const useStoreChrono = defineStore("storeChrono", () => {
 });
 
 export const useStoreWaitingList = defineStore("storeWaitingList", () => {
-  const waiting_list = useStorage('waiting_list', []);
+  const waiting_list = useStorage("waiting_list", []);
 
   function addSession(session_object) {
     waiting_list.value.push(session_object);
   }
 
   function deleteSession(session_object) {
-    waiting_list.value = waiting_list.value.filter(s => s !== session_object);
+    waiting_list.value = waiting_list.value.filter((s) => s !== session_object);
   }
 
   function cleanSession() {
@@ -123,12 +134,12 @@ export const useStoreWaitingList = defineStore("storeWaitingList", () => {
     waiting_list,
     addSession,
     cleanSession,
-    deleteSession
+    deleteSession,
   };
 });
 
-export const useSearchStore = defineStore('search', () => {
-  const searchValue = ref('');
+export const useSearchStore = defineStore("search", () => {
+  const searchValue = ref("");
 
   function updateSearchValue(value) {
     searchValue.value = value;
@@ -136,14 +147,22 @@ export const useSearchStore = defineStore('search', () => {
 
   return {
     searchValue,
-    updateSearchValue
-  }
-})
+    updateSearchValue,
+  };
+});
 
-export const useSearchTeamStore = defineStore('searchTeam', () => {
-  const searchTeamValue = ref('');
+export const useSearchTeamStore = defineStore("searchTeam", () => {
+  const searchTeamValue = ref("");
 
   return {
     searchTeamValue,
-  }
-})
+  };
+});
+
+export const useSearchSessionsStore = defineStore("searchSessions", () => {
+  const searchSessionsValue = ref("");
+
+  return {
+    searchSessionsValue,
+  };
+});

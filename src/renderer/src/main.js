@@ -55,6 +55,7 @@ import { useStoredDatabases, useStore } from "./store/store";
 const DatabaseSettings = () => import("./views/DatabaseSettings.vue");
 const DatabaseError = () => import("./components/DatabaseError.vue");
 const WaitingListSession = () => import("./views/WaitingListSession.vue");
+const SearchSessions = () => import("./views/SearchSessions.vue");
 
 const app = createApp(App);
 
@@ -108,6 +109,11 @@ const routes = [
   { path: "/team/:name", component: Team, props: true },
   { path: "/team/:name/:game", component: Team },
   { path: "/addteam", component: AddTeam },
+  {
+    path: "/search-sessions",
+    component: SearchSessions,
+    name: "search-sessions",
+  },
   { path: "/settings/games", component: GamesSettings, name: "settings-games" },
   {
     path: "/settings/games/:id",

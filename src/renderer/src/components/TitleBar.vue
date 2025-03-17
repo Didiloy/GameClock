@@ -31,6 +31,18 @@
             @blur="emit('toggleChronoListener')"
           />
         </div>
+        <div
+          v-if="currentRouteName === 'search-sessions'"
+          class="centered-search"
+        >
+          <InputText
+            type="text"
+            v-model="searchSessionStore.searchSessionsValue"
+            :placeholder="$t('SearchSessions.title')"
+            @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')"
+          />
+        </div>
         <div v-if="currentRouteName === 'home'" class="centered-title">
           <span class="h-span">{{ total_time_hours.toUpperCase() }}</span>
           <span class="h-subtitle">{{
@@ -99,7 +111,11 @@ import HalloweenIcon from "../assets/images/icons/halloween_icon.svg";
 import BaseIcon from "../assets/images/icons/base_icon.png";
 import { useRoute } from "vue-router";
 import InputText from "primevue/inputtext";
-import { useSearchStore, useSearchTeamStore } from "../store/store";
+import {
+  useSearchStore,
+  useSearchTeamStore,
+  useSearchSessionsStore,
+} from "../store/store";
 import { useTotalTime } from "../composables/total_time";
 const { total_time_hours, calculateTotalTime } = useTotalTime();
 import { useToast } from "primevue/usetoast";
@@ -115,6 +131,8 @@ const route = useRoute();
 const currentRouteName = ref("");
 const searchStore = useSearchStore();
 const searchTeamStore = useSearchTeamStore();
+const searchSessionStore = useSearchSessionsStore();
+
 const emit = defineEmits(["toggleChronoListener"]);
 
 function handleWindowControls() {

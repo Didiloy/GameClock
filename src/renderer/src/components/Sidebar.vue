@@ -84,8 +84,7 @@ const items = ref([
       {
         label: i18n.t("Sidebar.sessions.search"),
         icon: "pi pi-search",
-        //TODO
-        route: "TODO",
+        route: "/search-sessions",
       },
     ],
   },
