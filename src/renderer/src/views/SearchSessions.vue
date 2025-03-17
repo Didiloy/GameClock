@@ -92,8 +92,8 @@ watch(
 );
 
 const filter = ref({
-  name: i18n.t("SearchSessions.search_filter.game"),
-  value: 0,
+  name: i18n.t("SearchSessions.search_filter.comment"),
+  value: 1,
 });
 const options = ref([
   { name: i18n.t("SearchSessions.search_filter.game"), value: 0 },
