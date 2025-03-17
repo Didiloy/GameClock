@@ -64,7 +64,8 @@ const possible_colors = ref([
 
 function changeTheme() {
   const themeLink = document.getElementById("theme-link");
-  themeLink.href = `/${selected_style.value.code}-light-${selected_accent_color.value.code}/theme.css`;
+  console.log(themeLink);
+  themeLink.href = `./src/assets/css/${selected_style.value.code}-light-${selected_accent_color.value.code}/theme.css`;
 }
 </script>
 
@@ -83,7 +84,7 @@ function changeTheme() {
       }}</b>
       <InputSwitch v-model="use_logo_color_in_session_history" />
     </div>
-    <div class="tp-item">
+    <!-- <div class="tp-item">
       <b class="text-color">{{
         $t("AppearancePreference.application_style")
       }}</b>
@@ -92,15 +93,15 @@ function changeTheme() {
         :options="possible_styles"
         optionLabel="name"
       />
-    </div>
-    <div class="tp-item">
+    </div> -->
+    <!-- <div class="tp-item">
       <b class="text-color">{{ $t("AppearancePreference.accent_color") }}</b>
       <Dropdown
         v-model="selected_accent_color"
         :options="possible_colors"
         optionLabel="name"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 

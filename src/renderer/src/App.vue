@@ -47,7 +47,7 @@ watch(teams, () => {
 });
 
 onMounted(async () => {
-  changeTheme();
+  // changeTheme();
   addChronoListener();
   if (getPreferences("check_for_update_at_startup")) {
     new_version_available.value = await isThereNewVersion();
@@ -103,7 +103,8 @@ const selected_accent_color = ref(getPreferences("accent_color"));
 const selected_style = ref(getPreferences("application_style"));
 function changeTheme() {
   const themeLink = document.getElementById("theme-link");
-  themeLink.href = `/${selected_style.value}-light-${selected_accent_color.value}/theme.css`;
+  console.log(themeLink);
+  themeLink.href = `./src/assets/css/${selected_style.value}-light-${selected_accent_color.value}/theme.css`;
 }
 </script>
 
