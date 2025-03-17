@@ -66,6 +66,7 @@ import { onMounted, ref, watch } from "vue";
 import { useSearchStore } from "../store/store";
 import { convertMinuteToHoursMinute } from "../common/main";
 import { getPreferences } from "../preferences/preferences";
+import { debounce } from "lodash";
 
 const searchStore = useSearchStore();
 
@@ -123,7 +124,7 @@ window.electron.ipcRenderer.on("result_gamesessionscount", (event, data) => {
 
 watch(
   () => searchStore.searchValue,
-  () => {
+  debounce(() => {
     if (searchStore.searchValue.length < 3 && searchStore.searchValue !== "") {
       return;
     }
@@ -139,7 +140,7 @@ watch(
     );
     sortGames();
     loaded.value = true;
-  },
+  }, 300),
 );
 
 watch(sort_value, () => {

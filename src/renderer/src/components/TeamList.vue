@@ -167,6 +167,7 @@ import { storeToRefs } from "pinia";
 import { convertMinuteToHoursMinute } from "../common/main";
 import { getPreferences } from "../preferences/preferences";
 import { useSearchTeamStore } from "../store/store";
+import { debounce } from "lodash";
 import Loading from "./Loading.vue";
 
 import { useI18n } from "vue-i18n";
@@ -215,9 +216,9 @@ onMounted(() => {
 
 watch(
   () => searchTeamStore.searchTeamValue,
-  () => {
+  debounce(() => {
     filterTeam();
-  },
+  }, 300),
 );
 
 const teamItemFiltered = ref([]);
