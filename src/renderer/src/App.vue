@@ -169,6 +169,7 @@ function changeTheme() {
 .sidebar {
   height: 100%;
   width: 186px;
+  min-width: 186px;
   justify-content: center;
   align-items: center;
   padding-top: 10px;
