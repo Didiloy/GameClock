@@ -31,34 +31,29 @@ export function dashboardteam(ids_of_team, games, sessions, teams) {
 
 function getDayMostPlayed(ids_of_team, sessions) {
   let duration_per_day = new Map();
+
   for (const session of sessions) {
     const sessionDate = new Date(session.date * 1000);
-    const normalizedDate = new Date(
-      sessionDate.getFullYear(),
-      sessionDate.getMonth(),
-      sessionDate.getDate(),
-    );
-    const dayKey = normalizedDate.toISOString().split("T")[0]; // Extract YYYY-MM-DD
+    const dayKey = sessionDate.toISOString().split("T")[0]; // Ensures UTC date extraction
+
     if (session.teams.some((team) => ids_of_team.includes(team))) {
-      if (duration_per_day.has(dayKey)) {
-        duration_per_day.set(
-          dayKey,
-          duration_per_day.get(dayKey) + session.duration,
-        );
-      } else {
-        duration_per_day.set(dayKey, session.duration);
-      }
+      duration_per_day.set(
+        dayKey,
+        (duration_per_day.get(dayKey) || 0) + session.duration,
+      );
     }
   }
 
   let max_duration = 0;
   let max_day = "";
+
   for (const [day, totalDuration] of duration_per_day) {
     if (totalDuration > max_duration) {
       max_duration = totalDuration;
       max_day = day;
     }
   }
+
   return [max_day, max_duration];
 }
 
