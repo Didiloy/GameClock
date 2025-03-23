@@ -65,7 +65,7 @@ import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 import { useSearchStore } from "../store/store";
 import { convertMinuteToHoursMinute } from "../common/main";
-import { getPreferences } from "../preferences/preferences";
+import { getPreferences, setPreferences } from "../preferences/preferences";
 import { debounce } from "lodash";
 
 const searchStore = useSearchStore();
@@ -82,15 +82,17 @@ const games_values_searched = ref([]);
 
 const loaded = ref(false);
 
-const sort_value = ref({
-  name: i18n.t("GamesSettings.alphabetical_order"),
-  value: 0,
-});
+const sort_value = ref({});
 const options = ref([
   { name: i18n.t("GamesSettings.alphabetical_order"), value: 0 },
   { name: i18n.t("GamesSettings.sessions_number"), value: 1 },
   { name: i18n.t("GamesSettings.game_time"), value: 2 },
 ]);
+
+watch(sort_value, () => {
+  setPreferences("sort_order_game_settings_page", sort_value.value.value);
+  sortGames();
+});
 
 onMounted(() => {
   const _sessions = sessions.value.map((item) => ({
@@ -111,6 +113,11 @@ onMounted(() => {
     sessions: _sessions,
     games: _games,
   });
+
+  sort_value.value = options.value.find(
+    (option) =>
+      option.value === getPreferences("sort_order_game_settings_page"),
+  );
 });
 
 window.electron.ipcRenderer.on("result_gamesessionscount", (event, data) => {
@@ -119,6 +126,7 @@ window.electron.ipcRenderer.on("result_gamesessionscount", (event, data) => {
   if (getPreferences("use_logo_color_in_team_list")) {
     setTimeout(() => getTeamColorWithWorker(), 0);
   }
+  sortGames();
   loaded.value = true;
 });
 

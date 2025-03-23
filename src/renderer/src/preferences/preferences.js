@@ -43,6 +43,8 @@ const defaults = {
   associate_to_platform: [],
   accent_color: "blue",
   application_style: "lara",
+  //sort value of game settings page
+  sort_order_game_settings_page: 0,
 };
 
 const preferences_name = "preferences";
