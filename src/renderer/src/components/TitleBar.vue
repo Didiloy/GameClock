@@ -105,9 +105,10 @@
 import { onMounted, ref, watch } from "vue";
 import { useStoreChrono } from "../store/store";
 import { getPreferences, setPreferences } from "../preferences/preferences";
-import { isChristmas, isHalloween } from "../common/date";
+import { isChristmas, isHalloween, isEaster } from "../common/date";
 import ChristmasIcon from "../assets/images/icons/christmas_icon.svg";
 import HalloweenIcon from "../assets/images/icons/halloween_icon.svg";
+import EasterIcon from "../assets/images/icons/easter_icon.png";
 import BaseIcon from "../assets/images/icons/base_icon.png";
 import { useRoute } from "vue-router";
 import InputText from "primevue/inputtext";
@@ -160,6 +161,8 @@ function initializeIcon() {
     icon.value = HalloweenIcon;
   } else if (isChristmas()) {
     icon.value = ChristmasIcon;
+  } else if (isEaster()) {
+    icon.value = EasterIcon;
   }
 }
 
