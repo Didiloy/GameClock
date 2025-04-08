@@ -175,7 +175,6 @@ const props = defineProps(["teamName", "gameName", "addToWaitingList"]);
 const all_games = ref(games);
 const selected_platform = ref();
 const items = ref([]);
-const items_suggest_team = ref([]);
 const loading = ref(false);
 const comment = ref("");
 const icon = ref("pi pi-plus");
@@ -412,7 +411,7 @@ async function addNewSession() {
   } else {
     if (!props.addToWaitingList) {
       storeWaitingList.addSession({
-        teamId: getTeamsId(),
+        teamsId: getTeamsId(),
         gameName: game.value,
         duration: parseInt(duration.value),
         was_cool: was_cool.value.value,
