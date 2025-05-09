@@ -25,11 +25,7 @@
                   ', white 70%);'
             "
           >
-            <Column
-              field="name"
-              :header="i18n.t('SessionsHistory.game_name')"
-              v-once
-            >
+            <Column field="name" :header="i18n.t('SessionsHistory.game_name')">
               <template #body="slotProps">
                 <div class="sh-name">
                   <img
@@ -51,7 +47,6 @@
             <Column
               field="platform"
               :header="i18n.t('SessionsHistory.platform')"
-              v-once
             >
               <template #body="slotProps">
                 <div class="sh-name">
@@ -61,11 +56,7 @@
                 </div>
               </template>
             </Column>
-            <Column
-              field="team_name"
-              :header="i18n.t('SessionsHistory.team')"
-              v-once
-            >
+            <Column field="team_name" :header="i18n.t('SessionsHistory.team')">
               <template #body="slotProps">
                 <div class="sh-chips-team">
                   <Chip
@@ -87,17 +78,12 @@
             <Column
               field="playtime"
               :header="i18n.t('SessionsHistory.session_duration')"
-              v-once
             >
               <template #body="slotProps">
                 {{ convertMinuteToHoursMinute(slotProps.data.playtime) }}
               </template>
             </Column>
-            <Column
-              field="joyrate"
-              :header="i18n.t('SessionsHistory.joyrate')"
-              v-once
-            >
+            <Column field="joyrate" :header="i18n.t('SessionsHistory.joyrate')">
               <template #body="slotProps">
                 <div class="sh-hover-div">
                   <div v-if="slotProps.data.comment" class="sh-popup">
@@ -127,11 +113,7 @@
                 </div>
               </template>
             </Column>
-            <Column
-              field="date"
-              :header="i18n.t('SessionsHistory.date')"
-              v-once
-            >
+            <Column field="date" :header="i18n.t('SessionsHistory.date')">
               <template #body="slotProps">
                 <div>
                   {{
