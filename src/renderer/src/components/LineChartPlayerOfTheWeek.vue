@@ -203,14 +203,16 @@ const selected_day = ref("");
 const sessions_of_day = ref([]);
 const selected_team = ref("");
 function getSessionOfDay(day) {
+  const [dd, mm, yyyy] = day.split('/').map(Number);
+  const targetDate = new Date(yyyy, mm - 1, dd); // month is 0-based in JS Date
   const sess = [];
+  
   for (const session of sessions.value) {
-    let date = new Date(session.date.seconds * 1000);
-    let year = date.getFullYear();
-    let month = date.getMonth();
-    let d = date.getDate();
-    let day_string = `${d < 9 ? "0" + d : d}/${month < 9 ? "0" + (month + 1) : month + 1}/${year}`;
-    if (day_string === day && isTeamInSession(session, selected_team.value)) {
+    const sessionDate = new Date(session.date.seconds * 1000);
+    if (sessionDate.getFullYear() === targetDate.getFullYear() &&
+        sessionDate.getMonth() === targetDate.getMonth() &&
+        sessionDate.getDate() === targetDate.getDate() &&
+        isTeamInSession(session, selected_team.value)) {
       sess.push(session);
     }
   }
