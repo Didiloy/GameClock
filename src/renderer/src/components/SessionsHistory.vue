@@ -67,19 +67,20 @@
             <Column field="team_name" :header="i18n.t('SessionsHistory.team')">
               <template #body="slotProps">
                 <div class="sh-chips-team">
-                  <Chip
-                    v-for="(item, index) in slotProps.data.team_names"
-                    :key="index"
-                    :label="item"
-                    class="sh-chips-team-item"
-                    @click="$router.push('/team/' + item)"
-                    :pt="{
-                      root: {
-                        style:
-                          'margin-right: 5px; margin-top: 5px; height: 24px; font-size: 14px;',
-                      },
-                    }"
-                  />
+                  <span v-for="(teamName, index) in slotProps.data.team_names" :key="index" class="sh-team-chip-container">
+                    <Chip
+                      :label="teamName"
+                      class="sh-chips-team-item"
+                      @click="$router.push('/team/' + teamName)"
+                      :pt="{
+                        root: {
+                          style:
+                            'margin-right: 5px; margin-top: 5px; height: 24px; font-size: 14px;',
+                        },
+                      }"
+                    />
+                    <PlayingIndicator :isPlaying="getTeamPlayingStatus(teamName)" />
+                  </span>
                 </div>
               </template>
             </Column>
@@ -177,6 +178,7 @@ import {
 import { getPreferences } from "../preferences/preferences";
 import { useToast } from "primevue/usetoast";
 import { isLiked, addSession, removeSession } from "../common/likes";
+import PlayingIndicator from "./PlayingIndicator.vue";
 
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
@@ -204,6 +206,12 @@ const { games, sessions, teams, platforms } = storeToRefs(store);
 
 const sessions_values = ref([]);
 const id_of_team = ref([]);
+
+function getTeamPlayingStatus(teamName) {
+  const team = teams.value.find(t => t.name === teamName);
+  return team ? team.playing : false;
+}
+
 onMounted(() => {
   init();
   if (getPreferences("use_logo_color_in_session_history")) {
@@ -545,5 +553,11 @@ async function addLike(session) {
   border-width: 5px;
   border-style: solid;
   border-color: #555 transparent transparent transparent;
+}
+
+.sh-team-chip-container {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 5px;
 }
 </style>

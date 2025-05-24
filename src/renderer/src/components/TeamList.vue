@@ -36,6 +36,7 @@
               style="max-width: 60px; max-height: 60px; margin-right: 10px"
             />
             <h3>{{ item.name }}</h3>
+            <PlayingIndicator :isPlaying="getTeamPlayingStatus(item.name)" />
             <div v-if="getPreferences('display_successes_in_team_list')">
               <img
                 v-if="item.computed_successes && item.relentless.unlocked"
@@ -168,6 +169,7 @@ import { convertMinuteToHoursMinute } from "../common/main";
 import { getPreferences } from "../preferences/preferences";
 import { useSearchTeamStore } from "../store/store";
 import { debounce } from "lodash";
+import PlayingIndicator from "./PlayingIndicator.vue";
 import Loading from "./Loading.vue";
 
 import { useI18n } from "vue-i18n";
@@ -259,6 +261,12 @@ function filterTeam() {
       .includes(searchTeamStore.searchTeamValue.toLowerCase()),
   );
 }
+
+function getTeamPlayingStatus(teamName) {
+  const team = teams.value.find(t => t.name === teamName);
+  return team ? team.playing : false;
+}
+
 
 window.electron.ipcRenderer.on("result_teamlist", (event, data) => {
   teamItem.value = data.teams;

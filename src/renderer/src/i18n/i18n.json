@@ -52,6 +52,7 @@
       },
       "settings": {
         "label": "Paramètres",
+        "user": "Utilisateur",
         "games": "Jeux",
         "general": "Général",
         "databases": "Base de données"
@@ -248,7 +249,7 @@
     },
     "Teams": {
       "title": "Choisissez votre équipe !",
-      "search_team": "Chercher une équipe..."
+      "search_team": "Rechercher une équipe"
     },
     "TeamList": {
       "abandon": "Abandonner",
@@ -368,7 +369,8 @@
       "alphabetical_order": "Ordre Alphabétique",
       "sessions_number": "Nombre de sessions",
       "game_time": "Temps de jeu",
-      "sessions_count": "sessions"
+      "sessions_count": "sessions",
+      "search_team": "Search a team"
     },
     "Common": {
       "months_names": {
@@ -407,6 +409,10 @@
         "team_player": "Plus de 50% de vos sessions ont été faites en groupe",
         "shower": "Il faut penser à se doucher... Vous avez jouer plus de 23h en une seule journée"
       }
+    },
+    "UserSelection": {
+      "title": "Sélectionnez votre utilisateur",
+      "select_user": "Sélectionner un utilisateur"
     }
   },
   "en": {
@@ -455,16 +461,17 @@
         "add": "Add",
         "list": "List"
       },
-      "settings": {
-        "label": "Settings",
-        "games": "Games",
-        "general": "General",
-        "databases": "Databases"
-      },
       "sessions": {
         "label": "Sessions",
         "retry_list": "Waiting list",
         "search": "Search"
+      },
+      "settings": {
+        "label": "Settings",
+        "user": "User",
+        "games": "Games",
+        "general": "General",
+        "databases": "Databases"
       },
       "reload_data": "Reload data"
     },
@@ -778,7 +785,8 @@
       "alphabetical_order": "Alphabetical order",
       "sessions_number": "session number",
       "game_time": "Play time",
-      "sessions_count": "sessions"
+      "sessions_count": "sessions",
+      "search_team": "Search a team"
     },
     "Common": {
       "months_names": {
@@ -817,6 +825,10 @@
         "team_player": "More than 50% of your sessions have been in a team",
         "shower": "You should think about a shower... You played more than 23h in a single day"
       }
+    },
+    "UserSelection": {
+      "title": "Select your user",
+      "select_user": "Select a user"
     }
   }
 }

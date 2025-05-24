@@ -58,8 +58,10 @@
 </template>
 <script setup>
 import { onMounted, ref, watch } from "vue";
-import { useStoreChrono } from "../store/store";
+import { useStoreChrono, useStore } from "../store/store";
+import { storeToRefs } from "pinia";
 import { getPreferences, setPreferences } from "../preferences/preferences";
+import { updateUserPlayingStatus } from "../database/database";
 import { isChristmas, isHalloween, isEaster } from "../common/date";
 import ChristmasIcon from "../assets/images/icons/christmas_icon.svg";
 import HalloweenIcon from "../assets/images/icons/halloween_icon.svg";
@@ -92,6 +94,9 @@ const searchSessionStore = useSearchSessionsStore();
 
 const emit = defineEmits(["toggleChronoListener"]);
 
+const storeInstance = useStore();
+const { teams } = storeToRefs(storeInstance);
+
 function handleWindowControls() {
   // Make minimise/maximise/close buttons work when they are clicked
   document.getElementById("min-button").addEventListener("click", () => {
@@ -102,7 +107,14 @@ function handleWindowControls() {
     window.electron.ipcRenderer.send("maximize");
   });
 
-  document.getElementById("close-button").addEventListener("click", () => {
+  document.getElementById("close-button").addEventListener("click", async () => {
+    const userId = getPreferences("currentUser");
+    if (userId) {
+      const currentUser = teams.value.find(team => team.id === userId);
+      if (currentUser && currentUser.playing) {
+        await updateUserPlayingStatus(userId, false);
+      }
+    }
     window.electron.ipcRenderer.send("close");
   });
 }
@@ -178,6 +190,10 @@ async function startChrono() {
   is_chrono_running.value = true;
   background_color.value = "var(--red-500)";
   await setLinkmiPlayingStatus("playing");
+  const userId = getPreferences("currentUser");
+  if (userId) {
+    await updateUserPlayingStatus(userId, true);
+  }
 }
 
 async function stopChrono() {
@@ -186,6 +202,10 @@ async function stopChrono() {
   last_chrono_value.value = duration_seconds.value;
   setPreferences("last_chronometer_value", last_chrono_value.value);
   await setLinkmiPlayingStatus("stopped");
+  const userId = getPreferences("currentUser");
+  if (userId) {
+    await updateUserPlayingStatus(userId, false);
+  }
 }
 
 const is_chrono_paused = ref(false);

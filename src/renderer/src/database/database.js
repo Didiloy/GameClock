@@ -202,6 +202,17 @@ export async function getGames() {
   return gamesList;
 }
 
+export async function updateUserPlayingStatus(userId, playing) {
+  try {
+    const userRef = doc(db, "teams", userId);
+    await setDoc(userRef, { playing: playing }, { merge: true });
+    return true;
+  } catch (error) {
+    console.error("Error updating user playing status:", error);
+    return false;
+  }
+}
+
 export async function modifyGame(name, logo, heroe, grid) {
   try {
     const q = query(collection(db, "games"), where("name", "==", name));
