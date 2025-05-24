@@ -277,7 +277,8 @@
       "all_sessions_of_the_week": "Toutes les sessions de la semaine",
       "activate_zoom_on_graphs": "Activer le zoom en scrollant sur les graphiques",
       "check_new_version_at_startup": "Vérifier si il y a une mise a jour au démarrage de l'application",
-      "close_app_when_clicking_on_update": "Fermer l'application lors du clic sur le bouton de téléchargement de mise à jour"
+      "close_app_when_clicking_on_update": "Fermer l'application lors du clic sur le bouton de téléchargement de mise à jour",
+      "linkmi_apikey": "Connecter votre compte LINKMI en utilisant votre clé d'API"
     },
     "TeamsPreferences": {
       "sort_order": {
@@ -686,7 +687,8 @@
       "all_sessions_of_the_week": "All sessions of the week",
       "activate_zoom_on_graphs": "Activate zoom by scrolling on graphs",
       "check_new_version_at_startup": "Check for an update at startup",
-      "close_app_when_clicking_on_update": "Close the application when clicking on the download update button"
+      "close_app_when_clicking_on_update": "Close the application when clicking on the download update button",
+      "linkmi_apikey": "Connect your LINKMI account using your API Key"
     },
     "TeamsPreferences": {
       "sort_order": {
