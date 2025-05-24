@@ -6,145 +6,82 @@
     <div class="as-heroe-revert"></div>
     <div class="as-on-image">
       <div class="as-top-background">
-        <AutoComplete
-          v-model="game"
-          :placeholder="i18n.t('AddSession.game_name')"
-          :suggestions="items"
-          @complete="autocomplete"
-          :pt="{
+        <AutoComplete v-model="game" :placeholder="i18n.t('AddSession.game_name')" :suggestions="items"
+          @complete="autocomplete" :pt="{
             root: {
               style: 'height: 45px; width: 300px',
             },
-          }"
-        >
+          }">
         </AutoComplete>
-        <Checkbox
-          v-model="associate_to_platform"
-          inputId="associate_to_platform"
-          name="associate_to_platform"
-          :binary="true"
-          style="font-size: 12px; margin-left: 3px"
-          @change="saveAssociation"
-        />
-        <label
-          for="associate_to_platform"
-          style="font-size: 12px; margin-left: 3px"
-        >
+        <Checkbox v-model="associate_to_platform" inputId="associate_to_platform" name="associate_to_platform"
+          :binary="true" style="font-size: 12px; margin-left: 3px" @change="saveAssociation" />
+        <label for="associate_to_platform" style="font-size: 12px; margin-left: 3px">
           {{ $t("AddSession.associate_to_platform") }}
         </label>
         <div class="as-duration-input">
-          <InputText
-            class="input-number"
-            v-model="duration"
-            :placeholder="i18n.t('AddSession.duration_in_minute')"
-            :title="i18n.t('AddSession.informative_text_formulas')"
-            :pt="{
+          <InputText class="input-number" v-model="duration" :placeholder="i18n.t('AddSession.duration_in_minute')"
+            :title="i18n.t('AddSession.informative_text_formulas')" :pt="{
               root: {
                 style: 'height: 45px; width: 250px',
               },
-            }"
-          >
+            }">
           </InputText>
           <div>
-            <Button
-              icon="pi pi-clock"
-              @click="getChronoValue"
-              style="background-color: var(--primary-400)"
-              class="as-chrono-button"
-            />
+            <Button icon="pi pi-clock" @click="getChronoValue" style="background-color: var(--primary-400)"
+              class="as-chrono-button" />
           </div>
         </div>
       </div>
       <div class="as-bottom-background">
         <div class="as-bottom-background-top">
-          <MultiSelect
-            v-model="teamName"
-            :options="teams"
-            filter
-            display="chip"
-            optionLabel="name"
-            :placeholder="i18n.t('AddSession.select_team')"
-            class="mb20"
-            :pt="{
+          <MultiSelect v-model="teamName" :options="teams" filter display="chip" optionLabel="name"
+            :placeholder="i18n.t('AddSession.select_team')" class="mb20" :pt="{
               root: {
                 style: 'width: 100%',
               },
-            }"
-          />
+            }" />
           <div class="as-fun-selector mb20">
-            <ToggleButton
-              v-model="toggle_fun"
-              :onLabel="i18n.t('AddSession.fun')"
-              :offLabel="i18n.t('AddSession.fun')"
-              class="toggle-button"
-              :pt="{
+            <ToggleButton v-model="toggle_fun" :onLabel="i18n.t('AddSession.fun')" :offLabel="i18n.t('AddSession.fun')"
+              class="toggle-button" :pt="{
                 box: {
                   style: toggle_fun
                     ? 'background-color: var(&#45;&#45;green-400);'
                     : 'background-color: whitesmoke; border: none;',
                 },
-              }"
-            />
-            <ToggleButton
-              v-model="toggle_neutre"
-              :onLabel="i18n.t('AddSession.neutral')"
-              :offLabel="i18n.t('AddSession.neutral')"
-              class="toggle-button"
-              :pt="{
+              }" />
+            <ToggleButton v-model="toggle_neutre" :onLabel="i18n.t('AddSession.neutral')"
+              :offLabel="i18n.t('AddSession.neutral')" class="toggle-button" :pt="{
                 box: {
                   style: toggle_neutre
                     ? 'background-color: var(&#45;&#45;yellow-400);'
                     : 'background-color: whitesmoke; border: none;',
                 },
-              }"
-            />
-            <ToggleButton
-              v-model="toggle_nul"
-              :onLabel="i18n.t('AddSession.bad')"
-              :offLabel="i18n.t('AddSession.bad')"
-              class="toggle-button"
-              :pt="{
+              }" />
+            <ToggleButton v-model="toggle_nul" :onLabel="i18n.t('AddSession.bad')" :offLabel="i18n.t('AddSession.bad')"
+              class="toggle-button" :pt="{
                 box: {
                   style: toggle_nul
                     ? 'background-color: var(&#45;&#45;red-400);'
                     : 'background-color: whitesmoke; border: none;',
                 },
-              }"
-            />
+              }" />
           </div>
-          <SelectButton
-            v-model="selected_platform"
-            :options="platforms_options"
-            optionLabel="name"
-            dataKey="id"
-            class="mb20"
-            :pt="{
+          <SelectButton v-model="selected_platform" :options="platforms_options" optionLabel="name" dataKey="id"
+            class="mb20" :pt="{
               root: {
                 style: 'width: 100%; padding-left: 2px;',
               },
               button: {
                 style: 'height: 40px; width: 116px;',
               },
-            }"
-          >
+            }">
           </SelectButton>
-          <TextArea
-            v-model="comment"
-            :title="i18n.t('AddSession.comments_support_markdown')"
-            rows="1"
-            autoResize
-            class="mb5 as-comment"
-            :placeholder="i18n.t('AddSession.comments')"
-          />
+          <TextArea v-model="comment" :title="i18n.t('AddSession.comments_support_markdown')" rows="1" autoResize
+            class="mb5 as-comment" :placeholder="i18n.t('AddSession.comments')" />
         </div>
 
-        <Button
-          :label="i18n.t('AddSession.add')"
-          :icon="icon"
-          class="btn-add"
-          @click="addNewSession"
-          :loading="loading"
-        ></Button>
+        <Button :label="i18n.t('AddSession.add')" :icon="icon" class="btn-add" @click="addNewSession"
+          :loading="loading"></Button>
       </div>
     </div>
   </div>
@@ -158,6 +95,7 @@ import { storeToRefs } from "pinia";
 import { addSession } from "../database/database";
 import { getPreferences, setPreferences } from "../preferences/preferences";
 import gameNotFound from "../assets/images/game_not_found.jpg";
+import { addLastSessionToLinkmi } from "../api/linkmi";
 
 import { useI18n } from "vue-i18n";
 
@@ -366,6 +304,16 @@ async function addNewSession() {
   }
   let success = false;
   if (props.addToWaitingList) {
+    // Add last session to linkmi
+    await addLastSessionToLinkmi(
+      game.value,
+      parseInt(duration.value),
+      was_cool.value.value,
+      comment.value,
+      selected_platform.value.id,
+      new Date().toString()
+    )
+
     storeWaitingList.addSession({
       teamsId: getTeamsId(),
       gameName: game.value,
@@ -380,6 +328,17 @@ async function addNewSession() {
     if (!navigator.onLine) {
       success = false;
     } else {
+
+      // Add last session to linkmi
+      await addLastSessionToLinkmi(
+        game.value,
+        parseInt(duration.value),
+        was_cool.value.value,
+        comment.value,
+        selected_platform.value.id,
+        new Date().toString()
+      )
+
       success = await addSession(
         getTeamsId(),
         game.value,

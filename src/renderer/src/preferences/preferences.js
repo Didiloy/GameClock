@@ -45,6 +45,8 @@ const defaults = {
   application_style: "lara",
   //sort value of game settings page
   sort_order_game_settings_page: 0,
+  // LINKMI integration
+  linkmi_apikey: ""
 };
 
 const preferences_name = "preferences";

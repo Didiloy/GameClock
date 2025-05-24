@@ -180,6 +180,12 @@ watch(close_app_when_clicking_on_update, () => {
     close_app_when_clicking_on_update.value,
   );
 });
+
+const LINKMI_APIKEY = ref(getPreferences("linkmi_apikey"));
+const update_linkmi_apikey = (update_value) => {
+  setPreferences("linkmi_apikey", update_value);
+};
+
 </script>
 
 <template>
@@ -193,45 +199,28 @@ watch(close_app_when_clicking_on_update, () => {
       <b class="text-color">{{
         $t("GeneralPreference.shortcut_toggle_chronometer")
       }}</b>
-      <InputText
-        type="text"
-        :modelValue="toggle_chronometer_key_shortcut"
-        @update:modelValue="update_shortcut"
-        style="width: 50px"
-        maxlength="1"
-      />
+      <InputText type="text" :modelValue="toggle_chronometer_key_shortcut" @update:modelValue="update_shortcut"
+        style="width: 50px" maxlength="1" />
     </div>
     <div class="tp-item">
       <b class="text-color">{{
         $t("GeneralPreference.shortcut_reload_data")
       }}</b>
-      <InputText
-        type="text"
-        :modelValue="reload_data_key_shortcut"
-        @update:modelValue="update_shortcut_reload_data"
-        style="width: 50px"
-        maxlength="1"
-      />
+      <InputText type="text" :modelValue="reload_data_key_shortcut" @update:modelValue="update_shortcut_reload_data"
+        style="width: 50px" maxlength="1" />
     </div>
     <div class="tp-item">
       <b class="text-color">{{
         $t("GeneralPreference.page_start_application")
       }}</b>
-      <Dropdown
-        v-model="selected_page"
-        :options="pages_list"
-        optionLabel="label"
-      />
+      <Dropdown v-model="selected_page" :options="pages_list" optionLabel="label" />
     </div>
     <div class="tp-item">
       <b class="text-color">{{
         $t("GeneralPreference.number_of_last_session")
       }}</b>
-      <Dropdown
-        v-model="selected_number_of_last_sessions"
-        :options="number_of_last_session_possible"
-        optionLabel="label"
-      />
+      <Dropdown v-model="selected_number_of_last_sessions" :options="number_of_last_session_possible"
+        optionLabel="label" />
     </div>
     <div class="tp-item" style="margin-top: 10px">
       <b class="text-color">{{
@@ -251,6 +240,13 @@ watch(close_app_when_clicking_on_update, () => {
       }}</b>
       <InputSwitch v-model="close_app_when_clicking_on_update" />
     </div>
+  </div>
+  <div class="tp-item" style="margin-top: 10px">
+    <b class="text-color">{{
+      $t("GeneralPreference.linkmi_apikey")
+    }}</b>
+    <InputText type="text" :modelValue="LINKMI_APIKEY" @update:modelValue="update_linkmi_apikey"
+      style="width: max-content" />
   </div>
 </template>
 
