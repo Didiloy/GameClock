@@ -107,6 +107,12 @@ Create a [SteamGridDB](https://www.steamgriddb.com/api/v2) API Key – To use th
 
 ## Linkmi Integration
 
+Gameclock now supports LINKMI API integration (#6)
+
+To use your LINKMI API KEY go to * Settings > General > Connect your LINKMI account using your API Key* and then paste your Api Key.
+
+Available widgets built for Gameclock : *last-session* widget and *playing-status* widget.
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## License
