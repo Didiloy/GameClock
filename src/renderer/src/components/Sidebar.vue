@@ -15,6 +15,10 @@
               <a :href="subitem.route" @click="navigate">
                 <span :class="subitem.icon" />
                 <span class="ml">{{ subitem.label }}</span>
+                <PlayingIndicator 
+                  v-if="subitem.id === 'teams-list'" 
+                  :isPlaying="isAnyTeamPlaying" 
+                />
               </a>
             </div>
           </router-link>
@@ -38,14 +42,24 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "../store/store.js";
+import { storeToRefs } from "pinia";
 import app_info from "../../../../package.json";
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
+import PlayingIndicator from "./PlayingIndicator.vue";
+
+const store = useStore();
+const { teams } = storeToRefs(store);
 
 const loading = ref(false);
 const icon = ref("pi pi-replay");
+
+const isAnyTeamPlaying = computed(() => {
+  if (!teams.value) return false;
+  return teams.value.some(team => team.playing === true);
+});
 
 const items = ref([
   {
@@ -70,6 +84,7 @@ const items = ref([
         label: i18n.t("Sidebar.teams.list"),
         icon: "pi pi-list",
         route: "/teams",
+        id: "teams-list"
       },
     ],
   },
