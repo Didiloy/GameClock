@@ -113,6 +113,8 @@ To use your LINKMI API KEY go to * Settings > General > Connect your LINKMI acco
 
 Available widgets built for Gameclock : *last-session* widget and *playing-status* widget.
 
+When you add your LINKMI API Key to your Gameclock profile you will be able to update your LINKMI widgets if you trigger the clock timer and if you add a new Gameclock game session.
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## License
