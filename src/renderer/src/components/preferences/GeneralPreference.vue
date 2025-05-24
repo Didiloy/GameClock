@@ -240,13 +240,13 @@ const update_linkmi_apikey = (update_value) => {
       }}</b>
       <InputSwitch v-model="close_app_when_clicking_on_update" />
     </div>
-  </div>
-  <div class="tp-item" style="margin-top: 10px">
-    <b class="text-color">{{
-      $t("GeneralPreference.linkmi_apikey")
-    }}</b>
-    <InputText type="text" :modelValue="LINKMI_APIKEY" @update:modelValue="update_linkmi_apikey"
-      style="width: max-content" />
+    <div class="tp-item" style="margin-top: 10px">
+      <b class="text-color">{{
+        $t("GeneralPreference.linkmi_apikey")
+        }}</b>
+      <InputText type="password" :modelValue="LINKMI_APIKEY" @update:modelValue="update_linkmi_apikey"
+        style="width: 40vw" />
+    </div>
   </div>
 </template>
 

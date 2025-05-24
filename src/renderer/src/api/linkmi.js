@@ -4,6 +4,7 @@ const BASE_URL = import.meta.env.VITE_LINKMI_BASE_API_URL;
 const LINKMI_API_KEY = getPreferences("linkmi_apikey");
 
 export async function addLastSessionToLinkmi(gameName, duration, was_cool, comment, platform, date) {
+  if (!LINKMI_API_KEY) return;
   await fetch(`${BASE_URL}/widgets/gameclock/last-session`, {
     method: 'PUT',
     headers: {
@@ -17,6 +18,7 @@ export async function addLastSessionToLinkmi(gameName, duration, was_cool, comme
 }
 
 export async function setLinkmiPlayingStatus(status) {
+  if (!LINKMI_API_KEY) return;
   await fetch(`${BASE_URL}/widgets/gameclock/playing-status`, {
     method: 'PUT',
     headers: {
