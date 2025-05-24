@@ -1,26 +1,31 @@
-import { getPreferences, setPreferences } from "../../preferences/preferences";
+import { getPreferences } from "../preferences/preferences";
 
 const BASE_URL = import.meta.env.VITE_LINKMI_BASE_API_URL;
 const LINKMI_API_KEY = getPreferences("linkmi_apikey");
 
-export async function addLastSessionToLinkmi() {
-  const data = await fetch(`${BASE_URL}/widgets/gameclock/last-session`, {
+export async function addLastSessionToLinkmi(gameName, duration, was_cool, comment, platform, date) {
+  await fetch(`${BASE_URL}/widgets/gameclock/last-session`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${LINKMI_API_KEY}`,
       'Content-Type': 'application/json'
-    }
-  }).then((res) => res.json());
-  return data.data[0];
+    },
+    body: JSON.stringify({
+      gameName, duration, was_cool, comment, platform, date
+    })
+  });
 }
 
 export async function setLinkmiPlayingStatus(status) {
-  const data = await fetch(`${BASE_URL}/widgets/gameclock/playing-status`, {
+  await fetch(`${BASE_URL}/widgets/gameclock/playing-status`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${LINKMI_API_KEY}`,
       'Content-Type': 'application/json'
-    }
-  }).then((res) => res.json());
-  return data.data[0];
+    },
+    body: JSON.stringify({
+      status,
+      changed_at: new Date().toString()
+    })
+  })
 }

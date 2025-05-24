@@ -2,46 +2,21 @@
   <div id="header">
     <div id="drag-region">
       <div id="window-title">
-        <img
-          :src="icon"
-          draggable="false"
-          style="height: 23px; width: auto"
-          alt="logo"
-        />
+        <img :src="icon" draggable="false" style="height: 23px; width: auto" alt="logo" />
       </div>
       <div class="container-center">
-        <div
-          v-if="currentRouteName === 'settings-games'"
-          class="centered-search"
-        >
-          <InputText
-            type="text"
-            v-model="searchStore.searchValue"
-            :placeholder="$t('GamesSettings.search_game')"
-            @focus="emit('toggleChronoListener')"
-            @blur="emit('toggleChronoListener')"
-          />
+        <div v-if="currentRouteName === 'settings-games'" class="centered-search">
+          <InputText type="text" v-model="searchStore.searchValue" :placeholder="$t('GamesSettings.search_game')"
+            @focus="emit('toggleChronoListener')" @blur="emit('toggleChronoListener')" />
         </div>
         <div v-if="currentRouteName === 'teams'" class="centered-search">
-          <InputText
-            type="text"
-            v-model="searchTeamStore.searchTeamValue"
-            :placeholder="$t('Teams.search_team')"
-            @focus="emit('toggleChronoListener')"
-            @blur="emit('toggleChronoListener')"
-          />
+          <InputText type="text" v-model="searchTeamStore.searchTeamValue" :placeholder="$t('Teams.search_team')"
+            @focus="emit('toggleChronoListener')" @blur="emit('toggleChronoListener')" />
         </div>
-        <div
-          v-if="currentRouteName === 'search-sessions'"
-          class="centered-search"
-        >
-          <InputText
-            type="text"
-            v-model="searchSessionStore.searchSessionsValue"
-            :placeholder="$t('SearchSessions.title')"
-            @focus="emit('toggleChronoListener')"
-            @blur="emit('toggleChronoListener')"
-          />
+        <div v-if="currentRouteName === 'search-sessions'" class="centered-search">
+          <InputText type="text" v-model="searchSessionStore.searchSessionsValue"
+            :placeholder="$t('SearchSessions.title')" @focus="emit('toggleChronoListener')"
+            @blur="emit('toggleChronoListener')" />
         </div>
         <div v-if="currentRouteName === 'home'" class="centered-title">
           <span class="h-span">{{ total_time_hours.toUpperCase() }}</span>
@@ -50,13 +25,8 @@
           }}</span>
         </div>
       </div>
-      <div
-        id="chronometer"
-        @contextmenu="pauseChrono"
-        @click="startStopWatch"
-        :style="'background-color:' + background_color + ';'"
-        class="hover-div"
-      >
+      <div id="chronometer" @contextmenu="pauseChrono" @click="startStopWatch"
+        :style="'background-color:' + background_color + ';'" class="hover-div">
         <div class="popup">
           {{
             $t("TitleBar.last_chronometer_value") +
@@ -71,30 +41,15 @@
       </div>
       <div id="window-controls">
         <div class="button" id="min-button">
-          <img
-            class="icon"
-            src="../assets/images/minimize_icon.svg"
-            draggable="false"
-            alt="minimize"
-          />
+          <img class="icon" src="../assets/images/minimize_icon.svg" draggable="false" alt="minimize" />
         </div>
 
         <div class="button" id="max-button">
-          <img
-            class="icon-max"
-            src="../assets/images/maximize_icon.svg"
-            draggable="false"
-            alt="maximize"
-          />
+          <img class="icon-max" src="../assets/images/maximize_icon.svg" draggable="false" alt="maximize" />
         </div>
 
         <div class="button" id="close-button">
-          <img
-            class="icon"
-            src="../assets/images/close_icon.svg"
-            draggable="false"
-            alt="close"
-          />
+          <img class="icon" src="../assets/images/close_icon.svg" draggable="false" alt="close" />
         </div>
       </div>
     </div>
@@ -222,14 +177,15 @@ async function startChrono() {
   resetPause();
   is_chrono_running.value = true;
   background_color.value = "var(--red-500)";
-  await setLinkmiPlayingStatus();
+  await setLinkmiPlayingStatus("playing");
 }
 
-function stopChrono() {
+async function stopChrono() {
   is_chrono_running.value = false;
   background_color.value = "var(--primary-500)";
   last_chrono_value.value = duration_seconds.value;
   setPreferences("last_chronometer_value", last_chrono_value.value);
+  await setLinkmiPlayingStatus("stopped");
 }
 
 const is_chrono_paused = ref(false);
