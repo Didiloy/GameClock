@@ -180,6 +180,11 @@ watch(close_app_when_clicking_on_update, () => {
     close_app_when_clicking_on_update.value,
   );
 });
+
+const LINKMI_APIKEY = ref(getPreferences("linkmi_apikey"));
+watch(LINKMI_APIKEY, () => {
+  setPreferences("linkmi_apikey", LINKMI_APIKEY.value);
+});
 </script>
 
 <template>
@@ -252,6 +257,17 @@ watch(close_app_when_clicking_on_update, () => {
       <InputSwitch v-model="close_app_when_clicking_on_update" />
     </div>
   </div>
+   <div class="tp-item" style="margin-top: 10px">
+      <b class="text-color">{{
+        $t("GeneralPreference.linkmi_apikey")
+      }}</b>
+       <InputText
+        type="text"
+        :modelValue="LINKMI_APIKEY"
+        @update:modelValue="LINKMI_APIKEY"
+        style="width: 50px"
+      />
+    </div>
 </template>
 
 <style scoped>

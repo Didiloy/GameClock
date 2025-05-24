@@ -158,6 +158,7 @@ import { storeToRefs } from "pinia";
 import { addSession } from "../database/database";
 import { getPreferences, setPreferences } from "../preferences/preferences";
 import gameNotFound from "../assets/images/game_not_found.jpg";
+import { addLastSessionToLinkmi } from "../api/linkmi";
 
 import { useI18n } from "vue-i18n";
 
@@ -380,6 +381,12 @@ async function addNewSession() {
     if (!navigator.onLine) {
       success = false;
     } else {
+
+      // Add last session to linkmi
+      await addLastSessionToLinkmi(
+        
+      )
+
       success = await addSession(
         getTeamsId(),
         game.value,

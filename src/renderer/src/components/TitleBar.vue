@@ -118,6 +118,7 @@ import {
   useSearchSessionsStore,
 } from "../store/store";
 import { useTotalTime } from "../composables/total_time";
+import { setLinkmiPlayingStatus } from "../api/linkmi";
 const { total_time_hours, calculateTotalTime } = useTotalTime();
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
@@ -214,13 +215,14 @@ function startStopWatch() {
   }
 }
 
-function startChrono() {
+async function startChrono() {
   timestamp_start_chrono.value = Date.now();
   duration.value = 0;
   duration_seconds.value = 0;
   resetPause();
   is_chrono_running.value = true;
   background_color.value = "var(--red-500)";
+  await setLinkmiPlayingStatus();
 }
 
 function stopChrono() {

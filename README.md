@@ -93,6 +93,7 @@ Create a [SteamGridDB](https://www.steamgriddb.com/api/v2) API Key – To use th
 
    ```env
    VITE_STEAMGRIDDB_API_KEY=YOUR_KEY
+   VITE_LINKMI_BASE_API_URL=LINKMI_API_URL
    ```
 
    Make sure to replace `YOUR_KEY` with the actual API key you received from [SteamGridDB](https://www.steamgriddb.com/api/v2).
@@ -101,6 +102,10 @@ Create a [SteamGridDB](https://www.steamgriddb.com/api/v2) API Key – To use th
    ```sh
    npm run dev
    ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Linkmi Integration
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
