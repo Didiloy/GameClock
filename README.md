@@ -37,8 +37,8 @@
 GameClock is an Electron application with <a href="https://vuejs.org/">Vue</a> and <a href="https://firebase.google.com/">Firebase</a> that allow you to track your game time with anyone that has access to your database !
 
 ![Capture home](./resources/images/gameclock_home.png)
-![Capture home 2](./resources/images/gameclock_home2.png)
-![Capture home 2](./resources/images/gameclock_home3.png)
+![Capture home 2](./resources/images/gameclock_home_2.png)
+![Capture home 2](./resources/images/gameclock_home_3.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
