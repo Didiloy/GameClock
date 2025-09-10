@@ -1,87 +1,109 @@
-DROP TABLE IF EXISTS session_participants;
-DROP TABLE IF EXISTS sessions;
-DROP TABLE IF EXISTS server_members;
-DROP TABLE IF EXISTS servers;
-DROP TABLE IF EXISTS games;
-DROP TABLE IF EXISTS platforms;
-DROP TABLE IF EXISTS users;
-
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-
--- USERS authenticated with Auth0
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    auth0_id TEXT UNIQUE NOT NULL,
-    name TEXT,
-    email TEXT,
-    created_at TIMESTAMPTZ DEFAULT now()
-);
-
--- PLATFORMS
-CREATE TABLE platforms (
+-- Table utilisateur
+CREATE TABLE utilisateur (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE
+    nom VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL
 );
 
--- GAMES
-CREATE TABLE games (
+-- Table type_serveur
+CREATE TABLE type_serveur (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    grid TEXT,
-    hero TEXT,
-    logo TEXT
+    nom VARCHAR(100) NOT NULL
 );
 
--- Types of servers (e.g., 'game', 'sports', 'work')
-CREATE TABLE server_types (
+-- Table role
+CREATE TABLE role (
     id SERIAL PRIMARY KEY,
-    code TEXT UNIQUE NOT NULL -- e.g., 'game', 'sports'
+    nom VARCHAR(50) NOT NULL,
+    description TEXT
 );
 
--- Localized labels for each type
-CREATE TABLE server_type_translations (
+-- Table serveur
+CREATE TABLE serveur (
     id SERIAL PRIMARY KEY,
-    server_type_id INTEGER REFERENCES server_types(id) ON DELETE CASCADE,
-    language_code TEXT NOT NULL,  -- e.g., 'en', 'fr'
-    label TEXT NOT NULL,          -- e.g., 'game', 'jeux'
-    UNIQUE (server_type_id, language_code)
+    nom VARCHAR(255) NOT NULL,
+    type_id INT NOT NULL REFERENCES type_serveur(id),
+    createur_id INT NOT NULL REFERENCES utilisateur(id)
 );
 
--- SERVERS created by a user
-CREATE TABLE servers (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name TEXT NOT NULL,
-    owner_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    server_type_id INTEGER REFERENCES server_types(id) ON DELETE SET NULL,
-    created_at TIMESTAMPTZ DEFAULT now()
+-- Table serveur_membre
+CREATE TABLE serveur_membre (
+    id SERIAL PRIMARY KEY,
+    utilisateur_id INT NOT NULL REFERENCES utilisateur(id),
+    serveur_id INT NOT NULL REFERENCES serveur(id),
+    role_id INT NOT NULL REFERENCES role(id),
+    UNIQUE(utilisateur_id, serveur_id)
 );
 
--- Many-to-many: users <-> servers (memberships)
-CREATE TABLE server_members (
-    server_id UUID REFERENCES servers(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    role TEXT DEFAULT 'member',
-    joined_at TIMESTAMPTZ DEFAULT now(),
-    PRIMARY KEY (server_id, user_id)
+-- Table activité
+CREATE TABLE activité (
+    id SERIAL PRIMARY KEY,
+    serveur_id INT NOT NULL REFERENCES serveur(id),
+    nom VARCHAR(255) NOT NULL
 );
 
--- SESSIONS within a server
-CREATE TABLE sessions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    server_id UUID REFERENCES servers(id) ON DELETE CASCADE,
-    game_id INTEGER REFERENCES games(id) ON DELETE SET NULL,
-    platform_id INTEGER REFERENCES platforms(id) ON DELETE SET NULL,
-    date DATE NOT NULL,
-    duration INTEGER NOT NULL, -- in minutes
-    comment TEXT,
-    was_cool BOOLEAN,
-    created_by UUID REFERENCES users(id),
-    created_at TIMESTAMPTZ DEFAULT now()
+-- Table session
+CREATE TABLE session (
+    id SERIAL PRIMARY KEY,
+    activite_id INT NOT NULL REFERENCES activité(id),
+    serveur_id INT NOT NULL REFERENCES serveur(id),
+    createur_membre_id INT NOT NULL REFERENCES serveur_membre(id),
+    date TIMESTAMP NOT NULL DEFAULT NOW(),
+    duree INTERVAL
 );
 
--- Many-to-many: users who participated in a session
-CREATE TABLE session_participants (
-    session_id UUID REFERENCES sessions(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    PRIMARY KEY (session_id, user_id)
+-- Table session_membre (participants à une session)
+CREATE TABLE session_membre (
+    session_id INT NOT NULL REFERENCES session(id) ON DELETE CASCADE,
+    serveur_membre_id INT NOT NULL REFERENCES serveur_membre(id),
+    PRIMARY KEY (session_id, serveur_membre_id)
+);
+
+-- Table stats_serveur
+CREATE TABLE stats_serveur (
+    serveur_id INT PRIMARY KEY REFERENCES serveur(id),
+    total_sessions INT DEFAULT 0,
+    total_membres_actifs INT DEFAULT 0
+    -- Ajouter d'autres colonnes d'agrégation si nécessaire
+);
+
+-- Table stats_membre
+CREATE TABLE stats_membre (
+    serveur_id INT NOT NULL REFERENCES serveur(id),
+    serveur_membre_id INT NOT NULL REFERENCES serveur_membre(id),
+    total_sessions INT DEFAULT 0,
+    total_duree INTERVAL DEFAULT '0',
+    PRIMARY KEY (serveur_id, serveur_membre_id)
+    -- Ajouter d'autres colonnes d'agrégation si nécessaire
+);
+
+-- Table enum_definition (catégories d'énumérations par serveur)
+CREATE TABLE enum_definition (
+    id SERIAL PRIMARY KEY,
+    serveur_id INT NOT NULL REFERENCES serveur(id),
+    nom VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+-- Table enum_valeur (valeurs possibles pour chaque enum_definition)
+CREATE TABLE enum_valeur (
+    id SERIAL PRIMARY KEY,
+    enum_id INT NOT NULL REFERENCES enum_definition(id),
+    valeur VARCHAR(255) NOT NULL,
+    ordre INT DEFAULT 0
+);
+
+-- Table session_enum (valeur choisie par session)
+CREATE TABLE session_enum (
+    session_id INT NOT NULL REFERENCES session(id) ON DELETE CASCADE,
+    enum_valeur_id INT NOT NULL REFERENCES enum_valeur(id),
+    PRIMARY KEY (session_id, enum_valeur_id)
+);
+
+-- Table session_like (likes d'une session par membre)
+CREATE TABLE session_like (
+    session_id INT NOT NULL REFERENCES session(id) ON DELETE CASCADE,
+    serveur_membre_id INT NOT NULL REFERENCES serveur_membre(id),
+    date_like TIMESTAMP DEFAULT NOW(),
+    PRIMARY KEY (session_id, serveur_membre_id)
 );
