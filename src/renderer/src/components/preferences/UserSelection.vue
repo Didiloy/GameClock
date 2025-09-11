@@ -16,9 +16,7 @@ import { ref, onMounted } from "vue";
 import Dropdown from "primevue/dropdown";
 import { getPreferences, setPreferences } from "../../preferences/preferences";
 import { getTeams } from "../../database/database";
-import { useI18n } from "vue-i18n";
 
-const i18n = useI18n();
 const users = ref([]);
 const selectedUser = ref(null);
 
