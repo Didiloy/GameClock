@@ -37,6 +37,24 @@
                 <span class="value">{{ stats.numberOfGames }}</span>
                 <span class="label">{{ $t("Wrapped.games_played") }}</span>
               </div>
+              <div class="stat-row" v-if="stats.longestSessionOfYear || stats.shortestSessionOfYear">
+                <div class="stat-card" v-if="stats.longestSessionOfYear">
+                  <i class="pi pi-bolt"></i>
+                  <div class="stat-card-text">
+                    <span class="label">{{ $t("Wrapped.longest_session_year") }}</span>
+                    <span class="value">{{ convertMinuteToHoursMinute(stats.longestSessionOfYear.duration) }}</span>
+                    <span class="sub-value">{{ stats.longestSessionOfYear.gameName }}</span>
+                  </div>
+                </div>
+                <div class="stat-card" v-if="stats.shortestSessionOfYear">
+                  <i class="pi pi-minus"></i>
+                  <div class="stat-card-text">
+                    <span class="label">{{ $t("Wrapped.shortest_session_year") }}</span>
+                    <span class="value">{{ convertMinuteToHoursMinute(stats.shortestSessionOfYear.duration) }}</span>
+                    <span class="sub-value">{{ stats.shortestSessionOfYear.gameName }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- Page 2: Top Games (Time) -->
@@ -490,6 +508,50 @@ h2 {
 .label {
     font-size: 1.2rem;
     opacity: 0.8;
+}
+
+.stat-row {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.stat-card {
+    flex: 1 1 220px;
+    min-width: 220px;
+    max-width: 320px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.stat-card i {
+    font-size: 1.8rem;
+    color: #60a5fa;
+}
+
+.stat-card-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+}
+
+.stat-card-text .value {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #60a5fa;
+}
+
+.stat-card-text .sub-value {
+    font-size: 0.95rem;
+    opacity: 0.85;
 }
 
 /* Ranking List */

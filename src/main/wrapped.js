@@ -192,6 +192,32 @@ export function calculateWrappedStats(sessions, games, teams, year, ids_of_team)
       ? entriesWeekday.reduce((a, b) => (a[1] < b[1] ? a : b))
       : ["", 0];
 
+  // Longest and shortest session of the year
+  const longestSession =
+    yearSessions.length > 0
+      ? yearSessions.reduce((prev, current) =>
+          current.duration > prev.duration ? current : prev,
+        )
+      : null;
+  const shortestSession =
+    yearSessions.length > 0
+      ? yearSessions.reduce((prev, current) =>
+          current.duration < prev.duration ? current : prev,
+        )
+      : null;
+  const longestSessionGame = longestSession
+    ? games.find((g) => g.id === longestSession.game.id) || {
+        id: longestSession.game.id,
+        name: "Unknown",
+      }
+    : null;
+  const shortestSessionGame = shortestSession
+    ? games.find((g) => g.id === shortestSession.game.id) || {
+        id: shortestSession.game.id,
+        name: "Unknown",
+      }
+    : null;
+
 
   // 8. Social (Best Friend)
   
@@ -279,6 +305,22 @@ export function calculateWrappedStats(sessions, games, teams, year, ids_of_team)
       index: parseInt(leastActiveDayOfWeekEntry[0] || "0", 10),
       duration: leastActiveDayOfWeekEntry[1],
     },
+    longestSessionOfYear: longestSession
+      ? {
+          duration: longestSession.duration,
+          date: longestSession.date,
+          gameId: longestSession.game.id,
+          gameName: longestSessionGame ? longestSessionGame.name : "Unknown",
+        }
+      : null,
+    shortestSessionOfYear: shortestSession
+      ? {
+          duration: shortestSession.duration,
+          date: shortestSession.date,
+          gameId: shortestSession.game.id,
+          gameName: shortestSessionGame ? shortestSessionGame.name : "Unknown",
+        }
+      : null,
   };
 }
 
