@@ -15,6 +15,7 @@ import {
 import { teamList } from "./team_list";
 import { addSessionCountToGames, singleGameStats } from "./games_settings";
 import { dashboardteam } from "./dashboardteam";
+import { calculateWrappedStats } from "./wrapped";
 
 const { Tray, Menu } = require("electron/main");
 let tray;
@@ -210,7 +211,7 @@ function createWindow() {
       max_day,
       max_duration,
     } = dashboardteam(data.ids_of_team, data.games, data.sessions, data.teams);
-    BrowserWindow.getAllWindows()[0].webContents.send("result_dashboardteam", {
+    BrowserWindow.getAllWindows()[0].webContents.send(      "result_dashboardteam", {
       team_time,
       sessions_number,
       number_of_games,
@@ -221,6 +222,20 @@ function createWindow() {
       max_day,
       max_duration,
     });
+  });
+
+  ipcMain.on("wrapped_stats", (event, data) => {
+    const stats = calculateWrappedStats(
+      data.sessions,
+      data.games,
+      data.teams,
+      data.year,
+      data.id_of_team
+    );
+    BrowserWindow.getAllWindows()[0].webContents.send(
+      "result_wrapped_stats",
+      stats
+    );
   });
 
   ipcMain.on("linechartlastmonth", (event, data) => {
