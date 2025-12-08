@@ -87,7 +87,7 @@
         },
       }"
     >
-      <Wrapped />
+      <Wrapped :sessions="sessions_of_team" :id_of_team="id_of_team" />
     </Dialog>
     <DashboardTeam
       :teamName="$route.params.name"

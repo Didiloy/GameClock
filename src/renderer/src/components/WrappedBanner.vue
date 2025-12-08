@@ -27,16 +27,21 @@ defineEmits(["click"]);
   margin-bottom: 5px;
   transition: transform 0.2s;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 
 .wrapped-banner:hover {
   transform: scale(1.01);
 }
 
+
 .content {
   display: flex;
   align-items: center;
   justify-content: start;
+  position: relative;
+  z-index: 1;
 }
 
 .text h3 {
@@ -49,5 +54,6 @@ defineEmits(["click"]);
   margin: 0;
   opacity: 0.9;
 }
+
 </style>
 
