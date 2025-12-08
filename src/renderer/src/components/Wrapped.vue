@@ -310,7 +310,7 @@ onMounted(() => {
         date: s.date.seconds || s.date, // Ensure timestamp
         game: { id: s.game.id },
         teams: [...s.teams],
-        platform: { id: s.platform.id }
+        platform: { id: s.platform?.id ?? null }
     }));
      const _games = games.value.map(g => ({ ...g }));
      const _teams = teams.value.map(t => ({ ...t }));
