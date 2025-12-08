@@ -192,6 +192,51 @@ export function calculateWrappedStats(sessions, games, teams, year, ids_of_team)
       ? entriesWeekday.reduce((a, b) => (a[1] < b[1] ? a : b))
       : ["", 0];
 
+  // Streaks
+  const uniqueDayTimestamps = [
+    ...new Set(
+      yearSessions.map((s) => {
+        const d = new Date(s.date * 1000);
+        return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) / 1000;
+      }),
+    ),
+  ].sort((a, b) => a - b);
+
+  let longestStreak = { length: 0, start: null, end: null };
+  let longestBreak = { length: 0, start: null, end: null };
+
+  if (uniqueDayTimestamps.length > 0) {
+    let streakStart = uniqueDayTimestamps[0];
+    let streakEnd = uniqueDayTimestamps[0];
+    let prev = uniqueDayTimestamps[0];
+
+    for (let i = 1; i < uniqueDayTimestamps.length; i++) {
+      const curr = uniqueDayTimestamps[i];
+      const diffDays = (curr - prev) / 86400;
+      if (diffDays === 1) {
+        streakEnd = curr;
+      } else {
+        const len = (streakEnd - streakStart) / 86400 + 1;
+        if (len > longestStreak.length) {
+          longestStreak = { length: len, start: streakStart, end: streakEnd };
+        }
+        const breakLen = diffDays - 1;
+        if (breakLen > longestBreak.length) {
+          const breakStart = prev + 86400;
+          const breakEnd = curr - 86400;
+          longestBreak = { length: breakLen, start: breakStart, end: breakEnd };
+        }
+        streakStart = curr;
+        streakEnd = curr;
+      }
+      prev = curr;
+    }
+    const len = (streakEnd - streakStart) / 86400 + 1;
+    if (len > longestStreak.length) {
+      longestStreak = { length: len, start: streakStart, end: streakEnd };
+    }
+  }
+
   // Longest and shortest session of the year
   const longestSession =
     yearSessions.length > 0
@@ -305,6 +350,8 @@ export function calculateWrappedStats(sessions, games, teams, year, ids_of_team)
       index: parseInt(leastActiveDayOfWeekEntry[0] || "0", 10),
       duration: leastActiveDayOfWeekEntry[1],
     },
+    longestPlayStreak: longestStreak.length > 0 ? longestStreak : null,
+    longestBreak: longestBreak.length > 0 ? longestBreak : null,
     longestSessionOfYear: longestSession
       ? {
           duration: longestSession.duration,

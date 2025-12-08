@@ -55,6 +55,24 @@
                   </div>
                 </div>
               </div>
+              <div class="stat-row" v-if="stats.longestPlayStreak || stats.longestBreak">
+                <div class="stat-card" v-if="stats.longestPlayStreak">
+                  <i class="pi pi-calendar-plus"></i>
+                  <div class="stat-card-text">
+                    <span class="label">{{ $t("Wrapped.longest_streak") }}</span>
+                    <span class="value">{{ stats.longestPlayStreak.length }} {{ $t("Wrapped.session") }}{{ stats.longestPlayStreak.length > 1 ? 's' : '' }}</span>
+                    <span class="sub-value">{{ new Date(stats.longestPlayStreak.start * 1000).toLocaleDateString() }} - {{ new Date(stats.longestPlayStreak.end * 1000).toLocaleDateString() }}</span>
+                  </div>
+                </div>
+                <div class="stat-card" v-if="stats.longestBreak">
+                  <i class="pi pi-pause"></i>
+                  <div class="stat-card-text">
+                    <span class="label">{{ $t("Wrapped.longest_break") }}</span>
+                    <span class="value">{{ stats.longestBreak.length }} {{ $t("Wrapped.session") }}{{ stats.longestBreak.length > 1 ? 's' : '' }}</span>
+                    <span class="sub-value">{{ new Date(stats.longestBreak.start * 1000).toLocaleDateString() }} - {{ new Date(stats.longestBreak.end * 1000).toLocaleDateString() }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- Page 2: Top Games (Time) -->
