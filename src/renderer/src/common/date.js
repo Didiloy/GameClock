@@ -27,3 +27,10 @@ export function isEaster() {
     today.getTime() < after_easter.getTime()
   );
 }
+
+export function shouldShowWrapped() {
+  const today = new Date();
+  const before_wrapped = new Date(today.getFullYear(), 11, 1);
+  const after_wrapped = new Date(today.getFullYear(), 11, 31);
+  return today.getTime() > before_wrapped.getTime() && today.getTime() < after_wrapped.getTime();
+}

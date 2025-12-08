@@ -72,6 +72,23 @@
         @toggleChronoListener="toggleChronoListener"
       ></AddSession>
     </Dialog>
+    <WrappedBanner v-if="shouldShowWrapped()" @click="openWrapped" />
+    <Dialog
+      v-model:visible="showWrapped"
+      modal
+      dismissableMask
+      closeOnEscape
+      :closable="true"
+      :showHeader="false"
+      :pt="{
+        content: {
+          style:
+            'height: 600px; width: 800px; border-radius: 15px; margin: 0; padding: 0;',
+        },
+      }"
+    >
+      <Wrapped />
+    </Dialog>
     <DashboardTeam
       :teamName="$route.params.name"
       :sessions="selected_month.game_sessions"
@@ -82,14 +99,16 @@
 <script setup>
 import AddSession from "../components/AddSession.vue";
 import DashboardTeam from "../components/DashboardTeam.vue";
-import { onMounted, onUnmounted, ref } from "vue";
+import WrappedBanner from "../components/WrappedBanner.vue";
+import Wrapped from "../components/Wrapped.vue";
+import { onMounted, onUnmounted, ref, computed } from "vue";
 import { getPreferences } from "../preferences/preferences";
 import { useRoute } from "vue-router";
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import { getIdsOfTeam } from "../database/database";
 import { useSuccesses } from "../composables/successes";
-
+import { shouldShowWrapped } from "../common/date";
 import { useI18n } from "vue-i18n";
 const i18n = useI18n();
 
@@ -99,6 +118,11 @@ const { sessions, teams } = storeToRefs(store);
 const game_if_we_come_from_home = useRoute().params.game;
 const add_session_game_name = ref("");
 const add_session_dialog_visible = ref(false);
+const showWrapped = ref(false);
+
+function openWrapped() {
+  showWrapped.value = true;
+}
 
 const id_of_team = ref([]);
 

@@ -10,6 +10,12 @@
         "team": "Équipe"
       }
     },
+    "Wrapped": {
+      "banner_title": "Votre Wrapped {year} est là !",
+      "banner_subtitle": "Découvrez votre année en revue",
+      "title": "Wrapped {year}",
+      "subtitle": "Votre année en revue"
+    },
     "LineChartLastMonth": {
       "title": "Temps de jeux sur le dernier mois",
       "title_session_of_day": "Sessions du {0}",
@@ -425,6 +431,12 @@
         "comment": "Comment",
         "team": "Team"
       }
+    },
+    "Wrapped": {
+      "banner_title": "Your {year} Wrapped is here!",
+      "banner_subtitle": "Check out your year in review",
+      "title": "Wrapped {year}",
+      "subtitle": "Your year in review"
     },
     "LineChartLastMonth": {
       "title": "Play time the last month",
