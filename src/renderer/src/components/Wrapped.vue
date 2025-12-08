@@ -99,6 +99,16 @@
                    <span class="value">{{ $t("Wrapped.most_acive_week_subtitle") }} {{ stats.mostPlayedWeek.week }}</span>
                    <span class="sub-value">{{ convertMinuteToHoursMinute(stats.mostPlayedWeek.duration) }}</span>
                 </div>
+                <div class="grid-item">
+                   <i class="pi pi-sun"></i>
+                   <span class="label">{{ $t("Wrapped.most_active_weekday", { day: getWeekdayName(stats.mostActiveDayOfWeek.index) }) }}</span>
+                   <span class="sub-value">{{ convertMinuteToHoursMinute(stats.mostActiveDayOfWeek.duration) }}</span>
+                </div>
+                <div class="grid-item">
+                   <i class="pi pi-moon"></i>
+                   <span class="label">{{ $t("Wrapped.least_active_weekday", { day: getWeekdayName(stats.leastActiveDayOfWeek.index) }) }}</span>
+                   <span class="sub-value">{{ convertMinuteToHoursMinute(stats.leastActiveDayOfWeek.duration) }}</span>
+                </div>
               </div>
             </div>
 
@@ -246,6 +256,11 @@ function getMonthName(monthIndex) {
     return i18n.t("Common.months_names." + monthIndex);
 }
 
+function getWeekdayName(index) {
+    // JS getDay(): 0=Sunday ... 6=Saturday
+    return i18n.t("Common.weekdays_names." + index);
+}
+
 const props = defineProps(["sessions", "id_of_team"]);
 
 onMounted(() => {
@@ -277,7 +292,6 @@ onMounted(() => {
     window.electron.ipcRenderer.on("result_wrapped_stats", (event, data) => {
         stats.value = data;
         loading.value = false;
-        console.log(stats.value);
     });
 });
 

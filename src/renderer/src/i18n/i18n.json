@@ -26,6 +26,8 @@
       "most_active_month": "Mois le plus actif",
       "most_active_day": "Jour le plus actif",
       "most_active_week": "Semaine la plus active",
+      "most_active_weekday": "Tu joues surtout le {day}.",
+      "least_active_weekday": "Ton jour le plus calme est le {day}.",
       "most_acive_week_subtitle": "Semaine du",
       "highs_lows": "Moments forts et faibles",
       "most_fun": "Le plus fun",
@@ -417,6 +419,15 @@
         "10": "Novembre",
         "11": "Décembre"
       },
+      "weekdays_names": {
+        "0": "Dimanche",
+        "1": "Lundi",
+        "2": "Mardi",
+        "3": "Mercredi",
+        "4": "Jeudi",
+        "5": "Vendredi",
+        "6": "Samedi"
+      },
       "loading": "Chargement..."
     },
     "Successes": {
@@ -472,6 +483,8 @@
       "most_active_month": "Most Active Month",
       "most_active_day": "Most Active Day",
       "most_active_week": "Most Active Week",
+      "most_active_weekday": "You mostly play on {day}.",
+      "least_active_weekday": "Your calmest day is {day}.",
       "most_acive_week_subtitle": "Week of",
       "highs_lows": "Highs & Lows",
       "most_fun": "Most Fun",
@@ -862,6 +875,15 @@
         "9": "October",
         "10": "November",
         "11": "December"
+      },
+      "weekdays_names": {
+        "0": "Sunday",
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday"
       },
       "loading": "Loading..."
     },

@@ -175,6 +175,23 @@ export function calculateWrappedStats(sessions, games, teams, year, ids_of_team)
         duration: mostPlayedWeekEntry[1]
     }
 
+  // Active / Calm day of week
+  const weekdayStats = {};
+  yearSessions.forEach((session) => {
+    const date = new Date(session.date * 1000);
+    const weekday = date.getDay(); // 0=Sun ... 6=Sat
+    weekdayStats[weekday] = (weekdayStats[weekday] || 0) + session.duration;
+  });
+  const entriesWeekday = Object.entries(weekdayStats);
+  const mostActiveDayOfWeekEntry =
+    entriesWeekday.length > 0
+      ? entriesWeekday.reduce((a, b) => (a[1] > b[1] ? a : b))
+      : ["", 0];
+  const leastActiveDayOfWeekEntry =
+    entriesWeekday.length > 0
+      ? entriesWeekday.reduce((a, b) => (a[1] < b[1] ? a : b))
+      : ["", 0];
+
 
   // 8. Social (Best Friend)
   
@@ -254,6 +271,14 @@ export function calculateWrappedStats(sessions, games, teams, year, ids_of_team)
           logo: lastGame.logo || "",
         }
       : null,
+    mostActiveDayOfWeek: {
+      index: parseInt(mostActiveDayOfWeekEntry[0] || "0", 10),
+      duration: mostActiveDayOfWeekEntry[1],
+    },
+    leastActiveDayOfWeek: {
+      index: parseInt(leastActiveDayOfWeekEntry[0] || "0", 10),
+      duration: leastActiveDayOfWeekEntry[1],
+    },
   };
 }
 
