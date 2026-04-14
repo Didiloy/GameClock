@@ -294,6 +294,13 @@
     "Settings": {
       "title": "Paramètres"
     },
+    "DataExportPreference": {
+      "title": "Exporter les données",
+      "export_description": "Exporter toutes les sessions, jeux, plateformes et équipes dans un fichier JSON",
+      "export_button": "Exporter",
+      "success": "Les données ont été exportées avec succès !",
+      "error": "Une erreur est survenue lors de l'export des données."
+    },
     "GeneralPreference": {
       "title": "Général",
       "select_language": "Langue (requiert un redemarrage de l'application pour que tout soit appliqué correctement)",
@@ -754,6 +761,13 @@
     },
     "Settings": {
       "title": "Settings"
+    },
+    "DataExportPreference": {
+      "title": "Export data",
+      "export_description": "Export all sessions, games, platforms and teams to a JSON file",
+      "export_button": "Export",
+      "success": "Data exported successfully!",
+      "error": "An error occurred while exporting data."
     },
     "GeneralPreference": {
       "title": "General",

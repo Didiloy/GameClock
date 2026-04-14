@@ -24,7 +24,7 @@
     "@vueuse/core": "^11.1.0",
     "chart.js": "latest",
     "chartjs-plugin-zoom": "^2.0.1",
-    "dotenv": "16.4.7",
+    "dotenv": "latest",
     "firebase": "latest",
     "lodash": "^4.17.21",
     "markdown-it": "^14.1.0",
@@ -33,7 +33,7 @@
     "primevue": "v3-stable",
     "quantize": "^1.0.2",
     "steamgriddb": "latest",
-    "vue-i18n": "^9.13.1",
+    "vue-i18n": "^11.3.2",
     "vue-router": "latest"
   },
   "devDependencies": {
@@ -41,16 +41,16 @@
     "@rushstack/eslint-patch": "^1.6.1",
     "@vitejs/plugin-vue": "^5.0.2",
     "@vue/eslint-config-prettier": "^9.0.0",
-    "electron": "^29.1.6",
-    "electron-builder": "^24.9.1",
-    "electron-vite": "^4.0.0",
+    "electron": "latest",
+    "electron-builder": "latest",
+    "electron-vite": "latest",
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.19.2",
     "less": "^4.2.0",
     "prettier": "^3.1.1",
     "tippy.js": "^6.3.7",
-    "vite": "^7.1.4",
-    "vue": "^3.4.5",
+    "vite": "^8.0.8",
+    "vue": "^3.5.32",
     "vue3-calendar-heatmap": "^2.0.5"
   }
 }

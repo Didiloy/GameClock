@@ -1,4 +1,5 @@
-import { app, BrowserWindow, shell, ipcMain } from "electron";
+import { app, BrowserWindow, shell, ipcMain, dialog } from "electron";
+import { writeFileSync } from "fs";
 import { join } from "path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
@@ -250,6 +251,24 @@ function createWindow() {
         map_player_time_played,
       },
     );
+  });
+
+  ipcMain.on("export_data", async (event, data) => {
+    const { filePath } = await dialog.showSaveDialog({
+      title: "Exporter les données",
+      defaultPath: "gameclock_export.json",
+      filters: [{ name: "JSON", extensions: ["json"] }],
+    });
+    if (filePath) {
+      try {
+        writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+        BrowserWindow.getAllWindows()[0].webContents.send("result_export_data", { success: true });
+      } catch {
+        BrowserWindow.getAllWindows()[0].webContents.send("result_export_data", { success: false, cancelled: false });
+      }
+    } else {
+      BrowserWindow.getAllWindows()[0].webContents.send("result_export_data", { success: false, cancelled: true });
+    }
   });
 }
 

@@ -5,6 +5,7 @@ import AppearencePreference from "../components/preferences/AppearencePreference
 import GeneralPreference from "../components/preferences/GeneralPreference.vue";
 import PieChartPreferences from "../components/preferences/PieChartPreferences.vue";
 import UserSelection from "../components/preferences/UserSelection.vue";
+import DataExportPreference from "../components/preferences/DataExportPreference.vue";
 const emit = defineEmits(["toggleChronoListener"]);
 
 function toggleChronoListener() {
@@ -26,6 +27,8 @@ function toggleChronoListener() {
     <AppearencePreference />
     <Divider />
     <PieChartPreferences />
+    <Divider />
+    <DataExportPreference />
   </div>
 </template>
 
